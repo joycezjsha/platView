@@ -1,0 +1,31 @@
+{
+  "errcode":"0",
+  "errmsg":"success",
+  "data":[
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"},
+    {"city":"西安","in":"200","out":"120","in_out_radio":"16.9%","holdCount":"132","flowChange":"+80"},
+    {"city":"渭南","in":"1000","out":"120","in_out_radio":"92%","holdCount":"132","flowChange":"+1026"}
+
+  ]
+}
