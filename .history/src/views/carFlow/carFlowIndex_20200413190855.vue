@@ -1,0 +1,223 @@
+<template>
+  <div class="car-flow">
+   <car-table></car-table>
+    <car-info></car-info>
+  </div>
+</template>
+
+<script>
+import { IMG } from "./config";
+import table from "./car_table";
+import car_info from "./car_info";
+export default {
+  name: "carFlow",
+  data() {
+    return {
+      map: {}
+    };
+  },
+  components:{
+    carTable:table,
+    carInfo:car_info
+  },
+  mounted() {
+    this.map = this.$store.state.map;
+    let that = this;
+    this.map.setCenter([108.967368, 34.302634]);
+    this.map.setZoom(11);
+    this.map.repaint = true;
+    $(window).resize(function() {
+    });
+  },
+  destroyed() {
+    this.flyRoutes = [];
+    this.map.stop();
+    let that = this;
+    clearInterval(that.fly);
+    that.map.setPitch(0); //设置地图的俯仰角
+    /*for (let i = 0; i < that.buildingmore.length; i++) {
+        if(that.map.getLayer(that.buildingmore[i])) that.map.setLayoutProperty(that.buildingmore[i], 'visibility', 'none');
+      }*/
+    //显示地图右下角飞行图标
+    // eventBridge.$emit('map_hideFlyIcon');
+    // eventBridge.$emit('map_hideBuildingmore');
+    // eventBridge.$emit('hideLayerBtn');
+    // $("#traffiCtrlFly").css(
+    //   "background",
+    //   "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAWCAMAAADto6y6AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABC1BMVEWjtO////+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO////+KC4gAAAAAV3RSTlMAAJ8/nr07Xrk4H7U03/6yMKD7rS1g+Mn9qSohk6Un4WX8oSSikEr0nWM16fmZIzfblRzjGRbK8adNpMYGC5sHnASSjz4DJc7lx3UiAcBtCWKutB3uWVzSmX8cAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EKDAoBO7QtmC0AAADoSURBVCjPY2BiZkABjFDAwBLOyoZVgj08PJyDE4sEVzgIcPNgSDDwgmX4+AXQJQSBwkIgKWERVAlRoKCYOEiXhKQUsoQ0SIxXhg8sJSuHkGCQBwmxKgiB7VJUUoZLqIBFVNXUwXS4kIY0VEITIiCqpQ1hhOvocoEl9CBcMX1lg3CYlKERyIXGEJ6xiakZVMLcwhIkYQXlWtvYcgMpbTs1e7BRDAowExwYHJ2cXVxhrmJwg0m46yF7EAg8QCHi6eXN4IMmIavo62fE4B8QKIkmIWcKIn1Yw4PQJKAgOASHBEMoLgmGMIQEABPwPWhIBaSaAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEwLTEyVDEwOjAxOjU5KzA4OjAwEMBd+QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMC0xMlQxMDowMTo1OSswODowMGGd5UUAAAAASUVORK5CYII=') no-repeat 50% center"
+    // );
+    // commonVariable.CURRENT_MAP.repaint = false;
+  },
+  methods: {
+
+  }
+};
+</script>
+<style scope lang='scss'>
+@mixin flex($direction: column, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+#cruise_table::-webkit-scrollbar {
+  width: 1rem;
+  height: 1rem;
+  background-color: #9c9fad;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+#cruise_table::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  background-color: #9c9fad;
+}
+
+/*定义滑块 内阴影+圆角*/
+#cruise_table::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #ffffff;
+}
+.car-flow {
+  
+}
+&_title {
+  position: relative;
+  width: 96%;
+  border-bottom: 0.1rem solid #a9afd6;
+  font-family: Microsoft YaHei;
+  font-size: 1vw;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.6rem 2%;
+  font-weight: bolder;
+  > div {
+    display: flex;
+    align-items: center;
+  }
+  > div:nth-child(1) {
+    width: 60%;
+  }
+  > div:nth-child(2) {
+    width: 40%;
+    > div:nth-child(2) {
+      width: 1.5vw;
+      height: 2.3vh;
+      line-height: 2.3vh;
+      background-color: #02082f;
+      text-align: center;
+      border-radius: 3px;
+      margin-left: 0.5vh;
+    }
+  }
+}
+&_content{
+    width: 95%;
+    height: 85%;
+    background-color: #444d61;
+    margin: 1% auto;
+  &_table{
+  position: relative;
+  color: #fff;
+  font-family: \\5fae\8f6f\96c5\9ed1;
+  font-size: 0.9vw;
+  padding: 0;
+  text-align: left;
+  overflow-y: auto;
+  height: 100%;
+  .item {
+    width: 100%;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.9vw;
+    font-family: Microsoft YaHei;
+    display: block;
+    background-color: transparent;
+    border-bottom: 0.1rem solid #a9afd6;
+  }
+}
+}
+}
+
+#cruise_table {
+  position: relative;
+  color: #fff;
+  font-family: \\5fae\8f6f\96c5\9ed1;
+  font-size: 0.9vw;
+  padding: 0;
+  text-align: left;
+  overflow-y: auto;
+  height: 100%;
+  .cruise-item {
+    width: 100%;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.9vw;
+    font-family: Microsoft YaHei;
+    display: block;
+    background-color: transparent;
+    border-bottom: 0.1rem solid #a9afd6;
+    .delIcon{
+      float: right;
+      margin-right: 2vw;
+      cursor:pointer;
+      .el-icon-delete{color:red;}
+      }
+  }
+}
+.cruise-edit {
+  width: 100%;
+  height: 5vh;
+  border-top: 1px solid #eee;
+  background-color: #3c313175;
+  @include flex(row, center);
+  .editBtn {
+    width: 30%;
+    height: 4vh;
+    line-height: 4vh;
+    background-color: #787b90;
+    @include flex(row, center);
+    margin-left: 6%;
+    cursor: pointer;
+  }
+  button {
+    @include flex(row, center);
+    width: 30%;
+  }
+  button:nth-child(1) {
+    width: 20%;
+  }
+}
+.cruise-play-stop {
+  position: fixed;
+  bottom: 6rem;
+  width: 20%;
+  margin-left: 40%;
+  text-align: center;
+  z-index: 6;
+}
+.fangan {
+  width: 6vw;
+  background-color: #050d4e;
+  height: 2.5vh;
+  color: #fff;
+}
+</style>
+<style>
+.fangan .el-input__inner{
+      height: 2.5vh;
+      border-radius: 0;
+      background-color: transparent;
+      border-color: #f6f3f3;
+      color: #fff;
+    }
+.el-select .el-input .el-select__caret{
+   line-height:2vh;
+ }
+</style>

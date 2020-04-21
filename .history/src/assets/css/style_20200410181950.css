@@ -1,0 +1,90 @@
+/* 公共 */
+@import './color.scss';
+@import './base.css';
+/* top */
+.topbar-bar .el-menu,.topbar-bar .el-submenu ,.topbar-bar .el-menu-item,.topbar-bar .el-submenu .el-submenu__title{
+  height: 4vh;
+  line-height: 4vh;
+  float: left;
+  color: #fff;
+}
+.topbar-bar .el-submenu .el-submenu__title:hover,.topbar-bar .el-menu-item:hover {
+  background-color: #3a8ee6;
+}
+.topbar-bar .el-menu.el-menu--horizontal{
+background-color: transparent;
+border: none;
+}
+.topbar-bar .el-menu--horizontal li{
+  margin: 0 10px;
+  background-color: #3a3c4c;
+  color: white;
+}
+.topbar-bar .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover{
+  outline: 0;
+  color: #fff;
+}
+/*菜单-子级*/
+.el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title {
+  background-color: #3a3c4c;
+  float: none;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 10px;
+  color: #efefef;
+}
+.el-menu--popup-bottom-start{
+  background-color: #000;
+}
+.el-menu--horizontal .el-menu .el-menu-item.is-active, .el-menu--horizontal .el-menu .el-submenu.is-active>.el-submenu__title{
+  color: #fff;
+}
+.el-menu--horizontal .el-menu-item:hover {
+  background-color: #3a8ee6;
+}
+.topbar-bar .el-menu--horizontal li.is-active{
+  background-color: #3a8ee6;
+}
+/*巡航*/
+/*警情检测*/
+.el-tabs__item{color:white;}
+.el-tabs__nav-wrap::after{
+  background-color: white;
+}
+
+/*el样式改写*/
+.el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
+  background-color: transparent;color:white;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td{
+background-color: rgb(14, 182, 233);
+color:white;
+}
+.el-input__inner{
+}
+.el-input__inner,.el-range-editor .el-range-input {
+  background: transparent;
+  color:white;
+}
+.el-date-editor .el-range-separator{
+color:white;
+}
+.el-picker-panel{
+  color: white;
+  background-color: #282d27eb;
+}
+.el-range-editor.el-input__inner{
+height:3vh;
+line-height:3vh
+}
+.el-date-editor .el-range__icon{
+line-height:2vh;
+}
+.el-date-editor .el-range-separator{
+line-height:2vh;
+}
+.el-button{
+height:3vh;
+line-height:0.5;
+}
+/*el样式改写 --END*/
