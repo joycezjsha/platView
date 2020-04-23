@@ -65,9 +65,7 @@
 
 <script>
 import { getUUID } from './utils/index'
-import VertifyCode from "../items/VertifyCode";
 import * as config from "./config.js";
-import utils from "../js/utils.js";
 export default {
   name: "login",
   data() {

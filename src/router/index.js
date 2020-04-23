@@ -4,7 +4,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/home.vue'
-import MapCtrl from '@/views/map/MapCtrl'
 import cruise from '@/views/traffic-detection/TCruise'
 import overview from '@/views/overview/overViewIndex.vue'
 import carFlow from '@/views/carFlow/carFlowIndex.vue'

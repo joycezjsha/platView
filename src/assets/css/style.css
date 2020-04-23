@@ -44,9 +44,10 @@ border: none;
 .el-menu--horizontal .el-menu-item:hover {
   background-color: #3a8ee6;
 }
-.topbar-bar .el-menu--horizontal li.is-active{
+.topbar-bar .el-menu--horizontal li.is-active,.el-menu--horizontal .el-menu-item.is-active{
   background-color: #3a8ee6;
 }
+
 /*巡航*/
 /*警情检测*/
 .el-tabs__item{color:white;}
@@ -71,7 +72,7 @@ color:white;
 .el-date-editor .el-range-separator{
 color:white;
 }
-.el-picker-panel{
+.el-picker-panel,.el-dialog{
   color: white;
   background-color: #282d27eb;
 }

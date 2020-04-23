@@ -6,7 +6,7 @@
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>过车数据</span>
-              <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-menu">详细情况</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-menu" @click='showOrder(0)'>详细情况</el-button>
             </div>
             <div class="top-container">
               <div class='top-container-row'>
@@ -24,7 +24,7 @@
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>轨迹查询</span>
-              <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-menu">详细情况</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-menu"@click='showOrder(1)'>详细情况</el-button>
             </div>
             <div class="top-container">
               <div class='top-container-row'>
@@ -72,12 +72,16 @@
           </li>
         </ul>
     </div>
+    <el-dialog title="" :visible.sync="drawer">
+      <data-order :value='order_value'></data-order>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
+import dataOrder from "./dataOrder.vue";
 export default {
   name: "overview_left",
   data() {
@@ -103,7 +107,9 @@ export default {
       trafficDatas: [
         {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
       {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}],
-      selectItem:{"road":"西安",order:8}
+      selectItem:{"road":"西安",order:8},
+      order_value:'',
+      drawer:false
     };
   },
   mounted() {
@@ -113,6 +119,9 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
+  },
+  components: {
+    dataOrder
   },
   destroyed() {
     this.map.setPitch(0);
@@ -156,7 +165,11 @@ export default {
     //     }
     //   });
     },
-   
+  //显示数据排名
+   showOrder(f){
+     this.drawer=true;
+    this.order_value=f;
+   },
   //清除地图加载点、线、面、弹框
   clearMap(){
     //清除source

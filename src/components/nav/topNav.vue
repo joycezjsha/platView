@@ -22,10 +22,10 @@
           <MenuTree :menuData="this.menuData"></MenuTree>
         </el-menu>
       </div>
+      <div  class="topbar-time"><m-time></m-time></div>
       <div class="topbar-account topbar-btn">
         <div class="top_div">
           <div class="iconfont">
-            <!-- <img :src="userIcon" /> -->
             <i class='el-icon-user-solid' style="color:white;"></i>
           </div>
         </div>
@@ -47,6 +47,7 @@
 import menuTree from "./menuTree";
 import "element-ui/lib/theme-chalk/display.css";
 import { road } from "../../road.js";
+import time from '@/components/UI_el/time.vue'
 
 export default {
   data() {
@@ -195,10 +196,11 @@ export default {
     };
   },
   components: {
-    MenuTree: menuTree
+    MenuTree: menuTree,
+    mTime:time
   },
   created() {
-    // 组件创建完后获取数据
+    // 获取当前路由
     this.fetchNavData();
   },
   methods: {
@@ -214,14 +216,14 @@ export default {
       let routers = this.$router.options.routes; // 获取路由对象
       for (var i = 0; i < _this.menuData.length; i++) {
         if (_this.menuData[i].path === cur_path) {
-          _this.activeIndex=''+children[i].parent_id;
+          _this.activeIndex=''+_this.menuData[i].id;
           break;
         }
         let children =_this.menuData[i].node;
         if (children) {
           for (let j = 0; j < children.length; j++) {
             if (children[j].path === cur_path) {
-              _this.activeIndex=''+children[j].parent_id;
+              _this.activeIndex=''+children[j].id;
               break;
             }
             // 如果该菜单下还有子菜单
@@ -229,7 +231,7 @@ export default {
               let grandChildren = children[j].children;
               for (let z = 0; z < grandChildren.length; z++) {
                 if (grandChildren[z].path === cur_path) {
-                  _this.activeIndex=''+children[z].parent_id;
+                  _this.activeIndex=''+children[z].id;
                   break;
                 }
               }
@@ -237,7 +239,6 @@ export default {
           }
         }
       }
-      console.log(_this.activeIndex);
     },
     handleClick(){
     },
@@ -272,13 +273,6 @@ export default {
       this.nickname = user.nickname || "";
       this.companyName = user.companyName || "";
     }
-  },
-  watch: {
-    $route: function(to, from) {
-      // 路由改变时执行
-      //console.info("to.path:" + to.path);
-      // this.fetchNavData();
-    }
   }
 }
 </script>
@@ -305,9 +299,16 @@ export default {
     justify-content: left;
   }
   .topbar-bar {
-    width: 70%;
+    width: 55%;
     @include flex(row, center);
     justify-content: left;
+  }
+  .topbar-time{
+    width: 10%;
+    margin-right: 2%;
+    border-right: 1px solid #ccc;
+    @include flex(row, end);
+    justify-content: right;
   }
   .topbar-account {
     width: 6vw;

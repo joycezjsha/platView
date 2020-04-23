@@ -134,6 +134,10 @@ export default {
         this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
       };
       this.accurChart.setOption(this.accurChangeOption);
+    },
+    //设置表格样式
+    getRowClass({ row, column, rowIndex, columnIndex }) {
+      return "background:transparent;";
     }
   }
 };
