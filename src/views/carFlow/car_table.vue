@@ -1,9 +1,10 @@
 <template>
   <div class="city-index-div">
-    <div class="city-index_container">
+    <div class="city-index_container boxstyle">
       <div class="city-index_title">
         <div>
-          <i class="el-icon-collection-tag">全省流动情况</i>
+          <!-- <i class="el-icon-collection-tag">全省流动情况</i> -->
+          <m-title label='全省流动情况' img_type=1 style='width:100%;height:4vh;line-height:4vh;'></m-title>
         </div>
         
       </div>
@@ -28,11 +29,12 @@
           </el-date-picker>
           </span><span class="car-table-query--btn"><el-button type="primary">确定</el-button></span>
         </div>
-        <div class='car-table-query' v-else>{{tipTxt[activeName]}}</div>
+        <!-- <div class='car-table-query' v-else>{{tipTxt[activeName]}}</div> -->
+        <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt>
         <div class='all_statics'>
           <div><span>陕西省</span><span>{{allStatics.count}}</span></div>
-          <div><span>进入:+{{allStatics.in}}</span><span>流出：-{{allStatics.out}}</span></div>
-          <div><span>进出比：</span><span>{{allStatics.radio}}</span></div>
+          <div><span>进入：+{{allStatics.in}}</span><span>流出：-{{allStatics.out}}</span></div>
+          <div><span>进出比</span><span>{{allStatics.radio}}</span></div>
         </div>
         <ul :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <li class="item" v-for="(item,index) in flowDatas" :key="item.id">
@@ -42,11 +44,12 @@
               <span>进：{{item.in}}</span>
               <span>出：{{item.out}}</span>
               <span>进出比：{{item.in_out_radio}}</span>
-              </p>
-              <p>
-              <span class="address-name">保有量{{item.holdCount}}</span>
-              <span>流动变化：{{item.flowChange}}</span>
-              </p>
+            </p>
+            <p>
+              <span></span>
+              <span class="address-name">保有量<span class='value'>{{item.holdCount}}</span></span>
+              <span>流动变化：<span :class="item.flowChange>0?'up_value':'down_value'">{{item.flowChange}}</span></span>
+            </p>
           </li>
         </ul>
       </div>
@@ -58,8 +61,10 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import blur from "@/blur";
+import mTitle from "@/components/UI_el/title_com.vue";
+import mTiptxt from '@/components/UI_el/tiptxt.vue'
 export default {
-  name: "TCruise",
+  name: "car_table",
   data() {
     return {
       map: {},
@@ -78,6 +83,7 @@ export default {
       allStatics:{count:'+1357',out:'2048',in:'3405',radio:'1.66%'}
     };
   },
+  components:{mTitle,mTiptxt},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -157,7 +163,7 @@ export default {
 </script>
 <style scope lang='scss'>
 @import '@/assets/css/color.scss';
-@mixin flex($direction: column, $justify: center, $align: center) {
+@mixin flex($direction, $justify, $align: center) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
@@ -174,12 +180,9 @@ export default {
 .city-index_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .city-index_title{
       position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
@@ -189,21 +192,27 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
+    padding: 2px 2% 0.6rem 2%;
     font-weight: bolder;
     }
     .all_statics{
       color:$color-white;
-    width: 100%;
-    height: 7vh;
-    line-height: 3vh;
-    text-align: center;
-    // font-size: 1.2vw;
-    background-color: #232a56;
+      width: 100%;
+      height: 7vh;
+      line-height: 3vh;
+      text-align: center;
      @include flex(row,center);
      >div{
        width:30%;
        @include flex(column,center);
+     }
+     >div:nth-child(2){
+       span:nth-child(1){
+         color: $color-yellow;
+       }
+       span:nth-child(2){
+         color: $color-primary;
+       }
      }
     }
   .car-flow_content {
@@ -242,8 +251,68 @@ export default {
       color:white;
       padding: 0 10px;
       height: 86%;
-      li.item{
-          border-bottom: 1px solid $color-white;
+      .item{
+        // border-bottom: 1px solid $color-white;
+        line-height: 1em;
+        margin: 0 2%;
+        cursor: pointer;
+        height: 6vh;
+        >p:nth-child(1){
+          @include flex(row,center,center);
+          >span{
+            @include flex(row,center,center);
+          }
+          >span:nth-child(1){
+            width:8%;
+          }
+          >span:nth-child(2){
+            width:15%;
+          }
+          >span:nth-child(3){
+            width:20%;
+            color: $color-info;
+            
+          }
+          >span:nth-child(4){
+            width:20%;
+            color: $color-info;
+          }
+          >span:nth-child(5){
+            width:35%;
+            color: $color-info;
+            @include flex(row,flex-end,center);
+          }
+        }
+        >p:nth-child(2){
+          color: $color-info;
+          font-size:0.8vw;
+          @include flex(row,center,center);
+          >span{
+            @include flex(row,flex-end,center);
+          }
+          >span:nth-child(1){
+            width:13%;
+          }
+          >span:nth-child(2){
+            width:46%;
+            @include flex(row,flex-start,center);
+          }
+          >span:nth-child(3){
+            width:40%;
+          }
+          span.value{
+            color: $color-primary;
+          }
+          span.up_value{
+            color: $color-yellow;
+          }
+          span.down_value{
+            color: $color-active;
+          }
+        }
+      }
+      .item:hover{
+        background-color: $color-list_bg;
       }
     }
     &_table- {

@@ -1,30 +1,40 @@
 <template>
-  <div class="accident-statics">
-    <div class="accident-statics_container">
-      <div>
-        <el-divider content-position="left">省内车辆运行态势</el-divider>
+  <div class="overview-info">
+    <div class="overview-info_container">
+      <div class="boxstyle">
+        <div>
+          <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
+        </div>
+        <div class="overview-info_sort">
+          <div>
+            <m-list-o :list='listItems'></m-list-o>
+          </div>
+          <div id="overview-info_sort">
+            
+          </div>
+        </div>
+        <!-- <div class="overview-info_content">
+          <div class="overview-info--tab">
+            <div>
+              超速检测次数
+            </div>
+            <div>
+              平均行驶速度/限速
+            </div>
+          </div>
+          <div id="overview-info_sort">
+            
+          </div>
+        </div> -->
       </div>
-      <div class="accident-statics_content">
-        <div class="accident-statics--tab">
-          <div>
-            超速检测次数
-          </div>
-          <div>
-            平均行驶速度/限速
-          </div>
-        </div>
-        <div id="accident-statics_sort">
-          
-        </div>
-        
-        <div>
-          <el-divider content-position="left">进出陕车辆趋势</el-divider>
-          <div id="sumCountChange"></div>
-        </div>
-        <div>
-          <el-divider content-position="left">车辆保有量</el-divider>
-          <div id="accurCreateChange"></div>
-        </div>
+      <div class="boxstyle">
+        <m-title label='进出陕车辆趋势' img_type=1 style='width:12vw;'></m-title>
+        <!-- <div id="sumCountChange"></div> -->
+        <m-line-chart c_id='overViewsumCountChange' style='width:100%;height:18vh'></m-line-chart>
+      </div>
+      <div class="boxstyle">
+        <m-title label='车辆保有量' img_type=1  style='width:7vw;'></m-title>
+        <div id="accurCreateChange"></div>
       </div>
     </div>
   </div>
@@ -34,23 +44,21 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
+import mTitle from "@/components/UI_el/title_com.vue";
+import m_list from '@/components/UI_el/list_o.vue'
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
 export default {
   name: "overview_right",
   data() {
     return {
       map: {},
+      listItems:[{'label':'超速次数',value:'12'},{'label':'总检测数',value:'12345'}],
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b}: {c} ({d}%)'
-          },
-          legend: {
-              orient: 'vertical',
-              right: 10,
-              data: [],
-              textStyle:{color:'white'}
           },
           series: [
               {
@@ -244,6 +252,11 @@ export default {
       accurChart:null
     }
   },
+  components: {
+    mTitle,
+    mLineChart,
+    mListO:m_list
+  },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -252,7 +265,7 @@ export default {
     this.getIndexData();
     this.initAccidentStaticsChart();
     // setTimeout(()=>{
-        that.initSumCharts();
+        // that.initSumCharts();
         that.initAccurCharts();
     // },1000);
   },
@@ -272,9 +285,8 @@ export default {
      */
     initAccidentStaticsChart(){
        if(!this.accident_chart){
-        this.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
+        this.accident_chart = echarts.init(document.getElementById('overview-info_sort'));
       };
-      this.accident_option.legend.data=['超速次数','总检测数'];
       this.accident_option.series[0].data=[{name:'超速次数',value:120},{name:'总检测数',value:1200}]
       this.accident_chart.setOption(this.accident_option);
     },
@@ -307,7 +319,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-.accident-statics {
+.overview-info {
   position: fixed;
   z-index: 10;
   right: 1vw;
@@ -316,12 +328,12 @@ export default {
   top: 9vh;
   color: white;
 }
-.accident-statics_container {
+.overview-info_container {
   width: 100%;
   height: 100%;
   background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
-  .accident-statics_title {
+  // border: 1px solid $color-border-1;
+  .overview-info_title {
     position: relative;
     width: 96%;
     border-bottom: 0.1rem solid $color-border-1;
@@ -337,7 +349,7 @@ export default {
     padding: 0.6rem 2%;
     font-weight: bolder;
   }
-  .accident-statics--tab {
+  .overview-info--tab {
     width: 100%;
     height: 5vh;
    @include flex(row, center);
@@ -374,24 +386,39 @@ export default {
       }
     }
 }
-  .accident-statics_content {
+  .overview-info_content {
     width: 98%;
     height: 85%;
     background-color: $color-bg-1;
     margin: 1%;
 
-    #accident-statics_sort {
+    #overview-info_sort {
       width:100%;
       height:15vh;
     }
-    #sumCountChange{
-      width:100%;
-      height:25vh;
-    }
-    #accurCreateChange{
-      width:100%;
-      height:25vh;
-    }
+  }
+  .overview-info_sort {
+  width:90%;
+  height:8vh;
+  margin:2vh auto;
+  @include flex(row, center,center);
+  >div{
+    @include flex(row, center,center);
+    width:50%;
+  }
+  >div:nth-child(2){
+    height: 100%;
+    width: 40%;
+  }
+}
+  >div{
+    width:100%;}
+  >div:nth-child(2),>div:nth-child(3){
+    margin-top:5%;
+  }
+  #accurCreateChange{
+    width:100%;
+    height:25vh;
   }
 }
 

@@ -1,6 +1,8 @@
 <template>
   <div class='tiptxt'>
-    <span class='img'><img :src='icon' /></span>{{text}}
+    <span class='img'>
+      <img :src='icon' v-show='icon' />
+      </span>{{text}}
   </div>
 </template>
 <script>
@@ -40,8 +42,8 @@ export default {
   align-items: $align;
 }
 .tiptxt{
-    color: white;
-    background: rgba(255,255,255,0.298039);
+    color: #A6AFCD;
+    // background: rgba(255,255,255,0.298039);
     height: auto;
     line-height: 3vh;
     margin: 2% 0;

@@ -5,7 +5,7 @@
         <div class="_img_police">
           <img :src="logo" />
         </div>
-        <m-time></m-time>
+        <m-time style='margin-top: 9%;'></m-time>
       </div>
       <div class="_inner_title">
         <div class="_inner_title_font">陕西交警总队集成指挥平台地图大数据</div>
@@ -73,16 +73,15 @@ $percent100: 100%;
   left: 0;
   top: 0;
   z-index: 11;
-  //background: rgba(17, 32, 145, 1);
   color: #fff;
   background-color: #02030c;
   ._header_inner {
-    width: 96%;
+    width: 98%;
     height: $percent100;
     background-image: url("./image/title_back.png");
     -webkit-background-size: 100% 100%;
     background-size: 100% 100%;
-    margin: 0 auto;
+    padding: 0 1%;
     @include flex(row);
 
     ._inner_img {
@@ -216,7 +215,11 @@ $percent100: 100%;
         float: right;
         text-align: center;
         line-height: 3vh;
-        background-color: #3a3c4c;
+        background-image: url(./image/title_bg_checked.png);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        // background-color: #3a3c4c;
+        // background-image: linear-gradient(to right, #0c123a , #19579D);
         cursor: pointer;
         @include flex(row, center);
       }

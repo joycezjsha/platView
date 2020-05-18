@@ -1,18 +1,14 @@
 <template>
-  <el-dialog  :visible.sync="dialogVisible">
-    <div class="city_index_chart">
-      <m-tile label="西安市拥堵指数分析"></m-tile>
-      <div class="section">
-        <i class="el-icon-alarm-clock">历史最堵时段：7点、12点</i>
-      </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="分时段分析" name="1"></el-tab-pane>
-        <el-tab-pane label="近30天分析" name="2"></el-tab-pane>
-      </el-tabs>
-      <div id="exponentChart"></div>
-      <div class="txt">说明：指数越高，代表拥堵程度越严重</div>
-    </div>
-  </el-dialog>
+  <div class="city_index_chart">
+    <m-tile label="西安市拥堵指数分析"></m-tile>
+    <div class='section'><i class='el-icon-alarm-clock'>历史最堵时段：7点、12点</i></div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="分时段分析" name="1"></el-tab-pane>
+      <el-tab-pane label="近30天分析" name="2"></el-tab-pane>
+    </el-tabs>
+    <div id="exponentChart"></div>
+    <div class='txt'>说明：指数越高，代表拥堵程度越严重</div>
+  </div>
 </template>
 
 <script>
@@ -28,7 +24,6 @@ export default {
   },
   data() {
     return {
-      dialogVisible: false,
       activeName: "1",
       option: {
         title: {
@@ -38,7 +33,7 @@ export default {
           trigger: "axis"
         },
         legend: {
-          textStyle: { color: "white" },
+          textStyle:{color:'white'},
           data: ["当天", "前一天", "上周同期"]
         },
         grid: {
@@ -55,14 +50,14 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          axisLabel: { color: "white" },
-          axisLine: { lineStyle: { color: "white" } },
+          axisLabel:{color:'white'},
+          axisLine:{lineStyle:{color:'white'}},
           data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
         },
         yAxis: {
           type: "value",
-          axisLine: { lineStyle: { color: "white" } },
-          axisLabel: { color: "white" }
+          axisLine:{lineStyle:{color:'white'}},
+          axisLabel:{color:'white'},
         },
         series: [
           {
@@ -85,22 +80,19 @@ export default {
           }
         ]
       },
-      myChart: null
+      myChart:null
     };
   },
   components: {
     mTile: title
   },
   mounted() {
-    if (!this.myChart) {
+    if(!this.myChart){
       this.myChart = echarts.init(document.getElementById("exponentChart"));
     }
     this.myChart.setOption(this.option);
   },
   methods: {
-    init() {
-      this.dialogVisible = true;
-    },
     handleClick() {}
   },
   destroyed() {}
@@ -111,23 +103,24 @@ export default {
 .city_index_chart {
   width: 100%;
   height: 45vh;
-  .section {
-    position: absolute;
-    right: 2vw;
-    top: 6vh;
+  .section{
+    position:absolute;
+    right:2vw;
+    top:6vh;
     color: white;
     font-size: 0.9vw;
   }
   #exponentChart {
     width: 100%;
     height: 30vh;
-    border: 1px solid white;
+    border:1px solid white;
   }
-  .txt {
+  .txt{
     height: 5vh;
     width: 100%;
     color: #cecece;
     line-height: 5vh;
   }
+  
 }
 </style>

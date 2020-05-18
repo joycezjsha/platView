@@ -44,9 +44,10 @@ export default {
   .item{
      @include flex(column, center,center);    
      border: 1px solid #DCDFE6;
-    width: 8vw;
+    width: 7vw;
     height: 3vh;
     margin: 2%;
+    color:$color-info;
   }
 }
 </style>

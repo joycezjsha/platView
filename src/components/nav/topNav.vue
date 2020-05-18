@@ -1,12 +1,12 @@
 <template>
-  <el-row class="container">
+  <el-row class="top_nav_container">
     <!--头部-->
     <el-col :span="24" class="topbar-wrap">
       <div class="topbar-logo">
         <a>
-          <img src="../../assets/images/logo.png" style="padding-left:8px;    width: 40px;" />
+          <img src="../../assets/images/logo.png" style="padding-left:8px;padding-top:10%;width: 35px;" />
         </a>
-        <a style="color: #fff;margin-left:3%;font-size:1.1vw;">
+        <a style="color: #fff;margin-left:2%;font-size:1.2vw;letter-spacing:3px;">
           <span>陕西交警总队集成指挥平台地图大数据</span>
         </a>
       </div>
@@ -23,6 +23,7 @@
         </el-menu>
       </div>
       <div  class="topbar-time"><m-time></m-time></div>
+      <el-divider direction="vertical" style='height:3em;'></el-divider>
       <div class="topbar-account topbar-btn">
         <div class="top_div">
           <div class="iconfont">
@@ -40,6 +41,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+      <div class='overview_tab' @click='gotoOverview'>总览</div>
     </el-col>
   </el-row>
 </template>
@@ -207,6 +209,12 @@ export default {
     jumpTo(url) {
       this.$router.push(url); //用go刷新
     },
+    /**
+     * 跳转到总览界面
+     */
+    gotoOverview(){
+      this.$router.push('/overview');
+    },
     handleSelect(index) {
     },
     fetchNavData() {
@@ -277,16 +285,18 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+@import "@/assets/css/color.scss";
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
   align-items: $align;
 }
-.container {
+.top_nav_container {
   width: 100%;
   height: 6vh;
-  background: #000;
+  background: url('../../assets/images/top_title_bg.png') no-repeat;
+  background-size:100% 100%;
   padding: 0 1vw;
   .topbar-wrap {
     width: 100%;
@@ -294,19 +304,19 @@ export default {
     @include flex(row, center);
   }
   .topbar-logo {
-    width: 25%;
+    width: 36%;
     @include flex(row, center);
     justify-content: left;
   }
   .topbar-bar {
-    width: 55%;
+    width: 48%;
     @include flex(row, center);
     justify-content: left;
   }
   .topbar-time{
-    width: 10%;
+    width: 7%;
     margin-right: 2%;
-    border-right: 1px solid #ccc;
+    // border-right: 1px solid #ccc;
     @include flex(row, end);
     justify-content: right;
   }
@@ -324,5 +334,18 @@ export default {
     margin-left: 5%;
     }
   }
+  .overview_tab{
+    width: 3vw;
+    line-height: 4vh;
+    color:$color-primary;
+    cursor:pointer;
+    text-align: center;
+  }
+ 
 }
+</style>
+<style>
+ .top_nav_container .el-divider--vertical{
+   height:3em;
+ }
 </style>

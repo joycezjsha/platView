@@ -322,35 +322,7 @@ export default {
   width: 100%;
   height: 5vh;
 
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
 
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
-    }
 }
   .accident-statics_content {
     width: 98%;

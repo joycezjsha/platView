@@ -1,10 +1,8 @@
 <template>
-  <div class="accident-statics">
+  <div class="accident-statics boxstyle">
     <div class="accident-statics_container">
       <div class="accident-statics_title">
-        <div>
-          <i class="el-icon-collection-tag">全省统计</i>
-        </div>
+         <m-title label='全省统计' style='width:100%;'></m-title>
       </div>
       <div class="accident-statics--tab">
         <div>
@@ -34,12 +32,13 @@
           </div>
         </div>
         <div>
-          事故发生数量变化：
-          <div id="sumCountChange"></div>
+          <m-com-title label='事故发生数量变化' style="width:10vw;"></m-com-title>
+          <m-line-chart c_id='sumCountChange'></m-line-chart>
         </div>
         <div>
-          重大事故发生趋势：
-          <div id="accurCreateChange"></div>
+          <m-com-title label='重大事故发生趋势' style="width:10vw;"></m-com-title>
+          <!-- <div id=""></div> -->
+          <m-line-chart c_id='accurCreateChange'></m-line-chart>
         </div>
       </div>
     </div>
@@ -50,6 +49,9 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
+import mTitle from "@/components/UI_el/title.vue";
+import mComTitle from "@/components/UI_el/title_com.vue";
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
 export default {
   name: "TIndex",
   data() {
@@ -221,6 +223,7 @@ export default {
       accurChart:null
     }
   },
+  components: { mTitle,mComTitle,mLineChart },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -228,8 +231,8 @@ export default {
     this.map.setZoom(11);
     this.getIndexData();
     // setTimeout(()=>{
-        that.initSumCharts();
-        that.initAccurCharts();
+        // that.initSumCharts();
+        // that.initAccurCharts();
     // },1000);
   },
   destroyed() {
@@ -296,12 +299,9 @@ export default {
 .accident-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .accident-statics_title {
     position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
+    width: 100%;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
@@ -311,7 +311,6 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
     font-weight: bolder;
   }
   .accident-statics--tab {

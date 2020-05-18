@@ -1,9 +1,9 @@
 <template>
-  <div id="cruise-div" class="cover-div">
+  <div id="cruise-div" class="cover-div boxstyle">
     <div id="cruise_container">
       <div id="cruise_title">
         <div>
-          <i class="el-icon-collection-tag">巡航地点</i>
+           <m-title label='巡航地点' style='width:6vw;'></m-title>
         </div>
         <div>
           <el-select v-model="value" placeholder="请选择" class="fangan">
@@ -14,9 +14,6 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <!-- <div @click="addPlan">
-            <i class="el-icon-circle-plus-outline"></i>
-          </div> -->
         </div>
       </div>
       <div id="cruise_content">
@@ -24,28 +21,20 @@
           <li class="cruise-item" v-for="item in flyRoutes" :id="item.id" :key="item.id">
             <span>{{item.address}}</span>
             <span class="address-name">{{item.name}}</span>
-            <span v-show="showDelIcon" class="delIcon"><i class="el-icon-delete"></i></span>
+            <!-- <span v-show="showDelIcon" class="delIcon"><i class="el-icon-delete"></i></span> -->
           </li>
         </ul>
       </div>
-      <!-- <div class="cruise-edit">
-        <el-button type="text" @click="editPlanName">修改名称</el-button>
-        <div class="editBtn" @click="editPlanLocation">
-          <i class="el-icon-edit"></i>编辑地点
-        </div>
-        <el-button type="text" style="color: red;" @click="delPlan">删除方案</el-button>
-      </div> -->
       <div class="cruise-play-stop">
-        <img class="cruise-play-stop-img" :src="playImgUrl" @click="playOrStop()" />
+        <i :class="isPlay?'iconfont icon-zanting':'iconfont icon-video-control'" @click="playOrStop()"></i>
       </div>
     </div>
-    <!--<div style="position: fixed;bottom: 2rem;font-size: 16px;width: 40%;max-width: 600px;height: 30px;left: 30%;line-height: 30px;color: white;text-align: center;font-family: 'Microsoft YaHei';"><p class="scroll">人民日报、CCTV等媒体发布西安交警向公众提供3D粒子地图。</p></div>-->
-    <!--div style="background-image: url(./static/img/icon/tab-traffic-icon.png);background-size: cover;position: fixed;top: 10rem;font-size: 16px;width: 200px;height: 30px;right: 5%;line-height: 30px;color: white;text-align: center;font-family: 'Microsoft YaHei';">路况巡航</div-->
   </div>
 </template>
 
 <script>
 import { IMG } from "./config";
+import mTitle from '@/components/UI_el/title_com.vue'
 export default {
   name: "TCruise",
   data() {
@@ -62,6 +51,7 @@ export default {
       showDelIcon:true
     };
   },
+  components:{mTitle},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -263,11 +253,11 @@ export default {
       let that = this;
       if (that.isPlay) {
         that.isPlay = false;
-        that.playImgUrl = IMG.CRUISE_IMG_PLAY;
+        // that.playImgUrl = IMG.CRUISE_IMG_PLAY;
         clearInterval(that.fly);
       } else {
         that.isPlay = true;
-        that.playImgUrl = IMG.CRUISE_IMG_STOP;
+        // that.playImgUrl = IMG.CRUISE_IMG_STOP;
         setInterval(that.fly, 1000 * 10);
         that.fly();
       }
@@ -386,29 +376,22 @@ export default {
 #cruise_container {
   width: 100%;
   height: 100%;
-  background-color: #1a1a2373;
-  border: 1px solid #6d6262;
 }
 #cruise_content {
-  width: 85%;
-  height: 85%;
-  background-color: #444d61;
-  margin: 1% 5%;
+  width: 100%;
+  height: 93%;
 }
 #cruise_title {
   position: relative;
   width: 96%;
-  border-bottom: 0.1rem solid #a9afd6;
   font-family: Microsoft YaHei;
   font-size: 1vw;
   color: #fff;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 0.6rem 2%;
+  padding: 2px 2% 0.6rem 2%;
   font-weight: bolder;
   > div {
     display: flex;
@@ -419,6 +402,7 @@ export default {
   }
   > div:nth-child(2) {
     width: 40%;
+    margin-top: 2%;
     > div:nth-child(2) {
       width: 1.5vw;
       height: 2.3vh;
@@ -433,21 +417,21 @@ export default {
 #cruise_table {
   position: relative;
   color: #fff;
-  font-family: \\5fae\8f6f\96c5\9ed1;
   font-size: 0.9vw;
   padding: 0;
   text-align: left;
   overflow-y: auto;
   height: 100%;
   .cruise-item {
-    width: 100%;
+    width: 85%;
     color: #fff;
     padding: 0.5rem 1rem;
+    margin:0 auto;
     font-size: 0.9vw;
     font-family: Microsoft YaHei;
     display: block;
     background-color: transparent;
-    border-bottom: 0.1rem solid #a9afd6;
+    // border-bottom: 0.1rem solid #a9afd6;
     .delIcon{
       float: right;
       margin-right: 2vw;

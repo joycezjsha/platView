@@ -1,16 +1,11 @@
 <template>
-  <div class="city-accident-div">
-    <div class="city-accident_container">
-      <div class="tab_line"></div>
-      <div class="city-accident_title">
-        <div class="city-accident_title--tab active">
-          <div class="d4_one"></div>
-          <div class="tab_one">违法分析</div>
-          <div class="d5_one"></div>
-        </div>
+  <div class="illegal-city-div boxstyle">
+    <div class="illegal-city_container">
+      <div class="illegal-city_title">
+        <m-title label='违法分析' style='width:6vw;'></m-title>
       </div>
-      <div class='city-accident-query'>
-        <span class="city-accident-query--label">时间：</span><span class="city-accident-query--time">
+      <div class='illegal-city-query'>
+        <span class="illegal-city-query--label">时间：</span><span class="illegal-city-query--time">
           <el-date-picker width="100%"
             v-model="timeRange"
             type="daterange"
@@ -21,8 +16,8 @@
             end-placeholder="结束日期"
             >
           </el-date-picker>
-          </span><span class="city-accident-query--btn"><el-button type="primary">确定</el-button></span></div>
-      <div class="city-accident_content">
+          </span><span class="illegal-city-query--btn"><el-button type="primary">确定</el-button></span></div>
+      <div class="illegal-city_content">
          <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
           <el-tab-pane label="全部" name="first"></el-tab-pane>
           <el-tab-pane label="122" name="second"></el-tab-pane>
@@ -43,6 +38,7 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
+import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "TCruise",
   data() {
@@ -62,6 +58,7 @@ export default {
 
     };
   },
+  components:{mTitle},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -270,26 +267,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-#cruise_table::-webkit-scrollbar {
-  width: 1rem;
-  height: 1rem;
-  background-color:$color-bg;
-}
-
-/*定义滚动条轨道 内阴影+圆角*/
-#cruise_table::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px  $box-shadow;
-  border-radius: 5px;
-  background-color: $color-bg;
-}
-
-/*定义滑块 内阴影+圆角*/
-#cruise_table::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 6px $box-shadow;
-  background-color: $color-white;
-}
-.city-accident-div {
+.illegal-city-div {
   position: absolute;
   z-index: 10;
   left: 1vw;
@@ -297,11 +275,9 @@ export default {
   height: 80vh;
   top: 9vh;
 }
-.city-accident_container {
+.illegal-city_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .tab_line{
     width: 96%;
     height: 2px;
@@ -309,7 +285,7 @@ export default {
     position: absolute;
     margin: 5% 2% 0 2%;
     }
-  .city-accident_title{
+  .illegal-city_title{
       position: relative;
     width: 96%;
     border-bottom: 0.1rem solid $color-border-1;
@@ -322,7 +298,7 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
+    padding: 2px 2% 0.6rem 2%;
     font-weight: bolder;
     &--tab{
       width:100%;
@@ -371,7 +347,7 @@ export default {
     }
     
     }
-    .city-accident-query{
+    .illegal-city-query{
       color: $color-white;
       width: 100%;
       height: 3vh;
@@ -397,12 +373,10 @@ export default {
         @include flex(row,center);
       }
     }
-  .city-accident_content {
+  .illegal-city_content {
     width: 98%;
     height: 87%;
-    background-color: $color-bg-1;
     margin: 1%;
-    
     &_table {
       overflow-y: auto;
     }

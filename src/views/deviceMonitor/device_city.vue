@@ -1,7 +1,7 @@
 <template>
-  <div class="device-city-div">
+  <div class="device-city-div boxstyle">
     <div class="device-city_container">
-      <div class="tab_line"></div>
+      <!-- <div class="tab_line"></div>
       <div class="device-city_title">
         <div :class="!tableIndex?'device-city_title--tab active':'device-city_title--tab'"  @click='changeTable(0)'>
           <div class="d4_one"></div>
@@ -13,6 +13,10 @@
           <div class="tab_two">道路统计</div>
           <div class="d5_two"></div>
         </div>
+      </div> -->
+      <div class='device-city_header'>
+        <div @click='changeTable(0)'><m-title label='城市统计' :img_type='!tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
+        <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
       </div>
       <div class="device-city_content">
         <m-tiptxt></m-tiptxt>
@@ -51,6 +55,7 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import m_tiptxt from '@/components/UI_el/tiptxt.vue'
+import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "TCruise",
   data() {
@@ -73,10 +78,9 @@ export default {
         {label:'全部道路',value:'0'},{label:'国/省道',value:'1'},{label:'高速',value:'2'},{label:'主干道',value:'3'}
       ],
       road_type:'0'
-
     };
   },
-  components:{mTiptxt:m_tiptxt},
+  components:{mTiptxt:m_tiptxt,mTitle},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -303,77 +307,18 @@ export default {
 .device-city_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
-  .tab_line{
-    width: 96%;
-    height: 2px;
-    background: #fff;
-    position: absolute;
-    margin: 5% 2% 0 2%;
+  .device-city_header{
+    width:80%;
+    height: 4vh;
+    margin-top: 1px;
+    >div{
+      float:left;
+      cursor:pointer;
     }
-  .device-city_title{
-      position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
-    color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
-    &--tab{
-      width:100%;
-      height:100%;
-      @include flex(row,center);
+    >div:nth-child(2){
+      margin-left:-1vw;
     }
-    .d4_one,.d4_two{
-        float: left;
-        width: 0;
-        height: 0;
-        border-width: 1.5vh;
-        border-style: solid;
-        border-color: transparent #fff transparent transparent; 
-        transform: rotate(0deg);
-        @include flex(row,center);
-      }
-      .d5_one,.d5_two{
-        float: right;
-        width: 0; 
-        height: 0;
-        border-width: 1.5vh;
-        border-style: solid;
-        border-color: transparent #fff transparent transparent;
-        -webkit-transform: rotate(180deg);
-        @include flex(row,center);
-      }
-     .tab_one,.tab_two{
-        @include flex(row,center);
-        width: 65%;
-        background: #fff;
-        color:black;
-        cursor:pointer;
-        height:3vh;
-      }
-    &--tab.active,&--tab:hover{
-      .d4_one,.d4_two{
-        border-color: transparent #09c transparent transparent; 
-      }
-      .d5_one,.d5_two{
-        border-color: transparent #09c transparent transparent;
-      }
-     .tab_one,.tab_two{
-        background: #09c;
-        color:white;
-      }
-    }
-    
-    }
+  }
   .device-city_content {
     width: 98%;
     height: 87%;

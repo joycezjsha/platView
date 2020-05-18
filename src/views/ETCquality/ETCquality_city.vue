@@ -1,20 +1,11 @@
 <template>
-  <div class="device-city-div">
-    <div class="device-city_container">
-      <div class="tab_line"></div>
-      <div class="device-city_title">
-       <div :class="!tableIndex?'device-city_title--tab active':'device-city_title--tab'"  @click='changeTable(0)'>
-          <div class="d4_one"></div>
-          <div class="tab_one">城市统计</div>
-          <div class="d5_one"></div>
-        </div>
-        <div :class="tableIndex?'device-city_title--tab active':'device-city_title--tab'" @click='changeTable(1)'>
-          <div class="d4_two"></div>
-          <div class="tab_two">道路统计</div>
-          <div class="d5_two"></div>
-        </div>
+  <div class="ETCquality_city-div boxstyle">
+    <div class="ETCquality_city_container">
+      <div class='ETCquality_city_header'>
+        <div @click='changeTable(0)'><m-title label='城市统计' :img_type='!tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
+        <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
       </div>
-      <div class="device-city_content">
+      <div class="ETCquality_city_content">
         <m-tiptxt text='活跃龙门架设备是指近一天有数据回传数据'></m-tiptxt>
         <div v-if="!tableIndex">
           <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -50,6 +41,7 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import m_tiptxt from '@/components/UI_el/tiptxt.vue'
+import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "TCruise",
   data() {
@@ -74,7 +66,7 @@ export default {
       road_type:'0'
     };
   },
-  components:{mTiptxt:m_tiptxt},
+  components:{mTiptxt:m_tiptxt,mTitle},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -290,26 +282,8 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-#cruise_table::-webkit-scrollbar {
-  width: 1rem;
-  height: 1rem;
-  background-color:$color-bg;
-}
 
-/*定义滚动条轨道 内阴影+圆角*/
-#cruise_table::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px  $box-shadow;
-  border-radius: 5px;
-  background-color: $color-bg;
-}
-
-/*定义滑块 内阴影+圆角*/
-#cruise_table::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 6px $box-shadow;
-  background-color: $color-white;
-}
-.device-city-div {
+.ETCquality_city-div {
   position: absolute;
   z-index: 10;
   left: 1vw;
@@ -317,81 +291,22 @@ export default {
   height: 80vh;
   top: 9vh;
 }
-.device-city_container {
+.ETCquality_city_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
-  .tab_line{
-    width: 96%;
-    height: 2px;
-    background: #fff;
-    position: absolute;
-    margin: 5% 2% 0 2%;
+  .ETCquality_city_header{
+    width:80%;
+    height: 4vh;
+    margin-top: 1px;
+    >div{
+      float:left;
+      cursor:pointer;
     }
-  .device-city_title{
-      position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
-    color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
-    &--tab{
-      width:100%;
-      height:100%;
-      @include flex(row,center);
+    >div:nth-child(2){
+      margin-left:-1vw;
     }
-    .d4_one,.d4_two{
-        float: left;
-        width: 0;
-        height: 0;
-        border-width: 1.5vh;
-        border-style: solid;
-        border-color: transparent #fff transparent transparent; 
-        transform: rotate(0deg);
-        @include flex(row,center);
-      }
-      .d5_one,.d5_two{
-        float: right;
-        width: 0; 
-        height: 0;
-        border-width: 1.5vh;
-        border-style: solid;
-        border-color: transparent #fff transparent transparent;
-        -webkit-transform: rotate(180deg);
-        @include flex(row,center);
-      }
-     .tab_one,.tab_two{
-        @include flex(row,center);
-        width: 65%;
-        background: #fff;
-        color:black;
-        cursor:pointer;
-        height:3vh;
-      }
-    &--tab.active,&--tab:hover{
-      .d4_one,.d4_two{
-        border-color: transparent #09c transparent transparent; 
-      }
-      .d5_one,.d5_two{
-        border-color: transparent #09c transparent transparent;
-      }
-     .tab_one,.tab_two{
-        background: #09c;
-        color:white;
-      }
-    }
-    
-    }
-  .device-city_content {
+  }
+  .ETCquality_city_content {
     width: 98%;
     height: 87%;
     background-color: $color-bg-1;

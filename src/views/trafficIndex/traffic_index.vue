@@ -1,21 +1,18 @@
 <template>
   <div class="traffic-index-div">
-    <div class="traffic-index_container">
+    <div class="traffic-index_container boxstyle">
       <div class="traffic-index_title">
-        <div>
-          <i class="el-icon-collection-tag">境内高速路及主干路路况</i>
-        </div>
-        
+        <m-title label='境内高速路及主干路路况' img_type=1 style='width:14vw;height:4vh;line-height: 4vh;'></m-title>
       </div>
-      <div class='xian_order'>当前选择范围:<span class="xian_order--city">{{selectItem.road}}</span></div>
+      <m-tab label='当前选择范围' :value='selectItem.road'></m-tab>
       <div class="traffic-index_content">
         <ul class="traffic-index_content_table">
-          <li class="index-item" v-for="item in indexDatas" :id="item.id" :key="item.id">
-            <p><span>{{item.road}}</span>
+          <li class="index-item" v-for="(item,index) in indexDatas" :id="item.id" :key="item.id">
+            <p><span>{{++index}}</span><span>{{item.road}}</span>
             <span class="address-name">{{item.startRoad}}--->{{item.endRoad}}</span>
             </p>
-            <p><span>平均速度：{{item.averageSpeed}}</span>
-            <span class="address-name">路长{{item.length}}</span>
+            <p><span>平均速度：<span class='value'>{{item.averageSpeed}}km/h</span></span>
+            <span>路长<span class='value'>{{item.length}}km</span></span>
             </p>
           </li>
         </ul>
@@ -27,6 +24,8 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
+import mTitle from "@/components/UI_el/title_com.vue";
+import mTab from '@/components/UI_el/tab.vue'
 export default {
   name: "TIndex",
   data() {
@@ -37,6 +36,9 @@ export default {
       {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}],
       selectItem:{"road":"西安",order:8}
     };
+  },
+  components: {
+    mTitle,mTab
   },
   mounted() {
     this.map = this.$store.state.map;
@@ -77,51 +79,47 @@ export default {
 </script>
 <style scope lang='scss'>
 @import '@/assets/css/color.scss';
-@mixin flex($direction: column, $justify: center, $align: center) {
+@mixin flex($direction, $justify: center, $align: center) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
   align-items: $align;
 }
 .traffic-index-div {
-position: fixed;
-    z-index: 10;
-    right: 2vw;
-    width: 17vw;
-    height: 68vh;
-    top: 9vh;
-}
-.traffic-index_container {
-  width: 100%;
-  height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
-  .traffic-index_title{
+  position: fixed;
+  z-index: 10;
+  right: 2vw;
+  width: 17vw;
+  height: 68vh;
+  top: 9vh;
+  .traffic-index_container {
+    width: 100%;
+    height: 100%;
+    .traffic-index_title{
       position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
-    color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
+      width: 100%;
+      font-family: Microsoft YaHei;
+      font-size: 1vw;
+      color: $color-white;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      padding: 2px 2% 0.6rem 2%;
+      font-weight: bolder;
     }
     .xian_order{
       color: $color-white;
-    width: 100%;
-    height: 3vh;
-    line-height: 3vh;
-    text-align: center;
-    font-size: 1.2vw;
-    &--city{
-      color:$color-active;
-    }
+      width: 100%;
+      height: 3vh;
+      line-height: 3vh;
+      text-align: center;
+      font-size: 1.2vw;
+      &--city{
+        color:$color-active;
+      }
     }
   .traffic-index_content {
     width: 98%;
@@ -130,13 +128,54 @@ position: fixed;
     margin: 1%;
     
     &_table {
-      color: white;
-    margin: 0;
-    padding: 10px;
-    width: 95%;
-    height: 90%;
+      color: $color-white;
+      margin: 0;
+      padding: 5%;
+      width: 90%;
+      height: 90%;
+      .index-item{
+        >p:nth-child(1){
+          @include flex(row,center,center);
+          >span{
+            @include flex(row,center,center)
+          }
+          >span:nth-child(1){
+            width:8%;
+          }
+          >span:nth-child(2){
+            width:15%;
+          }
+          >span:nth-child(3){
+            width:75%;
+            @include flex(row,flex-end,center);
+          }
+        }
+        >p:nth-child(2){
+          color: $color-text-label;
+          font-size: 0.8vw;
+          @include flex(row,center,center);
+          >span{
+            @include flex(row,center,center)
+          }
+          >span:nth-child(1){
+            width:60%;
+          }
+          >span:nth-child(2){
+            width:40%;
+            @include flex(row,flex-end,center);
+          }
+        }
+        span.address-name{
+          color:$color-info;
+        }
+        span.value{
+          color:$color-text-value;
+        }
+      }
     }
     
   }
 }
+}
+
 </style>

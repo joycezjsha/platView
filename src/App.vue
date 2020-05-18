@@ -8,6 +8,7 @@
 
 <script>
   import 'babel-polyfill'
+  import '@/assets/css/iconfont.css'
   export default {
     name: 'App'
   }
@@ -20,5 +21,6 @@
     height: 100%;
     margin: 0 auto;
     padding: 0;
+    font-family:'SourceHanSansCN-';
   }
 </style>

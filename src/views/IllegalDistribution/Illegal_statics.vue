@@ -2,9 +2,10 @@
   <div class="accident-statics">
     <div class="accident-statics_container">
       <div class="accident-statics_title">
-        <div>
+        <m-title label='全省统计' style='width:100%;'></m-title>
+        <!-- <div>
           <i class="el-icon-collection-tag">全省统计</i>
-        </div>
+        </div> -->
       </div>
       <div class="accident-statics--tab">
         <div>
@@ -51,6 +52,8 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
+import mTitle from "@/components/UI_el/title.vue";
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
 export default {
   name: "TIndex",
   data() {
@@ -104,6 +107,7 @@ export default {
       indexDatas: [{"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}]
     }
   },
+  components: { mTitle,mLineChart },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -168,7 +172,7 @@ export default {
   border: 1px solid $color-border-1;
   .accident-statics_title {
     position: relative;
-    width: 96%;
+    width: 100%;
     border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
@@ -179,7 +183,6 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
     font-weight: bolder;
   }
   .accident-statics--tab {

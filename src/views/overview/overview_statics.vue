@@ -1,28 +1,28 @@
 <template>
   <div class="overview-statics">
    <div class='overview-statics--tab'>
-     <div><el-button>今日警情</el-button><span></span>{{datas.jq.count}}起</div>
-     <div>
+     <div class='overview-statics--tab_title'><span>今日警情</span><span>{{datas.jq.count}}</span>起</div>
+     <div class='overview-statics--tab_radio'>
        <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yestoday}}</span></div>
        <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.history}}</span></div>
     </div>
-     <div><span class='label'>重大警情:</span><span class='value'>{{datas.jq.main}}</span>起</div>
+     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span><span class='value'>{{datas.jq.main}}</span>起</div>
    </div>
    <div class='overview-statics--tab'>
-     <div><el-button>本月事故</el-button><span></span>{{datas.sg.count}}起</div>
-     <div>
+     <div class='overview-statics--tab_title'><span>本月事故</span><span>{{datas.sg.count}}</span>起</div>
+     <div class='overview-statics--tab_radio'>
        <div><span class='label'>伤:</span><span class='value'>{{datas.sg.hurt}}</span></div>
        <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.die}}</span></div>
     </div>
-     <div><span class='label'>重大事故:</span><span class='value'>{{datas.sg.main}}</span>起</div>
+     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.main}}</span>起</div>
    </div>
     <div class='overview-statics--tab'>
-     <div><el-button>活跃电警</el-button><span></span>{{datas.dj.count}}个</div>
-     <div>
+     <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.count}}</span>个</div>
+     <div class='overview-statics--tab_radio'>
        <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.sum}}</span></div>
        <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.work}}</span></div>
     </div>
-     <div><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.sg.main}}</span></div>
+     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.sg.main}}</span>个</div>
    </div>
   </div>
 </template>
@@ -39,7 +39,9 @@ export default {
         jq:{count:13512,history:'+123',yestoday:'-122',main:'2'},
         sg:{count:13512,hurt:'123',die:'3',main:'0'},
         dj:{count:11512,sum:'12377',work:'67%',main:'100%'}
-      }
+      },
+      warn_img:IMG.warningInstanceIMG,
+      accident_img:IMG.accidentIMG
     };
   },
   mounted() {
@@ -114,15 +116,21 @@ export default {
   z-index: 10;
   left: 30vw;
   width: 35vw;
-  height: 10vh;
+  height: 12vh;
   top: 10vh;
   color:$color-white;
+  // border-image: linear-gradient(-51deg,#19559a, #02082f);
+  // background-image: linear-gradient(#033a79cf, #02082fde);
+  background: url('./image/center_bg.png') no-repeat;
+    background-size: 100% 100%;
   @include flex(row, center,center);
   &--tab{
     width:10vw;
     height:10vh;
-    border:1px solid $color-text-sub;
-    margin: 2%;
+    // border:1px solid $color-text-sub;
+    border-right: 1px solid #02082f;
+    // border-image: linear-gradient(#063672,#ffffff,#063672);
+    padding: 2%;
      @include flex(column, center,center);
      >div{
        @include flex(row, center,center);
@@ -130,32 +138,62 @@ export default {
        height:30%;
        >div{
           @include flex(row, center,center);
-          // width:50%;
-          margin:2%;
           span{
             display:inline-block;
             font-size:0.7vw;
           }
-          
        }
       
        span.label{
             color:$color-label;
           }
           span.value{
-            color:$color-primary;
-            font-size:0.9vw;
             font-family: Hiragino Sans GB;
           }
      }
-     >div:nth-child(3){
-        >span{
-          display:inline-block;
-          width:50%;
-          font-size:0.7vw;
-        }
-     }
+    &_title{
+      span{
+        width: 50%;
+        @include flex(column, center,center);
+      }
+      span:nth-child(2){
+        font-family: 'DS-Digital-BoldItalic';
+        width: 40%;
+        font-size: 1.5vw;
+        color: #409EFF;
+        margin-bottom: 0.3vw;
+      }
+    }
+    &_radio{
+      >div{
+        width: 50%;
+        @include flex(column, center,center);
+      }
+    }
+    &_main{
+      span{
+        @include flex(column, center,center);
+      }
+      span.img{
+        width:20%;
+      }
+      span.label{
+        width:60%;
+        align-items: start;
+      }
+      span.value{
+        width:10%;
+      }
+    }
+    &_main_{
+      span.label{
+        width:80%;
+      }
+      span.value{
+        width:10%;
+      }
+    }
   }
-  
+  &--tab:last-child{border:none;} 
 }
 </style>

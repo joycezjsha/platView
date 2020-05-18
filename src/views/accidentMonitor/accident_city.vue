@@ -1,7 +1,7 @@
 <template>
-  <div class="city-accident-div">
+  <div class="city-accident-div boxstyle">
     <div class="city-accident_container">
-      <div class="tab_line"></div>
+      <!-- <div class="tab_line"></div>
       <div class="city-accident_title">
         <div class="city-accident_title--tab active">
           <div class="d4_one"></div>
@@ -13,6 +13,10 @@
           <div class="tab_two">大队警情统计</div>
           <div class="d5_two"></div>
         </div>
+      </div> -->
+      <div class='city-accident_header'>
+        <div @click='changeRange(1)'><m-title label='城市警情统计' :img_type='range_type?"1":"0"'></m-title></div>
+        <div @click='changeRange(0)'><m-title label='大队警情统计' :img_type='range_type?"0":"1"'></m-title></div>
       </div>
       <div class='city-accident-query'>
         <span class="city-accident-query--label">时间：</span><span class="city-accident-query--time">
@@ -21,7 +25,7 @@
             type="daterange"
             align="right"
             unlink-panels
-            range-separator="至"
+            range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             >
@@ -34,7 +38,7 @@
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs>
-        <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
+        <el-table :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
               <el-table-column prop="city" label="城市"></el-table-column>
               <el-table-column prop="index" label="警情数量" sortable></el-table-column>
               <el-table-column prop="week_radio" label="重大警情" sortable></el-table-column>
@@ -47,6 +51,7 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
+import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "TCruise",
   data() {
@@ -62,9 +67,13 @@ export default {
         lineList:[],
         popups:[]
       },
-      activeName:'全部'
+      activeName:'first',
+      range_type:1
 
     };
+  },
+  components:{
+    mTitle
   },
   mounted() {
     this.map = this.$store.state.map;
@@ -79,6 +88,13 @@ export default {
     this.clearMap();
   },
   methods: {
+    /**
+     * 切换：城市警情统计、大队警情统计
+     */
+    changeRange(v){
+      if(this.range_type==v) return;
+      this.range_type=v;
+    },
     //获取巡航数据
     getIndexData() {
       let that = this;
@@ -274,25 +290,6 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-#cruise_table::-webkit-scrollbar {
-  width: 1rem;
-  height: 1rem;
-  background-color:$color-bg;
-}
-
-/*定义滚动条轨道 内阴影+圆角*/
-#cruise_table::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px  $box-shadow;
-  border-radius: 5px;
-  background-color: $color-bg;
-}
-
-/*定义滑块 内阴影+圆角*/
-#cruise_table::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 6px $box-shadow;
-  background-color: $color-white;
-}
 .city-accident-div {
   position: absolute;
   z-index: 10;
@@ -304,8 +301,8 @@ export default {
 .city-accident_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
+  // background-color: $color-bg-1;
+  // border: 1px solid $color-border-1;
   .tab_line{
     width: 96%;
     height: 2px;
@@ -314,9 +311,9 @@ export default {
     margin: 5% 2% 0 2%;
     }
   .city-accident_title{
-      position: relative;
+     position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
+    // border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
@@ -374,6 +371,18 @@ export default {
       }
     }
     
+    }
+    .city-accident_header{
+      width:80%;
+      height: 4vh;
+      margin-top: 1px;
+      >div{
+        float:left;
+        cursor:pointer;
+      }
+      >div:nth-child(2){
+        margin-left:-1vw;
+      }
     }
     .city-accident-query{
       color: $color-white;

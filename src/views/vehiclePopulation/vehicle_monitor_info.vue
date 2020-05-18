@@ -1,9 +1,10 @@
 <template>
   <div class="vehicle-statics">
-    <div class="vehicle-statics_container">
+    <div class="vehicle-statics_container boxstyle">
       <div class="vehicle-statics_title">
         <div>
-          <i class="el-icon-collection-tag">全部监测车辆</i>
+          <!-- <i class="el-icon-collection-tag">全部监测车辆</i> -->
+          <m-title label='全部监测车辆' img_type=1></m-title>
         </div>
       </div>
       <div class="vehicle-statics--tab">
@@ -23,12 +24,18 @@
       </div>
       <div class="vehicle-statics_content">
         <div>
-          进出陕车辆趋势：
-          <div id="sumCountChange"></div>
+          
+          <m-com-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-com-title>
+          <div id="">
+            <m-line-chart c_id='sumCountChange'></m-line-chart>
+          </div>
         </div>
         <div>
-          车辆保有量：
-          <div id="accurCreateChange"></div>
+          
+          <m-com-title label='车辆保有量' img_type=1 style='width:7vw;'></m-com-title>
+          <div id="">
+            <m-line-chart c_id='accurCreateChange'></m-line-chart>
+          </div>
         </div>
       </div>
     </div>
@@ -42,6 +49,9 @@ import echarts from 'echarts'
 import m_item from '@/components/UI_el/tab_item.vue'
 import m_list from '@/components/UI_el/list_o.vue'
 import m_tab from '@/components/UI_el/tab.vue'
+import mTitle from "@/components/UI_el/title.vue";
+import mComTitle from "@/components/UI_el/title_com.vue";
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
 export default {
   name: "TIndex",
   data() {
@@ -256,7 +266,7 @@ export default {
       listItems:[{'label':'超速次数',value:'12'},{'label':'总检测数',value:'12345'}]
     }
   },
-  components:{mItem:m_item,mListO:m_list,mTab:m_tab},
+  components:{mItem:m_item,mListO:m_list,mTab:m_tab,mTitle,mComTitle,mLineChart},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -264,8 +274,8 @@ export default {
     this.map.setZoom(11);
     this.getIndexData();
     that.initMainStaticsChart();
-    that.initSumCharts();
-    that.initAccurCharts();
+    // that.initSumCharts();
+    // that.initAccurCharts();
   },
   destroyed() {
     this.flyRoutes = [];
@@ -337,35 +347,36 @@ export default {
   z-index: 10;
   right: 2vw;
   width: 17vw;
-  height: 80vh;
+  height: 85vh;
   top: 9vh;
   color: white;
 }
 .vehicle-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .vehicle-statics_title {
-    position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
+    // position: relative;
+    width: 100%;
+    height:5vh;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
+    // display: -webkit-box;
+    // display: -ms-flexbox;
+    // display: flex;
+    // -webkit-box-align: center;
+    // -ms-flex-align: center;
+    // align-items: center;
     font-weight: bolder;
+    >div{
+      width:100%;
+      height:100%;
+    }
   }
   .vehicle-statics--tab {
     width: 100%;
     height: 5vh;
-   @include flex(row, center);
+  //  @include flex(row, center);
 
     > div {
       width: 100%;
@@ -421,8 +432,7 @@ export default {
 }
   .vehicle-statics_content {
     width: 98%;
-    height: 78%;
-    background-color: $color-bg-1;
+    height: 50%;
     margin: 1%;
     #sumCountChange{
       width:100%;

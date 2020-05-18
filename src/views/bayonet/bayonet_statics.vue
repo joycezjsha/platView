@@ -1,10 +1,8 @@
 <template>
-  <div class="device-statics">
+  <div class="device-statics boxstyle">
     <div class="device-statics_container">
       <div class="device-statics_title">
-        <div>
-          <i class="el-icon-collection-tag">全省统计</i>
-        </div>
+        <m-title label='全省统计' img_type='1' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title>
       </div>
       <div class="device-statics_content">
         <div>
@@ -37,6 +35,7 @@ import { interf } from "./config";
 import echarts from 'echarts'
 import m_tab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list.vue'
+import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "TIndex",
   data() {
@@ -91,7 +90,7 @@ export default {
       ]
     }
   },
-  components:{mTab:m_tab,mList:m_list},
+  components:{mTab:m_tab,mList:m_list,mTitle},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -158,12 +157,12 @@ export default {
 .device-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
+  // background-color: $color-bg-1;
+  // border: 1px solid $color-border-1;
   .device-statics_title {
     position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
+    // border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
@@ -173,7 +172,7 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
+    padding: 2px 2% 0.6rem 2%;
     font-weight: bolder;
   }
   .device-statics--tab {

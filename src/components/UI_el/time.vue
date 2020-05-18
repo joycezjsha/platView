@@ -2,11 +2,11 @@
   <div class="_inner_header_time">
     <!--顶部时间-->
     <div class="col-md-5 fix-title-time" id="fix-title-time">
+      <div id="time" class="fix-title-time-date time">{{year}}</div>
       <div class="week-year">
         <span class="week" id="week">{{week}}</span>
-        <div class="year" id="year">{{year}}</div>
+        <div class="year" id="year">{{time}}</div>
       </div>
-      <div id="time" class="fix-title-time-date time">{{time}}</div>
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@ export default {
   props: {},
   components: {},
   created() {
+    let that=this;
     this.initTime();
     setInterval(function () {
         that.initTime();
@@ -69,12 +70,12 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 0.9vw !important;
-  margin-left: 5%;
+  margin: 2% 0 2% 5%;
   color:$color-white;
   .fix-title-time {
     width: 100%;
     height: 80%;
-    margin-top: 5%;
+    // margin-top: 5%;
     .week-year {
       width: 100%;
       height: 40%;
@@ -82,13 +83,13 @@ export default {
       @include flex(row, flex-start,start);
 
       .year {
-        width: 70%;
+        width: 55%;
         height: 100%;
         @include flex(row, flex-start,start);
       }
 
       .week {
-        width: 20%;
+        width: 35%;
         height: 100%;
         @include flex(row, flex-start,start);
       }
@@ -96,8 +97,8 @@ export default {
 
     .time {
       width: 100%;
-      height: 50%;
-      font-size: 1vw !important;
+      height: 40%;
+      font-size: 0.9vw !important;
       @include flex(row, flex-start,start);
     }
   }

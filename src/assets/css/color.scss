@@ -1,59 +1,55 @@
-// 主色
+/* 主色*/
 $color-primary: #409EFF;
-$color-active:rgb(64, 249, 255);
+$color-active:#00DFC7;
 
-// 辅助色
-$color-info: #909399;
+/* 辅助色*/
+$color-info: #A6AFCD;
 $color-success: #67C23A;
 $color-warning: #E6A23C;
 $color-danger: #F56C6C;
 
-// 文字
+/* 文字*/
 $color-text-main: #303133;
 $color-text-normal: #606266;
 $color-text-sub: #909399;
 $color-text-placehoder: #C0C4CC;
+$color-text-label:#A6AFCD;
+$color-text-value:#0CA6FF;
 
-// 边框
+/* 边框*/
 $color-border-1: #DCDFE6;
 $color-border-2: #E4E7ED;
 $color-border-3: #EBEEF5;
 $color-border-4: #F2F6FC;
 
-// 背景
+/* 背景*/
 $color-bg: #f8f8f9;
 $color-bg-1:#1a1a2373;
 $color-bg-2:rgba(67, 67, 68, 0.49);
 $color-bg-3:rgb(26,26,35);
 
-//白色
+/*白色*/
 $color-white:white;
 
-//label颜色
+/*label颜色*/
 $color-label:#aaa;
 
-//边框阴影
+/*边框阴影*/
  $box-shadow:rgba(252, 104, 104, 0.3);
 
-//  $color1:#556B2F;
-//  $color1:#00FFFF;
-//  $color1:#0000EE;
-//  $color1:#8A2BE2;
-//  $color1:#c48f58;
-//  $color1:#9fcac4;
-//  $color1:#6bac91;
-//  $color1:#f18a52;
-//  $color1:#656bd4;
-//  $color1:#7ca0cd;
-//  $color1:#88b7dc;
-//  $color1:#a08bd3;
-//  $color1:#be7fcd;
-//  $color1:#30a2c4;
-//  $color1:#c0ccd7;
-//  $color1:#dbddab;
-//  $color1:#9cd076;
-//  $color1:#69b38b;
-//  $color1:#437fb9;
-//  $color1:rgb(255, 143, 109)
+/**黄颜色**/
+$color-yellow:#FFB005;
+/**列表选中背景色**/
+$color-list_bg:#0367A6;
 
-//  #556B2F,#00FFFF,#0000EE,#8A2BE2,#c48f58,#6bac91,#89ceb1,#f18a52,#656bd4,#7ca0cd,#88b7dc,#a08bd3,#be7fcd,#30a2c4,#c0ccd7,#dbddab,#9cd076,#69b38b,#437fb9,rgb(255, 143, 109)
+ /**总览界面*/
+.overview-left-div .el-card{
+    background-color: $color-bg-3;
+    color: $color-white;
+    // border: 1px solid $color-primary;
+    border:none;
+    .el-card__header{
+      padding:0 0 10px 0;
+      border:none;
+    }
+  }

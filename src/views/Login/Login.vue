@@ -1,5 +1,5 @@
 <template>
-  <div class="page-login">
+  <div class="page-login" style="'background:url(./image/login_bg.png) no-repeat'">
     <!-- <div class="page-login--layer page-login--layer-area">
       <ul class="circles">
         <li v-for="n in 10" :key="n"></li>
@@ -35,13 +35,13 @@
                     <i slot="prepend" class="el-icon-key"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="code">
+                <!-- <el-form-item prop="code">
                   <el-input type="text" v-model="formLogin.code" placeholder="验证码">
                     <template slot="append">
                       <img class="login-code" :src="captchaPath"  @click="getCaptcha" />
                     </template>
                   </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
@@ -126,7 +126,6 @@ export default {
     };
   },
   components: {
-    VertifyCode
   },
   mounted() {
     // 验证码初始化
@@ -154,30 +153,36 @@ export default {
     // 提交登录信息
     submit() {
       let _this=this;
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          // 登录
-          // 注意 这里的演示没有传验证码
-          // 具体需要传递的数据请自行修改代码
-          config.interf.login({
-               'username': this.formLogin.username,
-               'password': this.formLogin.password,
-               'uuid': this.formLogin.uuid,
-               'captcha': this.formLogin.code
-          },(data) => {
-            //重定向对象不存在则返回顶层路径
-            let user={
+      let user={
               nickname:_this.formLogin.username,
               companyName:''
             }
             window.localStorage.setItem("access-user",JSON.stringify(user));
             this.$router.replace(this.$route.query.redirect || "/");
-          },()=>{});
-        } else {
-          // 登录表单校验失败
-          this.$message.error("表单校验失败，请检查");
-        }
-      });
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     // 登录
+      //     // 注意 这里的演示没有传验证码
+      //     // 具体需要传递的数据请自行修改代码
+      //     config.interf.login({
+      //          'username': this.formLogin.username,
+      //          'password': this.formLogin.password,
+      //          'uuid': this.formLogin.uuid,
+      //          'captcha': this.formLogin.code
+      //     },(data) => {
+      //       //重定向对象不存在则返回顶层路径
+      //       let user={
+      //         nickname:_this.formLogin.username,
+      //         companyName:''
+      //       }
+      //       window.localStorage.setItem("access-user",JSON.stringify(user));
+      //       this.$router.replace(this.$route.query.redirect || "/");
+      //     },()=>{});
+      //   } else {
+      //     // 登录表单校验失败
+      //     this.$message.error("表单校验失败，请检查");
+      //   }
+      // });
       // this.$http({
 //              url: this.$http.adornUrl('sys/login'),
 //              method: 'post',
@@ -220,6 +225,8 @@ $color-text-main: "#ccc";
   $backgroundColor: #000;
   // ---
   background-color: $backgroundColor;
+  background:url(../../../static/images/login_bg.png) no-repeat;
+  background-size: 100% 100%;
   height: 100%;
   position: absolute;
   top: 0;
@@ -258,27 +265,31 @@ $color-text-main: "#ccc";
   // main
   .page-login-header {
     text-align: center;
-    margin-bottom: 1em;
+    margin-bottom: 3em;
     &--logo {
-      width: 3vw;
+      width: 2vw;
+      float: left;
     }
     &--title {
-      font-size: 1.5vw;
+      font-size: 1.2vw;
       font-weight: 700;
+      line-height: 4vh;
     }
   }
   // 登录表单
   .page-login--form {
-    width: 20vw;
+    width: 28vw;
     margin: 0 auto;
-    margin-top: 10%;
+    margin-top: 8%;
     // 卡片
     .el-card {
       margin-bottom: 15px;
     }
     // 登录按钮
     .button-login {
-      width: 100%;
+      width: 75%;
+      margin: 1.5vh 10% 1.5vh 15%;
+      height: 3.5vh;
     }
     // 输入框左边的图表区域缩窄
     .el-input-group__prepend {

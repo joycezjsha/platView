@@ -3,14 +3,15 @@
     <div class='overview-left-div--top'>
       <div class="flip">
         <div class="front">
-          <el-card class="box-card">
+          <el-card class="box-card boxstyle">
             <div slot="header" class="clearfix">
-              <span>过车数据</span>
-              <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-menu" @click='showOrder(0)'>详细情况</el-button>
+              <!-- <span class='span_title'>过车数据</span> -->
+              <m-title label='过车数据' img_type=1 style='width:6vw'></m-title>
+              <el-button style="float: right; padding: 3px 0;position:absolute;top:3%;right:2%;" type="text" icon="iconfont icon-xiangxiqingkuang" @click='showOrder(0)'>详细情况</el-button>
             </div>
             <div class="top-container">
               <div class='top-container-row'>
-                <el-col :span='5'>历史过车数据：</el-col>
+                <el-col :span='5' style='width:8vw'>历史过车数据：</el-col>
                 <el-col :span='19' class="row_value">{{passCarCount.count}}</el-col>
               </div>
               <div class='top-container-row-'>
@@ -21,10 +22,10 @@
           </el-card>
         </div>
         <div class="back">
-          <el-card class="box-card">
+          <el-card class="box-card boxstyle">
             <div slot="header" class="clearfix">
-              <span>轨迹查询</span>
-              <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-menu"@click='showOrder(1)'>详细情况</el-button>
+              <m-title label='轨迹查询' img_type=1 style='width:6vw'></m-title>
+              <el-button style="float: right; padding: 3px 0;position:absolute;top:3%;right:2%;" type="text" icon="iconfont icon-xiangxiqingkuang" @click='showOrder(1)'>详细情况</el-button>
             </div>
             <div class="top-container">
               <div class='top-container-row'>
@@ -40,8 +41,9 @@
         </div>
       </div>
     </div>
-    <div class='overview-left-div--center'>
-       <el-divider content-position="left">交通动态监测</el-divider>
+    <div class='overview-left-div--center boxstyle'>
+       <!-- <span class='span_title'>交通动态监测</span> -->
+       <m-title label='交通动态监测' img_type=1  style='width:9vw'></m-title>
        <div class='center_txt'>实时统计上一个小时（15:00-16:00）的流动情况</div>
        <div class='center_statics'>
          <div class='center_statics--count'>陕西省<br/><span class="center_statics_">{{centerstatics.Count}}</span></div>
@@ -59,8 +61,8 @@
             </el-table>
        </div>
     </div>
-    <div class='overview-left-div--bottom'>
-      <el-divider content-position="left">境内路况监测</el-divider>
+    <div class='overview-left-div--bottom  boxstyle'>
+      <m-title label='境内路况监测' img_type=1  style='width:9vw'></m-title>
        <ul class="traffic-index_content_table">
           <li class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <p><span>{{item.road}}</span>
@@ -82,6 +84,7 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import dataOrder from "./dataOrder.vue";
+import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "overview_left",
   data() {
@@ -121,7 +124,8 @@ export default {
     that.getIndexData();
   },
   components: {
-    dataOrder
+    dataOrder,
+    mTitle
   },
   destroyed() {
     this.map.setPitch(0);
@@ -224,8 +228,10 @@ export default {
   @include flex(column, center,center);
   &--top{
     width:100%;
-    height:25vh;
+    height:25%;
     perspective:1000;transform-style:preserve-3d;
+    // background: url('./image/left_top_bg.png')no-repeat;
+    // background-size: 100% 100%;
     @include flex(column, center,center);
     @keyframes toback {
         0% {transform: rotateY(0deg);}
@@ -254,6 +260,8 @@ export default {
       &-row{
         @include flex(row, center,start);
         width:100%;
+        background:url('./image/left_bg.png') no-repeat;
+        background-size:100% 100%;
         >div{
           @include flex(column, center,start);
           width:50%;
@@ -262,7 +270,7 @@ export default {
           align-items: center;
         }
         .row_value{
-          border: 1px solid $color-info;
+          // border: 1px solid $color-info;
         }
       }
       &-row-{
@@ -285,13 +293,15 @@ export default {
     }
   }
   &--center{
+    clear:both;
     width:100%;
-    height:25vh;
-    @include flex(column, center,center);
+    height:40%;
+    padding:0 10px 10px 10px;
     .center_txt{
       width:100%;
       height:3vh;
-      // background: $color-text-sub;
+      padding-left:5%;
+      color:$color-info;     
     }
     .center_statics{
       width:100%;
@@ -317,25 +327,16 @@ export default {
   }
   &--bottom{
     width:100%;
-    height:25vh;
-    margin-top: 5vh;
-    @include flex(column, center,center);
+    height:30%;
+    padding:0 10px 10px 10px;
     ul{
       margin:0;
       display: block;
-      width: 100%;
+      width: 80%;
       li{
         border-bottom: 1px solid $color-info;
       }
     }
   }
-}
-</style>
-<style lang='scss'>
-@import '@/assets/css/color.scss';
-.el-card{
-    background-color: $color-bg-3;
-    color: $color-white;
-    border: 1px solid $color-info;
 }
 </style>

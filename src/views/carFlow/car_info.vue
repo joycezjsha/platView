@@ -1,26 +1,29 @@
 <template>
   <div class="car-info-div">
-    <div class="car-info_container">
+    <div class="car-info_container boxstyle">
       <div class="car-info_title">
         <div>
-          <i class="el-icon-collection-tag">全省统计</i>
+          <m-title label='全省统计' img_type=1 style='height:4vh;line-height:4vh;'></m-title>
         </div>
-        
       </div>
-      <div class='car-info_title'>总计进入车辆次数:<span class=''>{{statics.count}}</span></div>
-      <div class='car-info_title'>
-        <span>进入辆次:<span class=''>{{statics.in}}</span></span>
-        <el-divider direction="vertical"></el-divider>
-        <span>流出辆次:<span class=''>{{statics.count}}</span></span>
+      <!-- <div class='car-info_title'>总计进入车辆次数:<span class=''>{{statics.count}}</span></div> -->
+      <m-tab label='总计进入车辆次数' :value='statics.count'></m-tab>
+      <div class='car-info_tab'>
+        <span><div>进入辆次</div><div><span class=''>{{statics.in}}</span></div></span>
+        <span><div>流出辆次</div><div><span class=''>{{statics.count}}</span></div></span>
       </div>
       <div class="car-info_content">
         <div>
-          <el-divider content-position="left">进出陕车辆趋势</el-divider>
-          <div id="sumCountChange"></div>
+          <m-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-title>
+          <div id="">
+            <m-line-chart c_id='sumCountChange'></m-line-chart>
+          </div>
         </div>
         <div>
-          <el-divider content-position="left">车辆保有量</el-divider>
-          <div id="accurCreateChange"></div>
+          <m-title label='车辆保有量' img_type=1 style='width:8vw;'></m-title>
+          <div id="">
+             <m-line-chart c_id='accurCreateChange'></m-line-chart>
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +34,9 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
+import mTitle from "@/components/UI_el/title_com.vue";
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
+import mTab from '@/components/UI_el/tab.vue'
 export default {
   name: "TIndex",
   data() {
@@ -200,6 +206,7 @@ export default {
       statics:{count:'+2328',in:'+4546',out:'-2328'}
     };
   },
+  components:{mTitle,mLineChart,mTab},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -207,8 +214,8 @@ export default {
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getTrafficData();
-    that.initSumCharts();
-    that.initAccurCharts();
+    // that.initSumCharts();
+    // that.initAccurCharts();
   },
   destroyed() {
     this.flyRoutes = [];
@@ -276,12 +283,9 @@ position: fixed;
 .car-info_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .car-info_title{
-      position: relative;
+    position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
@@ -291,9 +295,28 @@ position: fixed;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
+    padding: 2px 2% 0.6rem 2%;
     font-weight: bolder;
+  }
+  .car-info_tab{
+    width: 96%;
+    padding: 2px 2% 0.6rem 2%;
+    @include flex(row,center,center);
+    >span{
+      @include flex(column,center,center);
+      width:50%;
+      >div{
+        @include flex(column,center,center);
+        width:50%;
+      }
     }
+    >span:nth-child(1){
+      color:$color-yellow;
+    }
+    >span:nth-child(2){
+      color:$color-active;
+    }
+  }
     .xian_order{
       color: $color-white;
     width: 100%;

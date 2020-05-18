@@ -1,16 +1,18 @@
 <template>
-  <div class="vehicle_monitor-div">
+  <div class="vehicle_monitor-div boxstyle">
     <div class='vehicle_monitor-div--top'>
       <div class='title'>
-        <i class="el-icon-collection-tag">车辆监测</i>
+        <!-- <i class="el-icon-collection-tag">车辆监测</i> -->
+        <m-title label='车辆监测' style='width:6vw;'></m-title>
       </div>
       <m-tiptxt text='“活跃”是指：30分钟内有被卡口监测到车辆'></m-tiptxt>
-      <div class='time'><i class="el-icon-refresh-left">{{time}}</i></div>
+      <div class='time'><i class="iconfont icon-shijian" style='margin-right:1vw;'></i>{{time}}</div>
       <m-tab label='实时监控车辆活跃数：' :value=work_count></m-tab>
     </div>
     <div class='vehicle_monitor-div--center'>
-       <el-divider content-position="left">交通动态监测</el-divider>
-       <div class='center_txt'>实时统计上一个小时（15:00-16:00）的流动情况</div>
+       <m-title label='交通动态监测' style='width:8vw;'></m-title>
+       <!-- <div class='center_txt'>实时统计上一个小时（15:00-16:00）的流动情况</div> -->
+        <m-tiptxt text='实时统计上一个小时（15:00-16:00）的流动情况'></m-tiptxt>
        <div class='center_statics'>
          <div class='center_statics--count'>陕西省<br/><span class="center_statics_">{{centerstatics.Count}}</span></div>
          <div class='center_statics--inout'>
@@ -20,7 +22,7 @@
          <div class='center_statics--radio'>进出比<br/><span class="">{{centerstatics.radio}}</span></div>
        </div>
        <div class='center_table'>
-         <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
+         <el-table :data="indexDatas" style="width: 100%" height="68%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
               <el-table-column prop="city" label="类型"></el-table-column>
               <el-table-column prop="index" label="数量" sortable></el-table-column>
               <el-table-column prop="week_radio" label="比例" sortable></el-table-column>
@@ -28,7 +30,7 @@
        </div>
     </div>
     <div class='vehicle_monitor-div--bottom'>
-      <el-divider content-position="left">境内路况监测</el-divider>
+      <m-title label='境内路况监测' style='width:8vw;'></m-title>
        <ul class="traffic-index_content_table">
           <li class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <p><span>{{item.road}}</span>
@@ -48,6 +50,7 @@ import { IMG } from "./config";
 import { interf } from "./config";
 import m_tab from '@/components/UI_el/tab.vue'
 import m_tiptxt from '@/components/UI_el/tiptxt.vue'
+import mTitle from '@/components/UI_el/title_com.vue'
 export default {
   name: "overview_left",
   data() {
@@ -68,7 +71,7 @@ export default {
       selectItem:{"road":"西安",order:8}
     };
   },
-  components:{mTab:m_tab,mTiptxt:m_tiptxt},
+  components:{mTab:m_tab,mTiptxt:m_tiptxt,mTitle},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -169,10 +172,9 @@ export default {
   left: 1vw;
   width: 23vw;
   height: 80vh;
-  top: 9vh;
+  top: 3vh;
   color:$color-white;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
+  
   @include flex(column, center,center);
   font-family: Microsoft YaHei;
   &--top{
@@ -182,7 +184,7 @@ export default {
     @include flex(column, start,start);
     .title{
       font-size: 1vw;
-      padding: 0.6rem 2%;
+      padding: 2px 2% 0.6rem 2%;
       font-weight: bolder;
       border-bottom: 0.1rem solid #DCDFE6;
       width: 96%;
@@ -190,13 +192,13 @@ export default {
     .time{
       position: absolute;
       right: 3%;
-      top: 2%;
+      top: 1%;
     }
   }
   &--center{
     width:100%;
     height:40%;
-    @include flex(column, center,center);
+    @include flex(column, center,start);
     .center_txt{
       width:100%;
       height:3vh;
@@ -228,12 +230,12 @@ export default {
     width:100%;
     height:40%;
     margin-top: 5vh;
-    @include flex(column, center,center);
+    @include flex(column, center,start);
     ul{
       margin:0;
       display: block;
       width: 96%;
-      padding: 0;
+      padding: 10px 4%;
       li{
         border-bottom: 1px solid $color-info;
       }

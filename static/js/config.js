@@ -1,4 +1,3 @@
-document.writeln("<link rel='stylesheet' href=\"./static/css/comm.css\">");
 //引入地图api文件
 document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v1.3/minemap.css\">");
 document.writeln("<script src=\"./static/lib/minemap/v1.3/minemap.js\"></script>");

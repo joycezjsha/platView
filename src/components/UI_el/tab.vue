@@ -46,8 +46,9 @@ export default {
   align-items: $align;
 }
 .tab{
-  width:100%;
+  width:98%;
   height:5vh;
+  margin:0 auto;
   border:1px solid $color-border-1;
   background: $color-primary;
   @include flex(row, center,center);

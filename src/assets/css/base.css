@@ -11,3 +11,93 @@ iframe{
   width:100%;
   height:100%;
 }
+::-webkit-scrollbar {
+  width: 0px;
+  /*display: none;*/
+}
+/*::-webkit-scrollbar:hover{width:2px;background-color: #ccc;}*/
+/*::-webkit-scrollbar {*/
+/*width: 6px;*/
+/*height: 16px;*/
+/*background-color: #2E5EF0;*/
+/*}*/
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  background-color: #021863;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #2E5EF0;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+
+/*::-webkit-scrollbar {*/
+/*width: 6px;*/
+/*height: 16px;*/
+/*background-color: #2E5EF0;*/
+/*}*/
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  background-color: #021863;
+}
+
+input::-webkit-input-placeholder {
+    /*placeholder颜色  */
+     color: #2a6ad2;
+   /* placeholder字体大小  */
+     font-size: 0.7vw;
+   /* placeholder位置  */
+     text-align: left;
+      line-height: 28px;
+}
+/*::-webkit-input-placeholder { !* WebKit, Blink, Edge *!*/
+  /*color:    #909;*/
+/*}*/
+/*:-moz-placeholder { !* Mozilla Firefox 4 to 18 *!*/
+  /*color:    #909;*/
+/*}*/
+/*::-moz-placeholder { !* Mozilla Firefox 19+ *!*/
+  /*color:    #909;*/
+/*}*/
+/*:-ms-input-placeholder { !* Internet Explorer 10-11 *!*/
+  /*color:    #909;*/
+/*}*/
+.shadows {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+}
+@font-face{
+  font-family: 'DS-Digital-BoldItalic'; 
+  src: url('../fonts/DS-DigitalBoldItalic.ttf');
+}
+@font-face{
+  font-family: 'SourceHanSansCN-'; 
+  src: url('../fonts/SourceHanSansCN-Regular.ttf');
+}
+@font-face {
+  font-family: 'iconfont';
+  src: url('../fonts/iconfont.eot');
+  src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/iconfont.woff2') format('woff2'),
+      url('../fonts/iconfont.woff') format('woff'),
+      url('../fonts/iconfont.ttf') format('truetype'),
+      url('../fonts/iconfont.svg#iconfont') format('svg');
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

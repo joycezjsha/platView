@@ -1,43 +1,30 @@
 <template>
   <div class="accident-statics">
     <div class="accident-statics_container">
-      <div class="accident-statics_title">
-        <div>
-          <i class="el-icon-collection-tag">全省统计</i>
-        </div>
+      <div class="accident-statics_title boxstyle">
+        <m-title label='全省统计' style='width:100%;'></m-title>
       </div>
-      <div class="accident-statics--tab">
-        <div>
-          <span class="--tab-title">
-            <i class="el-icon-bell"></i>警情总计
-          </span>
-          <span class="statics--tab--value">
-            <span class="statics_value sum">{{staticsData.sum}}</span>
-          </span>
-        </div>
-      </div>
-      <div class="accident-statics_content">
-        <div id="accident-statics_sort">
+      <div class="accident-statics--tab boxstyle">
+        <m-com-title label='警情统计' style='width:6vw;'></m-com-title>
+        <m-tab label='警情总计' :value='staticsData.sum'></m-tab>
+        <m-tab label='重大警情' :value='staticsData.mainCount'></m-tab>
+        <div class="accident-statics_sort">
           
-        </div>
-        <div class="accident-statics--tab">
+          <div id="accident-statics_sort">
+            
+          </div>
           <div>
-            <span class="--tab-title">
-              <i class="el-icon-bell"></i>重大警情
-            </span>
-            <span class="statics--tab--value">
-              <span class="statics_value sum">{{staticsData.mainCount}}</span>起
-            </span>
+            <m-list-o :list='listItems'></m-list-o>
           </div>
         </div>
-        <div>
-          近30天警情发生趋势：
-          <div id="sumCountChange"></div>
-        </div>
-        <div>
-          重大警情发生趋势：
-          <div id="accurCreateChange"></div>
-        </div>
+      </div>
+      <div class="accident-statics--tab boxstyle">
+        <m-com-title label='近30天警情发生趋势' style='width:12vw;'></m-com-title>
+        <m-line-chart c_id='accidentsumCountChange' style='width:100%;height:18vh'></m-line-chart>
+      </div>
+      <div class="accident-statics--tab boxstyle">
+        <m-com-title label='重大警情发生趋势' style='width:10vw;'></m-com-title>
+        <m-line-chart c_id='accidentaccurCreateChange' style='width:100%;height:18vh'></m-line-chart>
       </div>
     </div>
   </div>
@@ -47,29 +34,29 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
+import mTitle from "@/components/UI_el/title.vue";
+import mComTitle from "@/components/UI_el/title_com.vue";
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
+import mTab from '@/components/UI_el/tab.vue'
+import m_list from '@/components/UI_el/list_o.vue'
 export default {
   name: "TIndex",
   data() {
     return {
       map: {},
       staticsData: {sum: 10,mainCount:0},
+      listItems:[{'label':'122',value:'12'},{'label':'互联网',value:'12345'},{'label':'视频巡查',value:'122'}],
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
-          legend: {
-              orient: 'vertical',
-              right: 10,
-              data: [],
-              textStyle:{color:'white'}
-          },
           series: [
               {
                   name: '警情统计',
                   type: 'pie',
-                  radius: ['40%', '60%'],
+                  radius: ['50%', '65%'],
                   avoidLabelOverlap: false,
                   label: {
                       show: false,
@@ -257,6 +244,7 @@ export default {
       accurChart:null
     }
   },
+  components:{mLineChart,mTitle,mComTitle,mTab,mListO:m_list},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -265,8 +253,8 @@ export default {
     this.getIndexData();
     this.initAccidentStaticsChart();
     // setTimeout(()=>{
-        that.initSumCharts();
-        that.initAccurCharts();
+        // that.initSumCharts();
+        // that.initAccurCharts();
     // },1000);
   },
   destroyed() {
@@ -287,7 +275,6 @@ export default {
        if(!this.accident_chart){
         this.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
       };
-      this.accident_option.legend.data=['122','互联网','视频巡查'];
       this.accident_option.series[0].data=[{name:'122',value:120},{name:'互联网',value:120},{name:'视频巡查',value:10}]
       this.accident_chart.setOption(this.accident_option);
     },
@@ -332,12 +319,11 @@ export default {
 .accident-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
+  // background-color: $color-bg-1;
+  // border: 1px solid $color-border-1;
   .accident-statics_title {
     position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
+    width: 100%;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
@@ -347,53 +333,35 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
+    // padding: 0.6rem 2%;
     font-weight: bolder;
   }
   .accident-statics--tab {
-  width: 100%;
-  height: 5vh;
-
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
-
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
+    width: 100%;
+    height: 28vh;
+    .accident-statics_sort {
+      width:90%;
+      height:12vh;
+      margin:2vh auto;
+      @include flex(row, center,center);
+      >div{
+        @include flex(row, center,center);
+        width:50%;
+        height: 100%;
       }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
+      >div:nth-child(2){
+        width: 50%;
       }
     }
-}
+    
+  }
   .accident-statics_content {
     width: 98%;
     height: 85%;
     background-color: $color-bg-1;
     margin: 1%;
 
-    #accident-statics_sort {
-      width:100%;
-      height:15vh;
-    }
+    
     #sumCountChange{
       width:100%;
       height:25vh;

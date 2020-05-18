@@ -305,7 +305,7 @@ export default {
   border: 1px solid $color-border-1;
   .accident-statics_title {
     position: relative;
-    width: 96%;
+    width: 100%;
     border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
@@ -316,7 +316,6 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
     font-weight: bolder;
   }
   .accident-statics--tab {
