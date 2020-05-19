@@ -76,8 +76,8 @@ export default {
               });
             });
             that.indexDatas = datas;
-            that.addArea(data.data);
-            that.addAreaIdentify(data.data);
+            // that.addArea(data.data);
+            // that.addAreaIdentify(data.data);
           }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {

@@ -49,26 +49,21 @@ export default {
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
-              trigger: 'item',
-              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            show:false,
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
           series: [
               {
                   name: '警情统计',
                   type: 'pie',
-                  radius: ['50%', '65%'],
+                  radius: ['60%', '75%'],
                   avoidLabelOverlap: false,
                   label: {
                       show: false,
                       position: 'center'
                   },
-                  emphasis: {
-                      label: {
-                          show: true,
-                          fontSize: '30',
-                          fontWeight: 'bold'
-                      }
-                  },
+                  
                   labelLine: {
                       show: false
                   },

@@ -89,7 +89,7 @@ export default {
       }
 
       .week {
-        width: 35%;
+        width: 3vw;
         height: 100%;
         @include flex(row, flex-start,start);
       }

@@ -123,7 +123,7 @@ export default {
   align-items: $align;
 }
 .city-index-div {
-  position: absolute;
+  position: fixed;
   z-index: 10;
   left: 1vw;
   width: 23vw;

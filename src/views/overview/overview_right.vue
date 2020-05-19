@@ -57,14 +57,15 @@ export default {
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
-              trigger: 'item',
-              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            show:false,
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
           series: [
               {
                   name: '车辆运行态势',
                   type: 'pie',
-                  radius: ['30%', '50%'],
+                  radius: ['70%', '80%'],
                   avoidLabelOverlap: false,
                   label: {
                       show: false,
@@ -72,7 +73,7 @@ export default {
                   },
                   emphasis: {
                       label: {
-                          show: true,
+                          show: false,
                           fontSize: '30',
                           fontWeight: 'bold'
                       }
@@ -399,7 +400,7 @@ export default {
   }
   .overview-info_sort {
   width:90%;
-  height:8vh;
+  height:10vh;
   margin:2vh auto;
   @include flex(row, center,center);
   >div{

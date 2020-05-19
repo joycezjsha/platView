@@ -296,7 +296,7 @@ export default {
   left: 1vw;
   width: 23vw;
   height: 80vh;
-  top: 9vh;
+  top: 3vh;
 }
 .city-accident_container {
   width: 100%;

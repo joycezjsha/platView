@@ -208,7 +208,7 @@ $percent100: 100%;
       height: 100%;
       text-align: right;
 
-      @include flex(row, center);
+      @include flex(row, flex-end,center);
       ._btn_content {
         width: 6vw;
         height: 3vh;

@@ -1,5 +1,5 @@
 <template>
-  <div class='tab'>
+  <div class='tab' style='background-image: url(./static/images/ui_image/tab_bg.png);'>
     <div class='img'><img :src='icon' /></div>
     <div class='label'>{{label}}</div>
     <div class='value'>{{value}}</div>
@@ -49,8 +49,10 @@ export default {
   width:98%;
   height:5vh;
   margin:0 auto;
-  border:1px solid $color-border-1;
-  background: $color-primary;
+  // border:1px solid $color-border-1;
+  // background: $color-primary;
+  background-size: 100% 100%;
+  color: $color-white;
   @include flex(row, center,center);
   .img,.label,.value{
      @include flex(column, center,center);
