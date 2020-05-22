@@ -1,0 +1,68 @@
+<template>
+  <div class="xopacity">
+          <div class="opticy" style="margin-bottom:10.8vh;">
+            <span class="span1" style="margin-right:4.583vw;">x</span>
+            <span  class="span2" style="margin-right:5.78vw">x</span>
+            <span  class="span3" style="margin-right:6.56vw">x</span>
+            <span  class="span4">x</span>
+          </div>
+      </div>
+</template>
+
+<script>
+export default {
+    name:"xopacity"
+}
+</script>
+
+<style  scoped lang="scss">
+ .xopacity{
+    width:419px;
+    height:23px;
+    // background:rgba(71,83,108,1);
+    // opacity:0.2;
+    background:rgba(71,83,108,0.2);
+    margin-left: 27px;
+    margin-right: 28px;
+  }
+.xopacity>div{
+   .span1{
+    width:7px;
+    height:8px;
+    font-size:14px;
+    font-family:Source Han Sans CN;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    // line-height:8px;
+    margin-left: 16px;
+    } ;
+    .span2{
+        width:7px;
+        height:8px;
+        font-size:14px;
+        font-family:Source Han Sans CN;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        // line-height:14px;
+    };
+    .span3{
+        width:7px;
+        height:8px;
+        font-size:14px;
+        font-family:Source Han Sans CN;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        // line-height:8px;
+    }
+    .span4{
+        width:7px;
+        height:8px;
+        font-size:14px;
+        font-family:Source Han Sans CN;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        // line-height:8px;
+    }
+}
+</style>
+
