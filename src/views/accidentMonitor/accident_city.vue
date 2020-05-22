@@ -15,8 +15,8 @@
         </div>
       </div> -->
       <div class='city-accident_header'>
-        <div @click='changeRange(1)'><m-title label='城市警情统计' :img_type='range_type?"1":"0"'></m-title></div>
-        <div @click='changeRange(0)'><m-title label='大队警情统计' :img_type='range_type?"0":"1"'></m-title></div>
+        <div @click='changeRange(1)'><m-title label='城市警情统计' :img_type='range_type?"1":"0"' style='height:3.5vh;line-height:3.5vh;'></m-title></div>
+        <div @click='changeRange(0)'><m-title label='大队警情统计' :img_type='range_type?"0":"1"' style='height:3.5vh;line-height:3.5vh;'></m-title></div>
       </div>
       <div class='city-accident-query'>
         <span class="city-accident-query--label">时间：</span><span class="city-accident-query--time">
@@ -241,7 +241,7 @@ export default {
       },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
-                return "background:transparent;";
+                return "background:transparent;border:none;";
    },
   //取括号内数据
   getLonlats(str){
@@ -386,12 +386,12 @@ export default {
     }
     .city-accident-query{
       color: $color-white;
-      width: 100%;
+      width: 95%;
       height: 3vh;
       line-height: 3vh;
       text-align: center;
       font-size: 0.8vw;
-      margin: 2% 0;
+      margin: 3% auto;
       @include flex(row,center);
       &--label{
         width:15%;
@@ -411,10 +411,9 @@ export default {
       }
     }
   .city-accident_content {
-    width: 98%;
+    width: 94%;
     height: 87%;
-    background-color: $color-bg-1;
-    margin: 1%;
+    margin: 2% 3%;
     
     &_table {
       overflow-y: auto;

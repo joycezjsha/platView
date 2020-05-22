@@ -118,6 +118,18 @@ line-height:2vh;
 .topbar-bar .el-submenu.is-active .el-icon-arrow-down:before{
   color:#00C6FF;
 }
+.el-table td, .el-table th.is-leaf {
+  border-bottom:none;
+}
+.el-tabs__nav-wrap::after {
+  background-color: transparent;
+}
+.el-table::before {
+  content: none;
+}
+.el-table__fixed::before {
+  content: none;
+}
 /*el样式改写 --END*/
 
 /*登陆单独界面样式改写*/

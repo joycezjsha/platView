@@ -58,12 +58,12 @@ export default {
      @include flex(column, center,center);
   }
   .label{
-    max-width:50%;
+    max-width:60%;
     padding:0 5px;
     @include flex(column, start,start);
   }
   .value{
-    width:50%;
+    width:40%;
   }
 }
 </style>

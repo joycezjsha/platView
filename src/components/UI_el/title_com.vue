@@ -49,6 +49,7 @@ export default {
   // width:9vw;
   color:white;
   text-align: center;
-  font-size: 1vw;
+  font-size: 0.85vw;
+  line-height: 3vh;
 }
 </style>

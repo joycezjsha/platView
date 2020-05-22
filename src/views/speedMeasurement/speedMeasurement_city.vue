@@ -283,7 +283,7 @@ export default {
   align-items: $align;
 }
 .speedMeasurement-city-div {
-  position: absolute;
+  position: fixed;
   z-index: 10;
   left: 1vw;
   width: 23vw;

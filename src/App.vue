@@ -22,5 +22,6 @@
     margin: 0 auto;
     padding: 0;
     font-family:'SourceHanSansCN-';
+    font-size:0.8vw;
   }
 </style>

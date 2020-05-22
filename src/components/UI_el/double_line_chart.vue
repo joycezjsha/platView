@@ -8,6 +8,10 @@ export default {
     return {
       option: {
         animation: false,
+        grid:{
+          left:40,
+          right:40
+        },
         legend: {
           right: '6%',
           data: ["模拟数据","温度"]

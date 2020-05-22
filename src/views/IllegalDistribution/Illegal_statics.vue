@@ -168,12 +168,9 @@ export default {
 .accident-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .accident-statics_title {
     position: relative;
     width: 100%;
-    border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;

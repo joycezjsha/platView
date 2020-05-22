@@ -284,7 +284,7 @@ export default {
 }
 
 .ETCquality_city-div {
-  position: absolute;
+  position: fixed;
   z-index: 10;
   left: 1vw;
   width: 23vw;
