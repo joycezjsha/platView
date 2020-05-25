@@ -136,38 +136,37 @@ export default {
     getRowClass({ row, column, rowIndex, columnIndex }) {
                 return "background:transparent;";
    },
-    //获取巡航数据
+    //获取轨迹数据
     getIndexData() {
       let that = this;
-    // $.ajax({
-    //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     responseType: "json",
-    //     method: "get",
-    //     dataType: "json",
-    //     data: {
-    //       // token: window.localStorage.getItem("loginUserToken")
-    //     },
-    //     success: function(data) {
-    //       if (data.errcode == -2) {
-    //         that.$router.push({ name: "/login" });
-    //       }
-    //       if (data.errmsg == "success" && data.data.length > 0) {
-    //         let datas=[];
-    //         data.data.map(e=>{
-    //           datas.push(
-    //             {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
-    //           )
-    //         });
-    //         that.indexDatas=datas;
-    //       }
-    //     },
-    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       debugger
-    //     }
-    //   });
+      //ajax调用
+      interf.GET_HIS_CAR_API({id: ""},function(data){
+
+      }),
+      //axios调用
+      interf.GET_TRAIL_API({
+          id: ""
+        })
+        .then(response => {
+          if (response && response.status == 200) {
+            let data = response.data;
+            if (data.errcode == 0) {
+              
+            } else {
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
     },
   //显示数据排名
    showOrder(f){
