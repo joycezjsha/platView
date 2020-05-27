@@ -1,28 +1,37 @@
 <template>
-  <div class="xopacity">
-          <div class="opticy" style="margin-bottom:10.8vh;">
-            <span class="span1" style="margin-right:4.583vw;">x</span>
-            <span  class="span2" style="margin-right:5.78vw">x</span>
-            <span  class="span3" style="margin-right:6.56vw">x</span>
-            <span  class="span4">x</span>
-          </div>
-      </div>
+  <div class="xopacity hove">
+    <div class="opticy" style="margin-bottom:10.8vh;">
+      <span class="span1" style="margin-right:4vw;">x</span>
+      <span  class="span2" style="margin-right:5vw">x</span>
+      <span  class="span3" style="margin-right:6.5vw">x</span>
+      <span  class="span4">x</span>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name:"xopacity"
+    name:"xopacity",
+    data(){
+      return{
+
+      }
+    },
+    created(){
+   
+    }
 }
 </script>
 
 <style  scoped lang="scss">
+
  .xopacity{
-    width:419px;
+    width:21vw;
     height:23px;
     // background:rgba(71,83,108,1);
     // opacity:0.2;
     background:rgba(71,83,108,0.2);
-    margin-left: 27px;
+    margin-left: 1.406vw;
     margin-right: 28px;
   }
 .xopacity>div{
@@ -63,6 +72,10 @@ export default {
         color:rgba(255,255,255,1);
         // line-height:8px;
     }
+}
+.hove:hover{
+    background:rgba(3,103,166,1);
+    opacity:0.6;
 }
 </style>
 

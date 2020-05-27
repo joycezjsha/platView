@@ -5,6 +5,16 @@ import service from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
+  // 获取全省流动数据
+  GET_VEH_PRO_API:(stime,etime) => {
+    return http.service({
+      url:`Vehicle/getProvincialStatistics?token=token_for_show`,
+      method:'get',
+      params:{stime,etime}
+    })
+  },
+
+
   /*获取巡航数据*/
   getCruiseData:(data,callback,err)=>{
     return httpConnect("get", "cruise/getCruise",data,

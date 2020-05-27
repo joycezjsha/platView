@@ -25,8 +25,12 @@ export default {
     right
 
   },
-  mounted() {
-    
+   mounted() {
+    let _this=this;
+    _this.$store.commit("setRight", '28vw');
+    // blur.$on('isShowEvent',function(flag){
+    //   _this.isShowCity=flag;
+    // })
   },
   destroyed() {
   },

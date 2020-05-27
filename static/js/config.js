@@ -2,7 +2,7 @@
 document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v1.3/minemap.css\">");
 document.writeln("<script src=\"./static/lib/minemap/v1.3/minemap.js\"></script>");
 
-var ip='117.48.214.220:9602';//window.location.host//'117.157.231.168';//'localhost:8080'//'117.48.214.220';//
+var ip='127.0.0.1:8091/';//'117.48.214.220:9602';//window.location.host//'117.157.231.168';//'localhost:8080'//'117.48.214.220';//
 var mapConfig = {
   BASE_URL: '//map.xianjiaojing.com',//"//minedata.cn",
   DOMAIN_URL: '//map.xianjiaojing.com',

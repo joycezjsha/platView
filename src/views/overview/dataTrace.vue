@@ -1,6 +1,6 @@
 <template>
-  <div class="city_index_chart">
-    <m-tile label="过车数据回传排行"></m-tile>
+  <div class="trace_index_chart">
+    <m-tile label="今日轨迹接口调用情况"></m-tile>
     <el-table
           :data="indexDatas"
           style="width: 100%"
@@ -11,11 +11,11 @@
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
         >
-          <el-table-column fixed type="index" label="NO" width="150"></el-table-column>
-          <el-table-column prop="YJDFZJG" label="城市" width="250"></el-table-column>
-          <el-table-column prop="TODAYNUM" label="今日上传" width="500"></el-table-column>
-          <el-table-column prop="YESTERDAYNUM" label="昨日上传" width="500" sortable></el-table-column>
-          <el-table-column prop="TODAYPROPORTION" label="今日上传比" width="500" sortable></el-table-column>
+          <el-table-column fixed type="index" label="序号" width="150"></el-table-column>
+          <el-table-column prop="city" label="城市" width="250"></el-table-column>
+          <el-table-column prop="TODAYNUM" label="交警" width="500"></el-table-column>
+          <el-table-column prop="YESTERDAYNUM" label="公安" width="500" sortable></el-table-column>
+          <el-table-column prop="TODAYPROPORTION" label="总计" width="500" sortable></el-table-column>
         </el-table>
   </div>
 </template>
@@ -25,23 +25,18 @@ import echarts from "echarts";
 import title from "@/components/UI_el/title.vue";
 import { interf } from './config';
 export default {
-  name: "cityIndexChart",
+  name: "traceindexchart",
   props: {
-    order_value: {
-      type: String,
-      default: "1"
-    },
-     order_value: {
-      type: String,
-      default: "0"
-    }
+    // order_value: {
+    //   type: String,
+    //   default: "1"
+    // }
   },
   data() {
     return {
-      // list:["No","城市","今日上传","昨日上传","今日上传比"],
       indexDatas: [
-        {index: "2.1", YJDFZJG: "西安",  TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%",TODAYPROPORTION:"0.8%" },
-       { index: "1.1", YJDFZJG: "渭南",  TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%" ,TODAYPROPORTION:"2.8"}
+        {index: "2.1", city: "西安",  TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%",TODAYNUM:"0.8%" },
+       { index: "1.1", city: "渭南",  TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%" ,TODAYNUM:"2.8"}
       ]
     };
   },
@@ -52,7 +47,6 @@ export default {
   },
   methods: {
     getIndexData() {
-      
       let that = this;
       //获取历史过车数据列表  GET_HIS_CAR_LIST_API
       interf.GET_HIS_CAR_LIST_API({
@@ -82,7 +76,7 @@ export default {
 </script>
 
 <style scoped='true' lang='scss'>
-.city_index_chart {
+.trace_index_chart {
   width: 100%;
   height: 45vh;
   .section{

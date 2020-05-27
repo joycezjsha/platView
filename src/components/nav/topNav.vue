@@ -176,7 +176,7 @@ export default {
               parent_id: '5',
               menu_name: "车辆保有量",
               sorting: 0,
-              path:'/main/vehicle-population'
+              path:'/main/vehicleownership'
             },
             {
               id: '5-2',

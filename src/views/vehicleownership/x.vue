@@ -1,8 +1,8 @@
 <template>
-  <div class="x">
-        <span style="margin-right:4.583vw; margin-left:2.239vw;" >x</span>
-        <span style="margin-right:5.78vw">x</span>
-        <span style="margin-right:6.56vw">x</span>
+  <div class="x ">
+        <span style="margin-right:4vw; margin-left:2.239vw;" >x</span>
+        <span style="margin-right:5vw">x</span>
+        <span style="margin-right:6.5vw">x</span>
         <span class="span4">x</span>
     </div>
 </template>
@@ -15,6 +15,8 @@ export default {
 
 <style scoped lang="scss">
 .x{
+    margin-left:0.104vw;
+    // margin-right: 28px;
     span{  
         width:7px;
         height:8px;
@@ -25,5 +27,9 @@ export default {
         line-height:60px;
     };
 }
+// .hove:hover{
+//     background:rgba(3,103,166,1);
+//     opacity:0.6;
+// }
 
 </style>

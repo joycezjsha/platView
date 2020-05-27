@@ -18,7 +18,8 @@ import bayonet from '@/views/bayonet/bayonetIndex.vue'
 import etc from '@/views/ETCquality/ETCqualityIndex.vue'
 import measurement from '@/views/speedMeasurement/speedMeasurementIndex.vue'
 import user from '@/views/userManager/userManage.vue'
-// 懒加载方式，当路由被访问的时候才加载对应组件
+import vehicleownership from '@/views/vehicleownership/vehicleownership.vue'
+// 懒加载方式，当路由被访问的时候才加载对应组件       
 const Login = resolve => require(['@/views/Login/Login'], resolve)
 
 Vue.use(Router)
@@ -57,10 +58,17 @@ const router = new Router({
           }
         },
         {
-          path: '/main/car-flow', //车辆流量
+          path: '/main/car-flow', //车辆流量 
           name: 'carFlow',
           components: {
             default: carFlow
+          }
+        },
+        {
+          path: '/main/vehicleownership', //巡航
+          name: 'vehicleownership',
+          components: {
+            default: vehicleownership
           }
         },
         {
