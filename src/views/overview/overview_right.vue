@@ -5,6 +5,10 @@
         <div>
           <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
         </div>
+        <div style="margin-top:1vh;margin-left:1vw;">速度检测次数
+          <span style="margin-left:2vw;">平均行驶速度/限速</span>
+        </div>
+        <div class="avg">{{avg}}</div>
         <div class="overview-info_sort">
           <div>
             <m-list-o :list='listItems'></m-list-o>
@@ -27,13 +31,13 @@
           </div>
         </div> -->
       </div>
-      <div class="boxstyle" >
-        <m-title label='进出陕车辆趋势' img_type=1 style='width:12vw;margin-top: 50px;' ></m-title>
-        <!-- <div id="sumCountChange"></div> v-for="(item,i) in chart_data" :key="i" -->
-        <m-line-chart :chart_data="chart_data"  c_id='overViewsumCountChange' style='width:100%;height:18vh'></m-line-chart>
+      <div class="boxstyle">
+        <m-title label='进出陕车辆趋势' img_type=1 style='width:12vw;'></m-title>
+        <!-- <div id="sumCountChange"></div> -->
+        <m-line-chart :chart_data="chart_data" c_id='overViewsumCountChange' style='width:100%;height:18vh'></m-line-chart>
       </div>
       <div class="boxstyle">
-        <m-title label='车辆保有量' img_type=1  style='width:7vw;margin-top:50px;'></m-title>
+        <m-title label='车辆保有量' img_type=1  style='width:7vw;'></m-title>
         <div id="accurCreateChange"></div>
       </div>
     </div>
@@ -51,35 +55,28 @@ export default {
   name: "overview_right",
   data() {
     return {
+      avg:'',
       map: {},
-      chart_data:{
-        legend:["超速次数", "总检测数"],
-        timelist:"",
-        outlist:[
-          ["2016-10-4", 34],
-          ["2016-10-5", 33],
-          ["2016-10-6", 33],
-          ["2016-10-7", 37],
-          ["2016-10-8", 39],
-          ["2016-10-9", 30],
-          ["2016-10-10", 27],
-          ["2016-10-11", 18],
-          ["2016-10-12", 18]
-        ],
-        inlist:[
-            ["2016-10-4", 204],
-            ["2016-10-5", 201],
-            ["2016-10-6", 198],
-            ["2016-10-7", 189],
-            ["2016-10-8", 192],
-            ["2016-10-9", 182],
-            ["2016-10-10", 177],
-            ["2016-10-11", 177],
-            ["2016-10-12", 184]
-        ],
-       
-      },
-      listItems:[{'label':'超速次数',value:''},{'label':'总检测数',value:''}],
+      listItems:[
+        {'label':'超速次数',value:''},
+        {'label':'总检测数',value:''}
+      ],
+        chart_data:{
+          legend: ["进入辆次", "流出辆次"],
+          timelist:[],
+          inlist: [
+              // ["2016-10-4", 204],
+              // ["2016-10-5", 201],
+              // ["2016-10-6", 198],
+              // ["2016-10-7", 189],
+              // ["2016-10-8", 192],
+              // ["2016-10-9", 182],
+              // ["2016-10-10", 177],
+              // ["2016-10-11", 177],
+              // ["2016-10-12", 184]
+            ], 
+            outlist:[]
+        },
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
@@ -89,7 +86,7 @@ export default {
             formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
           series: [
-                {
+              {
                   name: '车辆运行态势',
                   type: 'pie',
                   radius: ['70%', '80%'],
@@ -109,7 +106,7 @@ export default {
                       show: false
                   },
                   data: [
-                    {name:'超速次数',value:null},{name:'总检测数',value:null}
+                 
                   ]
               }
           ]
@@ -152,13 +149,7 @@ export default {
                 textStyle: {
                     color: '#999'
                 }
-            },
-             splitLine:{
-			         show:false
-             },
-              axisTick:{
-			       show:false
-			       },
+            }
         },
         dataZoom: [
             {
@@ -310,17 +301,6 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
-    // 动态实现加载series下的data数据
-    //  getseriesData(){
-    //     var jsonstr = [];
-    //     for (var i = 0; i < this.outlist.length; i++) {
-    //       var json = {};
-    //       json.name = dataList[i];
-    //       json.value = "value";
-    //       jsonstr.push(json);
-    //     }
-    //     return jsonstr;
-    //  },
     //获取统计数据
     getIndexData() {
       let that = this;
@@ -332,8 +312,6 @@ export default {
       .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            //  console.log('进出陕车辆数据'+data)
-            //  console.log(111)
             //  console.log(data)
             if (data.errcode == 0) {
               that.chart_data.timelist=data.data.timelist,
@@ -358,7 +336,7 @@ export default {
         .finally(() => {
           that.tableLoading = false;
         })
-      // 省内车辆数据
+      //	省内车辆运行态势
       interf.GET_PRO_CAR_API({
         id:""
       })
@@ -369,8 +347,9 @@ export default {
             //  console.log(data)
             if (data.errcode == 0) {
                 that.listItems[0].value=data.data.cscount;
-                 console.log(this.listItems[0].value)
+                //  console.log(this.listItems[0].value)
                 that.listItems[1].value=data.data.count;
+                that.avg=data.data.avg;
             } else {
               that.$message({
                 message: data.errmsg,
@@ -394,12 +373,12 @@ export default {
        if(!this.accident_chart){
         this.accident_chart = echarts.init(document.getElementById('overview-info_sort'));
       };
-      //  var value1=this.listItems[0].value;
-      //  var value2=this.listItems[1].value;
-  
-      // this.accident_option.series[0].data=[{name:'超速次数',value:12},{name:'总检测数',value:12}]
-      this.accident_option.series[0].data[0].value=6;
-      this.accident_option.series[0].data[1].value=12;
+      this.accident_option.series[0].data=[{name:'超速次数',value:5},{name:'总检测数',value:5}]
+      // this.accident_option.series[0].data[0].value=6;
+      // this.accident_option.series[0].data[0].name='超速次数';
+      // this.accident_option.series[0].data[1].value=6;
+      // this.accident_option.series[0].data[1].name='总检测数';
+      // this.accident_option.series[0].data[1].value=12;
       this.accident_chart.setOption(this.accident_option);
     },
     /**
@@ -414,7 +393,7 @@ export default {
     /**
      * 生成重大事故发生趋势echarts
      */
-     initAccurCharts(){
+    initAccurCharts(){
       if(!this.accurChart){
         this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
       };
@@ -531,9 +510,11 @@ export default {
   #accurCreateChange{
     width:100%;
     height:25vh;
-    
   }
 }
-
-
+.avg{
+  position: fixed;
+  right: 4.5vw;
+  top:21.5vh;
+}
 </style>

@@ -1,29 +1,32 @@
 <template>
   <div class="city_index_chart">
-    <m-tile label="过车数据回传排行"></m-tile>
+    <m-tile  label="过车数据回传排行"></m-tile>
+    <!-- <m-tile v-if="(order_value=='0')" label="过车数据回传排行"></m-tile>
+    <m-tile v-else label="今日轨迹接口调用情况" ></m-tile> -->
     <el-table
           :data="indexDatas"
           style="width: 100%"
           highlight-current-row
           height="55vh"
-          :default-sort="{prop: 'YESTERDAYNUM', order: 'descending'}"
+          :default-sort="{prop: 'TODAYNUM', order: 'descending'}"
           :row-style="getRowClass"
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
         >
-          <el-table-column fixed type="index" label="NO" width="150"></el-table-column>
-          <el-table-column prop="YJDFZJG" label="城市" width="250"></el-table-column>
-          <el-table-column prop="TODAYNUM" label="今日上传" width="500"></el-table-column>
-          <el-table-column prop="YESTERDAYNUM" label="昨日上传" width="500" sortable></el-table-column>
-          <el-table-column prop="TODAYPROPORTION" label="今日上传比" width="500" sortable></el-table-column>
-        </el-table>
+          <el-table-column fixed type="index" label="No" width="60"></el-table-column>
+          <el-table-column prop="YJDFZJG" label="城市" ></el-table-column>
+          <el-table-column prop="TODAYNUM" label="今日上传" ></el-table-column>
+          <el-table-column prop="YESTERDAYNUM" label="昨日上传"  sortable></el-table-column>
+          <el-table-column prop="TODAYPROPORTION" label="今日上传占比"  sortable></el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
+import { IMG } from "./config";
+import { interf } from "./config";
 import echarts from "echarts";
 import title from "@/components/UI_el/title.vue";
-import { interf } from './config';
 export default {
   name: "cityIndexChart",
   props: {
@@ -31,28 +34,32 @@ export default {
       type: String,
       default: "1"
     },
-     order_value: {
-      type: String,
-      default: "0"
-    }
+    
   },
   data() {
     return {
-      // list:["No","城市","今日上传","昨日上传","今日上传比"],
       indexDatas: [
-        {index: "2.1", YJDFZJG: "西安",  TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%",TODAYPROPORTION:"0.8%" },
-       { index: "1.1", YJDFZJG: "渭南",  TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%" ,TODAYPROPORTION:"2.8"}
-      ]
+        {
+          //  'YJDFZJG': "", 
+          // //  'index': "2.1", 
+          //  'TODAYNUM': "",
+          //  'YESTERDAYNUM': "",
+          //  'TODAYPROPORTION':"" 
+          },
+        // { city: "渭南", index: "1.1", TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%",TODAYPROPORTION:"8.4" }
+      ],
+    
     };
   },
   components: {
     mTile: title
   },
   mounted() {
+
   },
   methods: {
-    getIndexData() {
-      
+   
+     getIndexData() {
       let that = this;
       //获取历史过车数据列表  GET_HIS_CAR_LIST_API
       interf.GET_HIS_CAR_LIST_API({
@@ -61,17 +68,16 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           var data=response.data;
+          console.log(data)
           if(data.errcode==0){
             that.indexDatas=data.data;
             console.log(that.indexDatas)
-            console.log("历史过车数据列表")
           }
         }
       })
-
+      
 
     },
-   
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
       return "background:transparent;";

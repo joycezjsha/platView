@@ -1,47 +1,28 @@
 <template>
   <div class="overview-statics">
-   <div class='overview-statics--tab' style="width:11vw;">
-     <div class='overview-statics--tab_title' >
-       <span>今日警情</span><span>{{datas.jq.count}}</span>起
-     </div>
+   <div class='overview-statics--tab'>
+     <div class='overview-statics--tab_title'><span>今日警情</span><span>{{datas.jq.count}}</span>起</div>
      <div class='overview-statics--tab_radio'>
-       <span class='label'>昨日:
-         <span >{{datas.jq.yestoday}}</span>
-        </span>
-       <span class='label'> 历史日均:
-         <span>{{datas.jq.history}}</span>
-       </span>
+       <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yestoday}}</span></div>
+       <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.history}}</span></div>
     </div>
-     <div class='overview-statics--tab_main'>
-       <span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span>
-       <span class='value' style="color:red">{{datas.jq.main}}</span>起
-      </div>
+     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span><span class='value'>{{datas.jq.main}}</span>起</div>
    </div>
-   <div class='overview-statics--tab'  style="width:11vw;">
+   <div class='overview-statics--tab' >
      <div class='overview-statics--tab_title'><span>本月事故</span><span>{{datas.sg.count}}</span>起</div>
      <div class='overview-statics--tab_radio'>
-       <span style="margin-right:1.5vw" class='label'>伤:
-         <span>{{datas.sg.hurt}}</span>
-        </span>
-       <span class='label'>死亡:
-         <span >{{datas.sg.die}}</span>
-       </span>
+       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.hurt}}</span></div>
+       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.die}}</span></div>
     </div>
-     <div class='overview-statics--tab_main' ><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value' style="color:red">{{datas.sg.main}}</span>起</div>
+     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.main}}</span>起</div>
    </div>
-    <div class='overview-statics--tab' style="width:11vw;">
+    <div class='overview-statics--tab'  >
      <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.count}}</span>个</div>
      <div class='overview-statics--tab_radio'>
-       <span class='label' >总设备:
-         <span>{{datas.dj.sum}}</span>
-       </span>
-       <span class='label'> 活跃率:
-         <span>{{datas.dj.work}}</span>
-        </span>
+       <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.sum}}</span></div>
+       <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.work}}</span></div>
     </div>
-     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span>
-     <span class='value' style="color:#00C6FF">{{datas.sg.main}}</span>起
-     </div>
+     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.sg.main}}</span>个</div>
    </div>
   </div>
 </template>
@@ -127,21 +108,17 @@ export default {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
-  // align-items: $align;
+  align-items: $align;
 }
-.overview-statics--tab_title,.overview-statics--tab_radio,.overview-statics--tab_main{
-  width:200px;
-  padding:3px;
-}
+
 .overview-statics {
   position: absolute;
   z-index: 10;
   left: 30vw;
-  width: 40vw;
+  width: 35vw;
   height: 12vh;
   top: 10vh;
   color:$color-white;
-
   // border-image: linear-gradient(-51deg,#19559a, #02082f);
   // background-image: linear-gradient(#033a79cf, #02082fde);
   background: url('./image/center_bg.png') no-repeat;
@@ -163,16 +140,12 @@ export default {
           @include flex(row, center,center);
           span{
             display:inline-block;
-            font-size:0.6vw;
+            font-size:0.7vw;
           }
        }
       
        span.label{
             color:$color-label;
-            // margin-right: 1px;
-            box-sizing: border-box;
-            padding: 0 3px;
-
           }
           span.value{
             font-family: Hiragino Sans GB;
@@ -186,7 +159,7 @@ export default {
       span:nth-child(2){
         font-family: 'DS-Digital-BoldItalic';
         width: 40%;
-        font-size: 1.3vw;
+        font-size: 1.5vw;
         color: #409EFF;
         margin-bottom: 0.3vw;
       }
@@ -223,5 +196,4 @@ export default {
   }
   &--tab:last-child{border:none;} 
 }
-
 </style>

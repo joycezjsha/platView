@@ -27,10 +27,10 @@ import { interf } from './config';
 export default {
   name: "traceindexchart",
   props: {
-    // order_value: {
-    //   type: String,
-    //   default: "1"
-    // }
+    order_value: {
+      type: String,
+      default: ""
+    }
   },
   data() {
     return {

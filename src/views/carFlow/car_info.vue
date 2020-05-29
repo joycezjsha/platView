@@ -214,6 +214,7 @@ export default {
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getTrafficData();
+    that.getIndexDatas()
     // that.initSumCharts();
     // that.initAccurCharts();
   },
@@ -236,6 +237,35 @@ export default {
     // commonVariable.CURRENT_MAP.repaint = false;
   },
   methods: {
+    getIndexDatas(){
+      let that=this;
+        // 车辆流动页面车辆类型分析   GET_VEH_TYPE_API
+     interf.GET_VEH_TYPE_API({
+        id:"",
+        fxlx:'2'
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(data)
+           if (data.errcode == 0) {
+             
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    },
     //获取巡航数据
     getTrafficData() {
       let that = this;
