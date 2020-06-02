@@ -38,16 +38,16 @@
         <div class='all_statics'>
           <div><span>陕西省</span><span>{{allStatics.addIn}}</span></div>
           <div><span>进入：+{{allStatics.incount}}</span><span>流出：-{{allStatics.outcount}}</span></div>
-          <div><span>进出比</span><span>{{allStatics.inoutProportion}}</span></div>
+          <div><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
         </div>
-        <ul :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
-          <li class="item" v-for="(item,index) in flowDatas" :key="item.id">
+        <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
+          <li @click="showData(item.xzqh)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
             <p>
               <span>{{index+1}}</span>
               <span class="address-name">{{item.city}}</span>
               <span>进：{{item.inNum}}</span>
               <span>出：{{item.outNum}}</span>
-              <span>进出比：{{item.proportion}}</span>
+              <span>进出比：{{item.proportion.toFixed(2)}}</span>
             </p>
             <p>
               <span></span>
@@ -90,7 +90,7 @@ export default {
         incount:'',
         outcount:'',
         addIn:'',
-        inoutProportion:''
+        inoutProportion:0
       }
     };
   },
@@ -104,15 +104,48 @@ export default {
     // that.getFlowData();
     that.getIndexData();
     that.realtimeData()
-  
-  
   },
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
   },
   methods: {
-    // 默认显示实时的数据
+    // showData() 点击城市获取对应城市  总计进入车辆辆次的数据 
+    showData(xzqh){
+      let that = this;
+      // let xzqh=xzqh.toString()
+      // console.log(xzqh,typeof(xzqh))
+       interf.GET_VEH_PRO_API({
+      id:"",
+      stime:'1',
+      xzqh:'xzqh'
+    })
+    .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(that.data)
+           if (data.errcode == 0) {
+            //  that.provinceData.addIn=data.data.addIn.toString();
+            //  that.provinceData.incount=data.data.incount.toString();
+            //  that.provinceData.outcount=data.data.outcount.toString();            
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    },
+
+    //  全省流动情况  默认显示实时的数据   
     realtimeData(){
       let that = this;
        interf.GET_VEH_FLOW_API({
@@ -131,11 +164,10 @@ export default {
              var obj=data.data.data
             //  console.log(obj)
             for(var key in obj){
-
               obj[key].city=key
               that.flowDatas.push(obj[key])
             }
-          //  console.log(that.flowDatas)
+           console.log(that.flowDatas[0])
             } else{
               that.$message({
                 message: data.errmsg,
@@ -198,34 +230,6 @@ export default {
     },
     getIndexData(){
       let that = this;
-    // 车辆流动页面流动趋势   GET_FLOW_TREND_API
-      interf.GET_FLOW_TREND_API({
-        id:"",
-        etime:'',
-        stime:''
-      })
-      .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-          //  console.log(data)
-           if (data.errcode == 0) {
-             
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-  
 
      //车辆流动页面全省车辆统计 GET_VEH_PRO_API
      interf.GET_VEH_PRO_API({

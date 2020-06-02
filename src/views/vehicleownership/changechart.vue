@@ -170,7 +170,7 @@ export default {
       };
       this.changechart.setOption(this.options);
     },
-    },
+  },
     mounted() {
     this.initSumCharts();
 

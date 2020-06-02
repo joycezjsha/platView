@@ -29,7 +29,7 @@ export default {
   props: {
     order_value: {
       type: String,
-      default: ""
+      default: "0"
     }
   },
   data() {

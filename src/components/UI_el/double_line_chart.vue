@@ -3,6 +3,7 @@
 </template>
 <script>
 import echarts from 'echarts'
+import blur from '../../blur'
 export default {
   data() {
     return {
@@ -143,28 +144,39 @@ export default {
           legend:[],
            timelist:[],
            inlist: [
-              ["2016-10-4", 204],
-              ["2016-10-5", 201],
-              ["2016-10-6", 198],
-              ["2016-10-7", 189],
-              ["2016-10-8", 192],
-              ["2016-10-9", 182],
-              ["2016-10-10", 177],
-              ["2016-10-11", 177],
-              ["2016-10-12", 184]
+              // ["2016-10-4", 204],
+              // ["2016-10-5", 201],
+              // ["2016-10-6", 198],
+              // ["2016-10-7", 189],
+              // ["2016-10-8", 192],
+              // ["2016-10-9", 182],
+              // ["2016-10-10", 177],
+              // ["2016-10-11", 177],
+              // ["2016-10-12", 184]
             ],
              outlist:[
-              ["2016-10-4", 34],
-              ["2016-10-5", 33],
-              ["2016-10-6", 33],
-              ["2016-10-7", 37],
-              ["2016-10-8", 39],
-              ["2016-10-9", 30],
-              ["2016-10-10", 27],
-              ["2016-10-11", 18],
-              ["2016-10-12", 18]
+              // ["2016-10-4", 34],
+              // ["2016-10-5", 33],
+              // ["2016-10-6", 33],
+              // ["2016-10-7", 37],
+              // ["2016-10-8", 39],
+              // ["2016-10-9", 30],
+              // ["2016-10-10", 27],
+              // ["2016-10-11", 18],
+              // ["2016-10-12", 18]
             ] 
           };
+      }
+    },
+    watch:{
+      chart_data:{
+        handler(oldVal,newVal){
+                this.$nextTick(() => {
+                   this.initAccidentStaticsChart();
+                })
+            },
+            deep:true,
+            immediate: false
       }
     },
     width:{
@@ -182,21 +194,35 @@ export default {
   },
   components: {},
   mounted() {
-    this.initAccidentStaticsChart();
+      // this.$nextTick(() => {
+      //       this.initAccidentStaticsChart()
+      //   })
+      blur.$on('setData',data=>{
+        if(data){
+       this.initAccidentStaticsChart(data);
+        }
+    
+      })
+   
+  },
+  destroyed(){
+    // 清空echarts
+    // this.initAccidentStaticsChart.dispose()
   },
   methods: {
     /**
      * 生成警情分别类统计echarts
      */
-    initAccidentStaticsChart() {
+    initAccidentStaticsChart(data) {
+      // console.log(data)
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
-      this.option.legend.data = this.chart_data.legend;
-      this.option.yAxis[0].name=this.chart_data.legend[0];
-      this.option.yAxis[1].name=this.chart_data.legend[1];
-      this.option.series[0].data =this.chart_data.inlist;
-      this.option.series[1].data =this.chart_data.outlist;
+      this.option.legend.data = data.legend;
+      this.option.yAxis[0].name=data.legend[0];
+      this.option.yAxis[1].name=data.legend[1];
+      this.option.series[0].data =data.inlist;
+      this.option.series[1].data =data.outlist;
       this.chart.setOption(this.option);
     }
   }

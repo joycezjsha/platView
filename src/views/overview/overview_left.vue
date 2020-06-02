@@ -8,6 +8,10 @@
               <!-- <span class='span_title'>过车数据</span> -->
               <m-title label='过车数据' img_type=1 style='width:6vw'></m-title>
               <el-button style="float: right; padding: 3px 0;position:absolute;top:3%;right:2%;" type="text" icon="iconfont icon-xiangxiqingkuang" @click='showOrder(0)' >详细情况</el-button>
+              <el-dialog title :visible.sync="drawer" append-to-body>
+                <data-order :order_value="order_value"></data-order>
+              </el-dialog>
+              <!-- <data></data> -->
             </div>
             <div class="top-container">
               <div class='top-container-row'>
@@ -57,7 +61,7 @@
             </span>
          </div>
          <div class='center_statics--radio'>进出比<br/>
-         <span class="">{{centerstatics.inoutProportion}}</span></div>
+         <span class="">{{centerstatics.inoutProportion | number}}</span></div>
        </div>
        <div class='center_table' >
          <!-- style="width: 100%"  max-height="250" -->
@@ -67,7 +71,11 @@
            <el-table-column prop="city" label="城市"  ></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
-            <el-table-column prop="proportion" label="进出比" sortable></el-table-column>
+            <el-table-column prop="proportion" label="进出比" sortable>
+              <template slot-scope="scope">
+                <span>{{scope.row.proportion | number}}</span>
+              </template>
+            </el-table-column>
           </el-table>
        </div>
     </div>
@@ -83,9 +91,9 @@
           </li>
         </ul>
     </div>
-    <el-dialog title="" :visible.sync="drawer">
+    <!-- <el-dialog title="" :visible.sync="drawer">
       <data-order :value='order_value'></data-order>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -101,6 +109,9 @@ export default {
       stime:"",
       etime:"",
       map: {},
+      indexDatascar:[
+
+      ],
       passCarCount:{
         count:"",
         todayCount:'',
@@ -263,31 +274,36 @@ export default {
    showOrder(f){
      this.drawer=true;
      this.order_value=f;
+     let that=this;
     //  发送请求 获取历史过车列表 GET_HIS_CAR_LIST_API
-    // interf.GET_HIS_CAR_LIST_API({
-    //       id: ""
-    //     })
-    //     .then(response => {
-    //       if (response && response.status == 200) {
-    //         var data = response.data.data;
-    //         console.log(data)
-    //         if (data.errcode == 0) {
-              
-    //         } else {
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //         }
-    //       }
-    //     })
-    //     .catch(e => {
-    //       console.error(err);
-    //     })
-    //     .finally(() => {
-    //       that.tableLoading = false;
-    //     });
+    interf.GET_HIS_CAR_LIST_API({
+          id: ""
+        })
+        .then(response => {
+          if (response && response.status == 200) {
+            var data = response.data.data;
+            console.log(data)
+            if (data.errcode == 0) {
+              that.indexDatascar=data.data;
+              // that.indexDatascar['TODAYNUM']=data.data[0].TODAYNUM;
+              // that.indexDatascar['YJDFZJG']=data.data[0].YJDFZJG;
+              // that.indexDatascar['YESTERDAYNUM']=data.data[0].YESTERDAYNUM;
+              // that.indexDatascar['TODAYPROPORTION']=data.data[0].TODAYPROPORTION;
+            } else {
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+        .catch(e => {
+          console.error(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
    },
   //清除地图加载点、线、面、弹框
   clearMap(){
