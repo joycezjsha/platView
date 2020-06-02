@@ -28,6 +28,10 @@ export default {
         that.initTime();
     }, 1000);
   },
+  mounted(){
+    // 调用
+   
+  },
   methods: {
     initTime() {
       let _this = this;

@@ -117,7 +117,7 @@ export default {
 }
 
 .mine-card {
-  position: fixed;
+  position: absolute;
   z-index: 10;
   left: 1vw;
   width: 23vw;

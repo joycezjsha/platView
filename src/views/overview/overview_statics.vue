@@ -8,7 +8,7 @@
     </div>
      <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span><span class='value'>{{datas.jq.main}}</span>起</div>
    </div>
-   <div class='overview-statics--tab'>
+   <div class='overview-statics--tab' >
      <div class='overview-statics--tab_title'><span>本月事故</span><span>{{datas.sg.count}}</span>起</div>
      <div class='overview-statics--tab_radio'>
        <div><span class='label'>伤:</span><span class='value'>{{datas.sg.hurt}}</span></div>
@@ -16,7 +16,7 @@
     </div>
      <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.main}}</span>起</div>
    </div>
-    <div class='overview-statics--tab'>
+    <div class='overview-statics--tab'  >
      <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.count}}</span>个</div>
      <div class='overview-statics--tab_radio'>
        <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.sum}}</span></div>

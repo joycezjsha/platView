@@ -2,7 +2,7 @@
   <div class="right">
      <back></back> 
       <changechart></changechart>
-     <rankchart></rankchart>
+      <rankchart></rankchart>
   </div>
 </template>
 

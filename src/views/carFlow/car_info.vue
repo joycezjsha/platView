@@ -7,23 +7,35 @@
         </div>
       </div>
       <!-- <div class='car-info_title'>总计进入车辆次数:<span class=''>{{statics.count}}</span></div> -->
-      <m-tab label='总计进入车辆次数' :value='statics.count'></m-tab>
+      <m-tab label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
       <div class='car-info_tab'>
-        <span><div>进入辆次</div><div><span class=''>{{statics.in}}</span></div></span>
-        <span><div>流出辆次</div><div><span class=''>{{statics.count}}</span></div></span>
+        <span><div>进入辆次</div><div><span class=''>{{provinceData.incount}}</span></div></span>
+        <span><div>流出辆次</div><div><span class=''>{{provinceData.outcount}}</span></div></span>
       </div>
       <div class="car-info_content">
         <div>
-          <m-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-title>
+          <m-title label='流动趋势' img_type=1 style='width:6vw;'></m-title>
           <div id="">
             <m-line-chart c_id='sumCountChange'></m-line-chart>
           </div>
         </div>
-        <div>
-          <m-title label='车辆保有量' img_type=1 style='width:8vw;'></m-title>
-          <div id="">
-             <m-line-chart c_id='accurCreateChange'></m-line-chart>
+        <div style="position:relative">
+          <m-title label='车辆类型分析' img_type=1 style='width:8vw;'></m-title>
+          <div class="typeanalysis">
+            <span :class="{active: isActive == 1}" @click="change(1)">进入</span>
+            <span :class="{active: isActive == 2}" @click="change(2)">流出</span>
           </div>
+          <div class="cars">
+            <div>大车:{{echartsData.BIGCAR}}辆次</div>
+            <div>小车:{{echartsData.SMALLCAR}}辆次</div>
+          </div>
+          <div id='accurCreateChange'>
+            <!-- <div class="text">122多少两次</div> -->
+          </div>
+          
+          <!-- <div id="">
+             <m-line-chart c_id='accurCreateChange'></m-line-chart>
+          </div> -->
         </div>
       </div>
     </div>
@@ -41,7 +53,65 @@ export default {
   name: "TIndex",
   data() {
     return {
+      isActive: 1,
       map: {},
+      provinceData:{
+        addIn:'',
+        incount:'',
+        outcount:'',
+      },
+      echartsData:{
+        BIGCAR:'',
+        SMALLCAR:''
+      },
+      accurCreateChange:null,
+      options:{
+        legend: {        
+            orient: 'vertical',         
+            x: 490,
+            y: 'center',
+            itemWidth: 50,   // 设置图例图形的宽
+            itemHeight: 50,  // 设置图例图形的高          
+            itemGap: 50,
+            textStyle: {
+              fontSize: 45,
+              color: '#fff'
+            },
+            // backgroundColor: '#eee',  // 设置整个图例区域背景颜色
+            // data: ['小轿车','货车','大车','小车'],
+          },
+        series: [
+            {
+              type: 'pie',
+              radius: ['30%', '60%'], 
+              center: ['30%', '50%'], 
+              data:[
+                {value:234},
+                {value:135}
+              ],
+              // itemStyle 设置饼状图扇形区域样式
+              itemStyle: {
+                 normal : {
+                    label : {
+                      show : false
+                    },
+                    labelLine : {
+                      show : false
+                    }
+                  },
+                // emphasis：英文意思是 强调;着重;（轮廓、图形等的）鲜明;突出，重读
+                // emphasis：设置鼠标放到哪一块扇形上面的时候，扇形样式、阴影
+                emphasis: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(30, 144, 255，0.5)'
+                }
+              },
+              
+            },
+            
+          ],
+      },
       indexDatas: [
         {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
       {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}],
@@ -208,12 +278,14 @@ export default {
   },
   components:{mTitle,mLineChart,mTab},
   mounted() {
+    this.initaccurCreateChange();
     this.map = this.$store.state.map;
     let that = this;
     that.$store.commit("setRight", '20vw');
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getTrafficData();
+    that.getIndexDatas()
     // that.initSumCharts();
     // that.initAccurCharts();
   },
@@ -236,6 +308,142 @@ export default {
     // commonVariable.CURRENT_MAP.repaint = false;
   },
   methods: {
+    //  点击进入和流出 触发 change事件
+    change(i){  
+      this.isActive = i;
+      // console.log(this.changeActive)
+      // if(this.changeActive==0){
+      //   document.getElementById('in').style.background='#0079fe';
+      //    document.getElementById('in').style.color='#efddfe'
+      // }
+      let that = this;
+      console.log(i)
+      // 车辆流动页面车辆类型分析  默认显示实时的数据   GET_VEH_TYPE_API
+     interf.GET_VEH_TYPE_API({
+        id:"",
+        stime:'1',
+        fxlx:i
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(data)
+           if (data.errcode == 0) {
+            //  var obj=data.data
+             that.echartsData.BIGCAR=data.data.BIGCAR;
+             that.echartsData.SMALLCAR=data.data.SMALLCAR;
+             console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR)
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    },
+    initaccurCreateChange(){
+      // if(!this.changechart){
+        this.changechart = echarts.init(document.getElementById('accurCreateChange'));
+      // };
+      this.changechart.setOption(this.options);
+    },
+    getIndexDatas(){
+      let that=this;
+    // 车辆流动页面车辆类型分析  默认显示实时的数据 如果客户没有点击进入或者流出，默认显示进入的数据  GET_VEH_TYPE_API
+    interf.GET_VEH_TYPE_API({
+        id:"",
+        stime:'1',
+        fxlx:1
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(data)
+           if (data.errcode == 0) {
+             that.echartsData.BIGCAR=data.data.BIGCAR;
+             that.echartsData.SMALLCAR=data.data.SMALLCAR;
+             console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR)
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    //车辆流动页面全省车辆统计  默认显示实时的数据   GET_VEH_PRO_API
+    interf.GET_VEH_PRO_API({
+      id:"",
+      stime:'1'
+    })
+    .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           if (data.errcode == 0) {
+             that.provinceData.addIn=data.data.addIn.toString();
+             that.provinceData.incount=data.data.incount.toString();
+             that.provinceData.outcount=data.data.outcount.toString();            
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+
+    // 车辆流动页面流动趋势   GET_FLOW_TREND_API
+      interf.GET_FLOW_TREND_API({
+        id:"",
+        // etime:'',
+        // stime:''
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+          //  console.log(data)
+           if (data.errcode == 0) {
+             
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+  
+    
+    },
     //获取巡航数据
     getTrafficData() {
       let that = this;
@@ -344,5 +552,39 @@ position: fixed;
     }
     
   }
+}
+.text{
+  color: #fff;
+  position: absolute;
+  top:0;
+  right: 20vw;
+}
+.typeanalysis{
+  position: absolute;
+  right:1vw;
+  top: 0;
+  span{
+    border: 1px solid #fff;
+    // color: #666666;
+    width: 3vw;
+    height: 2vh;
+    padding: 0.5vh 0.5vw;
+    border-radius: 5px;
+    // background: #aeaeae;
+  }
+}
+.cars{
+  color: #fff;
+  text-align:left;
+  position: absolute;
+  top: 12vh;
+  right: 1vw;
+}
+// .active {
+//   color: red;
+// }
+.active{
+  background-color:#0079fe;
+  color: #efddfe;
 }
 </style>

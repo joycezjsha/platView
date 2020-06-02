@@ -29,7 +29,12 @@ Vue.prototype.$echarts = echarts;
 Vue.component('footer-copyright', {
   template: '<p class="footer-msg">Copyright © Cennavi, All Rights Reserved.</p>'
 });
-
+// 定义保留两位小数的过滤器
+Vue.filter('number',function(data){
+  if (!data)  return '';
+  return data.toFixed(2)
+})
+// 时间过滤器
 Vue.filter('formatDateTime', function (value) {
   if (!value) return '';
   let date = new Date(value);
@@ -38,6 +43,7 @@ Vue.filter('formatDateTime', function (value) {
   let d = date.getDate();
   return y + mon + d;
 });
+
 new Vue({
   router,
   store,
