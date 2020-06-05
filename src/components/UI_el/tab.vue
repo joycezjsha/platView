@@ -24,13 +24,14 @@ export default {
       },
       value: {
         type: String,
-        default: '52328'
+        default: ''
       },
   },
   components: {
     
   },
   created() {
+    console.log(this.value)
   },
   methods: {
 

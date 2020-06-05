@@ -6,7 +6,7 @@
           <i class="el-icon-collection-tag">全省统计</i>
         </div>
       </div>
-      <m-tab></m-tab>
+      <m-tab :value="num"></m-tab>
       <div class="device-statics--tab">
         <div>
           <span class="--tab-title">
@@ -48,7 +48,8 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import echarts from 'echarts'
+import echarts from 'echarts';
+import blur from "@/blur";
 import m_tab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list.vue'
 export default {
@@ -56,6 +57,7 @@ export default {
   data() {
     return {
       map: {},
+      num:0,
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
@@ -199,6 +201,41 @@ export default {
     //获取统计数据
     getIndexData() {
       let that = this;
+      //设备查询 Overview/getDevStatistics   GET_QUERY_API
+     interf.GET_QUERY_API({
+        id:"",
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(data)
+           if (data.errcode == 0) {
+             that.num=data.data.devcount.toString();
+             console.log(that.num,typeof(that.num))
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+      // 接收数据
+      blur.$on('getXZQH',data=>{
+        console.log(data)
+        this.num=data.data.num;
+        console.log(this.num)
+        // let xzqh=data
+      })
+      // let that = this;
+
     },
     /**
      * 生成警情分别类统计echarts

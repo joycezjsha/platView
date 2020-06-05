@@ -6,6 +6,14 @@ import service from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
+  // 车辆流动页面  归属地分析  Vehicle/getVehicleOwnership
+  GET_BELONG_API:data=> {
+    return http.service({
+      url:`Vehicle/getVehicleOwnership?token=token_for_show`,
+      method:'get',
+      params:data
+    })
+  },
   // 车辆流动页面流动趋势 
   GET_FLOW_TREND_API:data=> {
     return http.service({

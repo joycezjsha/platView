@@ -65,8 +65,11 @@
        </div>
        <div class='center_table' >
          <!-- style="width: 100%"  max-height="250" -->
-         <el-table  v-for="item in indexDatas" :key="item.key" :data="indexDatas" style="width:100%"
-    height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+         <el-table 
+          v-for="item in indexDatas" :key="item.key" 
+          :data="indexDatas" style="width:100%"
+           height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
+           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
            <el-table-column fixed type="index" label="No" width="60" ></el-table-column>   
            <el-table-column prop="city" label="城市"  ></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
@@ -170,7 +173,7 @@ export default {
   
   //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
-                return "background:transparent;";
+      return "background:transparent;";
    },
        //获取轨迹数据
     getIndexData() {
@@ -208,7 +211,7 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           var data= response.data;
-          // console.log(data)
+          console.log(data)
           if (data.errcode == 0) {
             that.centerstatics.incount=data.data.incount;
             //  console.log(that.centerstatics.count)
@@ -223,7 +226,7 @@ export default {
             // obj[key].city=key
             that.indexDatas.push(obj[key])
            }
-          //  console.log(that.indexDatas)
+           console.log(that.indexDatas)
           }else{
             that.$message({
               message: data.errmsg,

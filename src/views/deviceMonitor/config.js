@@ -5,6 +5,30 @@ import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
+  // 设备查询 Overview/getDevStatistics
+  GET_QUERY_API:data=> {
+    return http.service({
+      url:`Overview/getDevStatistics?token=token_for_show`,
+      method:'get',
+      params:data
+    })
+  },
+  // 	设备总览-设备总数 Device/getDevCount
+  GET_TOTAL_NUM_API:data=> {
+    return http.service({
+      url:`Device/getDevCount?token=token_for_show`,
+      method:'get',
+      params:data
+    })
+  },
+  // 设备总览-城市统计 Device/getCityStatistics
+  GET_CITY_STA_API:data=> {
+    return http.service({
+      url:`Device/getCityStatistics?token=token_for_show`,
+      method:'get',
+      params:data
+    })
+  },
   /*获取巡航数据*/
   getCityIndexData:(data,callback,err)=>{
     return http._httpConnect("get", "AreaList/list",data,

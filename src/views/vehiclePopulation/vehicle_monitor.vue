@@ -10,17 +10,17 @@
       <m-tab label='实时监控车辆活跃数：' :value=work_count></m-tab>
     </div>
     <div class='vehicle_monitor-div--center'>
-       <m-title label='交通动态监测' style='width:8vw;'></m-title>
+       <!-- <m-title label='交通动态监测' style='width:8vw;'></m-title> -->
        <!-- <div class='center_txt'>实时统计上一个小时（15:00-16:00）的流动情况</div> -->
-        <m-tiptxt text='实时统计上一个小时（15:00-16:00）的流动情况'></m-tiptxt>
-       <div class='center_statics'>
-         <div class='center_statics--count'>陕西省<br/><span class="center_statics_">{{centerstatics.Count}}</span></div>
-         <div class='center_statics--inout'>
+        <!-- <m-tiptxt text='实时统计上一个小时（15:00-16:00）的流动情况'></m-tiptxt> -->
+       <!-- <div class='center_statics'> -->
+         <!-- <div class='center_statics--count'>陕西省<br/><span class="center_statics_">{{centerstatics.Count}}</span></div> -->
+         <!-- <div class='center_statics--inout'>
             <div>进入<br/><span class="row_value_">{{centerstatics.comein}}</span></div>
             <div>流出<br/><span class="row_value_">{{centerstatics.goout}}</span></div>
-         </div>
-         <div class='center_statics--radio'>进出比<br/><span class="">{{centerstatics.radio}}</span></div>
-       </div>
+         </div> -->
+         <!-- <div class='center_statics--radio'>进出比<br/><span class="">{{centerstatics.radio}}</span></div> -->
+       <!-- </div> -->
        <div class='center_table'>
          <el-table :data="indexDatas" style="width: 100%" height="68%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
               <el-table-column prop="city" label="类型"></el-table-column>
@@ -30,15 +30,18 @@
        </div>
     </div>
     <div class='vehicle_monitor-div--bottom'>
-      <m-title label='境内路况监测' style='width:8vw;'></m-title>
+      <m-title label='超速预警' style='width:8vw;'></m-title>
        <ul class="traffic-index_content_table">
           <li class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
-            <p><span>{{item.road}}</span>
-            <span class="address-name">{{item.startRoad}}--->{{item.endRoad}}</span>
-            </p>
-            <p><span>平均速度：{{item.averageSpeed}}</span>
-            <span class="address-name">路长{{item.length}}</span>
-            </p>
+            <div>
+               <span style="background:#631415;padding:5px;">{{item.HPZL}}</span>
+               <span style="margin-left:0.3vw">{{item.HPHM}}</span>、
+               <span style="margin-left:1vw">时速/限速:{{item.SJ}}</span>
+            </div>
+            <p>
+            <span class="address-name">{{item.WFDZ}}</span>
+            </p>         
+            <div class="address-name time">{{item.WFSJ}}</div>          
           </li>
         </ul>
     </div>
@@ -64,10 +67,13 @@ export default {
         goout:'',
         radio:'25%'
       },
-      indexDatas: [{"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}],
+      indexDatas: [
+        {"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}
+        ],
       trafficDatas: [
-        {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
-      {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}],
+      //   {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
+      // {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}
+      ],
       selectItem:{"road":"西安",order:8}
     };
   },
@@ -92,6 +98,32 @@ export default {
     //获取巡航数据
     getIndexData() {
       let that = this;
+    //重点车辆监测超速预警 KeyVehicle/getSpeeding   GET_OVER_WARN_FLOW_API
+    interf.GET_OVER_WARN_FLOW_API({
+      id:''
+    })
+    .then(response=>{
+        if (response && response.status == 200){
+          var data= response.data;
+          console.log(data)
+          if (data.errcode == 0) {
+            that.trafficDatas=data.data;
+            console.log(that.trafficDatas)
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     // $.ajax({
     //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
     //     headers: {
@@ -249,5 +281,16 @@ export default {
     background-color: $color-bg-3;
     color: $color-white;
     border: 1px solid $color-info;
+}
+.traffic-index_content_table{
+  overflow: hidden;
+}
+.time{
+  // position: absolute;
+  margin-left: 10vw;
+  margin-bottom: 2px;
+  // text-align: right;
+  // display: inline-block;
+
 }
 </style>

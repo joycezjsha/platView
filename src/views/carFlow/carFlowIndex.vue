@@ -1,7 +1,10 @@
 <template>
   <div class="car-flow">
-   <car-table></car-table>
-    <car-info></car-info>
+    <car-table></car-table>
+    <middle></middle>
+    <!-- <car-info></car-info> -->
+    <belong></belong>
+    <!-- <hotcard></hotcard> -->
   </div>
 </template>
 
@@ -9,6 +12,10 @@
 import { IMG } from "./config";
 import table from "./car_table";
 import car_info from "./car_info";
+import blur from "@/blur";
+import middle from "./middle";
+import belong from "./belong";
+import hotcard from "./hotcard";
 export default {
   name: "carFlow",
   data() {
@@ -18,7 +25,10 @@ export default {
   },
   components:{
     carTable:table,
-    carInfo:car_info
+    carInfo:car_info,
+    middle,
+    belong,
+    hotcard
   },
   mounted() {
     this.map = this.$store.state.map;
@@ -82,4 +92,5 @@ export default {
 .car-flow {
   
 }
+
 </style>

@@ -36,8 +36,10 @@
         >
           <el-table-column fixed type="index" label="序号" width="150"></el-table-column>
           <el-table-column prop="city" label="城市" width="250"></el-table-column>
-          <el-table-column prop="TODAYNUM" label="交警" width="500"  sortable></el-table-column>
-          <el-table-column prop="YESTERDAYNUM" label="公安" width="500" sortable></el-table-column>
+          <el-table-column prop="反恐怖" label="反恐怖" width="500"  sortable></el-table-column>
+          <el-table-column prop="公安部" label="公安部" width="500" sortable></el-table-column>
+          <el-table-column prop="行动技术" label="行动技术" width="500" sortable></el-table-column>
+          <el-table-column prop="刑侦" label="刑侦" width="500" sortable></el-table-column>
           <el-table-column prop="TODAYPROPORTION" label="总计" width="500" sortable></el-table-column>
         </el-table>
     </div>

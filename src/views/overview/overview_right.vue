@@ -47,6 +47,7 @@
 </template>
 
 <script>
+// const echarts=require("echarts/lib/echarts")
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
@@ -61,13 +62,11 @@ export default {
       avg:'',
       map: {},
       // timelist:[],
-      data1:null,
-      
+      data1:null, 
       listItems:[
-        {'label':'超速次数','value':''},
-        {'label':'总检测数','value':''}
+        {'label':'超速次数','value':null},
+        {'label':'总检测数','value':null}
       ],
-  
         chart_data:{
           legend: ["进入辆次", "流出辆次"],
           timelist:[],
@@ -287,6 +286,15 @@ export default {
     mLineChart,
     mListO:m_list
   },
+  created(){
+    // this.$axios.get('Overview/getVehicleOperation?token=token_for_show')
+    // .then(res => {
+    //   console.log(res.data)
+    // })
+    // .catch(err => {
+    //   console.log(err); 
+    // })
+  },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -307,7 +315,7 @@ export default {
   },
   methods: {
     //获取统计数据
-   getIndexData() {
+  async getIndexData() {
       let that = this;
     // 获取进出陕车辆数据 // timelist	True	String	日期// outlist	True	String	流出辆次
    // inlist	True	String	进入辆次 // msg	True	String	错误信息  
@@ -339,17 +347,18 @@ export default {
           that.tableLoading = false;
         })
       //	省内车辆运行态势
-      interf.GET_PRO_CAR_API({
+    // const {data:res}=await interf.GET_PRO_CAR_API({
+    await interf.GET_PRO_CAR_API({
         id:""
       })
       .then(response => {
           if (response && response.status == 200) {
             // console.log(response.data)
             var data = response.data;
-            //  console.log(data)
+             console.log(data)
             if (data.errcode == 0) {
                 that.listItems[0].value=data.data.cscount;
-                console.log(this.listItems[0].value)
+                // console.log(this.listItems[0].value)
                 that.listItems[1].value=data.data.count;
                 that.avg=data.data.avg;
             } else {
@@ -373,18 +382,18 @@ export default {
      */
     initAccidentStaticsChart(){
       console.log(this.listItems)
+
       // let a=this.listItems
-      console.log(this.listItems[0].label)
-      console.log(this.listItems[0].value)
+      // console.log(this.listItems[0].label)
+      console.log(this.listItems[0].value,typeof(this.listItems[0].value))
        if(!this.accident_chart){
         this.accident_chart = echarts.init(document.getElementById('overview-info_sort'));
       };
-         this.accident_option.series[0].data=[{name:'超速次数',value:this.listItems[0].value},{name:'总检测数',value:this.listItems[1].value}]
-        // this.accident_option.series[0].data=[{name:'超速次数',value:this.listItems[0].value},{name:'总检测数',value:this.listItems[1].value}]
-        // this.accident_option.series[0].data[0].value=this.listItems[0].value;
-        // this.accident_option.series[0].data[1].value=6;
-        // this.accident_option.series[0].data[1].value=this.listItems[1].value;
-        this.accident_chart.setOption(this.accident_option);
+     
+        this.accident_option.series[0].data=[{name:'超速次数',value:this.listItems[0].value},{name:'总检测数',value:this.listItems[1].value}]
+        this.accident_chart.setOption(this.accident_option);  
+    
+               
           
     },
     /**

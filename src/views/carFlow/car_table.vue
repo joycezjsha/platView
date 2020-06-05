@@ -33,7 +33,7 @@
             <el-button type="primary" @click="determine">确定</el-button>
           </span>
         </div>
-        <!-- <div class='car-table-query' v-else>{{tipTxt[activeName]}}</div> -->
+        <!-- <div class='car-table-query' v-else>{{tipTxt[activeName]}}</div>  item.xzqh.toString() -->
         <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt>
         <div class='all_statics'>
           <div><span>陕西省</span><span>{{allStatics.addIn}}</span></div>
@@ -41,7 +41,7 @@
           <div><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
-          <li @click="showData(item.xzqh)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
+          <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
             <p>
               <span>{{index+1}}</span>
               <span class="address-name">{{item.city}}</span>
@@ -71,6 +71,7 @@ export default {
   name: "car_table",
   data() {
     return {
+      showCity:false,
       map: {},
       flowDatas: [
 
@@ -85,7 +86,7 @@ export default {
         popups:[]
       },
       timeRange:'',
-      tipTxt:{1:'实时：统计上一个小时（15:00-16:00）的流动情况',2:'今天：统计上今天（00:00-16:00的流动情况',3:'昨天：统计上昨天全天的流动情况'},
+      tipTxt:{1:'实时：统计上一个小时(15:00-16:00)的流动情况',2:'今天：统计上今天(00:00-16:00)的流动情况',3:'昨天：统计上昨天全天的流动情况'},
       allStatics:{
         incount:'',
         outcount:'',
@@ -102,32 +103,107 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     // that.getFlowData();
+    // that.showdata1()
     that.getIndexData();
     that.realtimeData()
+  
   },
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
   },
   methods: {
-    // showData() 点击城市获取对应城市  总计进入车辆辆次的数据 
-    showData(xzqh){
+    // 如果点击今天或者昨天，之后在点击对应的城市，获取对应城市今天或者昨天的总计进入车辆辆次的数据
+    getdayDatas(){
+      // if((this.activeName==2 || this.activeName==3) && () ){
+      //   console.log("点击今天或者昨天")
+      //   getcityDatas()
+      // }
+    },
+    // 
+    getcityDatas(){
+
+    },
+    // showData() 默认实时数据 点击城市获取对应城市  总计进入车辆辆次的数据  GET_VEH_PRO_API
+    showData(xzqh,city){
       let that = this;
-      // let xzqh=xzqh.toString()
-      // console.log(xzqh,typeof(xzqh))
-       interf.GET_VEH_PRO_API({
-      id:"",
-      stime:'1',
-      xzqh:'xzqh'
-    })
-    .then(response=>{
+        interf.GET_VEH_PRO_API({
+        id:"",
+        stime:'1',
+        xzqh:xzqh
+      })
+     .then(response=>{
        if (response && response.status == 200){
+        //  console.log(response)
            var data = response.data;
-           console.log(that.data)
+           data.data['city']=city
+          //  console.log(data)
+           blur.$emit('getcitys',data)
            if (data.errcode == 0) {
-            //  that.provinceData.addIn=data.data.addIn.toString();
-            //  that.provinceData.incount=data.data.incount.toString();
-            //  that.provinceData.outcount=data.data.outcount.toString();            
+
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+      if(this.activeName!='4'){
+        console.log(this.activeName)
+        interf.GET_VEH_PRO_API({
+          id:"",
+          stime:this.activeName,
+          xzqh:xzqh,
+        })
+        .then(response=>{
+       if (response && response.status == 200){
+        //  console.log(response)
+           var data = response.data;
+           data.data['city']=city
+           console.log(data)
+           blur.$emit('getcitycardata',data)
+           if (data.errcode == 0) {
+
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    }
+      // 点击城市获取对应城市  车辆类型分析数据 默认显示进去的数据
+      interf.GET_VEH_TYPE_API({
+        id:"",
+        stime:'1',
+        xzqh:xzqh,
+        fxlx:'1'
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+        //  console.log(response)
+           var data = response.data;
+          //  data.data['city']=city
+          //  console.log(data)
+           blur.$emit('gettypeData',data)
+           if (data.errcode == 0) {
+
             } else{
               that.$message({
                 message: data.errmsg,
@@ -144,7 +220,6 @@ export default {
         that.tableLoading = false;
       });
     },
-
     //  全省流动情况  默认显示实时的数据   
     realtimeData(){
       let that = this;
@@ -167,7 +242,7 @@ export default {
               obj[key].city=key
               that.flowDatas.push(obj[key])
             }
-           console.log(that.flowDatas[0])
+          //  console.log(that.flowDatas[0])
             } else{
               that.$message({
                 message: data.errmsg,
@@ -361,6 +436,7 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
+      // 
      }
     
   }

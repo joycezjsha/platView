@@ -136,6 +136,14 @@ export default {
     };
   },
   props: {
+    flowchartsData:{
+       type: Object,
+       default: () =>{
+         return{
+            // legend: ["超速次数", "总检测数"], 
+         }
+       }
+    },
     chart_data: {
       type: Object,
       default: () => {
@@ -168,17 +176,6 @@ export default {
           };
       }
     },
-    watch:{
-      chart_data:{
-        handler(oldVal,newVal){
-                this.$nextTick(() => {
-                   this.initAccidentStaticsChart();
-                })
-            },
-            deep:true,
-            immediate: false
-      }
-    },
     width:{
        type: String,
       default:'400px'
@@ -199,9 +196,8 @@ export default {
       //   })
       blur.$on('setData',data=>{
         if(data){
-       this.initAccidentStaticsChart(data);
+          this.initAccidentStaticsChart(data);
         }
-    
       })
    
   },
