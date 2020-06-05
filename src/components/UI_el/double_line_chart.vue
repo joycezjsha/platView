@@ -150,35 +150,13 @@ export default {
     chart_data: {
       type: Object,
       default: () => {
-<<<<<<< HEAD
-        return {
-          //  legend: ["超速次数", "总检测数"], 
-          legend:[],
-           timelist:[],
-           inlist: [
-              // ["2016-10-4", 204],
-              // ["2016-10-5", 201],
-              // ["2016-10-6", 198],
-              // ["2016-10-7", 189],
-              // ["2016-10-8", 192],
-              // ["2016-10-9", 182],
-              // ["2016-10-10", 177],
-              // ["2016-10-11", 177],
-              // ["2016-10-12", 184]
-            ],
-             outlist:[
-              // ["2016-10-4", 34],
-              // ["2016-10-5", 33],
-              // ["2016-10-6", 33],
-              // ["2016-10-7", 37],
-              // ["2016-10-8", 39],
-              // ["2016-10-9", 30],
-              // ["2016-10-10", 27],
-              // ["2016-10-11", 18],
-              // ["2016-10-12", 18]
-            ] 
-          };
-=======
+        // return {
+        //   //  legend: ["超速次数", "总检测数"], 
+        //   legend:[],
+        //    timelist:[],
+        //    inlist: [],
+        //    outlist:[] 
+        //   };
         return { 
           legend: ["超速次数", "总检测数"], 
           y1data: [
@@ -203,7 +181,6 @@ export default {
               ["2016-10-12", 18]
             ]
             };
->>>>>>> 98cbed0a5088673ab21c0fdecc3f18fa4f8eceec
       }
     },
     width:{
@@ -221,7 +198,6 @@ export default {
   },
   components: {},
   mounted() {
-<<<<<<< HEAD
       // this.$nextTick(() => {
       //       this.initAccidentStaticsChart()
       //   })
@@ -234,10 +210,7 @@ export default {
   },
   destroyed(){
     // 清空echarts
-    // this.initAccidentStaticsChart.dispose()
-=======
-    this.initAccidentStaticsChart();
->>>>>>> 98cbed0a5088673ab21c0fdecc3f18fa4f8eceec
+    this.initAccidentStaticsChart.dispose()
   },
   methods: {
     /**
