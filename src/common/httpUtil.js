@@ -47,7 +47,7 @@ service.interceptors.request.use(config => {
   if(config.method === 'post'){
     config.params=new Object();
     config.params._t=new Date().getTime();
-    config.params.token=sessionStorage.getItem("token");
+    config.params.token='token_for_show';//sessionStorage.getItem("token");
     if(config.url.indexOf('updateOrganizationsRelationPermission')==-1 && config.url.indexOf('saveOrganizationsRelationPermission')==-1){
       config.data = qs.stringify({...config.data});
     }
@@ -55,7 +55,7 @@ service.interceptors.request.use(config => {
   }else{
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     if(config.url.indexOf('117.157.231.168')==-1){
-      config.params._t=new Date().getTime();config.params.token=sessionStorage.getItem("token");config.params = {...config.params};
+      config.params._t=new Date().getTime();config.params.token='token_for_show';config.params = {...config.params};
     }
   }
 
@@ -96,11 +96,12 @@ service.interceptors.response.use(function (response) {
   // return Promise.reject(error);
 });
 const httpConnect=function(type, url, params, callback,error) {
+  params.token='token_for_show';
   return $.ajax({
     type: type ? type : 'GET',
     url: urlConf.BASE_URL+url,
     data: params,
-    contentType:type=="POST" || type=="post"?"application/x-www-form-urlencoded;charset=UTF-8":"application/json;charset=UTF-8",
+    // contentType:type=="POST" || type=="post"?"application/x-www-form-urlencoded;charset=UTF-8":"application/json;charset=UTF-8",
     //返回数据格式为json
     dataType: "json",
     scriptCharset: 'utf-8',

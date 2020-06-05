@@ -3,12 +3,15 @@
 </template>
 <script>
 import echarts from 'echarts'
-import blur from '../../blur'
 export default {
   data() {
     return {
       option: {
         animation: false,
+        grid:{
+          left:40,
+          right:40
+        },
         legend: {
           right: '6%',
           data: ["模拟数据","温度"]
@@ -147,6 +150,7 @@ export default {
     chart_data: {
       type: Object,
       default: () => {
+<<<<<<< HEAD
         return {
           //  legend: ["超速次数", "总检测数"], 
           legend:[],
@@ -174,6 +178,32 @@ export default {
               // ["2016-10-12", 18]
             ] 
           };
+=======
+        return { 
+          legend: ["超速次数", "总检测数"], 
+          y1data: [
+              ["2016-10-4", 204],
+              ["2016-10-5", 201],
+              ["2016-10-6", 198],
+              ["2016-10-7", 189],
+              ["2016-10-8", 192],
+              ["2016-10-9", 182],
+              ["2016-10-10", 177],
+              ["2016-10-11", 177],
+              ["2016-10-12", 184]
+            ], y2data:[
+              ["2016-10-4", 34],
+              ["2016-10-5", 33],
+              ["2016-10-6", 33],
+              ["2016-10-7", 37],
+              ["2016-10-8", 39],
+              ["2016-10-9", 30],
+              ["2016-10-10", 27],
+              ["2016-10-11", 18],
+              ["2016-10-12", 18]
+            ]
+            };
+>>>>>>> 98cbed0a5088673ab21c0fdecc3f18fa4f8eceec
       }
     },
     width:{
@@ -191,6 +221,7 @@ export default {
   },
   components: {},
   mounted() {
+<<<<<<< HEAD
       // this.$nextTick(() => {
       //       this.initAccidentStaticsChart()
       //   })
@@ -204,21 +235,23 @@ export default {
   destroyed(){
     // 清空echarts
     // this.initAccidentStaticsChart.dispose()
+=======
+    this.initAccidentStaticsChart();
+>>>>>>> 98cbed0a5088673ab21c0fdecc3f18fa4f8eceec
   },
   methods: {
     /**
      * 生成警情分别类统计echarts
      */
-    initAccidentStaticsChart(data) {
-      // console.log(data)
+    initAccidentStaticsChart() {
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
-      this.option.legend.data = data.legend;
-      this.option.yAxis[0].name=data.legend[0];
-      this.option.yAxis[1].name=data.legend[1];
-      this.option.series[0].data =data.inlist;
-      this.option.series[1].data =data.outlist;
+      this.option.legend.data = this.chart_data.legend;
+      this.option.yAxis[0].name=this.chart_data.legend[0];
+      this.option.yAxis[1].name=this.chart_data.legend[1];
+      this.option.series[0].data =this.chart_data.y1data;
+      this.option.series[1].data =this.chart_data.y2data;
       this.chart.setOption(this.option);
     }
   }
