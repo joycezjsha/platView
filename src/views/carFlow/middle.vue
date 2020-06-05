@@ -1,12 +1,12 @@
 <template>
-  <div class="middle">
-    <div @click="realtime" >
+  <div class="middle" >
+    <div @click="realtime(1)" >
         <m-title label='车辆实时监测' class="car"></m-title>
     </div>
-    <div @click="belong" >
+    <div @click="realtime(2)" >
         <m-title label='车辆归属地OD' class="car"></m-title>
     </div>
-   <div @click="hotbayonet">
+   <div @click="realtime(3)">
         <m-title  label='热点卡口道路' class="car"></m-title>
    </div>
   </div>
@@ -20,7 +20,9 @@ export default {
     name:'middle',
     data(){
         return{
-
+            showcarinfo:true,
+            showbelong:false,
+            showhotcard:false
         }
     },
     components:{
@@ -30,19 +32,10 @@ export default {
     },
     methods:{
         // 车辆实时监测
-        realtime(){
-           console.log(111)
-        //    blur.$emit('realtime',)
-
+        realtime(i){       
+            blur.$emit('realtime',i)
+            console.log(i)
         },
-        // 车辆归属地OD
-        belong(){
-           console.log(222)
-        },
-        // 热点卡口道路
-        hotbayonet(){
-           console.log(333)
-        }
     }
 }
 </script>
@@ -60,6 +53,7 @@ export default {
         height:39px;
         justify-content: space-around;
         line-height: 39px;
+        cursor:pointer;
     }
     
 }

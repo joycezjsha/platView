@@ -1,5 +1,5 @@
 <template>
-  <div class="hotcard" v-show="showhotcard">
+  <div class="hotcard">
       <div>
         <m-tab label='全部车辆监控' ></m-tab>
       </div>
@@ -50,6 +50,9 @@ export default {
         mTitle,
         mTab,
         blur
+    },
+    mounted(){
+
     },
     methods:{
         //设置表格样式

@@ -8,7 +8,7 @@ export const interf={
   // 	重点车辆监测超速预警 KeyVehicle/getSpeeding
   GET_OVER_WARN_FLOW_API:data=> {
     return http.service({
-      url:`KeyVehicle/getSpeeding?token=token_for_show`,
+      url:`KeyVehicle/getSpeeding`,
       method:'get',
       params:data
     })
