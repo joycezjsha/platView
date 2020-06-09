@@ -65,7 +65,8 @@
 
 <script>
 import { getUUID } from './utils/index'
-import * as config from "./config.js";
+import {IMG,interf} from "./config.js";
+import axios from 'axios'
 export default {
   name: "login",
   data() {
@@ -131,7 +132,7 @@ export default {
     // 验证码初始化
   },
   created(){
-    this.getCaptcha();
+    // this.getCaptcha();
   },
   methods: {
     // ...mapActions('d2admin/account', [
@@ -153,65 +154,66 @@ export default {
     // 提交登录信息
     submit() {
       let _this=this;
-      let user={
-              nickname:_this.formLogin.username,
-              companyName:''
-            }
-            window.localStorage.setItem("access-user",JSON.stringify(user));
-            this.$router.replace(this.$route.query.redirect || "/");
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     // 登录
-      //     // 注意 这里的演示没有传验证码
-      //     // 具体需要传递的数据请自行修改代码
-      //     config.interf.login({
-      //          'username': this.formLogin.username,
-      //          'password': this.formLogin.password,
-      //          'uuid': this.formLogin.uuid,
-      //          'captcha': this.formLogin.code
-      //     },(data) => {
-      //       //重定向对象不存在则返回顶层路径
-      //       let user={
+      // let user={
       //         nickname:_this.formLogin.username,
       //         companyName:''
       //       }
       //       window.localStorage.setItem("access-user",JSON.stringify(user));
-      //       this.$router.replace(this.$route.query.redirect || "/");
-      //     },()=>{});
-      //   } else {
-      //     // 登录表单校验失败
-      //     this.$message.error("表单校验失败，请检查");
-      //   }
-      // });
-      // this.$http({
-//              url: this.$http.adornUrl('sys/login'),
-//              method: 'post',
-//              data: this.$http.adornData({
-//                'username': this.dataForm.userName,
-//                'password': this.dataForm.password,
-//                'uuid': this.dataForm.uuid,
-//                'captcha': this.dataForm.captcha
-//              })
-//            }).then((data) => {
-//              if (data && data.code === 200) {
-//                  console.log(_this.$router);
-//                this.$cookie.set('token', data.data.token)
-//                this.$router.replace({ name: 'sys-user' })
-//              } else {
-//                this.getCaptcha();
-//                this.$message({message: data.message, type: "warn",duration: 5000});
-//              }
-//            })
+            // this.$router.replace(this.$route.query.redirect || "/");
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          // 登录
+          // 注意 这里的演示没有传验证码
+          // 具体需要传递的数据请自行修改代码
+        //   config.interf.login({
+        //        'username': this.formLogin.username,
+        //        'password': this.formLogin.password,
+        //        'uuid': this.formLogin.uuid,
+        //        'captcha': this.formLogin.code
+        //   },(data) => {
+        //     //重定向对象不存在则返回顶层路径
+        //     let user={
+        //       nickname:_this.formLogin.username,
+        //       companyName:''
+        //     }
+        //     // window.localStorage.setItem("access-user",JSON.stringify(user));
+        //     // this.$router.replace(this.$route.query.redirect || "/");
+        //   },()=>{});
+        // } else {
+        //   // 登录表单校验失败
+        //   this.$message.error("表单校验失败，请检查");
+           let data={
+               'username': _this.formLogin.username,
+               'password': _this.formLogin.password,
+           }
+      axios.post('http://127.0.0.1:8091/sys/login',data)
+      .then(res => {
+        let data=res.data;
+        console.log(data)
+        if(data.code==200){
+          // _this.$alert('登陆成功')
+          window.sessionStorage.setItem('token',data.data.token)
+            _this.$router.push('/')
+        }else{
+          _this.$alert("登录失败，账号或密码不正确")
+        }
+      })
+      .catch(err => {
+        console.log(err); 
+      })
+        }
+      });
+    
     },
     /**
      * @description 获取验证码图片
      */
     // 获取验证码图片
-    getCaptcha () {
-      let _this=this;
-        this.formLogin.uuid = getUUID();
-        this.captchaPath = config.interf.adornUrl(`/captcha.jpg?uuid=${this.formLogin.uuid}`);//this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
-      },
+    // getCaptcha () {
+    //   let _this=this;
+    //     this.formLogin.uuid = getUUID();
+    //     this.captchaPath = config.interf.adornUrl(`/captcha.jpg?uuid=${this.formLogin.uuid}`);//this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
+    // },
   }
 };
 </script>

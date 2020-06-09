@@ -1,5 +1,5 @@
 <template>
-  <div class="car-info-div" v-show="carinfo">
+  <div class="car-info-div">
     <div class="car-info_container boxstyle">
       <div class="car-info_title">
         <div>
@@ -59,7 +59,7 @@ export default {
   name: "TIndex",
   data() {
     return {
-      carinfo:true,
+      data:true,
       isActive: 1,
       showback:false,
       map: {},
@@ -293,6 +293,7 @@ export default {
   },
   components:{mTitle,mLineChart,mTab,blur},
   mounted() {
+   
     this.initaccurCreateChange();
     this.getdata();
     this.map = this.$store.state.map;
@@ -385,7 +386,7 @@ export default {
       .then(response=>{
        if (response && response.status == 200){
            var data = response.data;
-           console.log(data)
+          //  console.log(data)
            if (data.errcode == 0) {
             //  var obj=data.data
              that.echartsData.BIGCAR=data.data.BIGCAR;

@@ -8,7 +8,7 @@ export const interf={
   // 设备查询 Overview/getDevStatistics
   GET_QUERY_API:data=> {
     return http.service({
-      url:`Overview/getDevStatistics?token=token_for_show`,
+      url:`Overview/getDevStatistics`,
       method:'get',
       params:data
     })
@@ -16,7 +16,7 @@ export const interf={
   // 	设备总览-设备总数 Device/getDevCount
   GET_TOTAL_NUM_API:data=> {
     return http.service({
-      url:`Device/getDevCount?token=token_for_show`,
+      url:`Device/getDevCount`,
       method:'get',
       params:data
     })
@@ -24,7 +24,7 @@ export const interf={
   // 设备总览-城市统计 Device/getCityStatistics
   GET_CITY_STA_API:data=> {
     return http.service({
-      url:`Device/getCityStatistics?token=token_for_show`,
+      url:`Device/getCityStatistics`,
       method:'get',
       params:data
     })

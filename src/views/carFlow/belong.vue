@@ -1,5 +1,5 @@
 <template>
-    <div class="belong">
+    <div class="belong" >
         <div>
             <m-tab label='全部车辆监控' ></m-tab>
             <m-title class="analysis"  label='车辆归属地分析' ></m-title>
@@ -9,12 +9,14 @@
             <span>流出</span>
         </span>
         <div class="protext">
-            <span>省内{{belongData.provinceWithin}}
-                <span>{{belongData.provinceWithinProportion}}</span>
-            </span>
-            <span>省外{{belongData.provinceExternal}}
-                <span>{{belongData.provinceExternalProportion}}</span>
-            </span>
+            <div>
+               <span>省内{{belongData.provinceWithin}}</span>
+               <span>{{belongData.provinceWithinProportion}}</span>
+            </div>
+            <div>
+              <span>省外{{belongData.provinceExternal}}</span>  
+               <span>{{belongData.provinceExternalProportion}}</span>
+            </div>   
         </div>
         <div class="qiehuan">
             <div class="provinces" style=""></div>
@@ -48,7 +50,6 @@ export default {
                 provinceExternal:null,
                 provinceExternalProportion:null,
             },
-            // showbelong:false,
             indexDatas: [
                 {"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},
                 {"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}
@@ -56,6 +57,7 @@ export default {
         }
     },
     mounted(){
+       
         this.getIndexData()
     },
     components:{
@@ -140,6 +142,10 @@ export default {
         font-family:Source Han Sans CN;
         font-weight:400;
         color:rgba(255,255,255,1);
+        display: flex;
+        div{
+            justify-content: space-around;
+        }
     }
     .qiehuan{
         display: flex;
