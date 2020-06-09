@@ -7,105 +7,133 @@ export default {
   data() {
     return {
       option: {
-          color:['#8ec6add6','#d68262bf'],
-          grid:{
-            top:'35%',
-            left:'15%',
-            right:'15%',
-            bottom:'15%'
-          },
-          tooltip: {
-            trigger: 'axis'
+        animation: false,
+        grid:{
+          left:40,
+          right:40
         },
-          legend: {
-            top:'6%',
-            data: [],
-            right:'5%',
-            textStyle:{color:'white'}
+        legend: {
+          right: '6%',
+          data: ["模拟数据","温度"]
+        },
+        tooltip: {
+          triggerOn: "none",
+          position: function(pt) {
+            return [pt[0], 130];
+          }
+        },
+        xAxis: {
+          type: "time",
+          splitLine: {
+            show: false
           },
-          xAxis: [
-              {
-                  type: 'category',
-                  show:true,
-                  axisLabel:{
-                      show:true,
-                      color:'white'
-                  },
-                  data:[],
-                  splitLine:{show:false},
-                  axisLine:{lineStyle:{color:'white'}},
-                  // axisPointer: {
-                  //     type: 'shadow'
-                  // }
-              }
-          ],
-          yAxis: [
-              {
-                  type: 'value',
-                  name: '',
-                  min: 0,
-                  splitLine:{show:false},
-                  axisLine:{lineStyle:{color:'white'}},
-                  axisLabel: {
-                      formatter: '{value}',
-                      color:'white'
-                  },
-                  nameTextStyle:{
-                    color:'white'
-                  }
-              },
-              {
-                  type: 'value',
-                  name: '',
-                  min: 0,
-                  axisLine:{lineStyle:{color:'white'}},
-                  splitLine:{show:false},
-                  axisLabel: {
-                      formatter: '{value}',
-                      color:'white'
-                  },
-                  nameTextStyle:{
-                    color:'white'
-                  }
-              }
-          ],
-          series: [
-              {
-                  name: '',
-                  type: 'line',
-                  data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-                  areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        offset: 0,
-                        color: "#8ec6add6"
-                      },
-                      {
-                        offset: 1,
-                        color: "transparent"
-                      }
-                    ])
-                  }
-              },
-              {
-                  name: '',
-                  type: 'line',
-                  yAxisIndex: 1,
-                  data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
-                  areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        offset: 0,
-                        color: "#d68262bf"
-                      },
-                      {
-                        offset: 1,
-                        color: "transparent"
-                      }
-                    ])
-                  }
-              }
-          ]
+          axisLabel: {
+                inside: false,
+                textStyle: {
+                    color: '#fff'
+                }
+            }
+        },
+        yAxis: [
+          {
+            name: "模拟数据",
+            type: "value",
+            axisTick: {
+              inside: true
+            },
+            splitLine: {
+              show: false
+            },
+            axisLabel: {
+              inside: false,
+              textStyle: {
+                    color: '#fff'
+                },
+              formatter: "{value}\n"
+            },
+            z: 10
+          },
+          {
+            type: "value",
+            name: "温度",
+            min: 0,
+            max: 25,
+            interval: 5,
+            splitLine: {
+              show: false
+            },
+            axisLabel: {
+              textStyle: {
+                    color: '#fff'
+                },
+              formatter: "{value} °C"
+            }
+          }
+        ],
+        grid: {
+          top: 30,
+          left: 30,
+          right: 30,
+          height: 160
+        },
+        dataZoom: [
+          {
+            type: "inside",
+            throttle: 50
+          }
+        ],
+        series: [
+          {
+            name: "模拟数据",
+            type: "line",
+            smooth: true,
+            symbol: "circle",
+            symbolSize: 5,
+            sampling: "average",
+            itemStyle: {
+              color: "#8ec6ad"
+            },
+            stack: "a",
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: "#8ec6ad"
+                },
+                {
+                  offset: 1,
+                  color: "#ffe"
+                }
+              ])
+            },
+            data: []
+          },
+          {
+            name: "模拟数据",
+            type: "line",
+            smooth: true,
+            stack: "a",
+            symbol: "circle",
+            symbolSize: 5,
+            sampling: "average",
+            itemStyle: {
+              color: "#d68262"
+            },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: "#d68262"
+                },
+                {
+                  offset: 1,
+                  color: "#ffe"
+                }
+              ])
+            },
+            data: []
+          }
+        ]
       },
       chart: null
     };
@@ -131,17 +159,27 @@ export default {
         //   };
         return { 
           legend: ["超速次数", "总检测数"], 
-          xdata:["2016-10-4",
-              "2016-10-5",
-              "2016-10-6",
-              "2016-10-7",
-              "2016-10-8",
-              "2016-10-9",
-              "2016-10-10",
-              "2016-10-11",
-              "2016-10-12"],
-          y1data: ['204','201','198','189','192','182','177', '177','184'],
-          y2data:[34,33,33,37,39,30,27,18,18]
+          y1data: [
+              ["2016-10-4", 204],
+              ["2016-10-5", 201],
+              ["2016-10-6", 198],
+              ["2016-10-7", 189],
+              ["2016-10-8", 192],
+              ["2016-10-9", 182],
+              ["2016-10-10", 177],
+              ["2016-10-11", 177],
+              ["2016-10-12", 184]
+            ], y2data:[
+              ["2016-10-4", 34],
+              ["2016-10-5", 33],
+              ["2016-10-6", 33],
+              ["2016-10-7", 37],
+              ["2016-10-8", 39],
+              ["2016-10-9", 30],
+              ["2016-10-10", 27],
+              ["2016-10-11", 18],
+              ["2016-10-12", 18]
+            ]
             };
       }
     },
@@ -158,44 +196,35 @@ export default {
       default:'chart_id'
     }
   },
-  watch:{
-    newValue: {
-      immediate: false,
-      handler: function(cVAL, oVAL) {
-        this.initAccidentStaticsChart();
-      }
-    }
-  },
-  computed: {
-  　　newValue() {
-  　　　　return this.chart_data.y1data
-  　　}
-  },
   components: {},
   mounted() {
-      // this.$nextTick(() => {
-      //   this.initAccidentStaticsChart()
+      // blur.$on('setData',data=>{
+      //   if(data){
+          this.initAccidentStaticsChart();
+      //   }
       // })
+   
   },
   destroyed(){
     // 清空echarts
+    this.initAccidentStaticsChart.dispose()
   },
   methods: {
     /**
      * 生成警情分别类统计echarts
      */
     initAccidentStaticsChart() {
+      console.log(this.chart_data)   
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
       this.option.legend.data = this.chart_data.legend;
-       this.option.xAxis[0].data = this.chart_data.xdata;
       this.option.yAxis[0].name=this.chart_data.legend[0];
       this.option.yAxis[1].name=this.chart_data.legend[1];
-      this.option.series[0].name=this.chart_data.legend[0];
-      this.option.series[1].name=this.chart_data.legend[1];
+      console.log(this.chart_data.y1data,this.chart_data.y2data)
       this.option.series[0].data =this.chart_data.y1data;
       this.option.series[1].data =this.chart_data.y2data;
+      console.log(this.option.series[0].data)
       this.chart.setOption(this.option);
     }
   }

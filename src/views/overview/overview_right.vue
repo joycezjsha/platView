@@ -8,29 +8,46 @@
         <div style="margin-top:1vh;margin-left:1vw;">速度检测次数
           <span style="margin-left:2vw;">平均行驶速度/限速</span>
         </div>
+        <div class="avg">{{avg}}</div>
         <div class="overview-info_sort">
           <div>
             <m-list-o :list='listItems'></m-list-o>
           </div>
-          <div class="avg">{{avg}}</div>
-          <div id="overview-info_sort" v-loading='tableLoading'>
+          <div id="overview-info_sort">
             
           </div>
         </div>
+        <!-- <div class="overview-info_content">
+          <div class="overview-info--tab">
+            <div>
+              超速检测次数
+            </div>
+            <div>
+              平均行驶速度/限速
+            </div>
+          </div>
+          <div id="overview-info_sort">        
+          </div>
+        </div> -->
       </div>
       <div class="boxstyle">
-        <m-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-title>
-        <m-line-chart :chart_data="chart_data" c_id='overViewsumCountChange' style='width:100%;height:28vh'></m-line-chart>
+        <m-title label='进出陕车辆趋势' img_type=1 style='width:12vw;'></m-title>
+        <!-- <div id="sumCountChange"></div> -->
+        <m-line-chart 
+        :chart_data="chart_data" 
+        c_id='overViewsumCountChange'
+         style='width:100%;height:18vh'></m-line-chart>
       </div>
       <div class="boxstyle">
         <m-title label='车辆保有量' img_type=1  style='width:7vw;'></m-title>
-        <m-line-chart c_id='accurCreateChange' style='width:100%;height:28vh'></m-line-chart>
+        <div id="accurCreateChange"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// const echarts=require("echarts/lib/echarts")
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
@@ -44,17 +61,28 @@ export default {
     return {
       avg:'',
       map: {},
+      // timelist:[],
       data1:null, 
       listItems:[
         {'label':'超速次数','value':null},
         {'label':'总检测数','value':null}
       ],
-      chart_data:{
-        legend: ["进入辆次", "流出辆次"],
-        xdata:[],
-        y1data:[],
-        y2data:[]
-      },
+        chart_data:{
+          legend: ["进入辆次", "流出辆次"],
+          timelist:[],
+          y1data: [     
+              // ["2016-10-4", 204],
+              // ["2016-10-5", 201],
+              // ["2016-10-6", 198],
+              // ["2016-10-7", 189],
+              // ["2016-10-8", 192],
+              // ["2016-10-9", 182],
+              // ["2016-10-10", 177],
+              // ["2016-10-11", 177],
+              // ["2016-10-12", 184]
+            ], 
+            y2data:[ ]
+        },
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
@@ -172,7 +200,85 @@ export default {
         ]
       },
       countChart:null,
-      tableLoading:false,//加载中...控制
+      accurChangeOption:{
+        title: {
+            text: '特性示例：渐变色 阴影 点击缩放',
+            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
+        },
+        xAxis: {
+            data:['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'],
+            axisLabel: {
+                inside: true,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            axisLine: {
+                show: false
+            },
+            z: 10
+        },
+        yAxis: {
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        dataZoom: [
+            {
+                type: 'inside'
+            }
+        ],
+        series: [
+          //   { // For shadow
+          //     type: 'bar',
+          //     itemStyle: {
+          //         color: 'rgba(0,0,0,0.05)'
+          //     },
+          //     barGap: '-100%',
+          //     barCategoryGap: '40%',
+          //     data: dataShadow,
+          //     animation: false
+          // },
+          {
+              type: 'bar',
+              itemStyle: {
+                  color: new echarts.graphic.LinearGradient(
+                      0, 0, 0, 1,
+                      [
+                          {offset: 0, color: '#83bff6'},
+                          {offset: 0.5, color: '#188df0'},
+                          {offset: 1, color: '#188df0'}
+                      ]
+                  )
+              },
+              emphasis: {
+                  itemStyle: {
+                      color: new echarts.graphic.LinearGradient(
+                          0, 0, 0, 1,
+                          [
+                              {offset: 0, color: '#2378f7'},
+                              {offset: 0.7, color: '#2378f7'},
+                              {offset: 1, color: '#83bff6'}
+                          ]
+                      )
+                  }
+              },
+              data: [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220]
+          }
+        ]
+      },
+      accurChart:null
     }
   },
   components: {
@@ -181,15 +287,26 @@ export default {
     mListO:m_list
   },
   created(){
+    this.getIndexData()
+    // this.$axios.get('Overview/getVehicleOperation?token=token_for_show')
+    // .then(res => {
+    //   console.log(res.data)
+    // })
+    // .catch(err => {
+    //   console.log(err); 
+    // })
   },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
+    // this.getIndexData();
     this.initAccidentStaticsChart();
-    that.initSumCharts();
-    // that.initAccurCharts();
+    // setTimeout(()=>{
+        // that.initSumCharts();
+        that.initAccurCharts();
+    // },1000);
   },
   destroyed() {
     this.flyRoutes = [];
@@ -198,24 +315,56 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
-    /**
-     * 初始化省内车辆运行态势echarts
-     */
-    initAccidentStaticsChart(){
-      let that=this;
-      interf.GET_PRO_CAR_API({})
+    //获取统计数据
+  getIndexData() {
+      let that = this;
+    // 获取进出陕车辆数据 // timelist	True	String	日期// outlist	True	String	流出辆次
+   // inlist	True	String	进入辆次 // msg	True	String	错误信息  
+      interf.GET_VEH_CAR_API({
+        id:""
+      })
       .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+             console.log(data)
+            if (data.errcode == 0) {
+              this.chart_data.timelist=data.data.timelist;
+              this.chart_data.y1data=data.data.inlist;
+              this.chart_data.y2data=data.data.outlist;
+              // let setChartData={};
+            //  setChartData=data.data;
+            //  setChartData.legend=that.chart_data.legend;
+            //  blur.$emit("setData",setChartData) 
+            } else {
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+       .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        })
+      //	省内车辆运行态势
+    // const {data:res}=await interf.GET_PRO_CAR_API({
+   interf.GET_PRO_CAR_API({
+        id:""
+      })
+      .then(response => {
+          if (response && response.status == 200) {
+            // console.log(response.data)
+            var data = response.data;
+             console.log(data)
             if (data.errcode == 0) {
                 that.listItems[0].value=data.data.cscount;
+                // console.log(this.listItems[0].value)
                 that.listItems[1].value=data.data.count;
                 that.avg=data.data.avg;
-                if(!that.accident_chart){
-                  that.accident_chart = echarts.init(document.getElementById('overview-info_sort'));
-                };
-                that.accident_option.series[0].data=[{name:'超速次数',value:that.listItems[0].value},{name:'总检测数',value:that.listItems[1].value}]
-                that.accident_chart.setOption(that.accident_option);
             } else {
               that.$message({
                 message: data.errmsg,
@@ -233,40 +382,41 @@ export default {
         });
     },
     /**
-     * 初始化进出陕车辆趋势echarts
+     * 生成警情分别类统计echarts
+     */
+    initAccidentStaticsChart(){
+      console.log(this.listItems)
+
+      // let a=this.listItems
+      // console.log(this.listItems[0].label)
+      console.log(this.listItems[0].value,typeof(this.listItems[0].value))
+       if(!this.accident_chart){
+        this.accident_chart = echarts.init(document.getElementById('overview-info_sort'));
+      };
+     
+        this.accident_option.series[0].data=[{name:'超速次数',value:this.listItems[0].value},{name:'总检测数',value:this.listItems[1].value}]
+        this.accident_chart.setOption(this.accident_option);  
+    
+               
+          
+    },
+    /**
+     * 生成发生数量趋势echarts
      */
     initSumCharts(){
-      let _this=this;
-      interf.GET_VEH_CAR_API({})
-      .then(response => {
-          if (response && response.status == 200) {
-            var data = response.data;
-            if (data.errcode == 0) {
-              let _data=_this.chart_data;
-              _data.xdata=data.data.timelist;
-              _data.y1data=data.data.inlist;
-              _data.y2data=data.data.outlist;
-             _this.chart_data=_data;
-            } else {
-              _this.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-          }
-        })
-       .catch(err => {
-          console.error(err);
-        })
-        .finally(() => {
-          _this.tableLoading = false;
-        })
+      if(!this.countChart){
+        this.countChart = echarts.init(document.getElementById('sumCountChange'));
+      };
+      this.countChart.setOption(this.accurChangeOption);
     },
     /**
      * 生成重大事故发生趋势echarts
      */
     initAccurCharts(){
+      if(!this.accurChart){
+        this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
+      };
+      this.accurChart.setOption(this.accurChangeOption);
     }
   }
 };
@@ -283,15 +433,15 @@ export default {
   position: fixed;
   z-index: 10;
   right: 1vw;
-  width: 400px;
+  width: 17vw;
   height: 80vh;
-  top: 10vh;
+  top: 9vh;
   color: white;
 }
 .overview-info_container {
   width: 100%;
   height: 100%;
-  // background-color: $color-bg-1;
+  background-color: $color-bg-1;
   // border: 1px solid $color-border-1;
   .overview-info_title {
     position: relative;
@@ -366,13 +516,7 @@ export default {
     @include flex(row, center,center);
     width:50%;
   }
-  .avg{
-    position: absolute;
-    left: 48%;
-    width: 50%;
-    height: auto;
-  }
-  >div:nth-child(3){
+  >div:nth-child(2){
     height: 100%;
     width: 40%;
   }
@@ -387,5 +531,9 @@ export default {
     height:25vh;
   }
 }
-
+.avg{
+  position: fixed;
+  right: 4.5vw;
+  top:21.5vh;
+}
 </style>

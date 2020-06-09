@@ -30,11 +30,14 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
+
 export default {
   name: "overview_statics",
   data() {
     return {
       map: {},
+      // map: commonVariable.CURRENT_MAP,
+      citymapDatas:[],
       datas:{
         jq:{count:13512,history:'+123',yestoday:'-122',main:'2'},
         sg:{count:13512,hurt:'123',die:'3',main:'0'},
@@ -63,6 +66,54 @@ export default {
     //获取巡航数据
     getIndexData() {
       let that = this;
+    // 在地图上显示城市流动数据
+    // 总览页面地图城市流动数据 Overview/getMapVehicleIn  GET_MAP_CITY_FLOW_API
+    interf.GET_MAP_CITY_FLOW_API({
+        id:"",
+      })
+      .then(response=>{
+        if (response && response.status == 200){
+          var data= response.data;
+          // console.log(data)
+          if (data.errcode == 0) {
+            that.citymapDatas=data.data;
+            console.log(that.citymapDatas)
+            for(var item of that.citymapDatas){
+            // console.log(item,item.addIn,item.city,item.latitude,item.longitude)
+            }
+            let mainDiv = $("<div style='border:1px solid #9A9A9A;height:33px;width:80px'></div>");
+            let leftimgDiv = $("<div class='tpi' style='width:20px;height:22px;text-align: center;float:left;background:" + curTpiColor + ";color:#2c3453;></div>");
+            let topSpan = $("<span style='font-weight: bold;font-size: 16px;margin-bottom: 8px;font-family: \"Microsoft YaHei\";'>"+item.city+"</span>");
+            let bottomSpan=$("<span style='font-weight: bold;font-size: 16px;margin-bottom: 8px;font-family: \"Microsoft YaHei\";'>" +item.addIn+"</span>");
+            bottomSpan.append(topSpan);
+            bottomSpan.append(leftimgDiv);
+            mainDiv.append(bottomSpan);
+          
+            let pointPopup = new minemap.Popup({
+              closeOnClick: false, 
+              offset: [0, 0], 
+              closeButton: false
+            }) 
+            pointPopup.setLngLat().setDOMContent(mainDiv[0]);
+            // pointPopup.addTo(commonVariable.CURRENT_MAP);
+            // commonVariable.MAP_POPUP_OVERALL_ARRAY[item.areaId] = pointPopup;
+            $(".minemap-popup-content").css("padding", "0");
+            $(".minemap-popup-tip").css("border-top-color", "#2c3453");
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     // $.ajax({
     //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
     //     headers: {

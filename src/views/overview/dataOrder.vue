@@ -1,10 +1,13 @@
 <template>
   <div class="city_index_chart">
-    <!-- <m-tile  :label="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'"></m-tile> -->
-    <div v-if="order_value==0">
+    <!-- <m-tile  label="过车数据回传排行"></m-tile> -->
+    <m-tile  :label="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'"></m-tile>
+    <!-- <m-tile  label="今日轨迹接口调用情况" ></m-tile> -->
+    <div>
       <el-table
-         
+          v-show="order_value==0"
           :data="indexDatascar"
+          style="width: 100%"
           highlight-current-row
           height="55vh"
           :default-sort="{prop: 'TODAYNUM', order: 'descending'}"
@@ -12,16 +15,18 @@
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
     >
-          <el-table-column fixed type="index" label="No" width="70"></el-table-column>
-          <el-table-column prop="YJDFZJG" label="城市"  width="100"></el-table-column>
+          <el-table-column fixed type="index" label="No" width="60"></el-table-column>
+          <el-table-column prop="YJDFZJG" label="城市"  ></el-table-column>
           <el-table-column prop="TODAYNUM" label="今日上传" ></el-table-column>
           <el-table-column prop="YESTERDAYNUM" label="昨日上传"  sortable></el-table-column>
           <el-table-column prop="TODAYPROPORTION" label="今日上传占比"  sortable></el-table-column>
       </el-table>
     </div>
-    <div v-else>
+    <div>
       <el-table
+          v-show="order_value==1"
           :data="indexDatas"
+          style="width: 100%"
           highlight-current-row
           height="55vh"
           :default-sort="{prop: 'YESTERDAYNUM', order: 'descending'}"
@@ -29,13 +34,13 @@
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
         >
-          <el-table-column fixed type="index" label="序号" width="70"></el-table-column>
-          <el-table-column prop="city" label="城市" width="100"></el-table-column>
+          <el-table-column fixed type="index" label="序号" width="60"></el-table-column>
+          <el-table-column prop="city" label="城市" ></el-table-column>
           <el-table-column prop="反恐怖" label="反恐怖" sortable></el-table-column>
           <el-table-column prop="公安部" label="公安部" sortable></el-table-column>
           <el-table-column prop="行动技术" label="行动技术" sortable></el-table-column>
-          <el-table-column prop="刑侦" label="刑侦" sortable></el-table-column>
-          <el-table-column prop="TODAYPROPORTION" label="总计" sortable></el-table-column>
+          <el-table-column prop="刑侦" label="刑侦"  sortable></el-table-column>
+          <el-table-column prop="TODAYPROPORTION" label="总计"  sortable></el-table-column>
         </el-table>
     </div>
   </div>
@@ -50,8 +55,8 @@ export default {
   name: "cityIndexChart",
   props: {
     order_value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ""
     },
     // indexDatascar,
   },
@@ -84,36 +89,26 @@ export default {
     mTile: title
   },
   mounted() {
-      this.$nextTick(() => {
-        this.getIndexData()
-      })
+
   },
   methods: {
-     getIndexData() {
-      let that = this;
-      //获取历史过车数据列表  GET_HIS_CAR_LIST_API
-      if(this.order_value){
-        interf.GET_TRAIL_LIST_API({}).then(response=>{
-          if (response && response.status == 200){
-            var data=response.data;
-            console.log(data)
-            if(data.errcode==0){
-              that.indexDatas=data.data;
-            }
-          }
-        })
-      }else{
-        interf.GET_HIS_CAR_LIST_API({}).then(response=>{
-          if (response && response.status == 200){
-            var data=response.data;
-            if(data.errcode==0){
-              that.indexDatascar=data.data;
-            }
-          }
-        })
-      }
-      
-    },
+    //  getIndexData() {
+    //   let that = this;
+    //   //获取历史过车数据列表  GET_HIS_CAR_LIST_API
+    //   interf.GET_HIS_CAR_LIST_API({
+    //     id:""
+    //   })
+    //   .then(response=>{
+    //     if (response && response.status == 200){
+    //       var data=response.data;
+    //       console.log(data)
+    //       if(data.errcode==0){
+    //         that.indexDatascar=data.data;
+    //         console.log(that.indexDatas)
+    //       }
+    //     }
+    //   })
+    // },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
       return "background:transparent;";
@@ -127,12 +122,6 @@ export default {
 .city_index_chart {
   width: 100%;
   height: 45vh;
-  
-  .title{
-    width:60%;
-    color:white;
-    font-size:20px;
-  }
   .section{
     position:absolute;
     right:2vw;
