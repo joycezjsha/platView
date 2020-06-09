@@ -28,7 +28,7 @@
       }
     },
     mounted(){
-      this.$store.commit("setRight", '20vw');
+      this.$store.commit("setRight", '22vw');
     },
     components:{top,lTable,tableInfo:table_info,statics}
   }

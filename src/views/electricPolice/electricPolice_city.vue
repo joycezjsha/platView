@@ -315,7 +315,7 @@ export default {
       overflow-y: auto;
     }
     .road_label{
-      color:$color-label;
+      color:$color-text-label;
       margin-right:1vw;
     }
   }

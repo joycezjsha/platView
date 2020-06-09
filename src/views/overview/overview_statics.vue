@@ -165,10 +165,10 @@ export default {
 .overview-statics {
   position: absolute;
   z-index: 10;
-  left: 30vw;
-  width: 35vw;
-  height: 12vh;
-  top: 10vh;
+  left: 28vw;
+  width: 835px;
+  height: 147px;
+  top: 8vh;
   color:$color-white;
   // border-image: linear-gradient(-51deg,#19559a, #02082f);
   // background-image: linear-gradient(#033a79cf, #02082fde);
@@ -176,12 +176,11 @@ export default {
     background-size: 100% 100%;
   @include flex(row, center,center);
   &--tab{
-    width:10vw;
+    width:33%;
     height:10vh;
-    // border:1px solid $color-text-sub;
-    border-right: 1px solid #02082f;
-    // border-image: linear-gradient(#063672,#ffffff,#063672);
-    padding: 2%;
+    border-right: 1px solid;
+    border-image: linear-gradient(rgba(0,255,255,0), #27345b 20%, #2f4162 80%, rgba(236, 239, 239, 0)) 1;
+    padding: 2% 5%;
      @include flex(column, center,center);
      >div{
        @include flex(row, center,center);
@@ -196,7 +195,7 @@ export default {
        }
       
        span.label{
-            color:$color-label;
+            color:$color-text-label;
           }
           span.value{
             font-family: Hiragino Sans GB;
@@ -211,7 +210,7 @@ export default {
         font-family: 'DS-Digital-BoldItalic';
         width: 40%;
         font-size: 1.5vw;
-        color: #409EFF;
+        color: $color-primary;
         margin-bottom: 0.3vw;
       }
     }
@@ -229,19 +228,21 @@ export default {
         width:20%;
       }
       span.label{
-        width:60%;
+        width:40%;
         align-items: start;
       }
       span.value{
-        width:10%;
+        width:30%;
+        color:$color-red;
       }
     }
     &_main_{
       span.label{
-        width:80%;
+        width:65%;
       }
       span.value{
         width:10%;
+        color:$color-primary;
       }
     }
   }
