@@ -68,7 +68,7 @@
          <el-table 
           v-for="item in indexDatas" :key="item.key" 
           :data="indexDatas" style="width:100%"
-           height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
+           height="42vh" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
            <el-table-column fixed type="index" label="No" width="60" ></el-table-column>   
            <el-table-column prop="city" label="城市"  ></el-table-column>

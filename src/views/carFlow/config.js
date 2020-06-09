@@ -6,6 +6,38 @@ import service from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
+  //车辆流动页面地图城市流动数据 Vehicle/getMapVehicleIn
+  GET_MAP_CITY_FLOW_API:data=> {
+    return http.service({
+      url:`Vehicle/getMapVehicleIn`,
+      method:'get',
+      params:data
+    })
+  },
+  //车辆流动页面地图热点卡口  Vehicle/getHotspotBayonetRanking
+  GET_MAP_HOT_BAY_API:data=> {
+    return http.service({
+      url:`Vehicle/getHotspotBayonetRanking`,
+      method:'get',
+      params:data
+    })
+  },
+  // 车辆流动页面热点卡口 Vehicle/getHotspotBayonetRanking
+  GET_HOT_RANK_API:data=> {
+    return http.service({
+      url:`Vehicle/getHotspotBayonetRanking`,
+      method:'get',
+      params:data
+    })
+  },
+  // 车辆流动页面热点道路 Vehicle/getHotspotRoadRanking
+  GET_HOT_ROAD_API:data=> {
+    return http.service({
+      url:`Vehicle/getHotspotRoadRanking`,
+      method:'get',
+      params:data
+    })
+  },
   // 车辆流动页面  归属地分析  Vehicle/getVehicleOwnership
   GET_BELONG_API:data=> {
     return http.service({

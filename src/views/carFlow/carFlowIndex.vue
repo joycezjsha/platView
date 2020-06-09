@@ -26,7 +26,7 @@ export default {
       map: {},
       i:1,
 
-      isShow:1, //显示对应的div
+      isShow:1, //显示对应的组件
       // showhotcard:false
     };
   },

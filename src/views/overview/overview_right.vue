@@ -70,7 +70,7 @@ export default {
         chart_data:{
           legend: ["进入辆次", "流出辆次"],
           timelist:[],
-          inlist: [     
+          y1data: [     
               // ["2016-10-4", 204],
               // ["2016-10-5", 201],
               // ["2016-10-6", 198],
@@ -81,7 +81,7 @@ export default {
               // ["2016-10-11", 177],
               // ["2016-10-12", 184]
             ], 
-            outlist:[ ]
+            y2data:[ ]
         },
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
@@ -287,6 +287,7 @@ export default {
     mListO:m_list
   },
   created(){
+    this.getIndexData()
     // this.$axios.get('Overview/getVehicleOperation?token=token_for_show')
     // .then(res => {
     //   console.log(res.data)
@@ -300,7 +301,7 @@ export default {
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
-    this.getIndexData();
+    // this.getIndexData();
     this.initAccidentStaticsChart();
     // setTimeout(()=>{
         // that.initSumCharts();
@@ -315,7 +316,7 @@ export default {
   },
   methods: {
     //获取统计数据
-  async getIndexData() {
+  getIndexData() {
       let that = this;
     // 获取进出陕车辆数据 // timelist	True	String	日期// outlist	True	String	流出辆次
    // inlist	True	String	进入辆次 // msg	True	String	错误信息  
@@ -325,12 +326,15 @@ export default {
       .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            //  console.log(data)
+             console.log(data)
             if (data.errcode == 0) {
-              let setChartData={};
-             setChartData=data.data;
-             setChartData.legend=that.chart_data.legend;
-             blur.$emit("setData",setChartData) 
+              this.chart_data.timelist=data.data.timelist;
+              this.chart_data.y1data=data.data.inlist;
+              this.chart_data.y2data=data.data.outlist;
+              // let setChartData={};
+            //  setChartData=data.data;
+            //  setChartData.legend=that.chart_data.legend;
+            //  blur.$emit("setData",setChartData) 
             } else {
               that.$message({
                 message: data.errmsg,
@@ -341,14 +345,14 @@ export default {
           }
         })
        .catch(err => {
-          console.error(err);
+          console.log(err);
         })
         .finally(() => {
           that.tableLoading = false;
         })
       //	省内车辆运行态势
     // const {data:res}=await interf.GET_PRO_CAR_API({
-    await interf.GET_PRO_CAR_API({
+   interf.GET_PRO_CAR_API({
         id:""
       })
       .then(response => {

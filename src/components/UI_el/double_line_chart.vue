@@ -198,14 +198,11 @@ export default {
   },
   components: {},
   mounted() {
-      // this.$nextTick(() => {
-      //       this.initAccidentStaticsChart()
-      //   })
-      blur.$on('setData',data=>{
-        if(data){
-          this.initAccidentStaticsChart(data);
-        }
-      })
+      // blur.$on('setData',data=>{
+      //   if(data){
+          this.initAccidentStaticsChart();
+      //   }
+      // })
    
   },
   destroyed(){
@@ -217,14 +214,17 @@ export default {
      * 生成警情分别类统计echarts
      */
     initAccidentStaticsChart() {
+      console.log(this.chart_data)   
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
       this.option.legend.data = this.chart_data.legend;
       this.option.yAxis[0].name=this.chart_data.legend[0];
       this.option.yAxis[1].name=this.chart_data.legend[1];
+      console.log(this.chart_data.y1data,this.chart_data.y2data)
       this.option.series[0].data =this.chart_data.y1data;
       this.option.series[1].data =this.chart_data.y2data;
+      console.log(this.option.series[0].data)
       this.chart.setOption(this.option);
     }
   }
