@@ -29,7 +29,7 @@
         iconTraffic:conf.IMG.iconTraffic,
         iconRoadCondition:'',
         show3D:false,
-        compassBoxStyle:{"display":"flex","align-items": "center","justify-content":"center","background":"url("+conf.IMG.iconCompassBG+")","background-repeat":"no-repeat","width":"48px","height": "48px"},
+        compassBoxStyle:{"display":"flex","align-items": "center","justify-content":"center","background":"url("+conf.IMG.iconCompassBG+")","background-repeat":"no-repeat","width":"33px","height": "33px"},
         trafficArr:[],
         isShowTraffic:true,
         trafficParticleIds:[]

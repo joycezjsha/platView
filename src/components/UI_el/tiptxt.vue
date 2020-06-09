@@ -45,7 +45,7 @@ export default {
     color: #A6AFCD;
     // background: rgba(255,255,255,0.298039);
     height: auto;
-    line-height: 3vh;
+    line-height: 4vh;
     margin: 2% 0;
     padding: 5px;
     width: 98%;

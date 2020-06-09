@@ -74,7 +74,7 @@
   background-color: transparent;color:white;
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td{
-background-color: rgb(14, 182, 233);
+background-color: #0367A6;
 color:white;
 }
 .el-input__inner,.el-range-editor .el-range-input {

@@ -358,7 +358,7 @@ export default {
       @include flex(row,center);
       &--label{
         width:15%;
-        color:$color-label;
+        color:$color-text-label;
         display:inline-block;
         @include flex(row,center);
       }
