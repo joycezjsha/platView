@@ -258,7 +258,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          localStorage.removeItem("access-user");
+          window.sessionStorage.clear()
+          // localStorage.removeItem("access-user");
           this.$router.push('/login');
         })
         .catch(() => {});

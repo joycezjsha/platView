@@ -146,21 +146,30 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.path.startsWith('/login')) {
-    sessionStorage.removeItem('token')
-    next()
-  } else {
-    if(to.path.startsWith(to.path)){
-      next()
-    }else{
-      let user = sessionStorage.getItem('token')
-      if (!user) {
-        next({path: '/login'})
-      } else {
-        next()
-      }
-    };
-  }
-});
+
+router.beforeEach((to, from, next)=>{
+  if(to.path=='/login') return next()
+  const tokenstr=window.sessionStorage.getItem('token')
+  if(!tokenstr)   return next('/login')
+  next()
+})
+
+// router.beforeEach((to, from, next) => {
+//   if (to.path.startsWith('/login')) {
+//     sessionStorage.removeItem('token')
+//     next()
+//   } else {
+//     if(to.path.startsWith(to.path)){
+//       next()
+//     }else{
+//       let user = sessionStorage.getItem('token')
+//       if (!user) {
+//         next({path: '/login'})
+//       } else {
+//         next()
+//       }
+//     };
+//   }
+// });
+
 export default router

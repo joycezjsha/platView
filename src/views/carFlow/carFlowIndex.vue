@@ -2,25 +2,32 @@
   <div class="car-flow">
     <car-table></car-table>
     <middle></middle>
-    <!-- <car-info></car-info> -->
-    <belong></belong>
-    <!-- <hotcard></hotcard> -->
+    <div>
+      <car-info v-if="isShow==1"></car-info>
+      <belong v-if="isShow==2"></belong>
+      <hotcard  v-if="isShow==3"></hotcard>
+    </div>
+    
   </div>
 </template>
 
 <script>
 import { IMG } from "./config";
 import table from "./car_table";
-import car_info from "./car_info";
-import blur from "@/blur";
+import blur from '../../blur.js'
 import middle from "./middle";
+import car_info from "./car_info";
 import belong from "./belong";
 import hotcard from "./hotcard";
 export default {
   name: "carFlow",
   data() {
     return {
-      map: {}
+      map: {},
+      i:1,
+
+      isShow:1, //显示对应的组件
+      // showhotcard:false
     };
   },
   components:{
@@ -31,8 +38,14 @@ export default {
     hotcard
   },
   mounted() {
-    this.map = this.$store.state.map;
     let that = this;
+     blur.$on('realtime',showcarinfo=>{
+       if(!showcarinfo) this.isShow=1;
+       this.isShow=showcarinfo;
+      console.log(showcarinfo)
+    })
+     
+    this.map = this.$store.state.map;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.map.repaint = true;

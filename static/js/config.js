@@ -16,8 +16,9 @@ var mapConfig = {
   MAX_ZOOM: 16.9,
   MIN_ZOOM: 3
 }
+
 var urlConf = {
   /*接口地址*/
-  BASE_URL: '//'+ip+'/',
+  BASE_URL: '//'+ip,
   IMG_PATH :'./static/images/'
 }
