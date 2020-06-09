@@ -8,19 +8,15 @@
               <!-- <span class='span_title'>过车数据</span> -->
               <m-title label='过车数据' img_type=1 style='width:6vw'></m-title>
               <el-button style="float: right; padding: 3px 0;position:absolute;top:3%;right:2%;" type="text" icon="iconfont icon-xiangxiqingkuang" @click='showOrder(0)' >详细情况</el-button>
-              <el-dialog title :visible.sync="drawer" append-to-body>
-                <data-order :order_value="order_value"></data-order>
-              </el-dialog>
-              <!-- <data></data> -->
             </div>
             <div class="top-container">
               <div class='top-container-row'>
-                <el-col :span='5' style='width:8vw'>历史过车数据：</el-col>
+                <el-col :span='5' style='width:50%'>历史过车数据：</el-col>
                 <el-col :span='19' class="row_value">{{passCarCount.count}}</el-col>
               </div>
               <div class='top-container-row-'>
-                <div>今日上传<br/><span class="row_value_">{{passCarCount.todayCount}}</span></div>
-                <div>昨日上传<br/><span class="row_value_">{{passCarCount.yesterdayCount}}</span></div>
+                <div>今日上传<br/><span class="row_value_">{{passCarCount.todayCount}}<span>次</span></span></div>
+                <div>昨日上传<br/><span class="row_value_">{{passCarCount.yesterdayCount}}<span>次</span></span></div>
               </div>
             </div>
           </el-card>
@@ -28,7 +24,7 @@
         <div class="back">
           <el-card class="box-card boxstyle">
             <div slot="header" class="clearfix">
-              <m-title label='轨迹查询' img_type=1 style='width:6vw'></m-title>
+              <m-title label='轨迹查询' img_type=1 style='width:50%'></m-title>
               <el-button style="float: right; padding: 3px 0;position:absolute;top:3%;right:2%;" type="text" icon="iconfont icon-xiangxiqingkuang" @click='showOrder(1)'>详细情况</el-button>
             </div>
             <div class="top-container">
@@ -37,8 +33,8 @@
                 <el-col :span='19' class="row_value">{{trailCallCount.count}}</el-col>
               </div>
               <div class='top-container-row-'>
-                <div>今日调用<br/><span class="row_value_">{{trailCallCount.todayCount}}</span></div>
-                <div>昨日调用<br/><span class="row_value_">{{trailCallCount.yesterdayCount}}</span></div>
+                <div>今日调用<br/><span class="row_value_">{{trailCallCount.todayCount}}<span>次</span></span></div>
+                <div>昨日调用<br/><span class="row_value_">{{trailCallCount.yesterdayCount}}<span>次</span></span></div>
               </div>
             </div>
           </el-card>
@@ -47,7 +43,7 @@
     </div>
     <div class='overview-left-div--center boxstyle'>
        <!-- <span class='span_title'>交通动态监测</span> -->
-       <m-title label='交通动态监测' img_type=1  style='width:9vw'></m-title>
+       <m-title label='交通动态监测' img_type=1  style='width:7vw'></m-title>
        <div class='center_txt'>实时统计上一个小时（15:00-16:00）的流动情况</div>
        <div class='center_statics'>
          <div class='center_statics--count'>陕西省<br/>
@@ -61,17 +57,17 @@
             </span>
          </div>
          <div class='center_statics--radio'>进出比<br/>
-         <span class="">{{centerstatics.inoutProportion | number}}</span></div>
+         <span class="">{{centerstatics.inoutProportion | number}}%</span></div>
        </div>
        <div class='center_table' >
          <!-- style="width: 100%"  max-height="250" -->
          <el-table 
           v-for="item in indexDatas" :key="item.key" 
-          :data="indexDatas" style="width:100%"
-           height="42vh" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
+          :data="indexDatas" style="width:94%;margin:0 3%;"
+           height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-           <el-table-column fixed type="index" label="No" width="60" ></el-table-column>   
-           <el-table-column prop="city" label="城市"  ></el-table-column>
+           <el-table-column fixed type="index" label="No" width="50" ></el-table-column>   
+           <el-table-column prop="city" width="60" label="城市"  ></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
             <el-table-column prop="proportion" label="进出比" sortable>
@@ -83,20 +79,22 @@
        </div>
     </div>
     <div class='overview-left-div--bottom  boxstyle'>
-      <m-title label='境内路况监测' img_type=1  style='width:9vw'></m-title>
+      <m-title label='境内路况监测' img_type=1  style='width:7vw'></m-title>
        <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
-            <p>{{i+1}}<span>{{item.road}}</span>
-            <span class="address-name">{{item.startRoad}}--->{{item.endRoad}}</span>
+            <p><span class='number'>{{i+1}}</span><span class='road'>{{item.road}}</span>
+              <span class="address-name">{{item.startRoad}}--->{{item.endRoad}}</span>
             </p>
-            <span>平均速度:<span class="text">{{item.averageSpeed}}</span></span>
-            <span>路长:<span class="address-name text">{{item.length}}</span></span>
+            <p>
+              <span class='road'>平均速度:<span class="text">{{item.averageSpeed}}km/h</span></span>
+              <span class="address-name">路长:<span class="text">{{item.length}}km</span></span>
+            </p>
           </li>
         </ul>
     </div>
-    <!-- <el-dialog title="" :visible.sync="drawer">
-      <data-order :value='order_value'></data-order>
-    </el-dialog> -->
+    <el-dialog :title="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'" :visible.sync="drawer" append-to-body class='data-order'>
+      <data-order :order_value="order_value"></data-order>
+    </el-dialog>
   </div>
 </template>
 
@@ -167,7 +165,6 @@ export default {
   },
   destroyed() {
     this.map.setPitch(0);
-    this.clearMap();
   },
   methods: {
   
@@ -211,22 +208,16 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           var data= response.data;
-          console.log(data)
           if (data.errcode == 0) {
             that.centerstatics.incount=data.data.incount;
-            //  console.log(that.centerstatics.count)
             that.centerstatics.addIn=data.data.addIn;
             that.centerstatics.outcount=data.data.outcount;
             that.centerstatics.inoutProportion=data.data.inoutProportion;
       
             var obj=data.data.data;
-            // console.log(obj)
            for(var key in obj){
-
-            // obj[key].city=key
             that.indexDatas.push(obj[key])
            }
-           console.log(that.indexDatas)
           }else{
             that.$message({
               message: data.errmsg,
@@ -355,14 +346,14 @@ export default {
   position: absolute;
   z-index: 10;
   left: 1vw;
-  width: 23vw;
-  height: 80vh;
+  width: 450px;
+  height: 90vh;
   top: 9vh;
   color:$color-white;
   @include flex(column, center,center);
   &--top{
     width:100%;
-    height:25%;
+    height:22%;
     perspective:1000;transform-style:preserve-3d;
     // background: url('./image/left_top_bg.png')no-repeat;
     // background-size: 100% 100%;
@@ -420,8 +411,11 @@ export default {
         }
         .row_value_{
           text-align:center;
-          color:$color-active;
-          font-size:1vw;
+          font-size:0.7vw;
+          span{
+            color:$color-text-label;
+            font-size:0.7vw;
+          }
         }
       }
     }
@@ -429,19 +423,21 @@ export default {
   &--center{
     clear:both;
     width:100%;
-    height:35vh;
+    height:50%;
     overflow:hidden;
     // overflow:scroll;
-    padding:0 10px 10px 10px;
+    padding:0 10px;
     .center_txt{
       width:100%;
-      height:3vh;
+      height:4vh;
+      line-height:4vh;
       padding-left:5%;
       color:$color-info;     
     }
     .center_statics{
       width:100%;
-      height:4vh;
+      height:7vh;
+      font-style: italic;
       @include flex(row, center,center);
       &--count{
         width:30%;
@@ -450,6 +446,9 @@ export default {
       &--inout{
         width:30%;
         @include flex(column, center,center);
+        .row_value_{
+          font-size:0.7vw;
+        }
       }
       &--radio{
         width:30%;
@@ -458,7 +457,7 @@ export default {
     }
     .center_table{
       // width:474px;
-      // height:407px;
+      height:65%;
       width:100%;
       
     }
@@ -466,22 +465,74 @@ export default {
   &--bottom{
     width:100%;
     height:30%;
-    padding:0 10px 10px 10px;
+    margin-top:8%;
+    padding:0 10px;
     ul{
-      margin:0;
+      margin:3% 0 0 0;
       display: block;
-      width: 80%;
+      padding: 0 15px;
+      width: 90%;
       li{
-        border-bottom: 1px solid $color-info;
+        // border-bottom: 1px solid $color-info;
+        margin-bottom: 20px;
+        >p{
+          margin:2% 0;
+          >span{
+            display: inline-block;
+            font-size: 0.8vw;
+            
+            .text{
+              // color:$color-text-label;
+              color: $color-text-value;
+            }
+          }
+        }
+        >p:nth-child(1){
+          .number{
+            width:15%;
+            text-align:center;
+          }
+          .road{
+            width: 15%;
+          }
+          .address-name{
+            width:68%;
+            text-align:right;
+          }
+        }
+        >p:nth-child(2){
+          margin-left:15%;
+          .road{
+            width: 40%;
+            color:$color-text-label;
+             .text{
+              color: $color-text-value;
+            }
+          }
+          .address-name{
+            width:58%;
+            text-align:right;
+            color:$color-text-label;
+            .text{
+              color: $color-text-value;
+            }
+          }
+        }
       }
     }
   }
 }
-.overview-left-div--bottom span{
-  margin: 0 1vw;
-  
-}
-.overview-left-div--bottom .text{
-  color: #0CA6FF;
+
+</style>
+<style lang='scss'>
+.data-order {
+  .el-dialog{
+      background: url(./image/dialog_bg.png) no-repeat;
+      background-size:100% 100%;
+    }
+  .el-dialog__title{
+    color:white;
+    font-size:20px;
+  }
 }
 </style>

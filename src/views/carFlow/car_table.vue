@@ -117,11 +117,11 @@ export default {
   },
   methods: {
     // 如果点击今天或者昨天，之后在点击对应的城市，获取对应城市今天或者昨天的总计进入车辆辆次的数据
-    getdayDatas(){
-     
+    getdayDatas(){  
+
     },
     // showData() 默认实时数据 点击城市获取对应城市  总计进入车辆辆次的数据  GET_VEH_PRO_API
-    showData(xzqh,city){
+    showData(xzqh,city,stime){
       let that = this;
       // 车辆类型分析
       that.xzqh=xzqh;
@@ -158,7 +158,7 @@ export default {
       // 点击城市获取对应城市  总计进入车辆辆次的数据  GET_VEH_PRO_API
       interf.GET_VEH_PRO_API({
         id:"",
-        stime:'1',
+        stime:that.stime,
         xzqh:that.xzqh
       })
      .then(response=>{
@@ -166,7 +166,7 @@ export default {
         //  console.log(response)
            var data = response.data;
            data.data['city']=city
-          //  console.log(data)
+           console.log(data)
            blur.$emit('getcitys',data)
            if (data.errcode == 0) {
 
@@ -218,12 +218,12 @@ export default {
         that.tableLoading = false;
       });
     }
-      // 点击城市获取对应城市  车辆类型分析数据 默认显示进去的数据
+    // 点击城市获取对应城市的车辆类型分析数据 默认显示进去的数据
       interf.GET_VEH_TYPE_API({
         id:"",
-        stime:'1',
+        stime:that.stime,
         xzqh:that.xzqh,
-        fxlx:'1'
+        fxlx:that.fxlx
       })
       .then(response=>{
        if (response && response.status == 200){

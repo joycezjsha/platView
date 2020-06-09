@@ -308,6 +308,7 @@ export default {
     this.getTrafficData();
     that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData()
+    that.carflowData(that.stime)
     // that.initSumCharts();
     // that.initAccurCharts();
     
@@ -335,6 +336,7 @@ export default {
     goback(){
       this.showback=false;
       this.getprovinceData()
+      that.getIndexDatas(that.stime,that.fxlx) 
       // this.getprovinceData(stime,xzqh)
     },
     // 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
@@ -420,10 +422,48 @@ export default {
         that.tableLoading = false;
       });
     },
+    /**
+     * 车辆流动页面流动趋势 默认显示实时数据  GET_FLOW_TREND_API 
+     */
+    carflowData(stime){ 
+      let that = this;   
+      interf.GET_FLOW_TREND_API({
+        id:"",
+        stime:stime
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(data)
+           if (data.errcode == 0) {
+             var obj=data.data;
+            //  for(){
+            //    that.
+            //  }
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+  
+    },
+    /**
+     * 车辆流动页面车辆类型分析  默认显示实时的数据
+     * 如果客户没有点击进入或者流出，默认显示进入的数据  GET_VEH_TYPE_API
+     */
     getIndexDatas(stime,fxlx){
-      let that=this;
-   // 车辆流动页面车辆类型分析  默认显示实时的数据 如果客户没有点击进入或者流出，默认显示进入的数据  GET_VEH_TYPE_API
-    interf.GET_VEH_TYPE_API({
+      let that=this;  
+      interf.GET_VEH_TYPE_API({
         id:"",
         stime:stime,
         fxlx:fxlx
@@ -456,36 +496,7 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
-    // 车辆流动页面流动趋势 默认显示实时数据  GET_FLOW_TREND_API
-      interf.GET_FLOW_TREND_API({
-        id:"",
-        stime:that.stime
-      })
-      .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-           console.log(data)
-           if (data.errcode == 0) {
-             var obj=data.data;
-            //  for(){
-            //    that.
-            //  }
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-  
+   
     
     },
     //获取巡航数据
