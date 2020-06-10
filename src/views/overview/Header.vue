@@ -68,7 +68,7 @@ $percent100: 100%;
 }
 ._nav_header {
   width: $percent100;
-  height: 8vh;
+  height: 87px;
   position: fixed;
   left: 0;
   top: 0;

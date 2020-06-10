@@ -4,6 +4,8 @@
 import http from '../../common/httpUtil'
 import warningInstance from './image/warningInstance.png'
 import accident from './image/accident.png'
+import jqImg from './image/jq.png'
+import sgImg from './image/sg.png'
 export const interf={
   // 	总览页面地图城市流动数据 Overview/getMapVehicleIn
   GET_MAP_CITY_FLOW_API:data => {
@@ -61,15 +63,6 @@ export const interf={
       params:data
     })
   },
-     //获取历史过车数据列表
-  // GET_HIS_CARLIST_API:data => {
-  //   return http.httpConnect("get", "Overview/getPassingDataDetals",data,
-  //   function(data){
-  //     callback(data);
-  //   },function(e){
-      
-  //   })
-  // },
   // 获取省内车辆运行态势数据
   GET_PRO_CAR_API:data => {
     return http.service({
@@ -94,10 +87,36 @@ export const interf={
   //     params:data
   //   })
   // },
+  //获取地图城市流动数据
+  GET_MAP_CITY_FLOW_API:data => {
+    return http.service({
+      url:`Overview/getMapVehicleIn`,
+      method:'get',
+      params:data
+    })
+  },
+  //获取车辆流动地图热点卡口
+  GET_MAP_CAR_FLOW_API:data => { 
+    return http.service({
+      url:`Vehicle/getHotspotBayonetRanking`, //接口可能不对
+      method:'get',
+      params:data
+    })
+  },
+  //获取车辆保有量数据
+  GET_CAR_FLOW_API:data => {
+    return http.service({
+      url:`Overview/getVehiclePopulation`,
+      method:'get',
+      params:data
+    })
+  },
 
 }
 export const IMG={
   /*总览*/
   warningInstanceIMG:warningInstance,
-  accidentIMG:accident
+  accidentIMG:accident,
+  jqImg:jqImg,
+  sgImg:sgImg
 }

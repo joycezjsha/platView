@@ -24,7 +24,7 @@
         <div class="back">
           <el-card class="box-card boxstyle">
             <div slot="header" class="clearfix">
-              <m-title label='轨迹查询' img_type=1 style='width:50%'></m-title>
+              <m-title label='轨迹查询' img_type=1 style='width:6vw'></m-title>
               <el-button style="float: right; padding: 3px 0;position:absolute;top:3%;right:2%;" type="text" icon="iconfont icon-xiangxiqingkuang" @click='showOrder(1)'>详细情况</el-button>
             </div>
             <div class="top-container">
@@ -43,7 +43,7 @@
     </div>
     <div class='overview-left-div--center boxstyle'>
        <!-- <span class='span_title'>交通动态监测</span> -->
-       <m-title label='交通动态监测' img_type=1  style='width:7vw'></m-title>
+       <m-title label='交通动态监测' img_type=1  class='title'></m-title>
        <div class='center_txt'>实时统计上一个小时（15:00-16:00）的流动情况</div>
        <div class='center_statics'>
          <div class='center_statics--count'>陕西省<br/>
@@ -79,7 +79,7 @@
        </div>
     </div>
     <div class='overview-left-div--bottom  boxstyle'>
-      <m-title label='境内路况监测' img_type=1  style='width:7vw'></m-title>
+      <m-title label='境内路况监测' img_type=1  class='title'></m-title>
        <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
             <p><span class='number'>{{i+1}}</span><span class='road'>{{item.road}}</span>
@@ -345,16 +345,17 @@ export default {
 .overview-left-div {
   position: absolute;
   z-index: 10;
-  left: 1vw;
-  width: 450px;
-  height: 90vh;
-  top: 9vh;
+  left: 12px;
+  width: 474px;
+  height: auto;
+  top: 87px;
   color:$color-white;
   @include flex(column, center,center);
   &--top{
     width:100%;
-    height:22%;
+    height:186px;
     perspective:1000;transform-style:preserve-3d;
+    margin-top:2px;
     // background: url('./image/left_top_bg.png')no-repeat;
     // background-size: 100% 100%;
     @include flex(column, center,center);
@@ -423,7 +424,8 @@ export default {
   &--center{
     clear:both;
     width:100%;
-    height:50%;
+    height:400px;
+    margin-top:2px;
     overflow:hidden;
     // overflow:scroll;
     padding:0 10px;
@@ -464,8 +466,8 @@ export default {
   }
   &--bottom{
     width:100%;
-    height:30%;
-    margin-top:8%;
+    height:377px;
+    margin-top:2px;
     padding:0 10px;
     ul{
       margin:3% 0 0 0;
@@ -520,6 +522,9 @@ export default {
         }
       }
     }
+  }
+  .title{
+    width:160px;
   }
 }
 
