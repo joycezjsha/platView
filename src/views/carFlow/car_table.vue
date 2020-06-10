@@ -8,8 +8,8 @@
         </div>
         
       </div>
-      <div class="car-flow_content ">
-        <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
+      <div class="car-flow_content " >
+        <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;" >
           <el-tab-pane label="实时" name="1"></el-tab-pane>
           <el-tab-pane label="今天" name="2"></el-tab-pane>
           <el-tab-pane label="昨天" name="3"></el-tab-pane>
@@ -37,22 +37,46 @@
         <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt>
         <div class='all_statics'>
           <div><span>陕西省</span><span>{{allStatics.addIn}}</span></div>
-          <div><span>进入：+{{allStatics.incount}}</span><span>流出：-{{allStatics.outcount}}</span></div>
-          <div><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
+          <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span><span>流出：-{{allStatics.outcount}}</span></div>
+          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
+        </div>
+        <div class="sort">
+          <div class="text">排序方式 ：</div>
+          <div style="width:120px;margin-left:3px" class="dropdown">
+              <select style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" >
+                  <option>进入辆次</option>
+                  <option>流出辆次</option>
+                  <option>进出比</option>
+                  <option>保有量</option>
+                  <option>流动变化</option>
+              </select>
+            <!-- <el-dropdown>
+                <el-button type="primary">
+                  流出车辆<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>进入辆次</el-dropdown-item>
+                  <el-dropdown-item>流出辆次</el-dropdown-item>
+                  <el-dropdown-item>进出比</el-dropdown-item>
+                  <el-dropdown-item>保有量</el-dropdown-item>
+                  <el-dropdown-item>流动变化</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown> -->
+          </div>
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
-            <p>
+            <p style="padding-top:3px">
               <span>{{index+1}}</span>
-              <span class="address-name">{{item.city}}</span>
-              <span>进：{{item.inNum}}</span>
+              <span  class="address-name">{{item.city}}</span>
+              <span style="margin-left:25px">进：{{item.inNum}}</span>
               <span>出：{{item.outNum}}</span>
-              <span>进出比：{{item.proportion.toFixed(2)}}</span>
+              <span>进出比：{{item.proportion.toFixed(2)}}%</span>
             </p>
-            <p>
+            <p style="padding-bottom:0px">
               <span></span>
-              <span class="address-name">保有量<span class='value'>{{item.holdCount}}</span></span>
-              <span>流动变化：<span :class="item.flowChange>0?'up_value':'down_value'">{{item.addIn}}</span></span>
+              <span  class="address-name">保有量：<span style="color:#00a6fb" class='value'>{{item.inventory}}万</span></span>
+              <span>流动变化：<span style="color:#d38c08" :class="item.flowChange>0?'up_value':'down_value'">{{item.addIn}}辆</span></span>
             </p>
           </li>
         </ul>
@@ -120,10 +144,13 @@ export default {
     getdayDatas(){  
 
     },
-    // showData() 默认实时数据 点击城市获取对应城市  总计进入车辆辆次的数据  GET_VEH_PRO_API
-    showData(xzqh,city,stime){
+    // showData() 列表中的每一项 默认实时数据 点击城市获取对应城市的数据  总计进入车辆辆次的数据  GET_VEH_PRO_API
+    showData(xzqh,city){
       let that = this;
       // 车辆类型分析
+      blur.$emit("paramxzqh",xzqh)
+      blur.$emit("paramcity",city)
+      blur.$emit("paramxzqh",xzqh)
       that.xzqh=xzqh;
       that.city=city;
       // that.fxlx=fxlx
@@ -219,36 +246,36 @@ export default {
       });
     }
     // 点击城市获取对应城市的车辆类型分析数据 默认显示进去的数据
-      interf.GET_VEH_TYPE_API({
-        id:"",
-        stime:that.stime,
-        xzqh:that.xzqh,
-        fxlx:that.fxlx
-      })
-      .then(response=>{
-       if (response && response.status == 200){
-        //  console.log(response)
-           var data = response.data;
-          //  data.data['city']=city
-          //  console.log(data)
-           blur.$emit('gettypeData',data)
-           if (data.errcode == 0) {
+    //   interf.GET_VEH_TYPE_API({
+    //     id:"",
+    //     stime:that.stime,
+    //     xzqh:that.xzqh,
+    //     fxlx:that.fxlx
+    //   })
+    //   .then(response=>{
+    //    if (response && response.status == 200){
+    //     //  console.log(response)
+    //        var data = response.data;
+    //       //  data.data['city']=city
+    //        console.log(data)
+    //        blur.$emit('gettypeData',data)
+    //        if (data.errcode == 0) {
 
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
+    //         } else{
+    //           that.$message({
+    //             message: data.errmsg,
+    //             type: "error",
+    //             duration: 1500
+    //           });
+    //        } 
+    //     }
+    //  })
+    //  .catch(err=>{
+    //      console.log(err);
+    //   })
+    //   .finally(() => {
+    //     that.tableLoading = false;
+    //   });
     },
     //  全省流动情况  默认显示实时的数据   
     realtimeData(){
@@ -261,7 +288,7 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
            var data = response.data;
-           console.log(data)
+          //  console.log(data)
             if (data.errcode == 0) {
              that.allStatics.incount=data.data.incount;
              that.allStatics.outcount=data.data.outcount;
@@ -293,14 +320,26 @@ export default {
     // 日期选择获取的数据
     determine(){
        let that = this;
-      // console.log(this.timeRange)
+       blur.$emit("determine",that.timeRange)
+        // console.log(that.timeRange[0],that.timeRange[1])
+        let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
+        let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
+        console.log(time1,time2)
+        let timeData={
+          time1,
+          time2
+        }
+        console.log(timeData)
+        blur.$emit("sendTime",timeData)
+        console.log('000000')
+        // blur.$emit("timer2",time2)
       // console.log(this.timeRange[0],this.timeRange[1])
       // 获取热点卡口道路的热点道路排名的数据 GET_HOT_ROAD_API
         interf.GET_HOT_ROAD_API({
          id: "",
         //  timeRange:that.timeRange
-         stime:this.timeRange[0],
-         etime:this.timeRange[1]
+         stime:that.timeRange[0],
+         etime:that.timeRange[1]
        })
        .then(response=>{
         if (response && response.status == 200){
@@ -328,8 +367,8 @@ export default {
         interf.GET_HOT_RANK_API({
          id: "",
         //  timeRange:that.timeRange
-         stime:this.timeRange[0],
-         etime:this.timeRange[1]
+         stime:that.timeRange[0],
+         etime:that.timeRange[1]
        })
        .then(response=>{
         if (response && response.status == 200){
@@ -357,8 +396,8 @@ export default {
        interf.GET_VEH_FLOW_API({
          id: "",
         //  timeRange:that.timeRange
-         stime:this.timeRange[0],
-         etime:this.timeRange[1]
+         stime:that.timeRange[0],
+         etime:that.timeRange[1]
        })
        .then(response=>{
         if (response && response.status == 200){
@@ -403,7 +442,7 @@ export default {
        if (response && response.status == 200){
            var data = response.data;
            console.log('11111')
-           console.log(data)
+          //  console.log(data)
            if (data.errcode == 0) {
             } else{
               that.$message({
@@ -508,10 +547,13 @@ export default {
       }
     },
     handleClick(item){
-      let that = this;
-     that.activeName=item.name;
+     let that = this;
+     that.activeName=item.name;  //对应的时间1  2  3  4
+     console.log(that.activeName)
+     blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
+     console.log(that.activeName)
      //车辆流动页面地图热点卡口  Vehicle/getHotspotBayonetRanking  GET_MAP_HOT_BAY_API 默认实时的数据
-      if(that.activeName!='4'){
+    if(that.activeName!='4'){
     interf.GET_MAP_HOT_BAY_API({
        id:"",
        stime:that.activeName
@@ -603,32 +645,32 @@ export default {
     } 
     // 热点卡口的数据 GET_HOT_RANK_API
     if(this.activeName!='4'){
-      interf.GET_HOT_RANK_API({
-        id: "",
-        stime:that.activeName
-      })
-      .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-          //  console.log(data)
-            blur.$emit('getbaytimes',data)
-            if (data.errcode == 0) {
+      // interf.GET_HOT_RANK_API({
+      //   id: "",
+      //   stime:that.activeName
+      // })
+      // .then(response=>{
+      //   if (response && response.status == 200){
+      //      var data = response.data;
+      //     //  console.log(data)
+      //       blur.$emit('getbaytimes',data)
+      //       if (data.errcode == 0) {
             
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
+      //       } else{
+      //         that.$message({
+      //           message: data.errmsg,
+      //           type: "error",
+      //           duration: 1500
+      //         });
+      //       }
+      //   }
+      // })
+      // .catch(err=>{
+      //    console.log(err);
+      // })
+      // .finally(() => {
+      //   that.tableLoading = false;
+      // });
     }
     // 获取车辆流动页面全省流动情况数据  GET_VEH_FLOW_API 
       if(this.activeName!='4'){
@@ -689,8 +731,8 @@ export default {
   position: absolute;
   z-index: 10;
   left: 1vw;
-  width: 23vw;
-  height: 80vh;
+  width:474px;
+  height:977px;
   top: 9vh;
 }
 .city-index_container {
@@ -765,14 +807,16 @@ export default {
     &_table {
       overflow-y: auto;
       color:white;
-      padding: 0 10px;
+      padding: 1px 10px;
       height: 86%;
       .item{
         // border-bottom: 1px solid $color-white;
+        box-sizing: border-box;
         line-height: 1em;
         margin: 0 2%;
+        // padding:1px 0 2px 0;
         cursor: pointer;
-        height: 6vh;
+        height:6.8vh;
         >p:nth-child(1){
           @include flex(row,center,center);
           >span{
@@ -807,11 +851,12 @@ export default {
             @include flex(row,flex-end,center);
           }
           >span:nth-child(1){
-            width:13%;
+            width:8%;
           }
           >span:nth-child(2){
-            width:46%;
+            width:50%;
             @include flex(row,flex-start,center);
+            // margin-left:-7.39583vw
           }
           >span:nth-child(3){
             width:40%;
@@ -834,6 +879,31 @@ export default {
     &_table- {
       height: 77%;
     }
+  }
+}
+.sort{
+  height:32px;
+  width: 100%;
+  position: relative;
+  margin-top: 3vh;
+  .text{
+    position: absolute;
+    top:0;
+    left: 37px;
+    width:6vw;
+    height:16px;
+    font-size:16px;
+    font-family:Source Han Sans CN;
+    font-weight:400;
+    color:rgba(166,175,205,1);
+    margin-top: 2px;
+  }
+  .dropdown{
+    position: absolute;
+    top:0;
+    left:120px;
+    height: 4vh;
+   
   }
 }
 </style>
