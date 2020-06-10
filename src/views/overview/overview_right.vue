@@ -24,7 +24,12 @@
       </div>
       <div class="boxstyle">
         <m-title label='车辆保有量' img_type=1  style='width:7vw;'></m-title>
-        <m-line-chart c_id='accurCreateChange' style='width:100%;height:28vh'></m-line-chart>
+        <m-tab label='陕西车辆保有量' :value='carStatics.count'></m-tab>
+        <div class='register'>
+          <div><span>本月注册</span><span>{{carStatics.this_month}}</span></div>
+          <div><span>上月注册</span><span>{{carStatics.front_month}}</span></div>
+        </div>
+        <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" style='width:100%;height:20vh'></bar-chart>
       </div>
     </div>
   </div>
@@ -37,6 +42,8 @@ import echarts from 'echarts'
 import mTitle from "@/components/UI_el/title_com.vue";
 import m_list from '@/components/UI_el/list_o.vue'
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
+import barChart from "@/components/UI_el/bar_chart.vue";
+import mTab from '@/components/UI_el/tab.vue'
 import blur from '../../blur.js'
 export default {
   name: "overview_right",
@@ -54,6 +61,11 @@ export default {
         xdata:[],
         y1data:[],
         y2data:[]
+      },
+      car_chart_data:{
+        legend: ["保有量", "城市"],
+        xdata:[],
+        ydata:[]
       },
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
@@ -173,12 +185,15 @@ export default {
       },
       countChart:null,
       tableLoading:false,//加载中...控制
+      carStatics:{count:0,front_month:0,this_month:0}
     }
   },
   components: {
     mTitle,
     mLineChart,
-    mListO:m_list
+    mListO:m_list,
+    mTab,
+    barChart
   },
   created(){
   },
@@ -189,7 +204,7 @@ export default {
     this.map.setZoom(11);
     this.initAccidentStaticsChart();
     that.initSumCharts();
-    // that.initAccurCharts();
+    that.initAccurCharts();
   },
   destroyed() {
     this.flyRoutes = [];
@@ -264,9 +279,40 @@ export default {
         })
     },
     /**
-     * 生成重大事故发生趋势echarts
+     * 初始化全省车辆保有量
      */
     initAccurCharts(){
+      let _this=this;
+      interf.GET_CAR_FLOW_API({})
+      .then(response => {
+          if (response && response.status == 200) {
+            var data = response.data;
+            if (data.errcode == 0) {
+              let _data=data.data;
+              _this.carStatics.count=_data.count?data.count:'';
+              _this.carStatics.this_month=_data.month?data.month:'';
+              _this.carStatics.front_month=_data.lastmonth?data.lastmonth:'';
+              let car_data=_this.car_chart_data;
+              _data.list.forEach(e=>{
+                car_data.xdata.push(e.name);
+                car_data.ydata.push(e.num);
+              });
+             _this.car_chart_data=car_data;
+            } else {
+              _this.$message({
+                message: '车辆保有量数据接口请求失败',//data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+       .catch(err => {
+          console.error(err);
+        })
+        .finally(() => {
+          _this.tableLoading = false;
+        })
     }
   }
 };
@@ -291,72 +337,86 @@ export default {
 .overview-info_container {
   width: 100%;
   height: 100%;
+  .register{
+    width:100%;
+    height:4vh;
+     @include flex(row, center);
+     >div{
+       width:50%;
+        height:4vh;
+       @include flex(row, center,center);
+       >span{
+         text-align:center;
+         padding:0 15px;
+       }
+     }
+  }
   // background-color: $color-bg-1;
   // border: 1px solid $color-border-1;
-  .overview-info_title {
-    position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
-    color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
-  }
-  .overview-info--tab {
-    width: 100%;
-    height: 5vh;
-   @include flex(row, center);
+  // .overview-info_title {
+  //   position: relative;
+  //   width: 96%;
+  //   border-bottom: 0.1rem solid $color-border-1;
+  //   font-family: Microsoft YaHei;
+  //   font-size: 1vw;
+  //   color: $color-white;
+  //   display: -webkit-box;
+  //   display: -ms-flexbox;
+  //   display: flex;
+  //   -webkit-box-align: center;
+  //   -ms-flex-align: center;
+  //   align-items: center;
+  //   padding: 0.6rem 2%;
+  //   font-weight: bolder;
+  // }
+//   .overview-info--tab {
+//     width: 100%;
+//     height: 5vh;
+//    @include flex(row, center);
 
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
-      border: 1px solid $color-text-normal;
-      margin: 2%;
+//     > div {
+//       width: 100%;
+//       height: 5vh;
+//       font-size: 0.8vw;
+//       @include flex(row, center);
+//       border: 1px solid $color-text-normal;
+//       margin: 2%;
 
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
-    }
-}
-  .overview-info_content {
-    width: 98%;
-    height: 85%;
-    background-color: $color-bg-1;
-    margin: 1%;
+//       .--tab-title {
+//         font-size: 0.9vw;
+//         width: 40%;
+//         @include flex(row, center);
+//       }
+//       .statics--tab--value {
+//         width: 60%;
+//         @include flex(row, center);
+//         .statics_value {
+//           color: $color-active;
+//         }
+//         .statics_value.sum {
+//           font-size: 1.4vw;
+//         }
+//       }
+//       .--tab-title {
+//         .el-icon-bell:before {
+//           font-size: 1.5vw;
+//           color: #e70101;
+//           font-weight: 600;
+//         }
+//       }
+//     }
+// }
+  // .overview-info_content {
+  //   width: 98%;
+  //   height: 85%;
+  //   background-color: $color-bg-1;
+  //   margin: 1%;
 
-    #overview-info_sort {
-      width:100%;
-      height:15vh;
-    }
-  }
+  //   #overview-info_sort {
+  //     width:100%;
+  //     height:15vh;
+  //   }
+  // }
   .overview-info_sort {
   width:90%;
   height:10vh;

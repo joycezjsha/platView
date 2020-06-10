@@ -5,6 +5,7 @@
     <l-table></l-table>
     <table-info></table-info>
     <statics></statics>
+    <map-view></map-view>
       <!--内容区-->
     <!-- <section class="content-container">
       <div class="grid-content bg-purple-light">
@@ -19,7 +20,8 @@
   import top from './header'
   import lTable from './overview_left'
   import table_info from './overview_right'
-   import statics from './overview_statics'
+  import statics from './overview_statics'
+  import mapView from './overview_map'
   export default {
     name: 'home',
     data () {
@@ -30,7 +32,7 @@
     mounted(){
       this.$store.commit("setRight", '22vw');
     },
-    components:{top,lTable,tableInfo:table_info,statics}
+    components:{top,lTable,tableInfo:table_info,statics,mapView}
   }
 </script>
 <style scoped="true" lang='scss'>

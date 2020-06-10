@@ -4,9 +4,9 @@
     <el-col :span="24" class="topbar-wrap">
       <div class="topbar-logo">
         <a>
-          <img src="../../assets/images/logo.png" style="padding-left:8px;padding-top:10%;width: 35px;" />
+          <img src="../../assets/images/logo.png" class='topbar-logo--img' />
         </a>
-        <a style="color: #fff;margin-left:2%;font-size:1.2vw;letter-spacing:3px;">
+        <a class='topbar-logo--title'>
           <span>陕西交警总队集成指挥平台地图大数据</span>
         </a>
       </div>
@@ -295,7 +295,7 @@ export default {
 }
 .top_nav_container {
   width: 100%;
-  height: 6vh;
+  height: 77px;
   background: url('../../assets/images/top_title_bg.png') no-repeat;
   background-size:100% 100%;
   padding: 0 1vw;
@@ -305,12 +305,18 @@ export default {
     @include flex(row, center);
   }
   .topbar-logo {
-    width: 36%;
+    width: 40%;
     @include flex(row, center);
     justify-content: left;
+    &--title{
+      color: #fff;margin-left:2%;font-size:28px;letter-spacing:3px;
+    }
+    &--img{
+      padding-left:8px;padding-top:10%;width: 40px;
+    }
   }
   .topbar-bar {
-    width: 48%;
+    width: 45%;
     @include flex(row, center);
     justify-content: left;
   }
@@ -332,7 +338,8 @@ export default {
     }
     .top_div:nth-child(2){
       color: white;
-    margin-left: 5%;
+      margin-left: 5%;
+      font-size:18px;
     }
   }
   .overview_tab{
@@ -341,6 +348,7 @@ export default {
     color:$color-primary;
     cursor:pointer;
     text-align: center;
+    font-size: 16px;
   }
  
 }
