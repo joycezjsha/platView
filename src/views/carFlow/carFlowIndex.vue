@@ -19,13 +19,13 @@ import middle from "./middle";
 import car_info from "./car_info";
 import belong from "./belong";
 import hotcard from "./hotcard";
+
 export default {
   name: "carFlow",
   data() {
     return {
       map: {},
       i:1,
-
       isShow:1, //显示对应的组件
       // showhotcard:false
     };
