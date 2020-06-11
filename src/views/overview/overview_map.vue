@@ -28,6 +28,9 @@ export default {
       map: {},
       areaList:[],
       map_cover:{
+        sourceList:[],
+        lineList:[],
+        popups:[],
         markers:[]
       },
       jqImg:IMG.jqImg,
@@ -44,6 +47,7 @@ export default {
   },
   destroyed() {
     this.map.setPitch(0);
+    this.clearMap();
   },
   methods: {
     /**
@@ -132,24 +136,30 @@ export default {
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){
     //清除source
-    if(this.mapAddItems.sourceList.length>0){
-      this.mapAddItems.sourceList.forEach(e=>{
+    if(this.map_cover.sourceList.length>0){
+      this.map_cover.sourceList.forEach(e=>{
         if(this.map.getSource(e)!=undefined){
           this.map.removeSource(e);
         }
       })
     }
     //清除layer
-    if(this.mapAddItems.lineList.length>0){
-      this.mapAddItems.lineList.forEach(e=>{
+    if(this.map_cover.lineList.length>0){
+      this.map_cover.lineList.forEach(e=>{
         if(this.map.getLayer(e)!=undefined){
           this.map.removeLayer(e);
         }
       })
     }
     //清除popup
-    if(this.mapAddItems.popups.length>0){
-      this.mapAddItems.popups.forEach(e=>{
+    if(this.map_cover.popups.length>0){
+      this.map_cover.popups.forEach(e=>{
+        e.remove();
+      })
+    }
+    //清除marker
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
         e.remove();
       })
     }

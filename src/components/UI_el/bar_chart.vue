@@ -59,7 +59,7 @@ export default {
                   itemStyle: {
                     color: '#2f498a'
                   },
-                  barWidth:18
+                  barWidth:14
               }
           ]
       },

@@ -48,7 +48,7 @@ export default {
 }
 .tab{
   width:98%;
-  height:5vh;
+  height:37px;
   margin:0 auto;
   // border:1px solid $color-border-1;
   // background: $color-primary;

@@ -329,7 +329,7 @@ export default {
   position: fixed;
   z-index: 10;
   right: 1vw;
-  width: 400px;
+  width: 480px;
   height: 80vh;
   top: 10vh;
   color: white;

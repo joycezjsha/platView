@@ -21,6 +21,7 @@ export default {
   },
   mounted() {
     let _this=this;
+    _this.$store.commit("setRight", '26vw');
     blur.$on('setSelectItems',function(name,id){
       _this.$refs['trafficBox'].setSelectItems(name,id);
     })
