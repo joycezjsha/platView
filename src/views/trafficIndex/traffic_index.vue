@@ -2,17 +2,17 @@
   <div class="traffic-index-div">
     <div class="traffic-index_container boxstyle">
       <div class="traffic-index_title">
-        <m-title label='境内高速路及主干路路况' img_type=1 style='width:14vw;height:4vh;line-height: 4vh;'></m-title>
+        <m-title label='境内高速路及主干道路况' img_type=1 class='title'></m-title>
       </div>
       <m-tab label='当前选择范围' :value='selectItem.road'></m-tab>
       <div class="traffic-index_content">
         <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,index) in indexDatas" :id="item.id" :key="item.id">
-            <p><span>{{++index}}</span><span>{{item.road}}</span>
-            <span class="address-name">{{item.startRoad}}--->{{item.endRoad}}</span>
+            <p><span>{{++index}}</span><span>{{item.roadname}}</span>
+            <span class="address-name">{{item.stratname}}--->{{item.endname}}</span>
             </p>
-            <p><span>平均速度：<span class='value'>{{item.averageSpeed}}km/h</span></span>
-            <span>路长<span class='value'>{{item.length}}km</span></span>
+            <p><span>平均速度：<span class='value'>{{item.sd}}km/h</span></span>
+            <span>路长<span class='value'>{{item.cd}}km</span></span>
             </p>
           </li>
         </ul>
@@ -31,10 +31,8 @@ export default {
   data() {
     return {
       map: {},
-      indexDatas: [
-        {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
-      {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}],
-      selectItem:{"road":"西安",order:8}
+      indexDatas: [],
+      selectItem:{"road":"全省",order:8}
     };
   },
   components: {
@@ -43,7 +41,6 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    that.$store.commit("setRight", '20vw');
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getTrafficData();
@@ -73,7 +70,34 @@ export default {
     },
     setSelectItems(name,id){
       this.selectItem.road=name;
-    }
+    },
+        /**
+     * 初始化城市拥堵排名列表
+     */
+    getCityIndexData(){
+      let that=this;
+      interf.GET_ROAD_TAFFIC_ORDER_API({})
+      .then(response=>{
+        if (response && response.status == 200){
+          var data= response.data;
+          if (data.errcode == 0) {
+            that.indexDatas=data.data;
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    },
   }
 }
 </script>
@@ -88,9 +112,9 @@ export default {
 .traffic-index-div {
   position: fixed;
   z-index: 10;
-  right: 2vw;
-  width: 17vw;
-  height: 68vh;
+  right: 13px;
+  width: 474px;
+  height: 1026px;
   top: 9vh;
   .traffic-index_container {
     width: 100%;
@@ -109,6 +133,11 @@ export default {
       align-items: center;
       padding: 2px 2% 0.6rem 2%;
       font-weight: bolder;
+      .title{
+        width:244px;
+        height:4vh;
+        line-height: 4vh;
+      }
     }
     .xian_order{
       color: $color-white;

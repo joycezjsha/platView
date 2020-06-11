@@ -17,12 +17,12 @@
      <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.main}}</span>起</div>
    </div>
     <div class='overview-statics--tab'  >
-     <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.count}}</span>个</div>
+     <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.activeDev}}</span>个</div>
      <div class='overview-statics--tab_radio'>
-       <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.sum}}</span></div>
-       <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.work}}</span></div>
+       <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.devcount}}</span></div>
+       <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.activityRate}}</span></div>
     </div>
-     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.sg.main}}</span>个</div>
+     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.dj.keyactivityRate}}</span>个</div>
    </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
       datas:{
         jq:{count:13512,history:'+123',yestoday:'-122',main:'2'},
         sg:{count:13512,hurt:'123',die:'3',main:'0'},
-        dj:{count:11512,sum:'12377',work:'67%',main:'100%'}
+        dj:{"activeDev":3,"devcount":6,"keyactivityRate":0,"activityRate":"50.0%"}
       },
       warn_img:IMG.warningInstanceIMG,
       accident_img:IMG.accidentIMG
@@ -63,35 +63,17 @@ export default {
     //获取巡航数据
     getIndexData() {
       let that = this;
-    // $.ajax({
-    //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     responseType: "json",
-    //     method: "get",
-    //     dataType: "json",
-    //     data: {
-    //       // token: window.localStorage.getItem("loginUserToken")
-    //     },
-    //     success: function(data) {
-    //       if (data.errcode == -2) {
-    //         that.$router.push({ name: "/login" });
-    //       }
-    //       if (data.errmsg == "success" && data.data.length > 0) {
-    //         let datas=[];
-    //         data.data.map(e=>{
-    //           datas.push(
-    //             {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
-    //           )
-    //         });
-    //         that.indexDatas=datas;
-    //       }
-    //     },
-    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       debugger
-    //     }
-    //   });
+      interf.GET_DEV_STATICS_API({})
+      .then(response=>{
+        if (response && response.status == 200){
+          let data= response.data;
+          console.log(data)
+          if (data.errcode == 0){
+           that.datas.dj=data.data;
+          }
+        }
+
+      })
     },
   /**
    * 点击标签页

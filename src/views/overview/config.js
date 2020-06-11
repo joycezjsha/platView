@@ -111,7 +111,23 @@ export const interf={
       params:data
     })
   },
-
+  //获取活跃电警统计数据
+  GET_DEV_STATICS_API:data => {
+    return http.service({
+      url:`Overview/getDevStatistics`,
+      method:'get',
+      params:data
+    })
+  },
+  //获取境内路况监测数据
+  GET_TAFFIC_ORDER_API:data => {
+    return http.service({
+      url:`TrafficJam/getRoadRanking`,
+      method:'get',
+      params:data
+    })
+  },
+  
 }
 export const IMG={
   /*总览*/
