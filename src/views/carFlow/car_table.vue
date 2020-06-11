@@ -62,7 +62,10 @@
                   <el-dropdown-item>流动变化</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown> -->
+              <div @click="changesort()"><i class='iconfont icon-paixu3'></i></div>
+              <div  @click="changesort()"><i class='iconfont icon-paixu1'></i></div>
           </div>
+        
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
