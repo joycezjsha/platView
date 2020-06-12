@@ -1,10 +1,11 @@
+
 <template>
   <div class="middle" >
     <div @click="realtime(1)" >
         <!-- <div  class="car car1">
             <span> 车辆实时监测</span>
         </div> -->
-        <m-title label='车辆实时监测' class="car"></m-title>
+        <m-title label='城市车辆分析' class="car"></m-title>
     </div>
     <div @click="realtime(2)" >
         <!-- <div  class="car car1">
@@ -50,7 +51,7 @@ export default {
 
 .middle{
     position: fixed;
-    top:88.6vh;
+    top:95.6vh;
     left:34.53vw;
     width: 38.85vw;
     display: flex;

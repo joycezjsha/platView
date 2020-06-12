@@ -1,6 +1,9 @@
+
 //引入地图api文件
 document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v1.3/minemap.css\">");
+document.writeln("<script src=\"./static/js/echarts-all-3.js\"></script>");
 document.writeln("<script src=\"./static/lib/minemap/v1.3/minemap.js\"></script>");
+document.writeln("<script src=\"./static/js/template.js\"></script>");
 
 var ip='127.0.0.1:8091/';//'117.48.214.220:9602';//window.location.host//'117.157.231.168';//'localhost:8080'//'117.48.214.220';//
 var mapConfig = {

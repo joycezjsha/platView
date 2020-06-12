@@ -42,7 +42,7 @@
         </div>
         <div class="sort">
           <div class="text">排序方式 ：</div>
-          <div style="width:120px;margin-left:3px" class="dropdown">
+          <div style="width:120px;margin-left:3px;display:flex" class="dropdown">
               <select style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" >
                   <option>进入辆次</option>
                   <option>流出辆次</option>
@@ -62,8 +62,11 @@
                   <el-dropdown-item>流动变化</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown> -->
-              <div @click="changesort()"><i class='iconfont icon-paixu3'></i></div>
-              <div  @click="changesort()"><i class='iconfont icon-paixu1'></i></div>
+              <span @click="sort" style="width:30px;height:26px;color:rgba(29,153,171,1);margin-left:15px;">              
+                  <i style="font-size:20px;" v-show="downIcon" class='iconfont icon-paixu3'></i>
+                  <i  style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
+              </span>
+         
           </div>
         
         </div>
@@ -98,6 +101,7 @@ export default {
   name: "car_table",
   data() {
     return {
+     downIcon: true,  //排序切换
       showCity:false,
       xzqh:'',
       fxlx:'1',
@@ -143,10 +147,9 @@ export default {
     this.clearMap();
   },
   methods: {
-    // 如果点击今天或者昨天，之后在点击对应的城市，获取对应城市今天或者昨天的总计进入车辆辆次的数据
-    getdayDatas(){  
-
-    },
+    sort() {
+     this.downIcon = !this.downIcon
+    }, 
     // showData() 列表中的每一项 默认实时数据 点击城市获取对应城市的数据  总计进入车辆辆次的数据  GET_VEH_PRO_API
     showData(xzqh,city){
       let that = this;
@@ -338,63 +341,63 @@ export default {
         // blur.$emit("timer2",time2)
       // console.log(this.timeRange[0],this.timeRange[1])
       // 获取热点卡口道路的热点道路排名的数据 GET_HOT_ROAD_API
-        interf.GET_HOT_ROAD_API({
-         id: "",
-        //  timeRange:that.timeRange
-         stime:that.timeRange[0],
-         etime:that.timeRange[1]
-       })
-       .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-           console.log(data)
-           blur.$emit('getroadData',data)
-            if (data.errcode == 0) {
+      //   interf.GET_HOT_ROAD_API({
+      //    id: "",
+      //   //  timeRange:that.timeRange
+      //    stime:that.timeRange[0],
+      //    etime:that.timeRange[1]
+      //  })
+      //  .then(response=>{
+      //   if (response && response.status == 200){
+      //      var data = response.data;
+      //      console.log(data)
+      //      blur.$emit('getroadData',data)
+      //       if (data.errcode == 0) {
 
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
+      //       } else{
+      //         that.$message({
+      //           message: data.errmsg,
+      //           type: "error",
+      //           duration: 1500
+      //         });
+      //       }
+      //   }
+      // })
+      // .catch(err=>{
+      //    console.log(err);
+      // })
+      // .finally(() => {
+      //   that.tableLoading = false;
+      // });
       // 获取热点卡口道路的热点卡口排名的数据 GET_HOT_RANK_API
-        interf.GET_HOT_RANK_API({
-         id: "",
-        //  timeRange:that.timeRange
-         stime:that.timeRange[0],
-         etime:that.timeRange[1]
-       })
-       .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-           console.log(data)
-            blur.$emit('getbayData',data)
-            if (data.errcode == 0) {
+      //   interf.GET_HOT_RANK_API({
+      //    id: "",
+      //   //  timeRange:that.timeRange
+      //    stime:that.timeRange[0],
+      //    etime:that.timeRange[1]
+      //  })
+      //  .then(response=>{
+      //   if (response && response.status == 200){
+      //      var data = response.data;
+      //      console.log(data)
+      //       blur.$emit('getbayData',data)
+      //       if (data.errcode == 0) {
            
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
+      //       } else{
+      //         that.$message({
+      //           message: data.errmsg,
+      //           type: "error",
+      //           duration: 1500
+      //         });
+      //       }
+      //   }
+      // })
+      // .catch(err=>{
+      //    console.log(err);
+      // })
+      // .finally(() => {
+      //   that.tableLoading = false;
+      // });
       // 用日历选择时间 获取车辆流动页面全省流动情况
        interf.GET_VEH_FLOW_API({
          id: "",
@@ -437,58 +440,58 @@ export default {
     },
     getIndexData(){
      let that = this;
-     interf.GET_MAP_HOT_BAY_API({
-       id:"",
-       stime:'1'
-     })
-     .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-           console.log('11111')
-          //  console.log(data)
-           if (data.errcode == 0) {
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
+    //  interf.GET_MAP_HOT_BAY_API({
+    //    id:"",
+    //    stime:'1'
+    //  })
+    //  .then(response=>{
+    //    if (response && response.status == 200){
+    //        var data = response.data;
+    //        console.log('11111')
+    //       //  console.log(data)
+    //        if (data.errcode == 0) {
+    //         } else{
+    //           that.$message({
+    //             message: data.errmsg,
+    //             type: "error",
+    //             duration: 1500
+    //           });
+    //        } 
+    //     }
+    //  })
+    //  .catch(err=>{
+    //      console.log(err);
+    //   })
+    //   .finally(() => {
+    //     that.tableLoading = false;
+    //   });
       
-    //车辆流动页面全省车辆统计 GET_VEH_PRO_API
-     interf.GET_VEH_PRO_API({
-       id:"",
-       etime:'',
-       stime:''
-     })
-     .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-          //  console.log(data)
-           if (data.errcode == 0) {
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
+    // //车辆流动页面全省车辆统计 GET_VEH_PRO_API
+    //  interf.GET_VEH_PRO_API({
+    //    id:"",
+    //    etime:'',
+    //    stime:''
+    //  })
+    //  .then(response=>{
+    //    if (response && response.status == 200){
+    //        var data = response.data;
+    //       //  console.log(data)
+    //        if (data.errcode == 0) {
+    //         } else{
+    //           that.$message({
+    //             message: data.errmsg,
+    //             type: "error",
+    //             duration: 1500
+    //           });
+    //        } 
+    //     }
+    //  })
+    //  .catch(err=>{
+    //      console.log(err);
+    //   })
+    //   .finally(() => {
+    //     that.tableLoading = false;
+    //   });
       
       
     },

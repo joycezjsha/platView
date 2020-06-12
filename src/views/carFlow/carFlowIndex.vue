@@ -2,12 +2,12 @@
   <div class="car-flow">
     <car-table></car-table>
     <middle></middle>
-    <div>
+    <div class="right">
       <car-info v-if="isShow==1"></car-info>
       <belong v-if="isShow==2"></belong>
       <hotcard  v-if="isShow==3"></hotcard>
     </div>
-    
+    <FlowMap></FlowMap>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ import middle from "./middle";
 import car_info from "./car_info";
 import belong from "./belong";
 import hotcard from "./hotcard";
-
+import FlowMap from "./carFlow_map";
 export default {
   name: "carFlow",
   data() {
@@ -35,7 +35,8 @@ export default {
     carInfo:car_info,
     middle,
     belong,
-    hotcard
+    hotcard,
+    FlowMap
   },
   mounted() {
     let that = this;
@@ -105,5 +106,6 @@ export default {
 .car-flow {
   
 }
+
 
 </style>

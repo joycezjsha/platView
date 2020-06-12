@@ -353,8 +353,9 @@ export default {
     goback(){
       let that = this;
       that.showback=false;
-      that.getprovinceData(that.stime)
-      that.getIndexDatas(that.stime,that.fxlx) 
+      that.getprovinceData('1')
+      that.getIndexDatas('1','1')
+      that.carflowData('1') 
       // this.getprovinceData(stime,xzqh)
     },
     // 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
@@ -369,23 +370,25 @@ export default {
       blur.$on('determine',times=>{
         that.timeRange=times;
         // console.log(that.timeRange)
-        if(that.stime=='4'){
+        if(that.stime=='4' && that.xzqh!=undefined && that.fxlx!=undefined){
           that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
           that.carflowData(that.timeRange[0],that.timeRange[1])
-          
+          that.getIndexDatas((that.timeRange[0],that.fxlx,that.xzqh,that.timeRange[1]))
         }      
       })  
       blur.$on("gettime",time=>{
         that.stime=time;
         // console.log(that.stime)  
-        if(that.stime!='4'){
-          that.getprovinceData(that.stime)
+        if(that.stime!='4' && that.xzqh!=undefined){       
           that.getprovinceData(that.stime,that.xzqh)  
           that.getIndexDatas(that.stime,that.fxlx,that.xzqh)
           that.getIndexDatas(that.stime,that.fxlx)   
-          that.carflowData(that.stime)
+          that.carflowData(that.stime,that.fxlx)
           // that.getprovinceData(that.stime,that.xzqh)    
-        }else{
+        }else if(that.stime!='4' && that.xzqh===undefined){
+            that.getprovinceData(that.stime)
+            that.getIndexDatas(that.stime)  
+            that.carflowData(that.stime) 
           // that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
         }       
       }) 
@@ -394,7 +397,7 @@ export default {
         // console.log(that.stime,that.xzqh);
         if(that.stime!='4'){
           that.getprovinceData(that.stime,that.xzqh);
-          that.getprovinceData(that.stime,that.xzqh,that.timeRange) 
+          // that.getprovinceData(that.stime,that.xzqh,that.timeRange) 
           that.getIndexDatas(that.stime,that.fxlx,that.xzqh);
         }
        
@@ -450,7 +453,7 @@ export default {
     getprovinceData(stime,xzqh,etime){
       console.log(stime,xzqh,etime)
       let that = this;
-      // 一个参数
+      // 如果只有一个参数 stime
       if(xzqh===undefined && etime===undefined){
        interf.GET_VEH_PRO_API({
         id:"",
@@ -556,7 +559,6 @@ export default {
         id:"",
         stime:stime,
         etime:etime
-
       })
       .then(response=>{
        if (response && response.status == 200){
@@ -624,6 +626,7 @@ export default {
     getIndexDatas(stime,fxlx,xzqh,etime){
       let that=this; 
       // console.log(xzqh)
+      // 如果2个参数stime  fxlx
       if(xzqh===undefined && etime==undefined && stime!='4'){
         interf.GET_VEH_TYPE_API({
           id:"",
@@ -633,7 +636,7 @@ export default {
         .then(response=>{
         if (response && response.status == 200){
             var data = response.data;
-            //  console.log(data)
+             console.log(data)
             if (data.errcode == 0) {
               that.echartsData.BIGCAR=data.data.BIGCAR;
               that.echartsData.SMALLCAR=data.data.SMALLCAR;
@@ -659,7 +662,8 @@ export default {
           that.tableLoading = false;
         });
       }
-      if(xzqh!=undefined && etime===undefined){
+      // 如果有三个参数 stime  xzqh   fxlx
+      if(xzqh!=undefined && etime===undefined && stime!='4'){
         interf.GET_VEH_TYPE_API({
           id:"",
           stime:stime,
@@ -669,7 +673,7 @@ export default {
         .then(response=>{
         if (response && response.status == 200){
             var data = response.data;
-            //  console.log(data)
+             console.log(data)
             if (data.errcode == 0) {
               that.echartsData.BIGCAR=data.data.BIGCAR;
               that.echartsData.SMALLCAR=data.data.SMALLCAR;
@@ -695,12 +699,14 @@ export default {
           that.tableLoading = false;
         });
       }
+      // 如果是四个参数 stime  xzqh,  fxlx,  etime
       if(xzqh!=undefined && etime!=undefined){
          interf.GET_VEH_TYPE_API({
           id:"",
           stime:stime,
           xzqh:xzqh,
-          fxlx:fxlx
+          fxlx:fxlx,
+          etime:etime
         })
         .then(response=>{
         if (response && response.status == 200){
@@ -778,7 +784,7 @@ position: fixed;
     // width: 17vw;
     width:24.6875vw;
     height: 80vh;
-    top: 6.388vh;
+    top: 9.388vh;
 }
 .car-info_container {
   // width: 100%;
