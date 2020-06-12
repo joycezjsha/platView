@@ -1,0 +1,65 @@
+<template>
+  <div class='tiptxt'>
+    <span class='img'>
+      <i :class='"iconfont "+icon' :style='"color:"+icon_color' v-show='icon' />
+    </span>
+    <span>{{text}}</span>
+  </div>
+</template>
+<script>
+
+export default {
+  data() {
+    return {
+
+    };
+  },
+  props:{
+    icon: {
+      type: String,
+      default: 'icon-jingqing'
+    },
+    icon_color:{
+      type: String,
+      default: '#00C6FF'
+    },
+    text: {
+      type: String,
+      default: '设备包括：电子警察、视频设备、ETC龙门架...'
+    }
+  },
+  components: {
+    
+  },
+  created() {
+  },
+  methods: {
+
+  }
+}
+</script>
+<style scoped lang="scss">
+@import "@/assets/css/color.scss";
+@mixin flex($direction, $justify, $align) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+.tiptxt{
+    color: #A6AFCD;
+    // background: rgba(255,255,255,0.298039);
+    height: auto;
+    line-height: 4vh;
+    margin: 2% 0;
+    padding: 5px;
+    width: 98%;
+ .img{
+    display: inline-block;
+    width: 10%;
+    text-align: center;
+    vertical-align: middle;
+
+ }
+}
+</style>
