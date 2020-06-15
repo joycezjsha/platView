@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-04 09:22:09
+ * @LastEditTime: 2020-06-15 11:22:06
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \one\src\views\carFlow\middle.vue
+--> 
 
 <template>
   <div class="middle" >
@@ -22,14 +30,14 @@
 <script>
 import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
-import blur from '../../blur.js'
+import blur from '../../blur.js';
 export default {
     name:'middle',
     data(){
         return{
-            showcarinfo:true,
-            showbelong:false,
-            showhotcard:false
+            // showcarinfo:true,
+            // showbelong:false,
+            // showhotcard:false
         }
     },
     components:{
@@ -39,9 +47,13 @@ export default {
     },
     methods:{
         // 车辆实时监测
-        realtime(i){       
+        realtime(i){    
+            let els=document.getElementsByClassName('.custom-popup-class');
+            // if(els){
+            // //    console.log("s",els) 
+            // }   
             blur.$emit('realtime',i)
-            console.log(i)
+            // console.log(i)
         },
     }
 }

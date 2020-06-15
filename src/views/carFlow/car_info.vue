@@ -47,6 +47,7 @@
           </div> -->
         </div>
     </div>
+    <!-- <FlowMap /> -->
   </div>
 </template>
 
@@ -57,7 +58,8 @@ import echarts from 'echarts'
 import mTitle from "@/components/UI_el/title_com.vue";
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
 import mTab from '@/components/UI_el/tab.vue'
-import blur from '../../blur.js'
+import blur from '../../blur.js';
+// import FlowMap from "./carFlow_map";
 export default {
   name: "TIndex",
   data() {
@@ -71,6 +73,11 @@ export default {
       xzqh:'', //行政区号
       showback:false,  //显示返回全省
       map: {},
+      i:1,
+      map_cover:{
+        markers:[]
+      },
+      markerList:[], //存放marker
       flowchartsData:{
         legend: ["进入车辆次", "流出车辆次"],
         innum:[],
@@ -100,7 +107,7 @@ export default {
               color: '#fff'
             },
             // backgroundColor: '#eee',  // 设置整个图例区域背景颜色
-            // data: ['小轿车','货车','大车','小车'],
+            data: ['小轿车','货车','大车','小车'],
           },
         series: [
             {
@@ -108,8 +115,8 @@ export default {
               radius: ['30%', '60%'], 
               center: ['30%', '50%'], 
               data:[
-                {'value':''},
-                {'value':''}
+                {'value':'','name':''},
+                {'value':'','name':''}
               ],
               // itemStyle 设置饼状图扇形区域样式
               itemStyle: {
@@ -312,15 +319,21 @@ export default {
     that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData(that.stime)
     that.carflowData(that.stime)
+    that.getMapVehicleInData(that.stime)
     // that.initSumCharts();
     // that.initAccurCharts();
     
   },
   destroyed() {
+    console.log("清除kkk")
     this.flyRoutes = [];
     this.map.stop();
     let that = this;
     that.map.setPitch(0); //设置地图的俯仰角
+    if(that.i!='1'){
+      that.clearMap()
+    }
+
     /*for (let i = 0; i < that.buildingmore.length; i++) {
         if(that.map.getLayer(that.buildingmore[i])) that.map.setLayoutProperty(that.buildingmore[i], 'visibility', 'none');
       }*/
@@ -340,6 +353,123 @@ export default {
     }
   },
   methods: {
+         //  地图上的显示 
+    addCityMarker(item){
+        let el = document.createElement('div');
+        el.id = 'marker';
+        // el.style["border"] = "solid 1px #333333";
+        // el.style["backgroundColor"] = "#333";
+        el.style["padding"] = "4px 6px";
+        el.style.color='white';
+        
+        let leftImgDiv=document.createElement('div');
+        leftImgDiv.style.float='left';
+        leftImgDiv.style.width='20px';
+        leftImgDiv.style.height='40px';
+        leftImgDiv.style.lineHeight='30px';
+        let img_i = document.createElement('i');
+        img_i.className='iconfont icon-shangsheng';
+        img_i.style.color='#FFAF05';
+        
+        if(item.addIn<0){
+            img_i.style.color='#00DFC7';
+            leftImgDiv.style.transform='rotate(180deg)';
+            leftImgDiv.style.lineHeight='50px';  
+        }
+        leftImgDiv.appendChild(img_i);
+        el.appendChild(leftImgDiv);
+
+        let rightDiv=document.createElement('div');
+        rightDiv.style.float='right';
+        rightDiv.style.width='40px';
+        rightDiv.style.height='30px';
+        let span1 = document.createElement('p');
+        span1.innerHTML = item.city;
+        span1.style.margin='0';
+        rightDiv.appendChild(span1);
+        let span2 = document.createElement('p');
+        span2.innerHTML = item.addIn;
+        span2.style.margin='0';
+        span2.style.color='#FFAF05';
+        if(item.addIn<0) span2.style.color='#00DEC7';
+        rightDiv.appendChild(span2);
+        el.appendChild(rightDiv);
+        //添加marker
+        let lnglat = [item.longitude,item.latitude];
+        let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
+        this.map_cover.markers.push(marker);
+        // this.markerlist.push(marker)
+      },
+      
+     //车辆流动页面地图 城市流动数据 Vehicle/getMapVehicleIn   GET_MAP_CITY_FLOW_API
+    getMapVehicleInData(stime,etime){
+      let that=this;
+        // 如果只有一个参数 stime
+      if(etime===undefined && stime!='4'){
+         interf.GET_MAP_CITY_FLOW_API({
+          id: "",
+          stime:stime
+          })
+          .then(response=>{
+            if (response && response.status == 200){
+              var data = response.data;
+              //  console.log(data)               
+                if (data.errcode == 0) {
+                    if(data.data.length>0){
+                        data.data.forEach(e=>{
+                        that.addCityMarker(e);
+                        })
+                    }
+                } else{
+                  that.$message({
+                    message: data.errmsg,
+                    type: "error",
+                    duration: 1500
+                  });
+                }
+              }
+            })
+            .catch(err=>{
+              console.log(err);
+            })
+            .finally(() => {
+              that.tableLoading = false;
+            });
+        } 
+        // 如果有2个参数 stime,etime
+         if(etime!=undefined){
+         interf.GET_MAP_CITY_FLOW_API({
+          id: "",
+          stime:stime,
+          etime:etime
+          })
+          .then(response=>{
+            if (response && response.status == 200){
+              var data = response.data;
+              //  console.log(data)             
+                if (data.errcode == 0) {
+                    if(data.data.length>0){
+                        data.data.forEach(e=>{
+                        that.addCityMarker(e);
+                        })
+                    }
+                } else{
+                  that.$message({
+                    message: data.errmsg,
+                    type: "error",
+                    duration: 1500
+                  });
+                }
+              }
+            })
+            .catch(err=>{
+              console.log(err);
+            })
+            .finally(() => {
+              that.tableLoading = false;
+            });
+        }
+    },
     // 如果点击实时，则右边数据全部加载实时的数据
     realTime(){
       let that = this;
@@ -408,6 +538,9 @@ export default {
       blur.$on('sendTime',data=>{
         // console.log(data)
       })
+      blur.$on('realtime',i=>{
+        this.i=i  //表示中间三个组件
+      })
       // 接受数据 点击城市获取对应城市  总计进入车辆辆次的数据
       // blur.$on('getcitys',data=>{
       //   // console.log(data)
@@ -462,7 +595,7 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           var data = response.data;
-          console.log(data)
+          // console.log(data)
           if (data.errcode == 0) {
             that.provinceData.addIn=data.data.addIn.toString();
             that.provinceData.incount=data.data.incount.toString();
@@ -493,7 +626,7 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           var data = response.data;
-          console.log(data)
+          // console.log(data)
           if (data.errcode == 0) {
             that.provinceData.addIn=data.data.addIn.toString();
             that.provinceData.incount=data.data.incount.toString();
@@ -525,7 +658,7 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-            console.log(data)
+            // console.log(data)
             if (data.errcode == 0) {
               that.provinceData.addIn=data.data.addIn.toString();
               that.provinceData.incount=data.data.incount.toString();
@@ -566,6 +699,7 @@ export default {
            console.log(data)
            if (data.errcode == 0) {
              var obj=data.data;
+             console.log(obj)
             //  for(){
             //    that.
             //  }
@@ -597,9 +731,7 @@ export default {
            console.log(data)
            if (data.errcode == 0) {
              var obj=data.data;
-            //  for(){
-            //    that.
-            //  }
+           
             } else{
               that.$message({
                 message: data.errmsg,
@@ -636,7 +768,7 @@ export default {
         .then(response=>{
         if (response && response.status == 200){
             var data = response.data;
-             console.log(data)
+            //  console.log(data)
             if (data.errcode == 0) {
               that.echartsData.BIGCAR=data.data.BIGCAR;
               that.echartsData.SMALLCAR=data.data.SMALLCAR;
@@ -720,7 +852,7 @@ export default {
               this.options.series[0].data[1].value=that.echartsData.SMALLCAR;
               that.changechart = echarts.init(document.getElementById('accurCreateChange'));
               that.changechart.setOption(that.options);
-              //  console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR)
+              //  console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR) 
               } else{
                 that.$message({
                   message: data.errmsg,
@@ -757,6 +889,38 @@ export default {
       };
       this.countChart.setOption(this.accurChangeOption);
     },
+   /*##清除地图加载点、线、面、弹框*/
+  clearMap(){
+    //清除source
+    // if(this.map_cover.sourceList.length>0){
+    //   this.map_cover.sourceList.forEach(e=>{
+    //     if(this.map.getSource(e)!=undefined){
+    //       this.map.removeSource(e);
+    //     }
+    //   })
+    // }
+    // //清除layer
+    // if(this.map_cover.lineList.length>0){
+    //   this.map_cover.lineList.forEach(e=>{
+    //     if(this.map.getLayer(e)!=undefined){
+    //       this.map.removeLayer(e);
+    //     }
+    //   })
+    // }
+    // //清除popup
+    // if(this.map_cover.popups.length>0){
+    //   this.map_cover.popups.forEach(e=>{
+    //     e.remove();
+    //   })
+    // }
+    //清除marker
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
+        e.remove();
+      })
+    }
+  },
+
     /**
      * 生成重大事故发生趋势echarts
      */

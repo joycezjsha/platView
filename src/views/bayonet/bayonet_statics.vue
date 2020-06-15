@@ -1,27 +1,57 @@
 <template>
-  <div class="device-statics boxstyle">
+  <div class="device-statics">
     <div class="device-statics_container">
       <div class="device-statics_title">
-        <m-title label='全省统计' img_type='1' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title>
+        <!-- <m-title label='全省统计' img_type='1' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title> -->
+        <div class="top boxstyle" >
+        <div class="title" v-if="showback==true">全省统计</div>
+        <div class="back "  v-else @click="goback()">
+          &lt;&lt; 返回全省
+          <span>{{city}}</span>
+        </div>
+      </div>
       </div>
       <div class="device-statics_content">
         <div>
-          <m-tab label='设备总数' value='2328'></m-tab>
-          <m-tab label='活跃卡口数' value='2328'></m-tab>
-            <m-tab label='今日回传过车数据' value='5316'></m-tab>
+          <div class="number reg" style="margin-bottom:10px">
+            <i style="" class='iconfont icon-shebei1'></i>
+            <span class="num">设备总数</span>
+            <span class="x x1" style="">{{devcount}}</span>
+          </div>
+          <div class="number reg" style="margin-bottom:10px">
+            <i style="" class='iconfont icon-kakou'></i>
+            <span class="num">活跃卡口数</span>
+            <span class="x x1" style="">{{activedev}}</span>
+          </div>
+          <div class="number reg" style="margin-bottom:10px">
+            <i style="" class='iconfont icon-shujuhuichuan'></i>
+            <span class="num">今日回传过车数据</span>
+            <span class="x x1" style="">{{todaynum}}</span>
+          </div>
+          <!-- <m-tab style="margin-bottom:2vh" label='设备总数' :value='devcount'></m-tab>
+          <m-tab  style="margin-bottom:2vh" label='活跃卡口数' :value='activedev'></m-tab>
+          <m-tab label='今日回传过车数据' :value='todaynum'></m-tab> -->
         </div>
-        <div>
+        <div class="bottom boxstyle">
            <div class="device-statics_title">
-            <div>
-              <i class="el-icon-collection-tag">今日卡口数据回传排名:</i>
+            <div style="margin-top:3px">
+              <m-title label='今日卡口数据回传排名' ></m-title>
+              <!-- <i class="el-icon-collection-tag">今日卡口数据回传排名:</i> -->
             </div>
           </div>
           <div class="device-statics_data">
-            <el-table :data="tableDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-              <el-table-column fixed type="index" label="No" width="50"></el-table-column>
-              <el-table-column prop="name" label="电警名称"></el-table-column>
-              <el-table-column prop="value" label="过车辆" sortable></el-table-column>
-            </el-table>
+            <div style="padding:0 5px">
+              <el-table :data="tableDatas" style="width: 100%" height="680px" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+                <el-table-column fixed type="index" label="No" width="38"></el-table-column>
+                <el-table-column  show-overflow-tooltip  prop="city,ROADNAME"  width="130" label="设备名称">
+                  <template slot-scope="scope">
+                   [{{scope.row.city}}]{{scope.row.ROADNAME}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="TIMENUM" label="流量"  width="60" sortable></el-table-column>
+                <el-table-column prop="TODAYNUM" label="过车量"  width="70" sortable></el-table-column>
+              </el-table>
+            </div>          
           </div>
         </div>
       </div>
@@ -30,17 +60,25 @@
 </template>
 
 <script>
+// getAttribute
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
 import m_tab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list.vue'
 import mTitle from "@/components/UI_el/title_com.vue";
+import blur from '../../blur.js';
 export default {
   name: "TIndex",
   data() {
     return {
+      showback: true, //是否显示返回按钮
       map: {},
+      devcount:'',
+      activedev:'',
+      todaynum:'',
+      XZQH:'',
+      city:'',
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
@@ -84,9 +122,9 @@ export default {
       },
       device_chart:null,
       tableDatas:[
-        {name:'十字路口002电警',value:'1222'},
-        {name:'十字路口002电警',value:'1222'},
-        {name:'十字路口002电警',value:'1222'}
+        {'ROADNAME':'','TODAYNUM':'','TIMENUM':'','city':''},
+        // {'name':'十字路口002电警','value':'1222'},
+        // {'name':'十字路口002电警','value':'1222'}
       ]
     }
   },
@@ -94,13 +132,17 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
-    this.getIndexData();
-    this.initdeviceStaticsChart();
+    that.map.setCenter([108.967368, 34.302634]);
+    that.map.setZoom(11);
+    that.getIndexData();
+    that.getdevcountData();
+    that.getbayrankDatas()
+    that.getData()
+    that.initdeviceStaticsChart();
     // setTimeout(()=>{
         that.initAccurCharts();
     // },1000);
+ 
   },
   destroyed() {
     this.flyRoutes = [];
@@ -109,6 +151,155 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
+    // 是否显示返回
+    goback() {
+      let that = this;
+      that.showback = true;
+      // that.getBelongData("1", "1", "2");
+      that.getbayrankDatas()
+      that.getdevcountData()
+    },
+    // 接受传过来的数据
+    getData(){
+      blur.$on("getXZQH",data=>{
+        this.XZQH=data;
+        if(this.XZQH!=''){
+          this.showback=false;
+        }
+        console.log(this.XZQH)
+        this.getbayrankDatas(this.XZQH)
+        this.getdevcountData(this.XZQH)
+      })
+      blur.$on("getcity",data=>{
+        this.city=data;
+      })
+    },
+    /**
+     * // 卡口监测-今日卡口数据回传排名 Bayonet/getBayonetEchoRanking GET_BAY_RANK_API
+    */
+   getbayrankDatas(xzqh){
+      let that = this;
+    //  如果没有参数
+     if(xzqh===undefined){
+       interf.GET_BAY_RANK_API({
+          id: ""
+       })
+       .then(response=>{
+         if (response && response.status == 200){
+            var data = response.data;
+            console.log(data)
+             if (data.errcode == 0) {
+               that.tableDatas=data.data;
+             } else{
+               that.$message({
+                 message: data.errmsg,
+                 type: "error",
+                 duration: 1500
+               });
+             }
+         }
+       })
+       .catch(err=>{
+          console.log(err);
+       })
+       .finally(() => {
+         that.tableLoading = false;
+       });
+     }else{
+       interf.GET_BAY_RANK_API({
+          id: "",
+          xzqh:xzqh
+       })
+       .then(response=>{
+         if (response && response.status == 200){
+            var data = response.data;
+            console.log(data)
+             if (data.errcode == 0) {
+                that.tableDatas=data.data;
+             } else{
+               that.$message({
+                 message: data.errmsg,
+                 type: "error",
+                 duration: 1500
+               });
+             }
+         }
+       })
+       .catch(err=>{
+          console.log(err);
+       })
+       .finally(() => {
+         that.tableLoading = false;
+       });
+     }
+   },
+    /**
+     *  卡口监测-全省统计  Bayonet/getDevCount   GET_DEV_COUNT_API
+    */
+   getdevcountData(xzqh){
+      let that = this;
+    //  如果没有参数
+    console.log(xzqh)
+    if(xzqh===undefined){
+      interf.GET_DEV_COUNT_API({
+          id: ""
+       })
+       .then(response=>{
+         if (response && response.status == 200){
+            var data = response.data;
+            console.log(data)
+             if (data.errcode == 0) {
+                // that.indexData=data.data;
+                that.todaynum=data.data.todaynum.toString();
+                that.devcount=data.data.devcount.toString();
+                that.activedev=data.data.activedev.toString();
+             } else{
+               that.$message({
+                 message: data.errmsg,
+                 type: "error",
+                 duration: 1500
+               });
+             }
+         }
+       })
+       .catch(err=>{
+          console.log(err);
+       })
+       .finally(() => {
+         that.tableLoading = false;
+       });
+    }else{
+      interf.GET_DEV_COUNT_API({
+          id: "",
+          xzqh:xzqh
+       })
+       .then(response=>{
+         if (response && response.status == 200){
+            var data = response.data;
+            console.log(data)
+             if (data.errcode == 0) {
+                // that.indexData=data.data;
+                that.todaynum=data.data.todaynum;
+                that.devcount=data.data.devcount;
+                that.activedev=data.data.activedev;
+             } else{
+               that.$message({
+                 message: data.errmsg,
+                 type: "error",
+                 duration: 1500
+               });
+             }
+         }
+       })
+       .catch(err=>{
+          console.log(err);
+       })
+       .finally(() => {
+         that.tableLoading = false;
+       });
+    }
+       
+   },
     //获取统计数据
     getIndexData() {
       let that = this;
@@ -133,7 +324,11 @@ export default {
         this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
       };
       this.accurChart.setOption(this.accurChangeOption);
-    }
+    },
+    //设置表格样式
+    getRowClass({ row, column, rowIndex, columnIndex }) {
+                return "background:transparent;";
+   },
   }
 };
 </script>
@@ -148,8 +343,8 @@ export default {
 .device-statics {
   position: fixed;
   z-index: 10;
-  right: 1vw;
-  width: 17vw;
+  right: 13px;
+  width: 474px;
   height: 85vh;
   top: 9vh;
   color: white;
@@ -212,7 +407,7 @@ export default {
   .device-statics_content {
     width: 98%;
     height: 85%;
-    background-color: $color-bg-1;
+    // background-color: $color-bg-1;
     margin: 1%;
     .device-statics_sort_list{
       width:50%;
@@ -235,5 +430,83 @@ export default {
     }
   }
 }
-
+.top {
+  margin-top: 3px;
+    width: 100%;
+    .back {
+      height: 34px;
+      font-size: 16px;
+      padding-top: 5px;
+      font-family: Source Han Sans CN;
+      font-weight: 400;
+      color: rgba(0, 198, 255, 1);
+      // background-color: $color-bg-1;
+      // border:1px solid;
+      padding-left: 17px;
+      cursor: pointer;
+      border-image: linear-gradient(
+          182deg,
+          rgba(10, 148, 255, 1),
+          rgba(255, 255, 255, 0)
+        )
+        1 1;
+      span {
+        width: 53px;
+        height: 18px;
+        font-size: 18px;
+        font-family: Source Han Sans CN;
+        font-weight: 400;
+        color: rgba(254, 254, 254, 1);
+        padding-left: 108px;
+        cursor: pointer;
+      }
+    }
+    .title {
+      height: 34px;
+      font-size: 18px;
+      padding-top: 5px;
+      text-align: center;
+      font-family: Source Han Sans CN;
+      font-weight: 400;
+      color: rgba(254, 254, 254, 1);
+      background-color: $color-bg-1;
+      border: 1px solid;
+      cursor: pointer;
+      border-image: linear-gradient(
+          182deg,
+          rgba(10, 148, 255, 1),
+          rgba(255, 255, 255, 0)
+        )
+        1 1;
+    }
+    .back{
+      border: 1px solid;
+      background-color: $color-bg-1;
+      border-image: linear-gradient(
+          182deg,
+          rgba(10, 148, 255, 1),
+          rgba(255, 255, 255, 0)
+        )
+        1 1;
+    }
+  }
+  .bottom{
+    margin-top: 3vh;
+    height:771px;
+  }
+  .number{
+    width:458px;
+    height:37px;
+    background:rgba(3,7,30,0.6);
+    border:1px solid rgba(139,142,164,1);
+    line-height: 37px;
+    i{
+      margin-left: 14px;
+      margin-right: 12px;
+    }
+    .x1{
+      float: right;
+      margin-right: 16px;
+    }
+  }
 </style>

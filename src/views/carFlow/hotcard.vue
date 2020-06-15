@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id='card-modal'>
     <div id="map" style=' width: 100%; height: 100%;'></div>
     <div class="hotcard">
         <div class="top">
@@ -50,6 +50,7 @@ export default {
     name:'hotcard',
     data(){
         return{
+          poPupList:[], //熱點卡口界面popup存儲
           showback:true, //是否显示返回按钮
           city:'',
           stime:'1',
@@ -57,10 +58,10 @@ export default {
           timeRange:'', //自定义时间
           showhotcard:false,
           map_cover:{
-          sourceList:[],
-          lineList:[],
-          popups:[],
-          markers:[]
+          // sourceList:[],
+          // lineList:[],
+            popups:[],
+            markers:[]
           },
           indexDatas: [
             {"road":"","index":"","inNum":"","outNum":""}
@@ -83,9 +84,6 @@ export default {
       this.map.setZoom(11);
        let that = this;
        that.$store.commit("setRight", '26.5vw');
-      //  that.getIndexDatas(that.stime) 
-      //  that.gettimeDatas()
-      //  that.gettimesDatas()
        that.getData()
        that.gethotcardDatas(that.stime)
      
@@ -96,6 +94,7 @@ export default {
       }
     },
     methods:{
+      
       /**
        * 点击返回按钮
        */
@@ -152,20 +151,21 @@ export default {
        */     
        
       getcardMapData(item){
+        // this.poPupList=[];
+        // minemap-popup-content
+        // $(".minemap-popup-content").css("background", "");
         let itemlist=[];
         itemlist.push(item.KKJD,item.KKWD)
-        console.log(itemlist)
-        // let lnglat = {item.KKJD,item.KKWD]; ,item.DLMC,item.KKBH,item.KKMC,item.NUM
-      //    let rightDiv=document.createElement('div');
+        // console.log(itemlist)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
         el.style.border='1px solid rgba(42, 76, 162, 1)';
         el.style.borderRadius='2px';
-        el.style.background='rgba(3,12,32,0.74)';
+        el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
         el.style["padding"] = "10px 10px";
-        // el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
+        el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
         let d1 = document.createElement('div');
         d1.innerHTML = item.KKMC;
         d1.style.color = "rgba(255,255,255,1)";
@@ -215,11 +215,12 @@ export default {
         d5.appendChild(span7)
         d5.appendChild(span8)
         el.appendChild(d5);
-        var popup3 = new minemap.Popup({closeOnClick: false, closeButton: false, offset: [0, 0]})
+        let popup= new minemap.Popup({closeOnClick: false, closeButton: false, offset: [0, 0]})
         .setLngLat(lnglat)
         .setDOMContent(el)
         .addTo(this.map);
-       
+        this.poPupList.push(popup)
+        // (".minemap-popup-tip").style.background='red';
       },
       /**
        *车辆流动页面热点道路
@@ -433,99 +434,6 @@ export default {
             });
         }
       },
-      // 今天，昨天，实时的数据
-      gettimesDatas(stime){
-        let that = this;
-        //  blur.$on('getroadtimes',data=>{
-        //   // console.log(data)
-        //   that.indexDatas=data.data;
-        // })
-        // 热点道路排名的数据
-        // blur.$on('getbaytimes',data=>{
-        //   // console.log(data)
-        //   // that.indexDatas1=data.data;
-        // })
-      },
-      // 获取日历选择的数据
-      gettimeDatas(){
-        let that = this;
-        // blur.$on('determine',times=>{
-        //   that.timeRange=times;
-        //   console.log(that.timeRange)
-        // })   
-        // 热点道路排名的数据
-        // blur.$on('getroadData',data=>{
-        //   // console.log(data)
-        //   that.indexDatas=data.data;
-        // })
-        // 热点道路排名的数据
-        // blur.$on('getbayData',data=>{
-        //   // console.log(data)
-        //   that.indexDatas1=data.data;
-        // })
-        
-      },
-      /**
-       * 1 最近的时间 2 今天 3昨天 对应的数据
-      */      
-      getIndexDatas(stime){
-        let that = this;
-      // 车辆流动页面热点道路 
-      
-      // 车辆流动页面热点卡口 Vehicle/getHotspotBayonetRanking  GET_HOT_RANK_API
-      // interf.GET_HOT_RANK_API({
-      //   id:"",
-      //   stime:stime
-      // })
-      // .then(response=>{
-      //   if (response && response.status == 200){
-      //       var data = response.data;
-      //       // console.log(data)
-      //       if (data.errcode == 0) {
-      //           // that.indexDatas1=data.data;
-      //           // console.log(that.indexDatas1)
-      //         } else{
-      //           that.$message({
-      //             message: data.errmsg,
-      //             type: "error",
-      //             duration: 1500
-      //           });
-      //       } 
-      //     }
-      // })
-      // .catch(err=>{
-      //     console.log(err);
-      //   })
-      //   .finally(() => {
-      //     that.tableLoading = false;
-      //   });
-      // 车辆流动页面热点道路 Vehicle/getHotspotRoadRanking   GET_HOT_ROAD_API
-      //   interf.GET_HOT_ROAD_API({
-      //   id:"",
-      //   stime:stime
-      // })
-      // .then(response=>{
-      //   if (response && response.status == 200){
-      //       var data = response.data;
-      //       // console.log(data)
-      //       if (data.errcode == 0) {
-      //           that.indexDatas=data.data;   
-      //         } else{
-      //           that.$message({
-      //             message: data.errmsg,
-      //             type: "error",
-      //             duration: 1500
-      //           });
-      //       } 
-      //     }
-      // })
-      // .catch(err=>{
-      //     console.log(err);
-      //   })
-      //   .finally(() => {
-      //     that.tableLoading = false;
-      //   });
-      },
       //设置表格样式
       getRowClass({ row, column, rowIndex, columnIndex }) {
         return "background:transparent;";
@@ -598,5 +506,13 @@ export default {
       }
       
     }
+}
+</style>
+<style>
+#map .minemap-popup-tip{
+  display: none !important;
+}
+#map  .minemap-popup-content{
+  background: none !important;
 }
 </style>

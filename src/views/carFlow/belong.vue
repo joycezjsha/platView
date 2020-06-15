@@ -2,7 +2,7 @@
 <template>
   <div class="carFlowBelong">
     <!-- 中间的OD地图 -->
-    <div class="carmapOD" id="map"></div>
+    <!-- <div class="carmapOD" id="map"></div> -->
     <div class="belong">
       <div class="top">
         <div class="title" v-if="showback==true">全部车辆监控</div>
@@ -91,14 +91,23 @@ export default {
         provinceExternal: null,
         provinceExternalProportion: null
       },
-      indexDatas: []
+      indexDatas: [],
+      belongList:[] , //存放OD图
+      map_cover:{
+        sourceList:[],
+        markers:[],
+        lineList:[],
+        popups:[]
+      }
     };
   },
   mounted() {
     this.map=this.$store.state.map;
-    this.getData();
-    this.getBelongData(this.stime, this.fxlx, this.provinceInorOut);
-    // this.getCityMapOD();
+    // this.map.setCenter([108.967368, 34.302634]);
+    let that = this;
+    that.getData();
+    that.getBelongData(that.stime, that.fxlx, that.provinceInorOut);
+    // that.getCityMapOD();
   },
   components: {
     mTitle,
@@ -145,13 +154,6 @@ export default {
       blur.$on("determine", times => {
         console.log(times);
         that.timeRange = times;
-        // console.log(that.timeRange)
-        // let time1=that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3")
-        // let time2=that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3")
-        // console.log(timer1,timer2)
-        // console.log(that.timeRange[0],that.timeRange[1])
-        //
-        // console.log(that.timeRange)
       });
       //
       blur.$on("paramcity", city => {
@@ -166,144 +168,144 @@ export default {
     goback() {
       let that = this;
       that.showback = true;
-      setTineout(()=>{that.getBelongData("1", "1", "2")},1000);
+      that.getBelongData("1", "1", "2");
     },
     //  OD地图函数
-    getCityMapOD(items) {
-     let data=[
-       [116.4551, 40.2539, 121.4648, 31.2891, '北京', '上海', 20]
-       ];
-      //  that.indexDatas.forEach(item => {
-      //     data.push([JWD.split(' ').toString()])
-                     
-      //             });
-      var scatterData = [];
-      var lineData = [];
-      var min = Number.MAX_VALUE;
-      var max = Number.MIN_VALUE;
-      for (var i = 0; i < data.length; i++) {
-        var item = data[i];
-        var name = item[4];
-        var dest = item[5];
-        var count = item[6];
-        if (count < min) {
-          min = count;
-        }
-        if (count > max) {
-          max = count;
-        }
-        scatterData.push({
-          name: dest,
-          count: count,
-          // value: item.slice(2, 4)
-        });
-        lineData.push({
-          name: name,
-          count: count,
-          dest: dest,
-          // coords: [item.slice(0, 2), item.slice(2, 4)]
-        });
-      }
-      var series = [
-        {
-          name: "bgLine",
-          type: "lines",
-          coordinateSystem: "GLMap",
-          zlevel: 1,
-          lineStyle: {
-            normal: {
-              color: "#FFF800",
-              width: 2,
-              opacity: 0.5,
-              curveness: 0.2
-            }
-          },
-          data: lineData
-        },
-        {
-          name: "scatter",
-          type: "scatter",
-          coordinateSystem: "GLMap",
-          zlevel: 2,
+    getCityMapOD(itemlist){
+      this.clearMap();
+      var data = [] ;
+       itemlist.forEach(item => {
+          data.push([
+            item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
+            item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
+            item.STRATNAME,item.ENDNAME,item.NUM
+          ]
+          )             
+      });
 
-          label: {
-            normal: {
-              show: true,
-              position: "right",
-              formatter: "{b}"
+
+        var scatterData = [];
+        var lineData = [];
+        var min = Number.MAX_VALUE;
+        var max = Number.MIN_VALUE;
+      for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var name = item[4];
+            var dest = item[5];
+            var count = item[6];
+
+            if (count < min) {
+                min = count;
             }
-          },
-          symbolSize: 10,
-          itemStyle: {
-            normal: {
-              show: true,
-              color: "#FFF800"
+            if (count > max) {
+                max = count;
             }
-          },
-          data: scatterData
-        },
-        {
-          name: "sLine",
-          type: "lines",
-          coordinateSystem: "GLMap",
-          zlevel: 3,
-          effect: {
-            show: true,
-            period: 6,
-            trailLength: 0.4,
-            symbolSize: 4
-          },
-          lineStyle: {
-            normal: {
-              color: "#FFF800",
-              width: 0,
-              curveness: 0.2
-            }
-          },
-          data: lineData
-        },
-        {
-          name: "lLine",
-          type: "lines",
-          coordinateSystem: "GLMap",
-          zlevel: 4,
-          effect: {
-            show: true,
-            period: 6,
-            trailLength: 0.4,
-            opacity: 0.08,
-            symbolSize: 15
-          },
-          lineStyle: {
-            normal: {
-              color: "#FFF800",
-              width: 0,
-              curveness: 0.2
-            }
-          },
-          data: lineData
+            scatterData.push({
+                name: dest,
+                count: count,
+                value: item.slice(2, 4)
+            })
+            lineData.push({
+                name: name,
+                count: count,
+                dest: dest,
+                coords: [item.slice(0, 2), item.slice(2, 4)]
+            });
+      }
+      var series = [{
+            name: 'bgLine',
+            type: 'lines',
+            coordinateSystem: 'GLMap',
+            zlevel: 1,
+            lineStyle: {
+                normal: {
+                    color: '#03825d',
+                    width: 2,
+                    opacity: 0.5,
+                    curveness: 0.2
+                }
+            },
+            data: lineData
+        }, {
+            name: 'scatter',
+            type: 'scatter',
+            coordinateSystem: 'GLMap',
+            zlevel: 2,
+
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    formatter: '{b}'
+                }
+            },
+            symbolSize: 10,
+            itemStyle: {
+                normal: {
+                    show: true,
+                    color: '#03825d'
+                }
+            },
+            data: scatterData
+        }, {
+            name: 'sLine',
+            type: 'lines',
+            coordinateSystem: 'GLMap',
+            zlevel: 3,
+            effect: {
+                show: true,
+                period: 6,
+                trailLength: 0.4,
+                symbolSize: 4
+            },
+            lineStyle: {
+                normal: {
+                    color: '#04b06e',
+                    width: 0,
+                    curveness: 0.2
+                }
+            },
+            data: lineData
+        }, {
+            name: 'lLine',
+            type: 'lines',
+            coordinateSystem: 'GLMap',
+            zlevel: 4,
+            effect: {
+                show: true,
+                period: 6,
+                trailLength: 0.4,
+                opacity: 0.08,
+                symbolSize: 15
+            },
+            lineStyle: {
+                normal: {
+                    color: '#04b06e',
+                    width: 0,
+                    curveness: 0.2
+                }
+            },
+            data: lineData
         }
-      ];
-      var option = {
-        GLMap: {
-          roam: true
-        },
-        tooltip: {
-          trigger: "item",
-          backgroundColor: "rgba(0,0,0,0)",
-          formatter: function(param) {
-            return (
-              param.data.name + "->" + param.data.dest + ": " + param.data.count
-            );
-          }
-        },
-        series: series
-      };
-      
-      var echartslayer = minemap.Template.create({ map: this.map, type: "od" });
-      echartslayer.chart.setOption(option);
-      // }
-      // )
+        ];
+        var option = {
+            GLMap: {
+                roam: true
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0,0,0,0)',
+                formatter: function (param) {
+                    return param.data.name + '->' + param.data.dest + ': ' + param.data.count;
+                }
+            },
+            series: series
+        };
+        var echartslayer = minemap.Template.create({map: this.map, type: 'od'});
+        echartslayer.chart.setOption(option);
+        this.belongList.push(echartslayer)
+
+        
     },
     // 右侧列表数据
     getBelongData(stime, fxlx, provinceInorOut, xzqh, etime) {
@@ -337,6 +339,9 @@ export default {
                  * 中间地图部分:
                  * 车辆流动页面归属地分析 --车辆归属地OD地图 Vehicle/getVehicleOwnership
                  */
+                if(that.indexDatas.length>0){
+                   that.getCityMapOD(that.indexDatas) 
+                }
               } else {
                 that.$message({
                   message: data.errmsg,
@@ -357,7 +362,7 @@ export default {
       if (xzqh != undefined && etime === undefined && stime != "4") {
         interf
           .GET_BELONG_API({
-            id: "",
+            // id: "",
             stime: stime,
             fxlx: fxlx,
             provinceInorOut: provinceInorOut,
@@ -377,6 +382,9 @@ export default {
                   data.data.provinceExternalProportion;
                 that.indexDatas = data.data.dataList;
                 console.log(that.belongData);
+                if(that.indexDatas.length>0){
+                   that.getCityMapOD(that.indexDatas) 
+                }
               } else {
                 that.$message({
                   message: data.errmsg,
@@ -397,7 +405,7 @@ export default {
       if (xzqh === undefined && etime === undefined && stime != "4") {
         interf
           .GET_BELONG_API({
-            id: "",
+            // id: "",
             stime: stime,
             fxlx: fxlx,
             provinceInorOut: provinceInorOut
@@ -405,7 +413,7 @@ export default {
           .then(response => {
             if (response && response.status == 200) {
               var data = response.data;
-                         console.log(data)
+              //            console.log(data)
               if (data.errcode == 0) {
                 // that.belongData=data.data;
                 that.belongData.provinceWithin = data.data.provinceWithin;
@@ -416,8 +424,9 @@ export default {
                   data.data.provinceExternalProportion;
                 that.indexDatas = data.data.dataList;
                 console.log(that.indexDatas);
-                if (data.data.dataList.length > 0) {
-                //  that.getCityMapOD(data.data.dataList);
+                if (that.indexDatas.length > 0) {               
+                   that.getCityMapOD(that.indexDatas) 
+                  
                 }
               } else {
                 that.$message({
@@ -453,7 +462,38 @@ export default {
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
       return "background:transparent;";
+    },
+    /*##清除地图加载点、线、面、弹框*/
+  clearMap(){
+    //清除source
+    if(this.map_cover.sourceList.length>0){
+      this.map_cover.sourceList.forEach(e=>{
+        if(this.map.getSource(e)!=undefined){
+          this.map.removeSource(e);
+        }
+      })
     }
+    //清除layer
+    if(this.map_cover.lineList.length>0){
+      this.map_cover.lineList.forEach(e=>{
+        if(this.map.getLayer(e)!=undefined){
+          this.map.removeLayer(e);
+        }
+      })
+    }
+    //清除popup
+    if(this.map_cover.popups.length>0){
+      this.map_cover.popups.forEach(e=>{
+        e.remove();
+      })
+    }
+    //清除marker
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
+        e.remove();
+      })
+    }
+   },
   }
 };
 </script>

@@ -3,11 +3,12 @@
     <car-table></car-table>
     <middle></middle>
     <div class="right">
-      <car-info v-if="isShow==1"></car-info>
-      <belong v-if="isShow==2"></belong>
-      <hotcard  v-if="isShow==3"></hotcard>
-    </div>
-    <FlowMap></FlowMap>
+      <car-info v-if="isShow==1" ref="carinfo">
+        <!-- <FlowMap></FlowMap> -->
+      </car-info>
+      <belong v-if="isShow==2" ref="belonginfo"></belong>
+      <hotcard  v-if="isShow==3" ref="hotcardinfo"></hotcard>
+    </div>  
   </div>
 </template>
 
@@ -19,7 +20,7 @@ import middle from "./middle";
 import car_info from "./car_info";
 import belong from "./belong";
 import hotcard from "./hotcard";
-import FlowMap from "./carFlow_map";
+// import FlowMap from "./carFlow_map";
 export default {
   name: "carFlow",
   data() {
@@ -27,7 +28,6 @@ export default {
       map: {},
       i:1,
       isShow:1, //显示对应的组件
-      // showhotcard:false
     };
   },
   components:{
@@ -36,18 +36,45 @@ export default {
     middle,
     belong,
     hotcard,
-    FlowMap
+    // FlowMap
   },
   mounted() {
     let that = this;
      blur.$on('realtime',showcarinfo=>{
        if(!showcarinfo) this.isShow=1;
        this.isShow=showcarinfo;
+       if(that.$refs.hotcardinfo){
+         let poplist=that.$refs.hotcardinfo.poPupList;
+         if(showcarinfo!==3){
+           poplist.map(item=>{
+             item.remove();
+           })
+           poplist=[];
+         }
+       }
+       if(that.$refs.belonginfo){
+          let belonglist=that.$refs.belonginfo.belongList;
+          if(showcarinfo!==2){
+           belonglist.map(item=>{
+             item.remove();
+           })
+           belonglist=[];
+         }
+       }
+       if(that.$refs.carinfo){
+          let marklist=that.$refs.carinfo.map_cover.markers;
+          if(showcarinfo!==1){
+           marklist.map(item=>{
+             item.remove();
+           })
+           marklist=[];
+         }
+       }
       console.log(showcarinfo)
     })
      
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
+    // this.map.setCenter([108.967368, 34.302634]);  carinfolist
     this.map.setZoom(11);
     this.map.repaint = true;
     $(window).resize(function() {
@@ -59,6 +86,7 @@ export default {
     let that = this;
     clearInterval(that.fly);
     that.map.setPitch(0); //设置地图的俯仰角
+    that.clearMap()
     /*for (let i = 0; i < that.buildingmore.length; i++) {
         if(that.map.getLayer(that.buildingmore[i])) that.map.setLayoutProperty(that.buildingmore[i], 'visibility', 'none');
       }*/
@@ -73,7 +101,37 @@ export default {
     // commonVariable.CURRENT_MAP.repaint = false;
   },
   methods: {
-
+    /*##清除地图加载点、线、面、弹框*/
+  clearMap(){
+    //清除source
+    if(this.map_cover.sourceList.length>0){
+      this.map_cover.sourceList.forEach(e=>{
+        if(this.map.getSource(e)!=undefined){
+          this.map.removeSource(e);
+        }
+      })
+    }
+    //清除layer
+    if(this.map_cover.lineList.length>0){
+      this.map_cover.lineList.forEach(e=>{
+        if(this.map.getLayer(e)!=undefined){
+          this.map.removeLayer(e);
+        }
+      })
+    }
+    //清除popup
+    if(this.map_cover.popups.length>0){
+      this.map_cover.popups.forEach(e=>{
+        e.remove();
+      })
+    }
+    //清除marker
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
+        e.remove();
+      })
+    }
+  },
   }
 };
 </script>
