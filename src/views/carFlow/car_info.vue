@@ -333,8 +333,10 @@ export default {
     this.map.stop();
     let that = this;
     that.map.setPitch(0); //设置地图的俯仰角
-    if(that.i!='1'){
-      that.clearMap()
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
+        e.remove();
+      })
     }
 
     /*for (let i = 0; i < that.buildingmore.length; i++) {

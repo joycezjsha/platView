@@ -348,6 +348,7 @@ export default {
                  * 车辆流动页面归属地分析 --车辆归属地OD地图 Vehicle/getVehicleOwnership
                  */
                 if(that.indexDatas.length>0){
+                  
                    that.getCityMapOD(that.indexDatas) 
                 }
               } else {

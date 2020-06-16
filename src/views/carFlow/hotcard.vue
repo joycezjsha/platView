@@ -88,6 +88,9 @@ export default {
        that.gethotcardDatas(that.stime)
      
     },
+    destroyed(){
+
+    },
     watch:{
       stime(newValue, oldValue){
         return newValue;
@@ -320,7 +323,7 @@ export default {
               that.tableLoading = false;
             });
         }
-        // 热点卡口，如果有1个参数,如果没有xzqh和etime参数
+        // 热点卡口，如果是默认显示  有1个参数,如果没有xzqh和etime参数
         if(stime!='4' && xzqh===undefined){  
           interf.GET_HOT_RANK_API({
           id: "",
@@ -333,10 +336,9 @@ export default {
              console.log(data)           
             if (data.errcode == 0) {
               if(that.indexDatas1.length>0){
-                // // 调用卡口地图方法
+                //  调用卡口地图方法
                 that.indexDatas1.forEach(element => {
                   that.getcardMapData(element)
-                //   // element.KKJD
                   console.log(element)
                 });
               }
@@ -371,10 +373,15 @@ export default {
             // blur.$emit('getbaytimes',data)
             if (data.errcode == 0) {
               if(that.indexDatas1.length>0){
-                // // 调用卡口地图方法
+                if(that.poPupList.length>0){
+                  that.poPupList.forEach(e=>{
+                    e.remove();
+                  })
+                }
+                // 调用卡口地图方法
                 that.indexDatas1.forEach(element => {
                   that.getcardMapData(element)
-                //   // element.KKJD
+                //  element.KKJD
                   console.log(element)
                 });
               }
@@ -410,7 +417,12 @@ export default {
             // blur.$emit('getbaytimes',data)
             if (data.errcode == 0) {
               if(that.indexDatas1.length>0){
-                // // 调用卡口地图方法
+                if(that.poPupList.length>0){
+                  that.poPupList.forEach(e=>{
+                    e.remove();
+                  })
+                }
+                // 调用卡口地图方法
                 that.indexDatas1.forEach(element => {
                   that.getcardMapData(element)
                 //   // element.KKJD
@@ -433,6 +445,37 @@ export default {
               that.tableLoading = false;
             });
         }
+      },
+      /*##清除地图加载点、线、面、弹框*/
+      clearMap(){
+        //清除source
+        // if(this.map_cover.sourceList.length>0){
+        //   this.map_cover.sourceList.forEach(e=>{
+        //     if(this.map.getSource(e)!=undefined){
+        //       this.map.removeSource(e);
+        //     }
+        //   })
+        // }
+        // //清除layer
+        // if(this.map_cover.lineList.length>0){
+        //   this.map_cover.lineList.forEach(e=>{
+        //     if(this.map.getLayer(e)!=undefined){
+        //       this.map.removeLayer(e);
+        //     }
+        //   })
+        // }
+        //清除popup
+        if(this.map_cover.popups.length>0){
+          this.map_cover.popups.forEach(e=>{
+            e.remove();
+          })
+        }
+        //清除marker
+        // if(this.map_cover.markers.length>0){
+        //   this.map_cover.markers.forEach(e=>{
+        //     e.remove();
+        //   })
+        // }
       },
       //设置表格样式
       getRowClass({ row, column, rowIndex, columnIndex }) {
