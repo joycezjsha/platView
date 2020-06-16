@@ -2,46 +2,30 @@
   <div class="device-statics">
     <div class="device-statics_container">
       <div class="device-statics_title">
-        <div>
-          <i class="el-icon-collection-tag">全省统计</i>
-        </div>
+         <m-title :label='title' img_type=1></m-title>
+         <div v-show='isShowReturn' class='return' @click='returnAll'><<返回全省</div>
       </div>
-      <m-tab :value="num"></m-tab>
-      <div class="device-statics--tab">
-        <div>
-          <span class="--tab-title">
-            <i class="el-icon-bell"></i>警情总计
-          </span>
-          <span class="statics--tab--value">
-            <span class="statics_value sum">{{staticsData.sum}}</span>
-          </span>
-        </div>
-      </div>
-      <div class="device-statics_content">
-        <div class="device-statics_title">
-          <div>
-            <i class="el-icon-collection-tag">设备类型分析</i>
-          </div>
-        </div>
+      <div class="device-statics_content boxstyle">
+        <m-title-com label='设备类型分析' style='width:8vw;height:4vh;line-height:4vh;'></m-title-com>
+        <m-tab :value="num" label='设备总数' icon='icon-shebei1'></m-tab>
         <div>
           <div class='device-statics_sort_list'><m-list :list='staticsSort'></m-list></div>
           <div id="device-statics_sort">
-          
           </div>
         </div>
-        <div>
-          <m-tab label='近30天活跃电警' value='2328'></m-tab>
-          <m-tab label='联通卡口设备' value='2328'></m-tab>
-            <m-tab label='联通视频设备' value='2328'></m-tab>
-              <m-tab label='连通龙门架设备' value='2328'></m-tab>
-               <m-tab label='连通区间测速设备' value='2328'></m-tab>
+      </div>
+        <div class='device-statics_tab boxstyle'>
+          <m-tab label='近30天活跃电警' :value='allStatics.pcount' icon='icon-dianjing' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='联通卡口设备' :value='allStatics.kkcount' icon='icon-kakou' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='联通视频设备' :value='allStatics.viocount' icon='icon-jiankong1' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='连通龙门架设备' :value='allStatics.lmjcount' icon='icon-liantonglongmenjia' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='连通区间测速设备' :value='allStatics.qjcscount' icon='icon-cesu' icon_style='color:#FFFFFF' class='item'></m-tab>
         </div>
-        <div>
-          重点设备监测：
-          <div id="accurCreateChange"></div>
+        <div v-show='isShowMainDev' class='device-statics_chart boxstyle'>
+          <m-title-com label='重点设备监测' style='width:8vw;height:4vh;line-height:4vh;'></m-title-com>
+          <m-line-chart :chart_data="device_data" c_id='deviceStaticsMainDevice' style='width:100%;height:28vh'></m-line-chart>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -52,16 +36,22 @@ import echarts from 'echarts';
 import blur from "@/blur";
 import m_tab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list.vue'
+import mTitle from "@/components/UI_el/title.vue";
+import mTitleCom from "@/components/UI_el/title_com.vue";
+import mLineChart from "@/components/UI_el/double_line_chart.vue";
 export default {
   name: "TIndex",
   data() {
     return {
       map: {},
+      title:'全省统计',
+      isShowReturn:false,
+      isShowMainDev:true,
       num:0,
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
-        color:['#02FDF4','#4D76F9','#01D647'],
+        color:['#00B5B7','#0572ED','#4F35D0'],
           tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b}: {c} ({d}%)'
@@ -77,8 +67,9 @@ export default {
               {
                   name: '警情统计',
                   type: 'pie',
-                  radius: ['40%', '60%'],
+                  radius: ['50%', '75%'],
                   avoidLabelOverlap: false,
+                  hoverAnimation:false,
                   label: {
                       show: false,
                       position: 'center'
@@ -105,6 +96,7 @@ export default {
         { name: "机动车与非机动车", value: "122", radio: "32%" },
         { name: "行人", value: "2", radio: "32%" }
       ],
+      allStatics:{},
       accurChangeOption:{
           tooltip: {
               trigger: 'axis',
@@ -176,43 +168,116 @@ export default {
               }
           ]
       },
-      accurChart:null
+      accurChart:null,
+      tableLoading:false,
+      device_data:{
+        legend: ["全部设备", "活跃设备"],
+        xdata:[],
+        y1data:[],
+        y2data:[]
+      }
     }
   },
-  components:{mTab:m_tab,mList:m_list},
+  components:{mTab:m_tab,mList:m_list,mTitle,mTitleCom,mLineChart},
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
-    this.getIndexData();
-    this.initdeviceStaticsChart();
-    // setTimeout(()=>{
-        that.initAccurCharts();
-    // },1000);
+    this.getSumDev();
+    this.initdeviceAnalysisChart();
+    this.getAllStaticsData();
+    this.initAccurCharts();
   },
   destroyed() {
     this.flyRoutes = [];
-    this.map.stop();
-    let that = this;
-    that.map.setPitch(0); //设置地图的俯仰角
+    this.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
-    //获取统计数据
-    getIndexData() {
-      let that = this;
-      //设备查询 Overview/getDevStatistics   GET_QUERY_API
-     interf.GET_QUERY_API({
-        id:"",
+    /**
+     * 根据参数刷新界面
+     * type:0->城市，1->道路  value：参数名称  flag：0->不显示‘返回全省’按钮，1->显示‘返回全省’按钮
+     */
+    initStatics(type,data,flag){
+      if(flag){
+        this.isShowReturn=true;
+        switch(type){
+          case 0:{
+            this.isShowMainDev=true;
+            this.title=data.name;
+            this.getSumDev(type,data.value);
+            this.initdeviceAnalysisChart(type,data.value);
+            this.initAccurCharts(data.value);
+            break;}
+          case 1:{
+            this.title=data.name;
+            this.getSumDev(type,data.value);
+            this.initdeviceAnalysisChart(type,data.value);
+            this.isShowMainDev=false;
+            this.show
+          }
+        }
+      }else{
+        this.isShowReturn=false;
+      }
+    },
+    /**
+     * 获取设备总数
+     */
+    getSumDev(type,value){
+      let _this=this;
+      let params={};
+      if(type && value){
+        switch(type){
+          case 0:params.xzqh=value;break;
+          case 1:break;
+          default:break;
+        }
+      };
+      interf.GET_TOTAL_NUM_API(params).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+              _this.num=data.data.num;
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
       })
-      .then(response=>{
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        _this.tableLoading = false;
+      });
+    },
+    /**
+     * 初始化设备类型分析chart
+     */
+    initdeviceAnalysisChart(type,value){
+      let _this=this;
+      let params={};
+      if(type && value){
+        switch(type){
+          case 0:params.xzqh=value;break;
+          case 1:break;
+          default:break;
+        }
+      }
+      interf.GET_QUERY_API(params).then(response=>{
        if (response && response.status == 200){
            var data = response.data;
-           console.log(data)
            if (data.errcode == 0) {
-             that.num=data.data.devcount.toString();
-             console.log(that.num,typeof(that.num))
-            } else{
+             if(!_this.device_chart){
+               _this.device_chart = echarts.init(document.getElementById('device-statics_sort'));
+              };
+            _this.staticsSort=[{color:'#00B5B7',label:'视频设备',value:data.data.viocount},{color:'#0572ED',label:'电警',value:data.data.pcount}];
+            _this.device_option.series[0].data=[{name:'视频设备',value:data.data.viocount},{name:'电警',value:data.data.pcount}]
+            _this.device_chart.setOption(_this.device_option);
+            }else{
               that.$message({
                 message: data.errmsg,
                 type: "error",
@@ -225,38 +290,90 @@ export default {
          console.log(err);
       })
       .finally(() => {
-        that.tableLoading = false;
+        _this.tableLoading = false;
       });
-      // 接收数据
-      blur.$on('getXZQH',data=>{
-        console.log(data)
-        this.num=data.data.num;
-        console.log(this.num)
-        // let xzqh=data
-      })
-      // let that = this;
-
+      
     },
     /**
-     * 生成警情分别类统计echarts
+     * 获取区间测速、电警、卡口、视频、龙门架统计数据,初始化统计列表
      */
-    initdeviceStaticsChart(){
-       if(!this.device_chart){
-        this.device_chart = echarts.init(document.getElementById('device-statics_sort'));
+    getAllStaticsData(type,value){
+      let _this=this;
+      let params={};
+      if(type && value){
+        switch(type){
+          case 0:params.xzqh=value;break;
+          case 1:break;
+          default:break;
+        }
       };
-      // this.device_option.legend.data=['视频设备','电警','其他'];
-      this.staticsSort=[{color:'#02FDF4',label:'视频设备',value:2328},{color:'#4D76F9',label:'电警',value:1232},{color:'#01D647',label:'其他',value:24}];
-      this.device_option.series[0].data=[{name:'视频设备',value:2328},{name:'电警',value:1232},{name:'其他',value:24}]
-      this.device_chart.setOption(this.device_option);
+      interf.GET_DEVICE_STATICS_API(params).then(response=>{
+       if (response && response.status == 200){
+         var data = response.data;
+         if (data.errcode == 0) {
+             _this.allStatics=data.data;
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        _this.tableLoading = false;
+      });
     },
     /**
      * 生成设备重点监测趋势echarts
      */
-    initAccurCharts(){
-      if(!this.accurChart){
-        this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
+    initAccurCharts(value){
+      let _this=this;
+      let params={};
+      if(value){
+        params.xzqh=value;
       };
-      this.accurChart.setOption(this.accurChangeOption);
+      interf.GET_MAIN_DEVICE_API(params).then(response=>{
+       if (response && response.status == 200){
+         var data = response.data;
+         if (data.errcode == 0) {
+             let _data=_this.device_data;
+             data.data.map(e=>{
+               _data.xdata.push(e.city);
+               _data.y1data.push(e.DEVNUM);
+               _data.y2data.push(e.ACTIVENUM);
+             });
+             _this.chart_data=_data;
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        _this.tableLoading = false;
+      });
+    },
+    /**
+     * 返回全省
+     */
+    returnAll(){
+      this.isShowMainDev=true;
+      this.isShowReturn=false;
+      this.title='全省统计';
+      this.getSumDev();
+      this.initdeviceAnalysisChart();
+      this.initAccurCharts();
     }
   }
 };
@@ -272,23 +389,18 @@ export default {
 .device-statics {
   position: fixed;
   z-index: 10;
-  right: 1vw;
-  width: 17vw;
-  height: 85vh;
-  top: 9vh;
+  right: 10px;
+  width: 474px;
+  height: auto;
+  top: 90px;
   color: white;
 }
 .device-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .device-statics_title {
     position: relative;
-    width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
+    width: 100%;
     color: $color-white;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -296,59 +408,42 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
-  }
-  .device-statics--tab {
-  width: 100%;
-  height: 5vh;
-
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
-
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
+    .return{
+      position: absolute;
+      left: 5%;
+      cursor: pointer;
     }
-}
+    .return:hover{
+      color:$color-primary;
+    }
+  }
+  
   .device-statics_content {
-    width: 98%;
-    height: 85%;
-    background-color: $color-bg-1;
-    margin: 1%;
+    width: 100%;
+    height: 280px;
     .device-statics_sort_list{
       width:50%;
-      height:10vh;
       margin-top:2vh;
       float:right;
     }
     #device-statics_sort {
       width:50%;
-      height:15vh;
+      height:200px;
       float:left;
     }
+  }
+  .device-statics_tab {
+    width: 94%;
+    height: 250px;
+    padding:6px 3%;
+    .item{
+       margin-top:12px;
+    }
+  }
+  .device-statics_chart{
+    width: 100%;
+    height: 307px;
+  }
     #sumCountChange{
       width:100%;
       height:25vh;
@@ -357,7 +452,6 @@ export default {
       width:100%;
       height:25vh;
     }
-  }
 }
 
 </style>

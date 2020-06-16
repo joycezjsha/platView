@@ -24,7 +24,7 @@ export default {
   computed:{
     img:function () {
       // `this` 指向 vm 实例
-      return this.img_type>0?'./static/images/ui_image/title_bg_checked.png':'./static/images/ui_image/title_bg_unchecked.png'
+      return this.img_type>0?'./static/images/ui_image/title_bg_checked_.png':'./static/images/ui_image/title_bg_unchecked_.png'
     }
   },
   components: {
