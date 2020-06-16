@@ -13,6 +13,7 @@ import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
+  
   // 卡口监测-今日卡口数据回传排名 Bayonet/getBayonetEchoRanking
   GET_BAY_RANK_API:data=> {
     return http.service({

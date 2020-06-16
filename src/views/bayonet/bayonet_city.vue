@@ -2,12 +2,16 @@
   <div class="bayonet_city-div boxstyle">
     <div class="bayonet_city_container">
       <div class='bayonet_city_header'>
-        <div @click='changeTable(0)'><m-title label='城市统计' :img_type='!tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
-        <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
+        <div @click='changeTable(0)'>
+          <m-title label='城市统计' :img_type='!tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title>
+        </div>
+        <div @click='changeTable(1)'>
+          <m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title>
+        </div>
       </div>
       <div class="bayonet_city_content">
-        <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:43px;left:20px;width:30px;height:22px;"></i>
-        <m-tiptxt text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
+        <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:17px;"></i>
+        <m-tiptxt style="margin-left:1vw" text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
         <div v-if="!tableIndex" style="padding:0 3px">
           <el-table :data="indexData" style="width: 100%" height="800px" 
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
@@ -364,7 +368,7 @@ export default {
   .bayonet_city_content {
     width: 98%;
     height: 87%;
-    background-color: $color-bg-1;
+    // background-color: $color-bg-1;
     margin: 1%;
     
     &_table {

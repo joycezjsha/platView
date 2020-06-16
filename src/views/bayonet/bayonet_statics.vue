@@ -130,6 +130,7 @@ export default {
   },
   components:{mTab:m_tab,mList:m_list,mTitle},
   mounted() {
+    
     this.map = this.$store.state.map;
     let that = this;
     that.map.setCenter([108.967368, 34.302634]);
@@ -432,7 +433,7 @@ export default {
 }
 .top {
   margin-top: 3px;
-    width: 100%;
+    width: 474px;
     .back {
       height: 34px;
       font-size: 16px;

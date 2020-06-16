@@ -1,4 +1,3 @@
-
 <template>
   <div class="carFlowBelong">
     <!-- 中间的OD地图 -->
@@ -107,7 +106,13 @@ export default {
     let that = this;
     that.getData();
     that.getBelongData(that.stime, that.fxlx, that.provinceInorOut);
-    // that.getCityMapOD();
+    // that.getCityMapOD();belonglist
+           
+  },
+  destroyed(){
+    this.belongList.map(item=>{  
+      item.remove();
+    })
   },
   components: {
     mTitle,
@@ -168,6 +173,9 @@ export default {
     goback() {
       let that = this;
       that.showback = true;
+      that.fxlx="1";
+      that.stime='1';
+      that.provinceInorOut="1";
       that.getBelongData("1", "1", "2");
     },
     //  OD地图函数

@@ -25,8 +25,8 @@
       <!-- 折线图 -->
         <div class="echarts">
           <m-title label='流动趋势' img_type=1 style='width:6vw;'></m-title>
-          <div id="">
-            <m-line-chart :flowchartsData='flowchartsData' c_id='sumCountChange'></m-line-chart>
+          <div style="width:100%;height:100%" id="">
+            <m-line-chart  style="width:100%;height:100%" :chart_data='flowchartsData' c_id='sumCountChange'></m-line-chart>
           </div>
         </div>
         <!-- 饼状图 -->
@@ -40,7 +40,7 @@
             <div>大车:{{echartsData.BIGCAR}}辆次</div>
             <div>小车:{{echartsData.SMALLCAR}}辆次</div>
           </div>
-          <div style="width:154px;height:154px;margin-left:3.5vw" id='accurCreateChange'></div>
+          <div style="width:60%;height:70%" id='accurCreateChange'></div>
             <!-- <div class="text">122多少两次</div> -->
           <!-- <div id="">
              <m-line-chart c_id='accurCreateChange'></m-line-chart>
@@ -80,8 +80,9 @@ export default {
       markerList:[], //存放marker
       flowchartsData:{
         legend: ["进入车辆次", "流出车辆次"],
-        innum:[],
-        outnum:[]
+        y1data:[],
+        y2data:[],
+        xdata:[]
       },
       provinceData:{
         addIn:'',
@@ -107,16 +108,18 @@ export default {
               color: '#fff'
             },
             // backgroundColor: '#eee',  // 设置整个图例区域背景颜色
-            data: ['小轿车','货车','大车','小车'],
+            show:true,
+            data: ['大车','小车'],
           },
+        color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
         series: [
             {
               type: 'pie',
-              radius: ['30%', '60%'], 
-              center: ['30%', '50%'], 
+              radius: ['50%', '70%'], 
+              center: ['40%', '50%'], 
               data:[
-                {'value':'','name':''},
-                {'value':'','name':''}
+                {value:'',name:'大车'},
+                {value:'',name:'小车'}
               ],
               // itemStyle 设置饼状图扇形区域样式
               itemStyle: {
@@ -131,10 +134,10 @@ export default {
                 // emphasis：英文意思是 强调;着重;（轮廓、图形等的）鲜明;突出，重读
                 // emphasis：设置鼠标放到哪一块扇形上面的时候，扇形样式、阴影
                 emphasis: {
-                  shadowBlur: 10,
+                  shadowBlur: 5,
                   shadowOffsetX: 0,
                   shadowColor: 'rgba(30, 144, 255，0.5)'
-                }
+                },
               },
               
             },
@@ -318,9 +321,9 @@ export default {
     this.getTrafficData();
     that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData(that.stime)
-    that.carflowData(that.stime)
+    // that.carflowData(that.stime)
     that.getMapVehicleInData(that.stime)
-    // that.initSumCharts();
+    that.initSumCharts();
     // that.initAccurCharts();
     
   },
@@ -353,7 +356,7 @@ export default {
     }
   },
   methods: {
-         //  地图上的显示 
+    //  地图上的显示 
     addCityMarker(item){
         let el = document.createElement('div');
         el.id = 'marker';
@@ -502,7 +505,7 @@ export default {
         // console.log(that.timeRange)
         if(that.stime=='4' && that.xzqh!=undefined && that.fxlx!=undefined){
           that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
-          that.carflowData(that.timeRange[0],that.timeRange[1])
+          // that.carflowData(that.timeRange[0],that.timeRange[1])
           that.getIndexDatas((that.timeRange[0],that.fxlx,that.xzqh,that.timeRange[1]))
         }      
       })  
@@ -513,12 +516,13 @@ export default {
           that.getprovinceData(that.stime,that.xzqh)  
           that.getIndexDatas(that.stime,that.fxlx,that.xzqh)
           that.getIndexDatas(that.stime,that.fxlx)   
-          that.carflowData(that.stime,that.fxlx)
+          // that.carflowData(that.stime,that.fxlx)
+          that.initSumCharts(that.stime)
           // that.getprovinceData(that.stime,that.xzqh)    
         }else if(that.stime!='4' && that.xzqh===undefined){
             that.getprovinceData(that.stime)
             that.getIndexDatas(that.stime)  
-            that.carflowData(that.stime) 
+            // that.carflowData(that.stime) 
           // that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
         }       
       }) 
@@ -698,11 +702,15 @@ export default {
            var data = response.data;
            console.log(data)
            if (data.errcode == 0) {
-             var obj=data.data;
-             console.log(obj)
-            //  for(){
-            //    that.
-            //  }
+              let car_data=that.flowchartsData;
+             data.data.forEach(e=>{
+               console.log(e)
+              //  that.flowchartsData.innum.push(e.innum)
+              //  that.flowchartsData.outnum.push(e.outnum)
+              //  that.flowchartsData.date.push(e.date)
+             })
+             that.flowchartsData=car_data;
+              console.log(that.flowchartsData)
             } else{
               that.$message({
                 message: data.errmsg,
@@ -777,6 +785,9 @@ export default {
               this.options.series[0].data[1].value=that.echartsData.SMALLCAR;
               that.changechart = echarts.init(document.getElementById('accurCreateChange'));
               that.changechart.setOption(that.options);
+              window.addEventListener("resize",()=>{
+                that.changechart.resize();
+              })
               //  console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR)
               } else{
                 that.$message({
@@ -881,13 +892,50 @@ export default {
     //   alert("进入")
     // },
     /**
-     * 生成发生数量趋势echarts
+     * 生成发生数量趋势echarts  开始时间 1今天,2昨天,3,近30天
      */
-    initSumCharts(){
-      if(!this.countChart){
-        this.countChart = echarts.init(document.getElementById('sumCountChange'));
-      };
-      this.countChart.setOption(this.accurChangeOption);
+    initSumCharts(stime){
+      let that = this;  
+      // 如果有两个参数stime,etime
+     if(stime!='4'){
+        interf.GET_FLOW_TREND_API({
+        stime:'3',
+      })
+      .then(response=>{
+       if (response && response.status == 200){
+           var data = response.data;
+           console.log(data)
+           if (data.errcode == 0) {
+            let car_data= that.flowchartsData;
+             data.data.forEach(e=>{
+               console.log(e)
+               that.flowchartsData.y1data.push(e.innum)
+               that.flowchartsData.y2data.push(e.outnum)
+               that.flowchartsData.xdata.push(e.date)
+               console.log(that.flowchartsData)
+               that.flowchartsData=car_data;
+                if(!that.countChart){
+                  that.countChart = echarts.init(document.getElementById('sumCountChange'));
+                };
+                that.countChart.setOption(that.accurChangeOption);
+             })
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+           } 
+          }
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+        .finally(() => {
+            that.tableLoading = false;
+        })
+      }
+     
     },
    /*##清除地图加载点、线、面、弹框*/
   clearMap(){

@@ -189,7 +189,7 @@ export default {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
       this.option.legend.data = this.chart_data.legend;
-       this.option.xAxis[0].data = this.chart_data.xdata;
+      this.option.xAxis[0].data = this.chart_data.xdata;
       this.option.yAxis[0].name=this.chart_data.legend[0];
       this.option.yAxis[1].name=this.chart_data.legend[1];
       this.option.series[0].name=this.chart_data.legend[0];
