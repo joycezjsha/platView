@@ -49,4 +49,5 @@ export default {
 .traffic-index{
   position:fixed;
 }
+
 </style>

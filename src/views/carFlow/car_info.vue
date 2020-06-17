@@ -40,7 +40,7 @@
             <div>大车:{{echartsData.BIGCAR}}辆次</div>
             <div>小车:{{echartsData.SMALLCAR}}辆次</div>
           </div>
-          <div style="width:60%;height:70%" id='accurCreateChange'></div>
+          <div style="width:67%;height:70%" id='accurCreateChange'></div>
             <!-- <div class="text">122多少两次</div> -->
           <!-- <div id="">
              <m-line-chart c_id='accurCreateChange'></m-line-chart>
@@ -96,6 +96,10 @@ export default {
       },
       accurCreateChange:null,
       options:{
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
         legend: {        
             orient: 'vertical',         
             x: 490,
@@ -109,14 +113,20 @@ export default {
             },
             // backgroundColor: '#eee',  // 设置整个图例区域背景颜色
             show:true,
-            data: ['大车','小车'],
+            data:['大车','小车'],
           },
         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
         series: [
             {
+              name: '访问来源',
               type: 'pie',
               radius: ['50%', '70%'], 
-              center: ['40%', '50%'], 
+              avoidLabelOverlap: false,
+              label: {
+                show: false,
+                position: 'center'
+              },
+              // center: ['40%', '50%'], 
               data:[
                 {value:'',name:'大车'},
                 {value:'',name:'小车'}
@@ -133,11 +143,16 @@ export default {
                   },
                 // emphasis：英文意思是 强调;着重;（轮廓、图形等的）鲜明;突出，重读
                 // emphasis：设置鼠标放到哪一块扇形上面的时候，扇形样式、阴影
-                emphasis: {
-                  shadowBlur: 5,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(30, 144, 255，0.5)'
-                },
+               emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '15',
+                    fontWeight: 'bold'
+                  }
+               },
+               labelLine: {
+                show: false
+               },
               },
               
             },
@@ -491,6 +506,7 @@ export default {
       that.getprovinceData('1')
       that.getIndexDatas('1','1')
       that.carflowData('1') 
+      that.initSumCharts()
       // this.getprovinceData(stime,xzqh)
     },
     // 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
@@ -688,79 +704,79 @@ export default {
    
     },
     /**
-     * 车辆流动页面流动趋势 默认显示实时数据  GET_FLOW_TREND_API 
+     *  默认显示实时数据  GET_FLOW_TREND_API 
      */
-    carflowData(stime,etime){ 
-      let that = this;  
-      // 如果有两个参数stime,etime
-     if(etime!=undefined && stime!='4'){
-        interf.GET_FLOW_TREND_API({
-        id:"",
-        stime:stime,
-        etime:etime
-      })
-      .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-           console.log(data)
-           if (data.errcode == 0) {
-              let car_data=that.flowchartsData;
-             data.data.forEach(e=>{
-               console.log(e)
-              //  that.flowchartsData.innum.push(e.innum)
-              //  that.flowchartsData.outnum.push(e.outnum)
-              //  that.flowchartsData.date.push(e.date)
-             })
-             that.flowchartsData=car_data;
-              console.log(that.flowchartsData)
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-          }
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-        .finally(() => {
-            that.tableLoading = false;
-        })
-      }
-      // 如果参数只有stime
-      if(etime===undefined  && stime!='4'){
-        interf.GET_FLOW_TREND_API({
-        id:"",
-        stime:stime
-      })
-      .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-           console.log(data)
-           if (data.errcode == 0) {
-             var obj=data.data;
+    // carflowData(stime,etime){ 
+    //   let that = this;  
+    //   // 如果有两个参数stime,etime
+    //  if(etime!=undefined && stime!='4'){
+    //     interf.GET_FLOW_TREND_API({
+    //     id:"",
+    //     stime:stime,
+    //     etime:etime
+    //   })
+    //   .then(response=>{
+    //    if (response && response.status == 200){
+    //        var data = response.data;
+    //        console.log(data)
+    //        if (data.errcode == 0) {
+    //           let car_data=that.flowchartsData;
+    //          data.data.forEach(e=>{
+    //            console.log(e)
+    //           //  that.flowchartsData.innum.push(e.innum)
+    //           //  that.flowchartsData.outnum.push(e.outnum)
+    //           //  that.flowchartsData.date.push(e.date)
+    //          })
+    //          that.flowchartsData=car_data;
+    //           console.log(that.flowchartsData)
+    //         } else{
+    //           that.$message({
+    //             message: data.errmsg,
+    //             type: "error",
+    //             duration: 1500
+    //           });
+    //        } 
+    //       }
+    //     })
+    //     .catch(err=>{
+    //         console.log(err);
+    //     })
+    //     .finally(() => {
+    //         that.tableLoading = false;
+    //     })
+    //   }
+    //   // 如果参数只有stime
+    //   if(etime===undefined  && stime!='4'){
+    //     interf.GET_FLOW_TREND_API({
+    //     id:"",
+    //     stime:stime
+    //   })
+    //   .then(response=>{
+    //    if (response && response.status == 200){
+    //        var data = response.data;
+    //        console.log(data)
+    //        if (data.errcode == 0) {
+    //          var obj=data.data;
            
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-          }
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-        .finally(() => {
-            that.tableLoading = false;
-        });
-      }
+    //         } else{
+    //           that.$message({
+    //             message: data.errmsg,
+    //             type: "error",
+    //             duration: 1500
+    //           });
+    //        } 
+    //       }
+    //     })
+    //     .catch(err=>{
+    //         console.log(err);
+    //     })
+    //     .finally(() => {
+    //         that.tableLoading = false;
+    //     });
+    //   }
       
   
-    },
+    // },
     /**
      * 车辆流动页面车辆类型分析  默认显示实时的数据
      * 如果客户没有点击进入或者流出，默认显示全省进入的数据  两个参数的 GET_VEH_TYPE_API
@@ -890,11 +906,8 @@ export default {
     setSelectItems(name,id){
       this.selectItem.road=name;
     },
-    // change1(){
-    //   alert("进入")
-    // },
     /**
-     * 生成发生数量趋势echarts  开始时间 1今天,2昨天,3,近30天
+     * 车辆流动页面流动趋势 echarts  开始时间 1今天,2昨天,3,近30天
      */
     initSumCharts(stime){
       let that = this;  
@@ -1073,7 +1086,7 @@ position: fixed;
 }
 .typeanalysis{
   position: absolute;
-  right:3vw;
+  right:1.5vw;
   top:5vh;
   cursor:pointer;
   span{
@@ -1091,7 +1104,7 @@ position: fixed;
   text-align:left;
   position: absolute;
   top: 12vh;
-  right: 3vw;
+  right: 1.5vw;
 }
 .active{
   background-color:#0079fe;

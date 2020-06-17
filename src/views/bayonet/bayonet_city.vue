@@ -114,9 +114,7 @@ export default {
       */
      getcitystatDatas(){
        let that = this;
-       interf.GET_CITY_STA_API({
-//           id: ""
-       })
+       interf.GET_CITY_STA_API({})
        .then(response=>{
          if (response && response.status == 200){
             var data = response.data;

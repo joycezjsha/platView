@@ -190,8 +190,6 @@ export default {
           ]
           )             
       });
-
-
         var scatterData = [];
         var lineData = [];
         var min = Number.MAX_VALUE;
@@ -319,9 +317,25 @@ export default {
     getBelongData(stime, fxlx, provinceInorOut, xzqh, etime) {
       let that = this;
       // 如果传入的是自定义是时间参数有fxlx, provinceInorOut,stime，xzqh，etime
-      if (xzqh != undefined && etime != undefined) {
-        interf
-          .GET_BELONG_API({
+      var belongData={};
+      if(xzqh != undefined && etime != undefined){
+        belongData.stime=stime;
+        belongData.fxlx=fxlx;
+        belongData.provinceInorOut=provinceInorOut;
+        belongData.xzqh=xzqh;
+        belongData.etime=etime;
+      }else if(xzqh != undefined && etime === undefined && stime != "4"){
+        belongData.stime=stime;
+        belongData.fxlx=fxlx;
+        belongData.provinceInorOut=provinceInorOut;
+        belongData.xzqh=xzqh;
+      }else if(xzqh === undefined && etime === undefined && stime != "4"){
+        belongData.stime=stime;
+        belongData.fxlx=fxlx;
+        belongData.provinceInorOut=provinceInorOut;
+      }
+      // if (xzqh != undefined && etime != undefined) {
+        interf.GET_BELONG_API({
             id: "",
             stime: stime,
             fxlx: fxlx,
@@ -366,93 +380,93 @@ export default {
           .finally(() => {
             that.tableLoading = false;
           });
-      }
+      // }
       // 如果传入xzqh参数，参数有fxlx, provinceInorOut,stime，xzqh
-      if (xzqh != undefined && etime === undefined && stime != "4") {
-        interf
-          .GET_BELONG_API({
-            // id: "",
-            stime: stime,
-            fxlx: fxlx,
-            provinceInorOut: provinceInorOut,
-            xzqh: xzqh
-          })
-          .then(response => {
-            if (response && response.status == 200) {
-              var data = response.data;
-              console.log(data);
-              if (data.errcode == 0) {
-                // that.belongData=data.data;
-                that.belongData.provinceWithin = data.data.provinceWithin;
-                that.belongData.provinceExternal = data.data.provinceExternal;
-                that.belongData.provinceWithinProportion =
-                  data.data.provinceWithinProportion;
-                that.belongData.provinceExternalProportion =
-                  data.data.provinceExternalProportion;
-                that.indexDatas = data.data.dataList;
-                console.log(that.belongData);
-                if(that.indexDatas.length>0){
-                   that.getCityMapOD(that.indexDatas) 
-                }
-              } else {
-                that.$message({
-                  message: data.errmsg,
-                  type: "error",
-                  duration: 1500
-                });
-              }
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          })
-          .finally(() => {
-            that.tableLoading = false;
-          });
-      }
-      //首次进入显示进入，省内的实时的数据 参数有fxlx, provinceInorOut,stime
-      if (xzqh === undefined && etime === undefined && stime != "4") {
-        interf
-          .GET_BELONG_API({
-            // id: "",
-            stime: stime,
-            fxlx: fxlx,
-            provinceInorOut: provinceInorOut
-          })
-          .then(response => {
-            if (response && response.status == 200) {
-              var data = response.data;
-              //            console.log(data)
-              if (data.errcode == 0) {
-                // that.belongData=data.data;
-                that.belongData.provinceWithin = data.data.provinceWithin;
-                that.belongData.provinceExternal = data.data.provinceExternal;
-                that.belongData.provinceWithinProportion =
-                  data.data.provinceWithinProportion;
-                that.belongData.provinceExternalProportion =
-                  data.data.provinceExternalProportion;
-                that.indexDatas = data.data.dataList;
-                console.log(that.indexDatas);
-                if (that.indexDatas.length > 0) {               
-                   that.getCityMapOD(that.indexDatas) 
+      // if (xzqh != undefined && etime === undefined && stime != "4") {
+      //   interf
+      //     .GET_BELONG_API({
+      //       // id: "",
+      //       stime: stime,
+      //       fxlx: fxlx,
+      //       provinceInorOut: provinceInorOut,
+      //       xzqh: xzqh
+      //     })
+      //     .then(response => {
+      //       if (response && response.status == 200) {
+      //         var data = response.data;
+      //         console.log(data);
+      //         if (data.errcode == 0) {
+      //           // that.belongData=data.data;
+      //           that.belongData.provinceWithin = data.data.provinceWithin;
+      //           that.belongData.provinceExternal = data.data.provinceExternal;
+      //           that.belongData.provinceWithinProportion =
+      //             data.data.provinceWithinProportion;
+      //           that.belongData.provinceExternalProportion =
+      //             data.data.provinceExternalProportion;
+      //           that.indexDatas = data.data.dataList;
+      //           console.log(that.belongData);
+      //           if(that.indexDatas.length>0){
+      //              that.getCityMapOD(that.indexDatas) 
+      //           }
+      //         } else {
+      //           that.$message({
+      //             message: data.errmsg,
+      //             type: "error",
+      //             duration: 1500
+      //           });
+      //         }
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log(err);
+      //     })
+      //     .finally(() => {
+      //       that.tableLoading = false;
+      //     });
+      // }
+      // //首次进入显示进入，省内的实时的数据 参数有fxlx, provinceInorOut,stime
+      // if (xzqh === undefined && etime === undefined && stime != "4") {
+      //   interf
+      //     .GET_BELONG_API({
+      //       // id: "",
+      //       stime: stime,
+      //       fxlx: fxlx,
+      //       provinceInorOut: provinceInorOut
+      //     })
+      //     .then(response => {
+      //       if (response && response.status == 200) {
+      //         var data = response.data;
+      //         //            console.log(data)
+      //         if (data.errcode == 0) {
+      //           // that.belongData=data.data;
+      //           that.belongData.provinceWithin = data.data.provinceWithin;
+      //           that.belongData.provinceExternal = data.data.provinceExternal;
+      //           that.belongData.provinceWithinProportion =
+      //             data.data.provinceWithinProportion;
+      //           that.belongData.provinceExternalProportion =
+      //             data.data.provinceExternalProportion;
+      //           that.indexDatas = data.data.dataList;
+      //           console.log(that.indexDatas);
+      //           if (that.indexDatas.length > 0) {               
+      //              that.getCityMapOD(that.indexDatas) 
                   
-                }
-              } else {
-                that.$message({
-                  message: data.errmsg,
-                  type: "error",
-                  duration: 1500
-                });
-              }
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          })
-          .finally(() => {
-            that.tableLoading = false;
-          });
-      }
+      //           }
+      //         } else {
+      //           that.$message({
+      //             message: data.errmsg,
+      //             type: "error",
+      //             duration: 1500
+      //           });
+      //         }
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log(err);
+      //     })
+      //     .finally(() => {
+      //       that.tableLoading = false;
+      //     });
+      // }
     },
     // 车辆归属地分析，根据进入 流出 和 省内，省外获取对应的 数据
     province(provinceInorOut) {

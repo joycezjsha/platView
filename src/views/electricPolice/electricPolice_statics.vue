@@ -180,117 +180,69 @@ export default {
     */
     getThirtyAlarm(xzqh){
       let that = this;
+      let ThirtyData={}
       // 如果没有传入参数，默认显示
-      
-      if(xzqh===undefined){
-        interf.GET_THIRTY_ALARM_API({})
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-             console.log(data)
-            if (data.errcode == 0) {
-              that.tableDatas=data.data;
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-      }else{
-        interf.GET_THIRTY_ALARM_API({
-          xzqh:xzqh
-        })
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-             console.log(data)
-            if (data.errcode == 0) {
-              that.tableDatas=data.data;
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
+      if(xzqh!=undefined){
+        ThirtyData.xzqh=xzqh;
       }
+      console.log(ThirtyData)
+        interf.GET_THIRTY_ALARM_API(ThirtyData)
+        .then(response=>{
+          if (response && response.status == 200){
+            var data = response.data;
+             console.log(data)
+            if (data.errcode == 0) {
+              that.tableDatas=data.data;
+            }else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+                });
+              }
+            }
+          })
+          .catch(err=>{
+            console.log(err);
+          })
+          .finally(() => {
+            that.tableLoading = false;
+          });
     },
     /**
      * 全省统计 Electronic/getDevCount  GET_PRO_STATIS_API
     */
     getDevCountDatas(xzqh){
       let that = this;
+      let DevCountData={};
       // 如果没有传入参数，默认显示
-      if(xzqh===undefined){
-        interf.GET_PRO_STATIS_API({})
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-             console.log(data)
-            if (data.errcode == 0) {
-              that.numcount=data.data.numcount;
-              that.thirtyActive=data.data.thirtyActive;
-              that.thirtyAlarm=data.data.thirtyAlarm;
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-      }else{
-        interf.GET_PRO_STATIS_API({
-          xzqh:xzqh
-        })
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-             console.log(data)
-            if (data.errcode == 0) {
-              that.numcount=data.data.numcount;
-              that.thirtyActive=data.data.thirtyActive;
-              that.thirtyAlarm=data.data.thirtyAlarm;
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
+      if(xzqh!=undefined){
+        DevCountData.xzqh=xzqh;
       }
+        interf.GET_PRO_STATIS_API(DevCountData)
+        .then(response=>{
+          if (response && response.status == 200){
+            var data = response.data;
+             console.log(data)
+            if (data.errcode == 0) {
+              that.numcount=data.data.numcount;
+              that.thirtyActive=data.data.thirtyActive;
+              that.thirtyAlarm=data.data.thirtyAlarm;
+            }else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+                });
+              }
+            }
+          })
+          .catch(err=>{
+            console.log(err);
+          })
+          .finally(() => {
+            that.tableLoading = false;
+          });
     },
     
     

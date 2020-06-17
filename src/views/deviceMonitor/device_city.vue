@@ -6,34 +6,34 @@
         <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:4vh;line-height:4vh;'></m-title></div>
       </div>
       <div class="device-city_content">
-        <m-tiptxt text='设备包括：电子警察、视频设备、ETC龙门架...' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:30px;height:30px;' isShowIcon='true'></m-tiptxt>
-        <m-tiptxt text='活跃设备：是指电警近一个月有抓拍违法数据；卡口、ETC龙门架 、区间测速设备近一天有回传数据；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:30px;height:30px;' isShowIcon='true'></m-tiptxt>
-        <div class='device-city_content_table' v-if="!tableIndex" >
-          <el-table :data="indexcityDatas"
-           @cell-click="handle"
-           v-for="item in indexcityDatas" :key="item.key"   
-           style="width: 100%" height="100%" :default-sort = "{prop: 'Num', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+        <m-tiptxt text='设备包括：电子警察、视频设备、ETC龙门架...' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:30px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
+        <m-tiptxt text='活跃设备：是指电警近一个月有抓拍违法数据；卡口、ETC龙门架 、区间测速设备近一天有回传数据；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:30px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
+       
+        <div class='device-city_content_table' v-if="tableIndex==0">
+          <el-table :data="indexcityDatas" @row-click="handle">
             <el-table-column fixed type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="city"   label="城市"></el-table-column>
             <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
-            <!-- <el-table-column prop="week_radio" label="覆盖率" sortable></el-table-column> -->
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
           </el-table>
         </div>
-        <div class='device-city_content_table' v-else>
-            <span class='road_label'>道路类型筛选:</span><el-select v-model="road_type" placeholder="请选择道路类型">
-               <el-option
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          <el-table :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+
+         <div class='device-city_content_table' v-else>
+          <span class='road_label'>道路类型筛选:</span>
+          <el-select v-model="road_type" placeholder="请选择道路类型">
+          <el-option v-for='(item,index) in typeOption' :key='index'
+          :label="item.label"
+          :value="item.value">
+            </el-option>
+          </el-select>
+          <el-table :data="roadDatas" @row-click="handle" style="width: 100%;height:100%;" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column fixed type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="road_name" label="道路名称"></el-table-column>
             <el-table-column prop="index" label="设备数量" sortable></el-table-column>
             <el-table-column prop="week_radio" label="活跃率" sortable></el-table-column>
           </el-table>
         </div>
+
       </div>
     </div>
   </div>
@@ -50,11 +50,7 @@ export default {
   data() {
     return {
       map: {},
-      // indexDatas:[],
-      indexcityDatas: [
-        // {"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},
-        // {"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}
-      ],
+      indexcityDatas: [],
       roadDatas:[{"road_name":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"road_name":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
@@ -70,7 +66,8 @@ export default {
       typeOption:[
         {label:'全部道路',value:'0'},{label:'国/省道',value:'1'},{label:'高速',value:'2'},{label:'主干道',value:'3'}
       ],
-      road_type:'0'
+      road_type:'0',
+      ishowicon:true
     };
   },
   components:{mTiptxt:m_tiptxt,mTitle},
@@ -87,40 +84,20 @@ export default {
     this.clearMap();
   },
   methods: {
-    handle(row){
-     let that = this;
-    // alert(row.XZQH)
-    // console.log(row.XZQH)
-    // blur.$emit('getXZQH',row.XZQH)
-          //设备总览-设备总数 Device/getDevCount  GET_TOTAL_NUM_API
-      interf.GET_TOTAL_NUM_API({
-        id:'',
-        xzqh:row.XZQH
-      })
-      .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-           blur.$emit('getXZQH',data)
-           console.log(data)
-            if (data.errcode == 0) {
-              
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-  },
-
+    /**
+     * 表格点击事件
+     */
+    handle(row, event, column){
+      let data={};
+      if(this.tableIndex){
+        data.name='G30连霍高速';
+        data.value='';
+      }else{
+        data.name=row.city;
+        data.value=row.XZQH;
+      }
+      blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
+    },
     /**
      * 切换显示table类型
      * @param 0->城市统计，1->道路统计
@@ -128,20 +105,17 @@ export default {
     changeTable(t){
       this.tableIndex=t;
     },
-    //获取巡航数据
+    /**
+     * 获取设备总览，统计数据
+     */
     getIndexData() {
       let that = this;
-      // 设备总览-城市统计 Device/getCityStatistics   GET_CITY_STA_API
-      interf.GET_CITY_STA_API({
-         id: "",
-      })
+      interf.GET_CITY_STA_API({})
       .then(response=>{
         if (response && response.status == 200){
            var data = response.data;
-          //  console.log(data)
             if (data.errcode == 0) {
                that.indexcityDatas=data.data;
-              // console.log(that.indexcityDatas)
             } else{
               that.$message({
                 message: data.errmsg,
@@ -157,42 +131,37 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
-    //  interf.getCityIndexData({index:1},(data) => {
-    //     console.log(data);
-    //       },(e)=>{
-
-    //       })
-    $.ajax({
-        url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        responseType: "json",
-        method: "get",
-        dataType: "json",
-        data: {
-          // token: window.localStorage.getItem("loginUserToken")
-        },
-        success: function(data) {
-          if (data.errcode == -2) {
-            that.$router.push({ name: "/login" });
-          }
-          if (data.errmsg == "success" && data.data.length > 0) {
-            let datas=[];
-            data.data.map(e=>{
-              datas.push(
-                {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
-              )
-            });
-            that.indexDatas=datas;
-            that.addArea(data.data);
-            // that.addAreaIdentify(data.data);
-          }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-          debugger
-        }
-      });
+    // $.ajax({
+    //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
+    //     headers: {
+    //       "Content-Type": "application/x-www-form-urlencoded"
+    //     },
+    //     responseType: "json",
+    //     method: "get",
+    //     dataType: "json",
+    //     data: {
+    //       // token: window.localStorage.getItem("loginUserToken")
+    //     },
+    //     success: function(data) {
+    //       if (data.errcode == -2) {
+    //         that.$router.push({ name: "/login" });
+    //       }
+    //       if (data.errmsg == "success" && data.data.length > 0) {
+    //         let datas=[];
+    //         data.data.map(e=>{
+    //           datas.push(
+    //             {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
+    //           )
+    //         });
+    //         that.indexDatas=datas;
+    //         that.addArea(data.data);
+    //         // that.addAreaIdentify(data.data);
+    //       }
+    //     },
+    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //       debugger
+    //     }
+    //   });
     },
     /**
      * 地图添加辖区面
@@ -300,7 +269,7 @@ export default {
       },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
-                return "background:transparent;";
+                return "background:transparent;cursor:pointer;";
    },
   //取括号内数据
   getLonlats(str){
@@ -378,6 +347,7 @@ export default {
     margin: 1%;
     
     &_table {
+      height: 550px;
       overflow-y: auto;
       padding:0 26px;
     }

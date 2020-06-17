@@ -1,6 +1,8 @@
 <template>
   <div class='tab' style='background-image: url(./static/images/ui_image/tab_bg.png);'>
-    <div class='img'><img :src='icon' /></div>
+    <div class='img'>
+      <i :class='"iconfont "+icon' :style='icon_style' v-show='isShowIcon' />
+    </div>
     <div class='label'>{{label}}</div>
     <div class='value'>{{value}}</div>
   </div>
@@ -14,18 +16,26 @@ export default {
     };
   },
   props:{
+    isShowIcon: {
+      type: Boolean,
+      default: true
+    },
     icon: {
-        type: String,
-        default: './static/images/default/device.png'
-      },
-      label: {
-        type: String,
-        default: '设备总数'
-      },
-      value: {
-        type: String,
-        default: ''
-      },
+      type: String,
+      default: 'icon-jingqing'
+    },
+    icon_style:{
+      type: String,
+      default: 'color:#A6AFCD;font-size:30px;height:30px;'
+    },
+    label: {
+      type: String,
+      default: '设备总数'
+    },
+    value: {
+      // type: String,
+      default: ''
+    },
   },
   components: {
     
@@ -60,6 +70,10 @@ export default {
   }
   .img{
     width:20%;
+    i{
+      font-size: 20px;
+      color:#8B8EA4;
+    }
   }
   .label{
     width:50%;

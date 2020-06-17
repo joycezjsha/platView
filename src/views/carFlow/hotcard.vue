@@ -233,19 +233,34 @@ export default {
         console.log(stime,xzqh,etime)
         let that=this;
         // 热点道路数据  如果有1个参数, 没有xzqh和etime参数
+        var hotroadData={};
+        var hotcardData={}
         if(stime!='4' && xzqh===undefined){
-          interf.GET_HOT_ROAD_API({
-          id: "",
-          stime:stime
-          })
+          hotroadData.stime=stime;
+
+          hotcardData.stime=stime
+        }else if(xzqh!=undefined && etime===undefined  && stime!='4'){
+          hotroadData.stime=stime;
+          hotroadData.xzqh=xzqh;
+
+          hotcardData.stime=stime;
+          hotcardData.xzqh=xzqh;
+        }else if(xzqh!=undefined && etime!=undefined){
+          hotroadData.stime=stime;
+          hotroadData.xzqh=xzqh;
+          hotroadData.etime=etime;
+
+          hotcardData.stime=stime;
+          hotcardData.xzqh=xzqh;
+          hotcardData.etime=etime;
+        }
+          interf.GET_HOT_ROAD_API(hotroadData)
           .then(response=>{
             if (response && response.status == 200){
               var data = response.data;
                console.log(data)
-                that.indexDatas=data.data;
                 if (data.errcode == 0) {
-                  
-                  
+                  that.indexDatas=data.data;
                 } else{
                   that.$message({
                     message: data.errmsg,
@@ -260,75 +275,9 @@ export default {
             })
             .finally(() => {
               that.tableLoading = false;
-            });
-        }
-        // 热点道路数据  如果有xzqh参数,没有etime参数
-         if(xzqh!=undefined && etime===undefined  && stime!='4'){
-          interf.GET_HOT_ROAD_API({
-          id: "",
-          stime:stime,
-          xzqh:xzqh
-          })
-          .then(response=>{
-            if (response && response.status == 200){
-              var data = response.data;
-               console.log(data)
-                that.indexDatas=data.data;
-                if (data.errcode == 0) {
-                  // blur.$emit('getroadtimes',data)
-                } else{
-                  that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                  });
-                }
-              }
-            })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-        }
-        // 热点道路数据 如果有3个参数
-         if(xzqh!=undefined && etime!=undefined){
-          interf.GET_HOT_ROAD_API({
-          id: "",
-          stime:stime,
-          xzqh:xzqh,
-          etime:etime
-          })
-          .then(response=>{
-            if (response && response.status == 200){
-              var data = response.data;
-               console.log(data)
-                that.indexDatas=data.data;
-                if (data.errcode == 0) {
-                  // blur.$emit('getroadtimes',data)
-                } else{
-                  that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                  });
-                }
-              }
-            })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-        }
+          });
         // 热点卡口，如果是默认显示  有1个参数,如果没有xzqh和etime参数
-        if(stime!='4' && xzqh===undefined){  
-          interf.GET_HOT_RANK_API({
-          id: "",
-          stime:stime
-        })
+        interf.GET_HOT_RANK_API(hotcardData)
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
@@ -356,95 +305,7 @@ export default {
             })
             .finally(() => {
               that.tableLoading = false;
-            });
-        }
-        //热点卡口, 如果有2个参数 stime和 xzqh,  没有etime参数
-         if(xzqh!=undefined && etime===undefined  && stime!='4'){  
-          interf.GET_HOT_RANK_API({
-          id: "",
-          stime:stime,
-          xzqh:xzqh
-        })
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-            that.indexDatas1=data.data;
-             console.log(data)
-            // blur.$emit('getbaytimes',data)
-            if (data.errcode == 0) {
-              if(that.indexDatas1.length>0){
-                if(that.poPupList.length>0){
-                  that.poPupList.forEach(e=>{
-                    e.remove();
-                  })
-                }
-                // 调用卡口地图方法
-                that.indexDatas1.forEach(element => {
-                  that.getcardMapData(element)
-                //  element.KKJD
-                  console.log(element)
-                });
-              }
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-        }
-        //  热点卡口,如果有三个参数参数
-         if(xzqh!=undefined && etime!=undefined){  
-          interf.GET_HOT_RANK_API({
-          id: "",
-          stime:stime,
-          xzqh:xzqh,
-          etime:etime
-        })
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-            that.indexDatas1=data.data;
-             console.log(data)
-            // blur.$emit('getbaytimes',data)
-            if (data.errcode == 0) {
-              if(that.indexDatas1.length>0){
-                if(that.poPupList.length>0){
-                  that.poPupList.forEach(e=>{
-                    e.remove();
-                  })
-                }
-                // 调用卡口地图方法
-                that.indexDatas1.forEach(element => {
-                  that.getcardMapData(element)
-                //   // element.KKJD
-                  console.log(element)
-                });
-              }
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-        }
+            });     
       },
       /*##清除地图加载点、线、面、弹框*/
       clearMap(){

@@ -78,7 +78,7 @@ background-color: #0367A6;
 color:white;
 }
 .el-input__inner,.el-range-editor .el-range-input {
-  background: transparent;
+  background: #0A173A;
   color:white;
 }
 .el-date-editor .el-range-separator{

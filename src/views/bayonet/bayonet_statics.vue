@@ -11,7 +11,7 @@
         </div>
       </div>
       </div>
-      <div class="device-statics_content">
+      <div class="bayonet_statics_content">
         <div>
           <div class="number reg" style="margin-bottom:10px">
             <i style="" class='iconfont icon-shebei1'></i>
@@ -310,7 +310,7 @@ export default {
      */
     initdeviceStaticsChart(){
        if(!this.device_chart){
-        this.device_chart = echarts.init(document.getElementById('device-statics_sort'));
+        this.device_chart = echarts.init(document.getElementById('bayonet_statics_sort'));
       };
       // this.device_option.legend.data=['视频设备','电警','其他'];
       this.staticsSort=[{color:'#02FDF4',label:'视频设备',value:2328},{color:'#4D76F9',label:'电警',value:1232},{color:'#01D647',label:'其他',value:24}];
@@ -341,7 +341,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-.device-statics {
+.bayonet_statics {
   position: fixed;
   z-index: 10;
   right: 13px;
@@ -350,12 +350,12 @@ export default {
   top: 9vh;
   color: white;
 }
-.device-statics_container {
+.bayonet_statics_container {
   width: 100%;
   height: 100%;
   // background-color: $color-bg-1;
   // border: 1px solid $color-border-1;
-  .device-statics_title {
+  .bayonet_statics_title {
     position: relative;
     width: 96%;
     // border-bottom: 0.1rem solid $color-border-1;
@@ -371,7 +371,7 @@ export default {
     padding: 2px 2% 0.6rem 2%;
     font-weight: bolder;
   }
-  .device-statics--tab {
+  .bayonet_statics--tab {
   width: 100%;
   height: 5vh;
 
@@ -405,18 +405,18 @@ export default {
       }
     }
 }
-  .device-statics_content {
+  .bayonet_statics_content {
     width: 98%;
     height: 85%;
     // background-color: $color-bg-1;
     margin: 1%;
-    .device-statics_sort_list{
+    .bayonet_statics_sort_list{
       width:50%;
       height:10vh;
       margin-top:2vh;
       float:right;
     }
-    #device-statics_sort {
+    #bayonet_statics_sort {
       width:50%;
       height:15vh;
       float:left;

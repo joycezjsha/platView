@@ -37,14 +37,14 @@ export default {
 }
 .ui_title{
   width:100%;
-  height:5vh;
+  height:34px;
   // border:1px solid $color-border-1;
   background:url(../../assets/images/div_title_bg.png) no-repeat;
   background-size:100% 100%;
   color:white;
-  line-height: 5vh;
+  line-height: 34px;
   text-align: center;
-  font-size: 1vw;
+  font-size: 18px;
   margin: 0 auto;
 }
 </style>
