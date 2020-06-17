@@ -333,6 +333,12 @@ export default {
      */
     initAccurCharts(value){
       let _this=this;
+      _this.device_data={
+        legend: ["全部设备", "活跃设备"],
+        xdata:[],
+        y1data:[],
+        y2data:[]
+      };
       let params={};
       if(value){
         params.xzqh=value;

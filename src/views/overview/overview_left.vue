@@ -149,7 +149,13 @@ export default {
     this.map.setPitch(0);
   },
   methods: {
-  
+  /**
+   * 展示详情
+   */
+  showOrder(t){
+    this.drawer=true;
+    this.order_value=t;
+  },
   //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
       return "background:transparent;";

@@ -26,10 +26,10 @@
         </el-table>
       </div>
     </div>
-    <el-dialog title="" :visible.sync="drawer" append-to-body>
-      <traffic-inde-charts></traffic-inde-charts>
+    <el-dialog :title="city+'拥堵指数分析'" :visible.sync="drawer" append-to-body class='traffic-echarts'>
+      <traffic-index-charts :adcode='adcode'></traffic-index-charts>
     </el-dialog>
-    <module-area></module-area>
+    <!-- <module-area></module-area> -->
   </div>
 </template>
 
@@ -37,8 +37,8 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import blur from "@/blur";
-import TrafficIndeCharts from "./TrafficIndexCharts.vue";
-import moduleArea from "@/components/area/area.vue";
+import TrafficIndexCharts from "./TrafficIndexCharts.vue";
+// import moduleArea from "@/components/area/area.vue";
 import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue'
 export default {
@@ -52,12 +52,13 @@ export default {
         markers:[]
       },
       currentRow: null,
-      drawer: false
+      drawer: false,
+      adcode:'610100',
+      city:'西安市'
     };
   },
   components: {
-    TrafficIndeCharts,
-    moduleArea,
+    TrafficIndexCharts,
     mTitle,
     mTab
   },
@@ -78,18 +79,50 @@ export default {
       return "background:transparent;";
     },
     clickHandle(item) {
-      blur.$emit("setSelectItems", item.city, item.index);
+      // blur.$emit("setSelectItems", item.city, item.index);
       this.drawer = true;
+      this.city=item.name;
+      this.adcode=item.id;
     },
     handleCurrentChange(val) {
       this.currentRow = val;
+    },
+    /**
+     * 获取西安市拥堵排名   --暂无接口
+     */
+    getXianIndexOrder(){
+      let that=this;
+      interf.GET_Xian_TAFFIC_ORDER({stime:1})
+      .then(response=>{
+        if (response && response.status == 200){
+          var data= response.data;
+          if (data.errcode == 0) {
+            that.indexDatas=data.data;
+            data.data.forEach(e=>{
+              that.addCityMarker(e);
+            })
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     },
     /**
      * 初始化城市拥堵排名列表
      */
     getCityIndexData(){
       let that=this;
-      interf.GET_CITY_TAFFIC_ORDER_API({})
+      interf.GET_CITY_TAFFIC_ORDER_API({stime:1})
       .then(response=>{
         if (response && response.status == 200){
           var data= response.data;
@@ -163,6 +196,7 @@ export default {
       this.map_cover.markers.push(marker);
 
     },
+
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){
     //清除marker
@@ -229,4 +263,16 @@ export default {
 }
 }
 
+</style>
+<style lang='scss'>
+.traffic-echarts {
+  .el-dialog{
+      background: url(./image/dialog_bg.png) no-repeat;
+      background-size:100% 100%;
+    }
+  .el-dialog__title{
+    color:white;
+    font-size:20px;
+  }
+}
 </style>
