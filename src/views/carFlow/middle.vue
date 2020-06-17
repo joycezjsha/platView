@@ -1,11 +1,3 @@
-<!--
- * @Author: your name
- * @Date: 2020-06-04 09:22:09
- * @LastEditTime: 2020-06-15 11:22:06
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \one\src\views\carFlow\middle.vue
---> 
 
 <template>
   <div class="middle" >
