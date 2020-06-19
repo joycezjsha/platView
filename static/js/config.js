@@ -1,18 +1,18 @@
 
 //引入地图api文件
-document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v1.3/minemap.css\">");
+document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v2.0/minemap.css\">");
 document.writeln("<script src=\"./static/js/echarts-all-3.js\"></script>");
-document.writeln("<script src=\"./static/lib/minemap/v1.3/minemap.js\"></script>");
+document.writeln("<script src=\"./static/lib/minemap/v2.0/minemap.js\"></script>");
 document.writeln("<script src=\"./static/js/template.js\"></script>");
 
 var ip='127.0.0.1:8091/';//'117.48.214.220:9602';//window.location.host//'117.157.231.168';//'localhost:8080'//'117.48.214.220';//
 var mapConfig = {
-  BASE_URL: '//map.xianjiaojing.com',//"//minedata.cn",
-  DOMAIN_URL: '//map.xianjiaojing.com',
-  MAP_TRAFFIC_URL: '//map.xianjiaojing.com/service/solu/',
-  spriteUrl:'//map.xianjiaojing.com/minemapapi/v1.3/sprite/sprite',
-  SOLUTION: 3478,
-  ACCESS_TOKEN: '18f589098bf14f5bac790331c60a37ae',
+  BASE_URL: '//113.141.73.223:11180',//"//minedata.cn",
+  DOMAIN_URL: '//113.141.73.223:11180',
+  MAP_TRAFFIC_URL: '//113.141.73.223:11180/service/solu/',
+  spriteUrl:'//113.141.73.223:11180/minemapapi/v1.3/sprite/sprite',
+  SOLUTION: 4659,
+  ACCESS_TOKEN: 'f1f7ca8c14164c28aead74dd72e86fde',
   DEFAULT_CENTER: [108.943368, 34.255634],
   DEFAULT_ZOOM: 5.5,
   DEFAULT_PITCH: 0,

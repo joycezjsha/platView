@@ -154,40 +154,38 @@ export default {
     // 提交登录信息
     submit() {
       let _this=this;
-      // let user={
-      //         nickname:_this.formLogin.username,
-      //         companyName:''
-      //       }
-      //       window.localStorage.setItem("access-user",JSON.stringify(user));
-            // this.$router.replace(this.$route.query.redirect || "/");
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           // 登录
           // 注意 这里的演示没有传验证码
           // 具体需要传递的数据请自行修改代码
-        //   config.interf.login({
+        //   interf.LOGIN_API({
         //        'username': this.formLogin.username,
         //        'password': this.formLogin.password,
-        //        'uuid': this.formLogin.uuid,
-        //        'captcha': this.formLogin.code
-        //   },(data) => {
-        //     //重定向对象不存在则返回顶层路径
-        //     let user={
-        //       nickname:_this.formLogin.username,
-        //       companyName:''
+        //       //  'uuid': this.formLogin.uuid,
+        //       //  'captcha': this.formLogin.code
+        //   },(res) => {
+        //     let data=res.data;
+        //     if(data.code==200){
+        //       let user={
+        //         nickname:_this.formLogin.username,
+        //         companyName:''
+        //       }
+        //       window.localStorage.setItem("access-user",JSON.stringify(user));
+        //       this.$router.replace(this.$route.query.redirect || "/");
+        //     }else{
+        //       this.$$alert.error("登录失败，账号或密码不正确");
         //     }
-        //     // window.localStorage.setItem("access-user",JSON.stringify(user));
-        //     // this.$router.replace(this.$route.query.redirect || "/");
+            
         //   },()=>{});
         // } else {
         //   // 登录表单校验失败
-        //   this.$message.error("表单校验失败，请检查");
-           let data={
-               'username': _this.formLogin.username,
-               'password': _this.formLogin.password,
-           }
-      axios.post('http://127.0.0.1:8091/sys/login',data)
-      .then(res => {
+        //   this.$message.error("请求失败，请检查服务");
+      let data={
+          'username': _this.formLogin.username,
+          'password': _this.formLogin.password,
+      }
+      axios.post(interf.LOGIN_URL,data).then(res => {
         let data=res.data;
         console.log(data)
         if(data.code==200){

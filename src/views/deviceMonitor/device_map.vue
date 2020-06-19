@@ -1,9 +1,15 @@
 <template>
   <div class="device-map">
+<<<<<<< HEAD
     <div @click='changeTable(0)'>
       <m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title>
     </div>
     <div @click='changeTable(1)'><m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
+=======
+    <div @click='changeTable(0)'><m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
+    <div @click='changeTable(1)'><m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div>
+    <t-area :isShowArea='showArea'></t-area>
+>>>>>>> f0193119d23c00f7022f6518825019dc3aad23c8
   </div>
 </template>
 
@@ -11,6 +17,7 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import mTitle from "@/components/UI_el/map_title_com.vue";
+import tArea from "@/components/area/area.vue";
 export default {
   name: "overview_left",
     data() {
@@ -19,20 +26,19 @@ export default {
       tableIndex:0,
       map_cover:{
         sourceList:[],
-        lineList:[],
-        popups:[],
-        markers:[]
-      }
+        lineList:[]
+      },
+      showArea:false
     };
   },
   mounted() {
     this.map = this.$store.state.map;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
-
+    setTimeout(this.addHeatMap,3000);
   },
   components: {
-    mTitle
+    mTitle,tArea
   },
   destroyed() {
     this.map.setPitch(0);
@@ -41,79 +47,69 @@ export default {
   methods: {
     /**
      * 切换显示设备分布热力/区域填充
-     * @param 0->城市统计，1->道路统计
+     * @param 0->设备分布热力，1->区域填充
      */
     changeTable(t){
       this.tableIndex=t;
+      if(t){
+        this.showArea=true;
+        this.hideHeatMap();
+      }else{
+        this.showArea=false;
+        this.addHeatMap();
+      }
     },
     /**
-     * 获取获取地图城市流动数据
+     * 显示设备分布热力图
      */
-    getCityCarFlowData() {
-      let that = this;
-      interf.GET_MAP_CITY_FLOW_API({})
-      .then(response=>{
-        if (response && response.status == 200){
-          let data= response.data;
-          console.log(data)
-          if (data.errcode == 0){
-           if(data.data.length>0){
-             data.data.forEach(e=>{
-               that.addCityMarker(e);
-             })
-           }
-          }
-        }
-
-      })
-    //   })
-      
-    },
-    addCityMarker(item){
-      let el = document.createElement('div');
-      el.id = 'marker';
-      // el.style["border"] = "solid 1px #333333";
-      // el.style["backgroundColor"] = "#333";
-      el.style["padding"] = "4px 6px";
-      el.style.color='white';
-      
-      let leftImgDiv=document.createElement('div');
-      leftImgDiv.style.float='left';
-      leftImgDiv.style.width='20px';
-      leftImgDiv.style.height='40px';
-      leftImgDiv.style.lineHeight='30px';
-      let img_i = document.createElement('i');
-      img_i.className='iconfont icon-shangsheng';
-      img_i.style.color='#FFAF05';
-     
-      if(item.addIn<0){
-        img_i.style.color='#00DFC7';
-        leftImgDiv.style.transform='rotate(180deg)';
-        leftImgDiv.style.lineHeight='50px';  
+    addHeatMap() {
+      this.map = this.$store.state.map;
+      if(this.map.getSource('heatmapSource')!=undefined){
+        this.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
+      }else{
+        this.map.addSource("heatmapSource", {
+            type: "geojson",
+            data: "./static/json/heat.json"/*可以是具体的服务*/
+        });
+        this.map.addLayer({
+            "id": "heatmapLayer",
+            "type": "heatmap",
+            "source": "heatmapSource",
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
+                "heatmap-radius": 30,
+                //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
+                "heatmap-weight": {
+                    "property": "mag",
+                    "stops": [[0, 0], [10, 1]]
+                },
+                // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
+                "heatmap-intensity": 1,
+                // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
+                "heatmap-color": [
+                    "interpolate",
+                    ["linear"],
+                    ["heatmap-density"],
+                    0, "rgba(0, 0, 255, 0)", 0.1, "royalblue", 0.3, "cyan", 0.5, "lime", 0.7, "yellow", 1, "red"
+                ],
+                // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
+                "heatmap-opacity": 1,
+            }
+        });
+        this.map_cover.sourceList.push('heatmapSource');
+        this.map_cover.lineList.push('heatmapLayer');
       }
-      leftImgDiv.appendChild(img_i);
-      el.appendChild(leftImgDiv);
-
-      let rightDiv=document.createElement('div');
-      rightDiv.style.float='right';
-      rightDiv.style.width='40px';
-      rightDiv.style.height='30px';
-      let span1 = document.createElement('p');
-      span1.innerHTML = item.city;
-      span1.style.margin='0';
-      rightDiv.appendChild(span1);
-      let span2 = document.createElement('p');
-      span2.innerHTML = item.addIn;
-      span2.style.margin='0';
-      span2.style.color='#FFAF05';
-      if(item.addIn<0) span2.style.color='#00DEC7';
-      rightDiv.appendChild(span2);
-      el.appendChild(rightDiv);
-      //添加marker
-      let lnglat = [item.longitude,item.latitude];
-      let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
-      this.map_cover.markers.push(marker);
-
+    },
+    /**
+     * 不显示设备分布热力图
+     */
+    hideHeatMap(){
+      if(this.map.getSource('')!=undefined){
+        this.map.setLayoutProperty('heatmapSource', 'visibility', 'none');
+      };
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){
@@ -131,18 +127,6 @@ export default {
         if(this.map.getLayer(e)!=undefined){
           this.map.removeLayer(e);
         }
-      })
-    }
-    //清除popup
-    if(this.map_cover.popups.length>0){
-      this.map_cover.popups.forEach(e=>{
-        e.remove();
-      })
-    }
-    //清除marker
-    if(this.map_cover.markers.length>0){
-      this.map_cover.markers.forEach(e=>{
-        e.remove();
       })
     }
   },

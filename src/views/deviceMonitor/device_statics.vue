@@ -333,6 +333,12 @@ export default {
      */
     initAccurCharts(value){
       let _this=this;
+      _this.device_data={
+        legend: ["全部设备", "活跃设备"],
+        xdata:[],
+        y1data:[],
+        y2data:[]
+      };
       let params={};
       if(value){
         params.xzqh=value;
@@ -442,7 +448,7 @@ export default {
   }
   .device-statics_chart{
     width: 100%;
-    height: 307px;
+    height: 280px;
   }
     #sumCountChange{
       width:100%;
