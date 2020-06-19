@@ -150,7 +150,7 @@ export default {
     sort() {
      this.downIcon = !this.downIcon
     }, 
-    // showData() 列表中的每一项 默认实时数据 点击城市获取对应城市的数据  总计进入车辆辆次的数据  GET_VEH_PRO_API
+    // showData() 列表中的每一项
     showData(xzqh,city){
       let that = this;
       // 车辆类型分析
@@ -159,129 +159,6 @@ export default {
       blur.$emit("paramxzqh",xzqh)
       that.xzqh=xzqh;
       that.city=city;
-      // that.fxlx=fxlx
-    //   interf.GET_VEH_TYPE_API({
-    //     id:"",
-    //     stime:'1',
-    //     fxlx:1,
-    //     xzqh:xzqh
-        
-    //   })
-    //   .then(response=>{
-    //    if (response && response.status == 200){
-    //        var data = response.data;
-    //        console.log(data)
-    //        if (data.errcode == 0) {
-           
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //        } 
-    //     }
-    //  })
-    //  .catch(err=>{
-    //      console.log(err);
-    //   })
-    //   .finally(() => {
-    //     that.tableLoading = false;
-    //   });
-      // 点击城市获取对应城市  总计进入车辆辆次的数据  GET_VEH_PRO_API
-      interf.GET_VEH_PRO_API({
-        id:"",
-        stime:that.stime,
-        xzqh:that.xzqh
-      })
-     .then(response=>{
-       if (response && response.status == 200){
-        //  console.log(response)
-           var data = response.data;
-           data.data['city']=city
-           console.log(data)
-           blur.$emit('getcitys',data)
-           if (data.errcode == 0) {
-
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-      // 如果不是日历选择的时间，车辆流动页面全省车辆统计 GET_VEH_PRO_API
-      if(that.activeName!='4'){
-        console.log(that.activeName)
-        interf.GET_VEH_PRO_API({
-          id:"",
-          stime:that.activeName,
-          xzqh:that.xzqh,
-        })
-        .then(response=>{
-       if (response && response.status == 200){
-        //  console.log(response)
-           var data = response.data;
-           data.data['city']=city
-           console.log(data)
-           blur.$emit('getcitycardata',data)
-           if (data.errcode == 0) {
-
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-    }
-    // 点击城市获取对应城市的车辆类型分析数据 默认显示进去的数据
-    //   interf.GET_VEH_TYPE_API({
-    //     id:"",
-    //     stime:that.stime,
-    //     xzqh:that.xzqh,
-    //     fxlx:that.fxlx
-    //   })
-    //   .then(response=>{
-    //    if (response && response.status == 200){
-    //     //  console.log(response)
-    //        var data = response.data;
-    //       //  data.data['city']=city
-    //        console.log(data)
-    //        blur.$emit('gettypeData',data)
-    //        if (data.errcode == 0) {
-
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //        } 
-    //     }
-    //  })
-    //  .catch(err=>{
-    //      console.log(err);
-    //   })
-    //   .finally(() => {
-    //     that.tableLoading = false;
-    //   });
     },
     //  全省流动情况  默认显示实时的数据   
     realtimeData(){
@@ -338,66 +215,7 @@ export default {
         console.log(timeData)
         blur.$emit("sendTime",timeData)
         console.log('000000')
-        // blur.$emit("timer2",time2)
-      // console.log(this.timeRange[0],this.timeRange[1])
-      // 获取热点卡口道路的热点道路排名的数据 GET_HOT_ROAD_API
-      //   interf.GET_HOT_ROAD_API({
-      //    id: "",
-      //   //  timeRange:that.timeRange
-      //    stime:that.timeRange[0],
-      //    etime:that.timeRange[1]
-      //  })
-      //  .then(response=>{
-      //   if (response && response.status == 200){
-      //      var data = response.data;
-      //      console.log(data)
-      //      blur.$emit('getroadData',data)
-      //       if (data.errcode == 0) {
-
-      //       } else{
-      //         that.$message({
-      //           message: data.errmsg,
-      //           type: "error",
-      //           duration: 1500
-      //         });
-      //       }
-      //   }
-      // })
-      // .catch(err=>{
-      //    console.log(err);
-      // })
-      // .finally(() => {
-      //   that.tableLoading = false;
-      // });
-      // 获取热点卡口道路的热点卡口排名的数据 GET_HOT_RANK_API
-      //   interf.GET_HOT_RANK_API({
-      //    id: "",
-      //   //  timeRange:that.timeRange
-      //    stime:that.timeRange[0],
-      //    etime:that.timeRange[1]
-      //  })
-      //  .then(response=>{
-      //   if (response && response.status == 200){
-      //      var data = response.data;
-      //      console.log(data)
-      //       blur.$emit('getbayData',data)
-      //       if (data.errcode == 0) {
-           
-      //       } else{
-      //         that.$message({
-      //           message: data.errmsg,
-      //           type: "error",
-      //           duration: 1500
-      //         });
-      //       }
-      //   }
-      // })
-      // .catch(err=>{
-      //    console.log(err);
-      // })
-      // .finally(() => {
-      //   that.tableLoading = false;
-      // });
+  
       // 用日历选择时间 获取车辆流动页面全省流动情况
        interf.GET_VEH_FLOW_API({
          id: "",

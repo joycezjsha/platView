@@ -5,16 +5,12 @@
       <div class="car-info_title">
         <div class="top" style="">
           <span style="display:flex;height:4vh;line-height:2.2vh;"  >
-            <span class="back"  @click="goback()" v-show="showback">&lt;&lt; 返回全省</span>
+            <span class="back"  @click="goback" v-if="showback">&lt;&lt; 返回全省</span>
             <div class="title" style="text-align:center;margin-left:8vw;line-height:3.5vh" v-if="showback==false" >全部车辆监控</div>
-            <!-- <m-title v-if="showback==false" style="height:4vh;line-height:4vh;" label="全省统计"></m-title> -->
-            <span style="padding:5px 0" v-else>{{provinceData.city}}</span>
-            <!-- <m-title :label='showback==false ? "全省统计":"西安市"' img_type=1 style="height:4vh;line-height:4vh;"></m-title> -->
+            <span style="padding:5px 0" v-if="showback">{{city}}</span>           
           </span>
         </div>
       </div>
-      <!-- <div class='car-info_title'>总计进入车辆次数:<span class=''>{{statics.count}}</span></div> -->
-      <!-- 全省数据 -->
       <div class="data" >
         <m-tab style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
         <div class='car-info_tab'>
@@ -118,7 +114,7 @@ export default {
         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
         series: [
             {
-              name: '访问来源',
+              name: '',
               type: 'pie',
               radius: ['50%', '70%'], 
               avoidLabelOverlap: false,
@@ -177,7 +173,7 @@ export default {
                 }
             },
             axisTick: {
-                show: false
+                show: true
             },
             axisLine: {
                 show: false
@@ -189,7 +185,7 @@ export default {
                 show: false
             },
             axisTick: {
-                show: false
+                show: true
             },
             axisLabel: {
                 textStyle: {
@@ -256,19 +252,19 @@ export default {
                 }
             },
             axisTick: {
-                show: false
+                show: true
             },
             axisLine: {
-                show: false
+                show: true
             },
             z: 10
         },
         yAxis: {
             axisLine: {
-                show: false
+                show: true
             },
             axisTick: {
-                show: false
+                show: true
             },
             axisLabel: {
                 textStyle: {
@@ -343,7 +339,6 @@ export default {
     
   },
   destroyed() {
-    console.log("清除kkk")
     this.flyRoutes = [];
     this.map.stop();
     let that = this;
@@ -514,48 +509,49 @@ export default {
     getdata(){
       let that = this;
       /**
-       *接收传过来的参数
+       * 接收传过来的参数
        * paramxzqh:  行政区号  gettime:时间 1，2，3，4
        * paramcity:  城市  timeRange:自定义的时间
        */   
+      //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
+      blur.$on("gettime",time=>{
+        that.stime=time;
+        if(time!='4'){
+         that.getprovinceData(that.stime)  
+        }
+        // that.getIndexDatas(that.stime,that.fxlx,that.xzqh)
+        // that.getIndexDatas(that.stime,that.fxlx)
+        // that.initSumCharts(that.stime)  
+        // that.getprovinceData(that.stime)
+        // that.getIndexDatas(that.stime)       
+      }) 
+      //接收自定义的  timeRange:自定义的时间
       blur.$on('determine',times=>{
         that.timeRange=times;
         // console.log(that.timeRange)
-        if(that.stime=='4' && that.xzqh!=undefined && that.fxlx!=undefined){
-          that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
-          // that.carflowData(that.timeRange[0],that.timeRange[1])
-          that.getIndexDatas((that.timeRange[0],that.fxlx,that.xzqh,that.timeRange[1]))
-        }      
+        // console.log(that.stime)
+        that.getprovinceData(that.stime)  
+        // if(that.stime=='4' && that.xzqh!=undefined && that.fxlx!=undefined){
+        //   that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
+        //   // that.getIndexDatas((that.timeRange[0],that.fxlx,that.xzqh,that.timeRange[1]))
+        // }      
       })  
-      blur.$on("gettime",time=>{
-        that.stime=time;
-        // console.log(that.stime)  
-        if(that.stime!='4' && that.xzqh!=undefined){       
-          that.getprovinceData(that.stime,that.xzqh)  
-          that.getIndexDatas(that.stime,that.fxlx,that.xzqh)
-          that.getIndexDatas(that.stime,that.fxlx)   
-          // that.carflowData(that.stime,that.fxlx)
-          that.initSumCharts(that.stime)
-          // that.getprovinceData(that.stime,that.xzqh)    
-        }else if(that.stime!='4' && that.xzqh===undefined){
-            that.getprovinceData(that.stime)
-            that.getIndexDatas(that.stime)  
-            // that.carflowData(that.stime) 
-          // that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
-        }       
-      }) 
       blur.$on("paramxzqh",xzqh=>{
         that.xzqh=xzqh;
+        // console.log(that.stime,that.xzqh)
+        that.getprovinceData(that.stime,that.xzqh);
         // console.log(that.stime,that.xzqh);
-        if(that.stime!='4'){
-          that.getprovinceData(that.stime,that.xzqh);
-          // that.getprovinceData(that.stime,that.xzqh,that.timeRange) 
-          that.getIndexDatas(that.stime,that.fxlx,that.xzqh);
-        }
+        // if(that.stime!='4'){
+        //   that.getprovinceData(that.stime,that.xzqh);
+        //   // that.getprovinceData(that.stime,that.xzqh,that.timeRange) 
+        //   that.getIndexDatas(that.stime,that.fxlx,that.xzqh);
+        // }
        
       })
       blur.$on("paramcity",city=>{
-        that.city=city
+        that.city=city;
+        that.showback=true; 
+        // console.log(that.city)
       })
       blur.$on('sendTime',data=>{
         // console.log(data)
@@ -586,12 +582,12 @@ export default {
       blur.$on('getcitycardata',data=>{
         // console.log(data)
         let citycardatas=data;
-        that.showback=true;  //显示返回全省
+         //显示返回全省
         // console.log(citycatdatas)
-        that.provinceData.addIn=citycardatas.data.addIn;
-        that.provinceData.incount=citycardatas.data.incount;
-        that.provinceData.outcount=citycardatas.data.outcount;
-        that.provinceData.city=citycardatas.data.city;
+        // that.provinceData.addIn=citycardatas.data.addIn;
+        // that.provinceData.incount=citycardatas.data.incount;
+        // that.provinceData.outcount=citycardatas.data.outcount;
+        // that.provinceData.city=citycardatas.data.city;
       })
     },
     // 如果选择左侧的城市，显示对应城市的车辆类型分析
@@ -605,15 +601,27 @@ export default {
       that.getIndexDatas(that.stime,that.isActive) 
     },
     // 车辆流动页面全省车辆统计 xzqh===undefined && etime===undefined
-    getprovinceData(stime,xzqh,etime){
-      console.log(stime,xzqh,etime)
+    getprovinceData(type,xzqh){
       let that = this;
-      // 如果只有一个参数 stime
-      if(xzqh===undefined && etime===undefined){
-       interf.GET_VEH_PRO_API({
-        id:"",
-        stime:stime,
-      })
+      let provinceData={};
+      // 如果只有一个 type=1  2  3 时 并且没有xzqh 参数
+      if(type!='4' && xzqh===undefined){
+        provinceData.stime=type;
+        // 如果type=4 时  并且没有xzqh 参数
+      }else if(type=='4' && xzqh===undefined){
+        provinceData.stime=that.timeRange[0];
+        provinceData.etime=that.timeRange[1];
+      }else if(type!='4' && xzqh!=undefined){
+        provinceData.stime=type;
+        provinceData.xzqh=xzqh;
+        // 如果type=4 时 并且有xzqh 参数
+      }else if(type=='4' && xzqh!=undefined){
+        provinceData.stime=that.timeRange[0];
+        provinceData.xzqh=xzqh;
+        provinceData.etime=that.timeRange[1];
+      }
+        // 请求 全省车辆统计 数据
+      interf.GET_VEH_PRO_API(provinceData)
       .then(response=>{
         if (response && response.status == 200){
           var data = response.data;
@@ -637,146 +645,7 @@ export default {
         .finally(() => {
           that.tableLoading = false;
         });
-      }
-      // 如果不是自定义时间，2个参数stime,xzqh
-      if(xzqh!=undefined && etime===undefined){
-       interf.GET_VEH_PRO_API({
-        id:"",
-        stime:stime,
-        xzqh:xzqh
-      })
-      .then(response=>{
-        if (response && response.status == 200){
-          var data = response.data;
-          // console.log(data)
-          if (data.errcode == 0) {
-            that.provinceData.addIn=data.data.addIn.toString();
-            that.provinceData.incount=data.data.incount.toString();
-            that.provinceData.outcount=data.data.outcount.toString();            
-          } else{
-              that.$message({
-              message: data.errmsg,
-              type: "error",
-              duration: 1500
-            });
-          } 
-        }
-      })
-      .catch(err=>{
-          console.log(err);
-        })
-        .finally(() => {
-          that.tableLoading = false;
-        });
-      }
-      // 如果是自定义的时间，获取数据 3个参数
-      if(etime!=undefined && xzqh!=undefined){
-        interf.GET_VEH_PRO_API({
-          id:"",
-          stime:that.timeRange[0],
-          xzqh:xzqh,
-          etime:that.timeRange[1]
-        })
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-            // console.log(data)
-            if (data.errcode == 0) {
-              that.provinceData.addIn=data.data.addIn.toString();
-              that.provinceData.incount=data.data.incount.toString();
-              that.provinceData.outcount=data.data.outcount.toString();            
-          } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            } 
-          }
-        })
-        .catch(err=>{
-           console.log(err);
-        })
-        .finally(() => {
-          that.tableLoading = false;
-        })
-      }
-   
     },
-    /**
-     *  默认显示实时数据  GET_FLOW_TREND_API 
-     */
-    // carflowData(stime,etime){ 
-    //   let that = this;  
-    //   // 如果有两个参数stime,etime
-    //  if(etime!=undefined && stime!='4'){
-    //     interf.GET_FLOW_TREND_API({
-    //     id:"",
-    //     stime:stime,
-    //     etime:etime
-    //   })
-    //   .then(response=>{
-    //    if (response && response.status == 200){
-    //        var data = response.data;
-    //        console.log(data)
-    //        if (data.errcode == 0) {
-    //           let car_data=that.flowchartsData;
-    //          data.data.forEach(e=>{
-    //            console.log(e)
-    //           //  that.flowchartsData.innum.push(e.innum)
-    //           //  that.flowchartsData.outnum.push(e.outnum)
-    //           //  that.flowchartsData.date.push(e.date)
-    //          })
-    //          that.flowchartsData=car_data;
-    //           console.log(that.flowchartsData)
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //        } 
-    //       }
-    //     })
-    //     .catch(err=>{
-    //         console.log(err);
-    //     })
-    //     .finally(() => {
-    //         that.tableLoading = false;
-    //     })
-    //   }
-    //   // 如果参数只有stime
-    //   if(etime===undefined  && stime!='4'){
-    //     interf.GET_FLOW_TREND_API({
-    //     id:"",
-    //     stime:stime
-    //   })
-    //   .then(response=>{
-    //    if (response && response.status == 200){
-    //        var data = response.data;
-    //        console.log(data)
-    //        if (data.errcode == 0) {
-    //          var obj=data.data;
-           
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //        } 
-    //       }
-    //     })
-    //     .catch(err=>{
-    //         console.log(err);
-    //     })
-    //     .finally(() => {
-    //         that.tableLoading = false;
-    //     });
-    //   }
-      
-  
-    // },
     /**
      * 车辆流动页面车辆类型分析  默认显示实时的数据
      * 如果客户没有点击进入或者流出，默认显示全省进入的数据  两个参数的 GET_VEH_TYPE_API

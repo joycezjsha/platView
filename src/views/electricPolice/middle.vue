@@ -1,10 +1,10 @@
 <template>
-  <div class="middle">
+  <div class="electricPolice-middle">
       <div @click="change(1)">
-         <m-title  label='电警热力分布' class="car"></m-title> 
+         <m-title  label='电警热力分布'  :img_type='tableIndex==1?"1":"0"' class="car"></m-title> 
       </div>
       <div @click="change(2)">
-        <m-title  label='活跃电警点位' class="car"></m-title> 
+        <m-title  label='活跃电警点位'  :img_type='tableIndex==2?"1":"0"' class="car"></m-title> 
       </div> 
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     name:'middle',
     data(){
         return{
-
+            tableIndex:1,
         }
     },
     components:{
@@ -26,9 +26,8 @@ export default {
     methods:{
         // 切换卡口热力分布  与   活跃卡口点位
         change(i){   
-            alert(i)
-        //   blur.$emit('realtime',i)
-        // 更新
+            this.tableIndex=i;
+
         },
     },
     mounted(){
@@ -39,7 +38,7 @@ export default {
 
 <style scope lang='scss'>
 
-.middle{
+.electricPolice-middle{
     position: fixed;
     top:95.6vh;
     left:756px;

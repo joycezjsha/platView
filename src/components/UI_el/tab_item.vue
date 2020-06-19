@@ -43,8 +43,8 @@ export default {
   @include flex(row, center,center);
   .item{
      @include flex(column, center,center);    
-     border: 1px solid #DCDFE6;
-    width: 7vw;
+    //  border: 1px solid #DCDFE6;
+    width: 9vw;
     height: 3vh;
     margin: 2%;
     color:$color-info;

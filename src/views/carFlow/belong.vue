@@ -10,7 +10,7 @@
           <span>{{city}}</span>
         </div>
       </div>
-      <div class="main">
+      <div class="carFlow-main">
         <div>
           <m-title class="analysis" label="车辆归属地分析"></m-title>
         </div>
@@ -80,6 +80,7 @@ export default {
       city: "",
       stime: "1",
       xzqh: "",
+      isZoom:'',
       provinceInorOut: "1", //省份 1  城市2
       fxlx: "1", //进入1  流出2
       showback: true, //是否显示返回按钮
@@ -102,10 +103,11 @@ export default {
   },
   mounted() {
     this.map=this.$store.state.map;
-    // this.map.setCenter([108.967368, 34.302634]);
+    this.map.setCenter([108.967368, 34.302634]);
+    this.map.setZoom(4);
     let that = this;
     that.getData();
-    that.getBelongData(that.stime, that.fxlx, that.provinceInorOut);
+    that.getBelongData(that.stime);
     // that.getCityMapOD();belonglist
            
   },
@@ -145,29 +147,34 @@ export default {
 
       blur.$on("paramxzqh", xzqh => {
         that.xzqh = xzqh;
-        if (that.stime != "4")
-          that.getBelongData(
-            that.stime,
-            that.fxlx,
-            that.provinceInorOut,
-            that.xzqh
-          );
+        that.getBelongData(that.stime,that.fxlx);
       });
+
       blur.$on("gettime", time => {
         that.stime = time;
+        if(time!='4'){
+          that.getBelongData(that.stime);
+        }
       });
       blur.$on("determine", times => {
-        console.log(times);
         that.timeRange = times;
+        that.getBelongData(that.stime);
       });
       //
       blur.$on("paramcity", city => {
         that.city = city;
-        // console.log(that.city)
         if (city !== undefined) {
           that.showback = false;
         }
       });
+      blur.$on('realtime',data=>{
+        console.log(data)
+        that.isZoom=data;
+        console.log(that.isZoom,typeof(that.isZoom))
+        // if(that.isZoom==2){
+        //   that.map.setZoom(4);
+        // }
+      })
     },
     // 是否显示返回
     goback() {
@@ -176,19 +183,18 @@ export default {
       that.fxlx="1";
       that.stime='1';
       that.provinceInorOut="1";
-      that.getBelongData("1", "1", "2");
+      that.xzqh='';
+      that.getBelongData("1", "1", "1");
     },
     //  OD地图函数
     getCityMapOD(itemlist){
       this.clearMap();
       var data = [] ;
-       itemlist.forEach(item => {
-          data.push([
-            item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
-            item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
-            item.STRATNAME,item.ENDNAME,item.NUM
-          ]
-          )             
+      itemlist.forEach(item => {
+        data.push([
+        item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
+        item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
+        item.STRATNAME,item.ENDNAME,item.NUM])                
       });
         var scatterData = [];
         var lineData = [];
@@ -313,174 +319,92 @@ export default {
 
         
     },
-    // 右侧列表数据
-    getBelongData(stime, fxlx, provinceInorOut, xzqh, etime) {
+
+    // 右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
+
+    getBelongData(type,xzqh){
       let that = this;
-      // 如果传入的是自定义是时间参数有fxlx, provinceInorOut,stime，xzqh，etime
-      var belongData={};
-      if(xzqh != undefined && etime != undefined){
-        belongData.stime=stime;
-        belongData.fxlx=fxlx;
-        belongData.provinceInorOut=provinceInorOut;
-        belongData.xzqh=xzqh;
-        belongData.etime=etime;
-      }else if(xzqh != undefined && etime === undefined && stime != "4"){
-        belongData.stime=stime;
-        belongData.fxlx=fxlx;
-        belongData.provinceInorOut=provinceInorOut;
-        belongData.xzqh=xzqh;
-      }else if(xzqh === undefined && etime === undefined && stime != "4"){
-        belongData.stime=stime;
-        belongData.fxlx=fxlx;
-        belongData.provinceInorOut=provinceInorOut;
+      let BelongData={};
+      // 如果只传入时间参数，只有一个type=1  2  3 时, 并且默认进入省外 fxlx=1  provinceInorOut=1 没有xzqh,etime参数
+      if(type!='4' && xzqh===undefined ){
+        BelongData.stime=that.stime;
+        BelongData.fxlx=that.fxlx;
+        BelongData.provinceInorOut=that.provinceInorOut;
+        // 如果时间是自定义的，进入省外
+      }else if(type=='4' && xzqh===undefined ){
+        BelongData.stime=that.timeRange[0];
+        BelongData.fxlx=that.fxlx;
+        BelongData.provinceInorOut=that.provinceInorOut;
+        BelongData.etime=that.timeRange[1];
+        // 如果type=1  2  3 时,并且传入xzqh时
+      }else if(type!='4' && xzqh!=undefined){
+        BelongData.stime=that.stime;
+        BelongData.fxlx=that.fxlx;
+        BelongData.provinceInorOut=that.provinceInorOut;
+        BelongData.xzqh=that.xzqh;
+        // 如果type=4 时,并且传入xzqh时
+      }else if(type=='4' && xzqh!=undefined ){
+        BelongData.stime=that.timeRange[0];
+        BelongData.fxlx=that.fxlx;
+        BelongData.xzqh=that.xzqh;
+        BelongData.provinceInorOut=that.provinceInorOut;
+        BelongData.etime=that.timeRange[1];
       }
-      // if (xzqh != undefined && etime != undefined) {
-        interf.GET_BELONG_API({
-            id: "",
-            stime: stime,
-            fxlx: fxlx,
-            provinceInorOut: provinceInorOut,
-            xzqh: xzqh,
-            etime: etime
-          })
-          .then(response => {
-            if (response && response.status == 200) {
-              var data = response.data;
-              console.log(data);
-              if (data.errcode == 0) {
-                // that.belongData=data.data;
-                that.belongData.provinceWithin = data.data.provinceWithin;
-                that.belongData.provinceExternal = data.data.provinceExternal;
-                that.belongData.provinceWithinProportion =
-                  data.data.provinceWithinProportion;
-                that.belongData.provinceExternalProportion =
-                  data.data.provinceExternalProportion;
-                that.indexDatas = data.data.dataList;
-                console.log(that.belongData);
-                /**
-                 * 中间地图部分:
-                 * 车辆流动页面归属地分析 --车辆归属地OD地图 Vehicle/getVehicleOwnership
-                 */
-                if(that.indexDatas.length>0){
-                  
-                   that.getCityMapOD(that.indexDatas) 
-                }
-              } else {
-                that.$message({
-                  message: data.errmsg,
-                  type: "error",
-                  duration: 1500
-                });
+      // 请求数据
+        interf.GET_BELONG_API(BelongData)
+        .then(response => {
+          if (response && response.status == 200) {
+            var data = response.data;
+            console.log(data);
+            if (data.errcode == 0) {
+              that.belongData.provinceWithin = data.data.provinceWithin;
+              that.belongData.provinceExternal = data.data.provinceExternal;
+              that.belongData.provinceWithinProportion =
+              data.data.provinceWithinProportion;
+              that.belongData.provinceExternalProportion =
+              data.data.provinceExternalProportion;
+              that.indexDatas = data.data.dataList;
+              console.log(that.belongData);
+              if(that.indexDatas.length>0){
+                that.getCityMapOD(that.indexDatas) 
               }
+            } else {
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
             }
-          })
-          .catch(err => {
-            console.log(err);
-          })
-          .finally(() => {
-            that.tableLoading = false;
-          });
-      // }
-      // 如果传入xzqh参数，参数有fxlx, provinceInorOut,stime，xzqh
-      // if (xzqh != undefined && etime === undefined && stime != "4") {
-      //   interf
-      //     .GET_BELONG_API({
-      //       // id: "",
-      //       stime: stime,
-      //       fxlx: fxlx,
-      //       provinceInorOut: provinceInorOut,
-      //       xzqh: xzqh
-      //     })
-      //     .then(response => {
-      //       if (response && response.status == 200) {
-      //         var data = response.data;
-      //         console.log(data);
-      //         if (data.errcode == 0) {
-      //           // that.belongData=data.data;
-      //           that.belongData.provinceWithin = data.data.provinceWithin;
-      //           that.belongData.provinceExternal = data.data.provinceExternal;
-      //           that.belongData.provinceWithinProportion =
-      //             data.data.provinceWithinProportion;
-      //           that.belongData.provinceExternalProportion =
-      //             data.data.provinceExternalProportion;
-      //           that.indexDatas = data.data.dataList;
-      //           console.log(that.belongData);
-      //           if(that.indexDatas.length>0){
-      //              that.getCityMapOD(that.indexDatas) 
-      //           }
-      //         } else {
-      //           that.$message({
-      //             message: data.errmsg,
-      //             type: "error",
-      //             duration: 1500
-      //           });
-      //         }
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.log(err);
-      //     })
-      //     .finally(() => {
-      //       that.tableLoading = false;
-      //     });
-      // }
-      // //首次进入显示进入，省内的实时的数据 参数有fxlx, provinceInorOut,stime
-      // if (xzqh === undefined && etime === undefined && stime != "4") {
-      //   interf
-      //     .GET_BELONG_API({
-      //       // id: "",
-      //       stime: stime,
-      //       fxlx: fxlx,
-      //       provinceInorOut: provinceInorOut
-      //     })
-      //     .then(response => {
-      //       if (response && response.status == 200) {
-      //         var data = response.data;
-      //         //            console.log(data)
-      //         if (data.errcode == 0) {
-      //           // that.belongData=data.data;
-      //           that.belongData.provinceWithin = data.data.provinceWithin;
-      //           that.belongData.provinceExternal = data.data.provinceExternal;
-      //           that.belongData.provinceWithinProportion =
-      //             data.data.provinceWithinProportion;
-      //           that.belongData.provinceExternalProportion =
-      //             data.data.provinceExternalProportion;
-      //           that.indexDatas = data.data.dataList;
-      //           console.log(that.indexDatas);
-      //           if (that.indexDatas.length > 0) {               
-      //              that.getCityMapOD(that.indexDatas) 
-                  
-      //           }
-      //         } else {
-      //           that.$message({
-      //             message: data.errmsg,
-      //             type: "error",
-      //             duration: 1500
-      //           });
-      //         }
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.log(err);
-      //     })
-      //     .finally(() => {
-      //       that.tableLoading = false;
-      //     });
-      // }
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
     },
     // 车辆归属地分析，根据进入 流出 和 省内，省外获取对应的 数据
     province(provinceInorOut) {
       let that = this;
       that.provinceInorOut = provinceInorOut;
-      console.log(that.stime, that.fxlx, that.provinceInorOut);
-      that.getBelongData(that.stime, that.fxlx, that.provinceInorOut);
+      // 如果没有xzqh 
+      if(that.xzqh==''){
+        that.getBelongData(that.stime)
+      }else{
+        that.getBelongData(that.stime,that.xzqh)
+      }
     },
     // 车辆流动页面  归属地分析  Vehicle/getVehicleOwnership  // 进入 流出数据
     changeIn(fxlx) {
       let that = this;
       that.fxlx = fxlx;
-      that.getBelongData(that.stime, that.fxlx, that.provinceInorOut);
-      console.log(that.fxlx, that.provinceInorOut);
+      // 如果没有xzqh 
+      if(that.xzqh==''){
+        that.getBelongData(that.stime)
+      }else{
+        that.getBelongData(that.stime,that.xzqh)
+      }
     },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
@@ -531,7 +455,7 @@ export default {
   left: 588px;
   margin-bottom: 114px;
 }
-.belong {
+.carFlowBelong .belong {
   position: fixed;
   top: 9.388vh;
   right: 13px;
@@ -587,7 +511,7 @@ export default {
         1 1;
     }
   }
-  .main {
+ .carFlow-main {
     height: 951px;
     background-color: $color-bg-1;
     border: 1px solid;
