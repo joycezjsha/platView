@@ -1,41 +1,48 @@
 <template>
   <div class="vehicle-statics">
-    <div class="vehicle-statics_container boxstyle">
-      <div class="vehicle-statics_title">
-        <div>
-          <!-- <i class="el-icon-collection-tag">全部监测车辆</i> -->
-          <m-title label='全部监测车辆' img_type=1></m-title>
+    <div class="vehicle-statics_container">
+      <div class="top">
+        <div class="title" v-if="showback==true">全部车辆监控</div>
+        <div class="back" v-else @click="goback()">&lt;&lt; 返回全省
+          <span>{{CODE}}</span>
         </div>
       </div>
-      <div class="vehicle-statics--tab">
+      <div class="Provincial boxstyle">
+        <m-com-title label='今日省内重点监测车辆运行势态' img_type=1 style='width:17vw;'></m-com-title>
         <m-item :tabList='tabItems'></m-item>
-      </div>
-      <div class="vehicle-statics_sort">
-        <div>
-          <m-list-o :list='listItems'></m-list-o>
+        <div style="margin-left:4vw;display:flex">
+          <div style="margin-top:2vh">
+            <div style="display: block;margin-bottom:1vh;">
+              <span>超速次数：</span>
+              <span>{{cscount}}</span>
+            </div>
+            <div style="display: block;">
+              <span>总检测次数次数：</span>
+              <span>{{count}}</span>
+            </div>
+          </div>
+          <!-- <div>
+            <m-list-o :list='listItems'></m-list-o>
+          </div> -->
+          <div  class="vehicle-statics_sort" id='vehicle-statics_circle'></div>
         </div>
-        <div id='vehicle-statics_circle'></div>
       </div>
-      <div class='vehicle-statics_tab'>
-        <m-tab label='今日入陕辆次:' :value='statics.in'></m-tab>
-        <m-tab label='今日出陕辆次:' :value='statics.out'></m-tab>
+      <div class='vehicle-statics_tab boxstyle'>
+        <m-tab label='今日入陕辆次:' :value='incount'></m-tab>
+        <m-tab label='今日出陕辆次:' :value='outcount'></m-tab>
         <!-- <div>今日入陕辆次:<span>{{statics.in}}</span></div>
         <div>今日出陕辆次:<span>{{statics.out}}</span></div> -->
+        <m-com-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-com-title>
+        <m-line-chart  style="width:100%;height:80%" :chart_data='outboundEchartsData' c_id='outboundEcharts'></m-line-chart> 
       </div>
-      <div class="vehicle-statics_content">
-        <div>
-          
-          <m-com-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-com-title>
-          <div id="">
-            <m-line-chart c_id='sumCountChange'></m-line-chart>
-          </div>
-        </div>
-        <div>
-          
-          <m-com-title label='车辆保有量' img_type=1 style='width:7vw;'></m-com-title>
-          <div id="">
-            <m-line-chart c_id='accurCreateChange'></m-line-chart>
-          </div>
+      <div class="vehicle-statics_content boxstyle">
+        <m-com-title label='境内城市监测车辆实时排名' img_type=1 style='width:13vw;'></m-com-title>
+        <div class='center_table' style="padding:0 20px">
+         <el-table :data="indexData" style="width: 100%" height="32.5vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            <el-table-column fixed type="index" label="No." width="80"></el-table-column>
+            <el-table-column prop="city" label="城市"  width="130"></el-table-column>
+            <el-table-column prop="NUM" label="辆次" sortable></el-table-column>
+          </el-table>
         </div>
       </div>
     </div>
@@ -52,12 +59,26 @@ import m_tab from '@/components/UI_el/tab.vue'
 import mTitle from "@/components/UI_el/title.vue";
 import mComTitle from "@/components/UI_el/title_com.vue";
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
+import blur from '../../blur.js';
 export default {
   name: "TIndex",
   data() {
     return {
       map: {},
-      statics:{sum:12345,over:12,radio:'10',in:'66666',out:'6666'},
+      CODE:'',
+      cscount:'',
+      count:"",
+      avg:'',
+      showback: true, //是否显示返回按钮 
+      incount:"", //今日入陕辆次
+      outcount:"", //进入出陕辆次
+      indexData:[{"NUM":"","XZQH":"","":"city"}],
+      outboundEchartsData:{
+        legend: ["入陕", "出陕"],
+        y1data:[],
+        y2data:[],
+        xdata:[]
+      },
       statics_sort_option:{
         color:['green','#ccc'],
         tooltip:{
@@ -66,49 +87,49 @@ export default {
         },
         series: [
             {
-                name: '',
-                type: 'pie',
-                radius: ['70%', '90%'],
-                avoidLabelOverlap: false,
+              name: '',
+              type: 'pie',
+              radius: ['70%', '90%'],
+              avoidLabelOverlap: false,
+              label: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
                 label: {
-                    show: false,
-                    position: 'center'
-                },
-                emphasis: {
-                    label: {
-                        show: true,
-                        fontSize: '30',
-                        fontWeight: 'bold'
-                    }
-                },
-                labelLine: {
-                    show: false
-                },
-                data: [],
-                label: {
-                    normal: {
-                        show: true,
-                        position: 'center',
-                        formatter:function (argument) {
-                            var html;
-                            html='本月业绩\r\n\r\n'+'50单';
-                            return html;
-                        },
-                        textStyle:{
-                           fontSize: 15,
-                            color:'#39CCCC'
-                        }
-                    }
-                }
-            }
+                  show: true,
+                  fontSize: '10',
+                  fontWeight: 'bold'
+                }
+              },
+              labelLine: {
+                show: false
+              },
+              data: [],
+              label: {
+                normal: {
+                  show: true,
+                  position: 'center',
+                  formatter:function (argument) {
+                     var html;
+                     html='本月业绩\r\n\r\n'+'50单';
+                     return html;
+                  },
+                  textStyle:{
+                    fontSize: 10,
+                    color:'#39CCCC'
+                  }
+               }
+            }
+          }
         ]
       },
       sort_chart:null,
       countChangeOption:{
-        title: {
-            text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        },
+        // title: {
+        //     text: '特性示例：渐变色 阴影 点击缩放',
+        //     subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
+        // },
         xAxis: {
             data:['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'],
             axisLabel: {
@@ -184,10 +205,10 @@ export default {
       },
       countChart:null,
       accurChangeOption:{
-        title: {
-            text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        },
+        // title: {
+        //     text: '特性示例：渐变色 阴影 点击缩放',
+        //     subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
+        // },
         xAxis: {
             data:['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'],
             axisLabel: {
@@ -197,19 +218,19 @@ export default {
                 }
             },
             axisTick: {
-                show: false
+                show: true
             },
             axisLine: {
-                show: false
+                show: true
             },
             z: 10
         },
         yAxis: {
             axisLine: {
-                show: false
+                show: true
             },
             axisTick: {
-                show: false
+                show: true
             },
             axisLabel: {
                 textStyle: {
@@ -269,13 +290,15 @@ export default {
   components:{mItem:m_item,mListO:m_list,mTab:m_tab,mTitle,mComTitle,mLineChart},
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
-    this.getIndexData();
+    let that = this;
     that.initMainStaticsChart();
+    that.getData()
+    that.getDomesticVehicleRankingDatas();
+    that.getToadyKeyVehicleInAndOutDatas();
     // that.initSumCharts();
-    // that.initAccurCharts();
+    that.initAccurCharts();
   },
   destroyed() {
     this.flyRoutes = [];
@@ -296,40 +319,207 @@ export default {
     // commonVariable.CURRENT_MAP.repaint = false;
   },
   methods: {
-    //获取统计数据
-    getIndexData() {
+    /* 
+    * 接受外部传来的数据
+    */ 
+    getData(){
+      blur.$on('getCity',data=>{
+        this.CODE=data;
+        this.getDomesticVehicleRankingDatas(this.CODE)
+        this.getToadyKeyVehicleInAndOutDatas(this.CODE)
+        this.initAccurCharts(this.CODE);
+        if(this.CODE!==''){
+          this.showback=false;
+        }
+      })
+    },
+    /* 
+    * 点击返回按钮
+    */
+    goback(){
+      this.showback=true;
+      this.getDomesticVehicleRankingDatas();
+      this.getToadyKeyVehicleInAndOutDatas();
+      this.initAccurCharts();
+    },
+     /*
+     *今日入陕 出陕 KeyVehicle/getToadyKeyVehicleInAndOut   GET_TOADY_VEHICLE_API 参数  code		车辆类型
+     */  
+    getToadyKeyVehicleInAndOutDatas(code){
+       let that = this;
+       let ToadyKeyData={};
+        // 如果没有参数
+      if(code===undefined){
+        ToadyKeyData={};
+      }else{  
+        // 如果传入参数code  车辆类型
+        ToadyKeyData.code=code;
+      }
+    interf.GET_TOADY_VEHICLE_API(ToadyKeyData)
+    .then(response=>{
+        if (response && response.status == 200){
+          var data= response.data;
+          if (data.errcode == 0) {
+            that.incount=data.data.incount;
+            that.outcount=data.data.outcount;
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    },
+    /* 
+    * 境内城市监测车辆实时排名 KeyVehicle/getDomesticVehicleRanking   GET_DOM_VEH_RANKING_API
+    */
+    getDomesticVehicleRankingDatas(code){
       let that = this;
+      let DomesticVehicleData={};
+      // 如果没有参数
+      if(code===undefined){
+        DomesticVehicleData={};
+      }else{  
+        // 如果传入参数code  车辆类型
+        DomesticVehicleData.code=code;
+      }
+    interf.GET_DOM_VEH_RANKING_API(DomesticVehicleData)
+    .then(response=>{
+        if (response && response.status == 200){
+          var data= response.data;
+          if (data.errcode == 0) {
+           that.indexData=data.data;
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+    },
+    /* 
+    * 
+    */
+    getVehicleOperation() {
+      
     },
     /**
      * 生成发生数量趋势echarts
      */
-    initSumCharts(){
-      if(!this.countChart){
-        this.countChart = echarts.init(document.getElementById('sumCountChange'));
-      };
-      this.countChart.setOption(this.accurChangeOption);
-    },
+    // initSumCharts(){
+    //   // 
+    //   if(!this.countChart){
+    //     this.countChart = echarts.init(document.getElementById('outboundEcharts'));
+    //   };
+    //   this.countChart.setOption(this.accurChangeOption);
+    // },
     /**
-     * 生成重大事故发生趋势echarts
+     * 近30日重点车辆出入陕趋势echarts  近30日重点车辆出入陕趋势 
+     *  KeyVehicle/getMonthKeyVehicleInAndOut GET_MONT_INOUT_API
      */
-    initAccurCharts(){
-      if(!this.accurChart){
-        this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
-      };
-      this.accurChart.setOption(this.accurChangeOption);
+    initAccurCharts(code){
+      let that=this;
+      let ChartsData={};
+      // 如果没有参数
+      if(code===undefined){
+        ChartsData={};
+      }else{
+        ChartsData.code=code;
+      }
+      // 如果有参数
+      interf.GET_MONT_INOUT_API(ChartsData)
+      .then(response=>{
+          if (response && response.status == 200){
+            var data= response.data;
+            if (data.errcode == 0) {
+              let car_data= that.outboundEchartsData;
+               data.data.forEach(e=>{
+               that.outboundEchartsData.y1data.push(e.innum)
+               that.outboundEchartsData.y2data.push(e.outnum)
+               that.outboundEchartsData.xdata.push(e.date)
+               that.outboundEchartsData=car_data;
+                if(!that.accurChart){
+                  that.accurChart = echarts.init(document.getElementById('outboundEcharts'));
+                };
+                that.accurChart.setOption(that.accurChangeOption);
+             })
+            }else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
+      
     },
+      //设置表格样式
+    getRowClass({ row, column, rowIndex, columnIndex }) {
+      return "background:transparent;";
+   },
      /**
-     * 生成超速占比饼图echarts
+     * 生成超速占比饼图echarts 今日重点监测车辆运行态势 Overview/getVehicleOperation   GET_OPERA_API
      */
     initMainStaticsChart(){
-       if(!this.sort_chart){
-        this.sort_chart = echarts.init(document.getElementById('vehicle-statics_circle'));
-      };
-      this.statics_sort_option.series[0].data=[{name:'超速次数',value:120},{name:'总检测数',value:1200}];
-      this.statics_sort_option.series[0].label.normal.formatter=function(c){
-        return '10%';
-      }
-      this.sort_chart.setOption(this.statics_sort_option);
+      let that = this;
+      interf.GET_OPERA_API({})
+      .then(response=>{
+          if (response && response.status == 200){
+            var data= response.data;
+            console.log(data);
+            if (data.errcode == 0) {
+             that.cscount=data.data.cscount;
+             that.count=data.data.count;
+             that.avg=data.data.avg;
+              if(!this.sort_chart){
+                this.sort_chart = echarts.init(document.getElementById('vehicle-statics_circle'));
+              };
+              this.statics_sort_option.series[0].data=[{name:'超速次数',value:that.cscount},{name:'总检测数',value:that.count}];
+              this.statics_sort_option.series[0].label.normal.formatter=function(c){
+                return that.avg;
+              }
+              this.sort_chart.setOption(this.statics_sort_option);
+            }else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
+
+    
+      
     },
   }
 };
@@ -345,8 +535,8 @@ export default {
 .vehicle-statics {
   position: fixed;
   z-index: 10;
-  right: 2vw;
-  width: 17vw;
+  right: 13px;
+  width: 474px;
   height: 85vh;
   top: 9vh;
   color: white;
@@ -355,62 +545,28 @@ export default {
   width: 100%;
   height: 100%;
   .vehicle-statics_title {
-    // position: relative;
     width: 100%;
     height:5vh;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
-    // display: -webkit-box;
-    // display: -ms-flexbox;
-    // display: flex;
-    // -webkit-box-align: center;
-    // -ms-flex-align: center;
-    // align-items: center;
+
     font-weight: bolder;
     >div{
       width:100%;
       height:100%;
     }
   }
-  .vehicle-statics--tab {
-    width: 100%;
-    height: 5vh;
-  //  @include flex(row, center);
-
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
-      margin: 2%;
-
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
-    }
+  // .vehicle-statics--tab {
+  //   width: 100%;
+  //   height: 5vh;
+// }
+.vehicle-statics_tab{
+  width:474px;
+  height:368px;
 }
 .vehicle-statics_sort {
-  width:90%;
+  width:50%;
   height:8vh;
   margin:2vh auto;
   @include flex(row, center,center);
@@ -441,8 +597,78 @@ export default {
     #accurCreateChange{
       width:100%;
       height:20vh;
+      
     }
   }
 }
-
+.vehicle-statics_container .top {
+  width:474px;
+  height:34px;
+    .back {
+      height: 34px;
+      font-size: 16px;
+      padding-top: 5px;
+      font-family: Source Han Sans CN;
+      font-weight: 400;
+      color: rgba(0, 198, 255, 1);
+      padding-left: 17px;
+      border: 1px solid;
+      background-color: $color-bg-1;
+      cursor: pointer;
+      border-image: linear-gradient(
+          182deg,
+          rgba(10, 148, 255, 1),
+          rgba(255, 255, 255, 0)
+        )
+        1 1;
+      span {
+        width: 53px;
+        height: 18px;
+        font-size: 18px;
+        font-family: Source Han Sans CN;
+        font-weight: 400;
+        color: rgba(254, 254, 254, 1);
+        padding-left: 108px;
+        cursor: pointer;
+      }
+    }
+    .title {
+      height: 34px;
+      font-size: 18px;
+      padding: 5px;
+      text-align: center;
+      font-family: Source Han Sans CN;
+      font-weight: 400;
+      color: rgba(254, 254, 254, 1);
+      background-color: $color-bg-1;
+      border: 1px solid;
+      cursor: pointer;
+      border-image: linear-gradient(
+          182deg,
+          rgba(10, 148, 255, 1),
+          rgba(255, 255, 255, 0)
+        )
+        1 1;
+    }
+  }
+  .Provincial{
+    width:474px;
+    height:180px;
+    margin-top: 7px;
+    div{
+      // display: flex;
+      .Provincial-data{
+        padding:3vh 1.5vw;
+        
+      }
+    }
+  }
+  .Provincial-text{
+    margin-left: 4vw;
+    
+  }
+  .vehicle-statics_content{
+    width:474px;
+    height:363px;
+  }
 </style>

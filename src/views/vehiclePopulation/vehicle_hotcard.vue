@@ -1,11 +1,11 @@
 <template>
-  <div id='card-modal'>
+  <div id='vehicle_hotcard-modal'>
     <div id="map" style=' width: 100%; height: 100%;'></div>
     <div class="hotcard">
         <div class="top">
           <div class="title" v-if="showback==true" >全部车辆监控</div>
             <div class="back" v-else @click="goback()" >&lt;&lt; 返回全省
-              <span> {{city}}</span>
+              <span> {{code}}</span>
           </div>
         </div>
         <div class="hotroad" style="height:41.29vh;">
@@ -13,11 +13,11 @@
           <div class="padding">
             <div class="table">
               <el-table :data="indexDatas"
-            style="width: 100%" height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column show-overflow-tooltip fixed type="index" label="No" width="60"></el-table-column>
+            style="width: 100%" height="100%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+                  <el-table-column fixed type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="inNum" label="进入辆次" sortable></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="outNum" label="流出辆次" sortable></el-table-column>
+                  <el-table-column  prop="innum" label="进入辆次" sortable></el-table-column>
+                  <el-table-column  prop="outnum" label="流出辆次" sortable></el-table-column>
               </el-table>
             </div> 
           </div>
@@ -27,14 +27,20 @@
           <div  class="padding"> 
             <div  class="table">
               <el-table :data="indexDatas1"
-            style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column show-overflow-tooltip fixed type="index" label="No" width="60"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="city,KKMC"   label="卡口名称">
-                    <template slot-scope="scope">
-                     [{{scope.row.city}}]{{scope.row.KKMC}}
-                    </template>
-                  </el-table-column>
-                  <el-table-column show-overflow-tooltip prop="NUM" label="过车辆" sortable></el-table-column>     
+            style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+                  <el-table-column  fixed type="index" label="No" width="60"></el-table-column>
+                  <!-- <div v-if="showCity==null">
+                       <el-table-column show-overflow-tooltip prop="KKMC"   label="卡口名称"></el-table-column>
+                  </div> -->
+                  <div>
+                      <el-table-column :formatter="userTypeList"
+                      show-overflow-tooltip prop="city,KKMC"   label="卡口名称">
+                        <template slot-scope="scope"> 
+                        [{{scope.row.city}}]{{scope.row.KKMC}}
+                        </template>
+                      </el-table-column>
+                  </div>
+                  <el-table-column  prop="NUM" label="过车辆" sortable></el-table-column>     
               </el-table>
             </div>
           </div>       
@@ -51,14 +57,15 @@ import blur from '../../blur.js';
 import { IMG } from "./config";
 import { interf } from "./config";
 export default {
-    name:'hotcard',
+    name:'vehicle_hotcard',
     data(){
         return{
           poPupList:[], //熱點卡口界面popup存儲
           showback:true, //是否显示返回按钮
-          city:'',
+          code:'',
           stime:'1',
           xzqh:'',
+          showCity:'',  //用于判断table中的城市与卡口名称拼接
           timeRange:'', //自定义时间
           showhotcard:false,
           map_cover:{
@@ -68,12 +75,12 @@ export default {
             markers:[]
           },
           indexDatas: [
-            {"road":"","index":"","inNum":"","outNum":""}
+            {"road":"","index":"","innum":"","outnum":""}
             ],
-          indexDatas1: [
+            indexDatas1: [
             {"KKMC":"","index":"","NUM":"","city":""}
             ],
-
+          
         }
     },
     components:{
@@ -88,8 +95,8 @@ export default {
        let that = this;
        that.$store.commit("setRight", '26.5vw');
        that.getData()
-      that.getHotCarDatas(that.stime)
-     
+       that.getHotspotRoadRankinDatas();
+       that.getHotspotBayonetRankingDatas();
     },
     destroyed(){
 
@@ -100,57 +107,34 @@ export default {
       }
     },
     methods:{
-      
       /**
        * 点击返回按钮
        */
       goback(){
         let that=this;
         that.showback=true;
-        that.gethotcardDatas('1')
+        that.getHotspotRoadRankinDatas();
+        that.getHotspotBayonetRankingDatas();
+
       },
       /**
        * 接收table传过来的数据 
        */
-      getData(){
-        let that=this;
-        /**
-        *gettime  传入对应的时间 1  2  3  4
-        *paramcity 对应城市
-        *determine 定义时间
-        */
-        //  接收对应的行政区划
-        blur.$on("paramxzqh",xzqh=>{
-          that.xzqh=xzqh;
-          that.getHotCarDatas(that.stime,that.xzqh); 
-        })
-        // 接收自定义的时间 that.timeRange[0]->stime   that.timeRange[1]->etime
-        blur.$on('determine',times=>{
-          that.timeRange=times;
-          that.getHotCarDatas(that.stime)
-        })  
-        // 接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
-         blur.$on('gettime',time=>{
-          that.stime=time;
-          if(that.stime!='4'){
-            that.getHotCarDatas(that.stime)
-          }        
-          
-        }) 
-        // 接收对应的城市名称
-        blur.$on("paramcity",city=>{
-          that.city=city;
-          if(city!==undefined){
-            that.showback=false;
-          }
-        })
-      },
+     getData() {
+      let that = this;
+      blur.$on('getCity',data=>{
+          that.code=data;
+          that.showback = false;
+          that.getHotspotRoadRankinDatas(that.code)
+          that.getHotspotBayonetRankingDatas(that.code)
+      })
+    },
       /**
        * 热点卡口地图
        */     
-      getcardMapData(item){
+      getHotspotBayMapData(item){
         let itemlist=[];
-        itemlist.push(item.KKJD,item.KKWD)
+        itemlist.push(item.JWD.split(" ")[0],item.JWD.split(" ")[1],);
         // console.log(itemlist)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
@@ -162,7 +146,7 @@ export default {
         el.style["padding"] = "10px 10px";
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
         let d1 = document.createElement('div');
-        if(item.city){
+       if(item.city){
           let citySpan= document.createElement('span');
           citySpan.innerHTML=`[${item.city}]-`; 
           d1.appendChild(citySpan);
@@ -196,7 +180,8 @@ export default {
         d3.appendChild(span3)
         d3.appendChild(span4)
         el.appendChild(d3);
-        //如果没有方向，就不需要创建d4
+
+         //如果没有方向，就不需要创建d4
         if(item.KKJC) {
           let d4= document.createElement('div');
           let span5= document.createElement('span'); 
@@ -209,7 +194,6 @@ export default {
           d4.appendChild(span6)
           el.appendChild(d4);
         }
-        
         
         let d5= document.createElement('div');
         let span7= document.createElement('span'); 
@@ -228,104 +212,87 @@ export default {
         this.poPupList.push(popup)
         // (".minemap-popup-tip").style.background='red';
       },
-      /**
-       *车辆流动页面热点道路
-       *车辆流动页面热点卡口
-       *{@params} type 1->实时，2->今天，3->昨天，4->自定义 xzqh：行政区划编码
+      /*
+      *热点卡口 KeyVehicle/getHotspotBayonetRanking  GET_HOT_BAY_RANK_API
       */
-      getHotCarDatas(type,xzqh){
+     getHotspotBayonetRankingDatas(code){
         let that=this;
-        var hotroadData={};  //存放热点道路参数
-        var hotcardData={};  //存放热点卡口参数
-        // 如果type=1  2  3 时 并且没有xzqh 参数
-        if(type!='4' && xzqh===undefined ){
-          hotroadData.stime=type;
-          hotcardData.stime=type;
-          // 如果type=4 时  并且没有xzqh 参数
-        }else if(type=='4' && xzqh===undefined){
-          hotroadData.stime=that.timeRange[0];
-          hotroadData.etime=that.timeRange[1];
-
-          hotcardData.stime=that.timeRange[0];
-          hotcardData.etime=that.timeRange[1];
-          // 如果type=1  2  3 时 并且有xzqh 参数
-        }else if(type!='4' && xzqh!=undefined){
-          hotroadData.stime=type;
-          hotroadData.xzqh=xzqh;
-
-          hotcardData.stime=type;
-          hotcardData.xzqh=xzqh;
-          // 如果type=4 时 并且有xzqh 参数
-        }else if(type=='4' && xzqh!=undefined){
-          hotroadData.stime=that.timeRange[0];
-          hotroadData.xzqh=xzqh;
-          hotroadData.etime=that.timeRange[1];
-
-          hotcardData.stime=that.timeRange[0];
-          hotcardData.xzqh=xzqh;
-          hotcardData.etime=that.timeRange[1];
+        let HotspotBayonetData={};
+         // 如果默认显示，没有任何参数
+        if(code===undefined){
+            HotspotBayonetData={};
+        }else{
+            HotspotBayonetData.code=code;
         }
-        // 请求热点卡口数据
-        interf.GET_HOT_RANK_API(hotcardData)
+        // 发送请求
+        interf.GET_HOT_BAY_RANK_API(HotspotBayonetData)
         .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-            that.indexDatas1=data.data;
-             console.log(data)           
-            if (data.errcode == 0) {
-              if(that.indexDatas1.length>0){
-                // 清除上一次的popups
-                // if(this.map_cover.popups.length>0){
-                //   this.map_cover.popups.forEach(e=>{
-                //     e.remove();
-                //   })
-                // }
-                //  调用卡口地图方法
-                that.indexDatas1.forEach(element => {
-                  that.getcardMapData(element)
-                  // console.log(element)
-                });
-              }
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
-            }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });   
-          // 请求热点道路数据
-          interf.GET_HOT_ROAD_API(hotroadData)
-          .then(response=>{
             if (response && response.status == 200){
-              var data = response.data;
-               console.log(data)
-                if (data.errcode == 0) {
-                  that.indexDatas=data.data;
-                } else{
-                  that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                  });
+            var data = response.data;
+                if(data.errcode == 0){
+                    that.indexDatas1=data.data;
+                    // console.log(that.indexDatas1)
+                    that.indexDatas1.forEach(e=>{
+                        that.showCity=e.city;
+                        console.log(that.showCity)
+                        // if(that.showCity!=null){
+                        //     // that.indexDatas1.city=
+                        // }
+                    })
+                        if(that.indexDatas1.length>0){
+
+                        // 清除上一次的popups
+                        // if(this.map_cover.popups.length>0){
+                        //   this.map_cover.popups.forEach(e=>{
+                        //     e.remove();
+                        //   })
+                        // }
+                        //  调用卡口地图方法
+                        that.indexDatas1.forEach(element => {
+                        that.getHotspotBayMapData(element)
+                        // console.log(element)
+                        });
+                    }
                 }
-              }
-            })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-          });
-      },
-     
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+        .finally(() => {
+            that.tableLoading = false;
+        });
+     },
+      /**
+       * 热点道路  KeyVehicle/getHotspotRoadRankin  GET_HOT_ROAD_RANK_API
+      */
+     getHotspotRoadRankinDatas(code){
+        let that=this;
+        let HotspotRoandData={};
+        // 如果默认显示，没有任何参数
+        if(code===undefined){
+            HotspotRoandData={};
+        }else{
+            HotspotRoandData.code=code;
+        }
+        // 发送请求
+        interf.GET_HOT_ROAD_RANK_API(HotspotRoandData)
+        .then(response=>{
+            if (response && response.status == 200){
+            var data = response.data;
+            // console.log(data)
+                if(data.errcode == 0){
+                    that.indexDatas=data.data;
+                }
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+        .finally(() => {
+            that.tableLoading = false;
+        });
+     },
       /*##清除地图加载点、线、面、弹框*/
       clearMap(){
         //清除source
@@ -382,8 +349,8 @@ export default {
         font-family:Source Han Sans CN;
         font-weight:400;
         color:rgba(0,198,255,1);
-        // background-color: $color-bg-1;
-        // border:1px solid;
+        background-color: $color-bg-1;
+        border:1px solid;
         padding-left: 17px;
         cursor:pointer;
         border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;

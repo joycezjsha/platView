@@ -1,7 +1,7 @@
 <template>
-  <div class="device-statics">
-    <div class="device-statics_container">
-      <div class="device-statics_title">
+  <div class="electricPolice-statics">
+    <div class="electricPolice-statics_container">
+      <div class="electricPolice-statics_title">
         <div class="top boxstyle" >
           <div class="title" v-if="showback==true">全省统计</div>
           <div class="back "  v-else @click="goback()">
@@ -13,7 +13,7 @@
           <i class="el-icon-collection-tag">全省统计</i>
         </div> -->
       </div>
-      <div class="device-statics_content">
+      <div class="electricPolice-statics_content">
         <div>
           <div class="number reg" style="margin-bottom:10px">
             <i style="" class='iconfont icon-shebei1'></i>
@@ -35,13 +35,13 @@
             <m-tab label='近30天抓拍违法数量' value='5316'></m-tab> -->
         </div>
         <div class="table_right">
-           <div class="device-statics_title">
+           <div class="electricPolice-statics_title">
             <div>
               <m-title  label='近30天违法抓拍量排名'></m-title>
               <!-- <i class="el-icon-collection-tag"></i> -->
             </div>
           </div>
-          <div class="device-statics_data" style="padding:0 5px">
+          <div class="electricPolice-statics_data" style="padding:0 5px">
             <el-table :data="tableDatas" style="width: 100%" height="" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
               <el-table-column fixed type="index" label="No" width="50"></el-table-column>
               <el-table-column show-overflow-tooltip  prop="city,ROADNAME" width="200" label="电警名称">
@@ -288,7 +288,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-.device-statics {
+.electricPolice-statics {
   position: fixed;
   z-index: 10;
   right: 13px;
@@ -297,14 +297,14 @@ export default {
   top: 9vh;
   color: white;
 }
-.device-statics_container {
-  width: 100%;
-  height: 100%;
+.electricPolice-statics_container {
+  // width: 100%;
+  // height: 100%;
   // background-color: $color-bg-1;
   // border: 1px solid $color-border-1;
-  .device-statics_title {
+  .electricPolice-statics_title {
     position: relative;
-    width: 96%;
+    width: 100%;
     // border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
@@ -315,10 +315,10 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0.6rem 2%;
+    // padding: 0.6rem 2%;
     font-weight: bolder;
   }
-  .device-statics--tab {
+  .electricPolice-statics--tab {
   width: 100%;
   height: 5vh;
 
@@ -352,18 +352,18 @@ export default {
       }
     }
 }
-  .device-statics_content {
+  .electricPolice-statics_content {
     width: 98%;
     height: 85%;
     // background-color: $color-bg-1;
     margin: 1%;
-    .device-statics_sort_list{
+    .electricPolice-statics_sort_list{
       width:50%;
       height:10vh;
       margin-top:2vh;
       float:right;
     }
-    #device-statics_sort {
+    #electricPolice-statics_sort {
       width:50%;
       height:15vh;
       float:left;
@@ -381,7 +381,7 @@ export default {
 
 .top {
   margin-top: 3px;
-    width: 474px;
+    width: 100%;
     .back {
       height: 34px;
       font-size: 16px;

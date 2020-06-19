@@ -1,7 +1,7 @@
 <template>
-  <div class="carFlow-middle" >
+  <div class="vehicle-middle" >
     <div @click="realtime(1)" >
-        <m-title label='城市车辆分析' class="car" :img_type='tableIndex==1?"1":"0"'></m-title>
+        <m-title label='车辆实时监测' class="car" :img_type='tableIndex==1?"1":"0"'></m-title>
     </div>
     <div @click="realtime(2)" >
         <m-title label='车辆归属地OD' class="car" :img_type='tableIndex==2?"1":"0"'></m-title>
@@ -17,7 +17,7 @@ import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
 import blur from '../../blur.js';
 export default {
-    name:'middle',
+    name:'vehicle_middle',
     data(){
         return{
             tableIndex:1,
@@ -32,16 +32,15 @@ export default {
         // 车辆实时监测
         realtime(i){    
             this.tableIndex=i;
-            let els=document.getElementsByClassName('.custom-popup-class');
-            blur.$emit('realtime',i)
+            // let els=document.getElementsByClassName('.custom-popup-class');
+            blur.$emit('realtime',i)  
         },
     }
 }
 </script>
 
 <style scope lang='scss'>
-
-.carFlow-middle{
+.vehicle-middle{
     position: fixed;
     top:95.6vh;
     left:34.53vw;

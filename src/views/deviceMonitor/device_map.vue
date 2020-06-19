@@ -1,6 +1,8 @@
 <template>
   <div class="device-map">
-    <div @click='changeTable(0)'><m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
+    <div @click='changeTable(0)'>
+      <m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title>
+    </div>
     <div @click='changeTable(1)'><m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
   </div>
 </template>

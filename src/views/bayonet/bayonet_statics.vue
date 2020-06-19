@@ -1,5 +1,9 @@
 <template>
-  <div class="device-statics">
+  <div class="bayonet_device-statics" style="position: fixed;z-index: 10;color: white;
+  right: 13px;
+  width: 24.6875vw;
+  height: 85vh;
+  top: 9vh;">
     <div class="device-statics_container">
       <div class="device-statics_title">
         <!-- <m-title label='全省统计' img_type='1' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title> -->
@@ -12,7 +16,7 @@
       </div>
       </div>
       <div class="bayonet_statics_content">
-        <div>
+        <div style="padding-left:5px">
           <div class="number reg" style="margin-bottom:10px">
             <i style="" class='iconfont icon-shebei1'></i>
             <span class="num">设备总数</span>
@@ -25,7 +29,7 @@
           </div>
           <div class="number reg" style="margin-bottom:10px">
             <i style="" class='iconfont icon-shujuhuichuan'></i>
-            <span class="num">今日回传过车数据</span>
+            <span  class="num">今日回传过车数据</span>
             <span class="x x1" style="">{{todaynum}}</span>
           </div>
           <!-- <m-tab style="margin-bottom:2vh" label='设备总数' :value='devcount'></m-tab>
@@ -35,7 +39,7 @@
         <div class="bottom boxstyle">
            <div class="device-statics_title">
             <div style="margin-top:3px">
-              <m-title label='今日卡口数据回传排名' ></m-title>
+              <m-title label='今日卡口数据回传排名' style="width:12vw" ></m-title>
               <!-- <i class="el-icon-collection-tag">今日卡口数据回传排名:</i> -->
             </div>
           </div>
@@ -467,6 +471,7 @@ export default {
       font-size: 18px;
       padding-top: 5px;
       text-align: center;
+      margin-bottom: 2px;
       font-family: Source Han Sans CN;
       font-weight: 400;
       color: rgba(254, 254, 254, 1);
