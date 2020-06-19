@@ -1,6 +1,6 @@
 <template>
   <div class='ui_title_com'>
-    <div :style="'background-image:url('+img+');background-repeat: no-repeat;background-size: 100% 100%;padding: 0 15px 0 10px;height: 100%;'">{{label}}</div>
+    <div :style="'background-image:url('+img+');'">{{label}}</div>
   </div>
 </template>
 <script>
@@ -48,10 +48,16 @@ export default {
 .ui_title_com{
   // width:9vw;
   color:white;
-  text-align: center;
   font-size: 0.85vw;
   line-height: 4vh;
   height: 4vh;
   font-size: 16px;
+  text-align:center;
+  >div{
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding: 0 15px 0 10px;
+    height: 100%;
+  }
 }
 </style>

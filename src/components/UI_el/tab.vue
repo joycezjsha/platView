@@ -1,7 +1,7 @@
 <template>
   <div class='tab' style='background-image: url(./static/images/ui_image/tab_bg.png);'>
-    <div class='img'>
-      <i :class='"iconfont "+icon' :style='icon_style' v-show='isShowIcon' />
+    <div class='img' v-if='isShowIcon' >
+      <i :class='"iconfont "+icon' :style='icon_style'/>
     </div>
     <div class='label'>{{label}}</div>
     <div class='value'>{{value}}</div>
@@ -77,9 +77,12 @@ export default {
   }
   .label{
     width:50%;
+    align-items: start;
+    font-size: 16px;
   }
   .value{
     width:30%;
+    font-size: 24px;
   }
 }
 </style>

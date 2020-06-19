@@ -7,11 +7,12 @@ import connect from '../../common/httpUtil';
   /*登录*/
   URL_LOGIN: urlConf.BASE_URL + "user/login",
   VERTIFY_CODE: urlConf.BASE_URL + "user/getnumber",
+  LOGIN_URL:urlConf.BASE_URL + "sys/login",
   LOGIN_API: data => {
     return connect.service({
-      url:`user/login`,
-      method:'get',
-      params:data
+      url:`sys/login`,
+      method:'post',
+      data
     })},
   VERTIFY_CODE_API: data => {
     return connect.service({
@@ -22,15 +23,7 @@ import connect from '../../common/httpUtil';
 
     adornUrl:data=>{
       return urlConf.BASE_URL+data
-    },
-
-      // 车辆流动页面流动趋势 
-    // login:data=> {
-    //   return connect.service({
-    //   url:
-    //   method:'post',
-    //   params:data
-    // })
+    }
   }
   
   // insertLog:data => {

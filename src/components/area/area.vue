@@ -39,12 +39,36 @@ export default {
       }
     };
   },
+  props:{
+    isShowArea: {
+      type: Boolean,
+      default: true
+    }
+  },
+  watch:{
+    isShowArea:{
+      immediate: false,
+      handler: function(cVAL, oVAL) {
+        // debugger;
+        if(cVAL){
+          this.initArea();
+        }else{
+          this.hideArea();
+        }
+      }
+    }
+  },
   computed: {},
   mounted() {
     this.map = this.$store.state.map;
-    this.initArea();
+    if(this.isShowArea) this.initArea();
   },
   methods: {
+    hideArea(){
+      if(this.map.getLayer('area_polygon')!=undefined){
+        this.map.setLayoutProperty('area_polygon', 'visibility', 'none');
+      }
+    },
     /**
      *获取区域数据
      */
@@ -87,6 +111,13 @@ export default {
     },
     addArea(data) {
       let _this = this;
+      if(this.map.getLayer('area_polygon')!=undefined){
+        this.map.setLayoutProperty('area_polygon', 'visibility', 'visible');
+      }else{
+        let jsonData = {
+          type: "FeatureCollection",
+          features: []
+        };
       data.forEach((e, i) => {
         let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
         lonlats = lonlats.map(e => {
@@ -96,29 +127,46 @@ export default {
             return [e.split(" ")[1], e.split(" ")[2]];
           }
         });
-        let jsonData = {
-          type: "FeatureCollection",
-          features: [
-            {
+        jsonData.features.push({
               type: "Feature",
               geometry: {
                 type: "Polygon",
                 coordinates: [lonlats]
+              },
+              "properties": {
+                  "title": e.areaName
               }
-            }
-          ]
-        };
-        _this.areaColors[i];
-        _this.mapAddItems.lineList.push("arealayerId_" + i);
-        _this.mapAddItems.sourceList.push("areaSourceId_" + i);
-        this.map.addPolygons(
-          jsonData,
-          this.map,
-          "areaSourceId_" + i,
-          "arealayerId_" + i,
-          _this.areaColors[i]
-        );
+            });
       });
+      _this.map.addSource('area_polygonSource', {
+            'type': 'geojson',
+            'data': jsonData
+        });
+        /**
+         * 面的名称显示
+         */
+        _this.map.addLayer({
+            "id": "area_polygon",
+            "type": "symbol",
+            "source": "area_polygonSource",
+            "layout": {
+                "text-field": "{title}",
+                "text-offset": [0, 0.6],
+                "text-anchor": "top"
+            },
+            "paint": {
+                "icon-color": "#0000ff",
+                 "text-color": {
+                    "type": "categorical",
+                    "property": "kind",
+                    "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
+                    "default": "#ff0000"
+                }
+            }
+        });
+      _this.mapAddItems.polygons.push("area_polygonSource");
+      _this.mapAddItems.sourceList.push("area_polygon");
+      }
     },
     /**
      * 添加指数悬浮框
@@ -260,7 +308,9 @@ export default {
       return curTpiColor;
     }
   },
-  destroyed: function() {}
+  destroyed: function() {
+    this.clearMap();
+  }
 };
 </script>
 <style scoped lang="scss">

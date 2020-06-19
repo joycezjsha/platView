@@ -74,7 +74,7 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 0.9vw !important;
-  margin: 2% 0 2% 5%;
+  margin: 6% 0 2% 5%;
   color:$color-white;
   .fix-title-time {
     width: 100%;
@@ -82,7 +82,7 @@ export default {
     // margin-top: 5%;
     .week-year {
       width: 100%;
-      height: 40%;
+      height: 30px;
       font-size: 0.9vw;
       @include flex(row, flex-start,start);
 
@@ -93,7 +93,7 @@ export default {
       }
 
       .week {
-        width: 3vw;
+        width: 2.5vw;
         height: 100%;
         @include flex(row, flex-start,start);
       }
@@ -101,7 +101,7 @@ export default {
 
     .time {
       width: 100%;
-      height: 40%;
+      height: 20px;
       font-size: 0.9vw !important;
       @include flex(row, flex-start,start);
     }

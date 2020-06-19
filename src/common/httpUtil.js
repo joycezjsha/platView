@@ -47,11 +47,9 @@ service.interceptors.request.use(config => {
   if(config.method === 'post'){
     config.params=new Object();
     config.params._t=new Date().getTime();
-    config.params.token='token_for_show';//sessionStorage.getItem("token");
-    config.headers['Content-Type'] = 'application/json';
-   
-    if(config.url.indexOf('updateOrganizationsRelationPermission')==-1 && config.url.indexOf('saveOrganizationsRelationPermission')==-1){
-      config.data = qs.stringify({...config.data});
+    if(config.url.indexOf('sys/login')==-1){
+      config.params.token='token_for_show';//sessionStorage.getItem("token");
+      config.headers['Content-Type'] = 'application/json';
     }
     // insertLog(config.method);
   }else{

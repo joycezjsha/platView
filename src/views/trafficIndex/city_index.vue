@@ -4,7 +4,7 @@
       <div class="city-index_title">
         <m-title label='城市拥堵排名' img_type=1 class='title'></m-title>
       </div>
-      <m-tab :label="selectItem.city+'在全国排名'" :value='selectItem.order'></m-tab>
+      <!-- <m-tab :isShowIcon="isShowIcon" :label="selectItem.city+'在全国排名'" :value='selectItem.order' style='width:90%;margin:0 auto;'></m-tab> -->
       <div class="city-index_content">
         <el-table
           :data="indexDatas"
@@ -54,7 +54,8 @@ export default {
       currentRow: null,
       drawer: false,
       adcode:'610100',
-      city:'西安市'
+      city:'西安市',
+      isShowIcon:false
     };
   },
   components: {
@@ -218,12 +219,12 @@ export default {
   align-items: $align;
 }
 .city-index-div {
-  position: fixed;
+  position: absolute;
   z-index: 10;
   left: 1vw;
   width: 474px;
   height: 1026px;
-  top: 9vh;
+  top: 11px;
   .city-index_container {
   width: 100%;
   height: 100%;
@@ -251,10 +252,10 @@ export default {
     }
   }
   .city-index_content {
-    width: 98%;
+    width: 90%;
     height: 85%;
     background-color: $color-bg-1;
-    margin: 1%;
+    margin: 1% 5%;
 
     &_table {
       overflow-y: auto;

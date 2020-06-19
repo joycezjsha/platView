@@ -4,7 +4,7 @@
       <div class="traffic-index_title">
         <m-title label='境内高速路及主干道路况' img_type=1 class='title'></m-title>
       </div>
-      <!-- <m-tab :isShowIcon="isShowIcon" label='当前选择范围' :value='selectItem.road'></m-tab> -->
+      <m-tab :isShowIcon="isShowIcon" label='当前选择范围' :value='selectItem.road' style='width:90%;margin:0 auto;'></m-tab>
       <div class="traffic-index_content">
         <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,index) in indexDatas" :id="item.id" :key="item.id">
@@ -147,7 +147,7 @@ export default {
       padding: 2px 2% 0.6rem 2%;
       font-weight: bolder;
       .title{
-        width:244px;
+        width:220px;
         height:4vh;
         line-height: 4vh;
       }
@@ -164,7 +164,7 @@ export default {
       }
     }
   .traffic-index_content {
-    width: 98%;
+    width: 95%;
     height: 85%;
     background-color: $color-bg-1;
     margin: 1%;
@@ -172,11 +172,13 @@ export default {
     &_table {
       color: $color-white;
       margin: 0;
-      padding: 5%;
+      padding: 2% 5%;
       width: 90%;
-      height: 90%;
+      height: 80%;
+      overflow-y: auto;
       .index-item{
         >p:nth-child(1){
+          margin-bottom:0px;
           @include flex(row,center,center);
           >span{
             @include flex(row,center,center)
@@ -186,6 +188,7 @@ export default {
           }
           >span:nth-child(2){
             width:30%;
+             @include flex(row,start,start)
           }
           >span:nth-child(3){
             width:55%;
@@ -193,6 +196,7 @@ export default {
           }
         }
         >p:nth-child(2){
+          margin-top:0px;
           color: $color-text-label;
           font-size: 0.8vw;
           @include flex(row,center,center);
@@ -202,6 +206,7 @@ export default {
           >span:nth-child(1){
             margin-left:15%;
             width:45%;
+            @include flex(row,start,start)
           }
           >span:nth-child(2){
             width:40%;

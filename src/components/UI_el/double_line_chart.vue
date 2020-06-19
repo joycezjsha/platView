@@ -72,6 +72,7 @@ export default {
           series: [
               {
                   name: '',
+                  smooth:true,
                   type: 'line',
                   data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
                   areaStyle: {
@@ -90,13 +91,14 @@ export default {
               {
                   name: '',
                   type: 'line',
+                  smooth:true,
                   yAxisIndex: 1,
                   data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
                   areaStyle: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                       {
                         offset: 0,
-                        color: "#d68262bf"
+                        color: "#00D8FFbf"
                       },
                       {
                         offset: 1,

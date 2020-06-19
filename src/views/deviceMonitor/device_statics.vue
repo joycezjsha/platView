@@ -448,7 +448,7 @@ export default {
   }
   .device-statics_chart{
     width: 100%;
-    height: 307px;
+    height: 280px;
   }
     #sumCountChange{
       width:100%;

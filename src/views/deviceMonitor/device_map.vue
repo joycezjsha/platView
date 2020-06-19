@@ -2,7 +2,7 @@
   <div class="device-map">
     <div @click='changeTable(0)'><m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
     <div @click='changeTable(1)'><m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div>
-    <t-area v-show='showArea'></t-area>
+    <t-area :isShowArea='showArea'></t-area>
   </div>
 </template>
 
@@ -46,6 +46,7 @@ export default {
       this.tableIndex=t;
       if(t){
         this.showArea=true;
+        this.hideHeatMap();
       }else{
         this.showArea=false;
         this.addHeatMap();
@@ -57,7 +58,7 @@ export default {
     addHeatMap() {
       this.map = this.$store.state.map;
       if(this.map.getSource('heatmapSource')!=undefined){
-        // this.map.getLayer('heatmapLayer').set
+        this.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
       }else{
         this.map.addSource("heatmapSource", {
             type: "geojson",
@@ -94,6 +95,14 @@ export default {
         this.map_cover.sourceList.push('heatmapSource');
         this.map_cover.lineList.push('heatmapLayer');
       }
+    },
+    /**
+     * 不显示设备分布热力图
+     */
+    hideHeatMap(){
+      if(this.map.getSource('')!=undefined){
+        this.map.setLayoutProperty('heatmapSource', 'visibility', 'none');
+      };
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){

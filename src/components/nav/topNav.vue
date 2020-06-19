@@ -305,7 +305,7 @@ export default {
     @include flex(row, center);
   }
   .topbar-logo {
-    width: 40%;
+    width: 35%;
     @include flex(row, center);
     justify-content: left;
     &--title{
@@ -316,18 +316,19 @@ export default {
     }
   }
   .topbar-bar {
-    width: 45%;
+    width: 50%;
     @include flex(row, center);
     justify-content: left;
   }
   .topbar-time{
     width: 7%;
-    margin-right: 2%;
+    margin-right:5px;
     // border-right: 1px solid #ccc;
     @include flex(row, end);
     justify-content: right;
   }
   .topbar-account {
+    margin-left: 5px;
     width: 6vw;
     line-height: 4vh;
     @include flex(row, center);
@@ -355,6 +356,7 @@ export default {
 </style>
 <style>
  .top_nav_container .el-divider--vertical{
-   height:3em;
+   height:2.6em;
+   width:1.5px;
  }
 </style>

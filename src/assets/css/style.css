@@ -6,9 +6,9 @@
   height: 4vh;
   line-height: 4vh;
   float: left;
-  color: #fff;
+  color: #BEC5DE;
   width: 100%;
-  font-size:22px;
+  font-size:20px;
 }
 .topbar-bar .el-submenu.is-active .el-submenu__title{
   color:#00C6FF;
@@ -27,7 +27,7 @@
   /* background-color: #3a3c4c; */
   color: white;
   width: 14vh;
-  font-size:22px;
+  font-size:20px;
 }
 .topbar-bar .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover{
   outline: 0;
