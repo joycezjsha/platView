@@ -5,7 +5,9 @@
         <div>
           <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
         </div>
-        <div style="margin-top:1vh;margin-left:1vw;">速度检测次数
+        <div class="tab">
+          <span style="margin-right:2vw;">速度检测次数</span>
+          <el-divider direction="vertical"></el-divider>
           <span style="margin-left:2vw;">平均行驶速度/限速</span>
         </div>
         <div class="overview-info_sort">
@@ -258,10 +260,7 @@ export default {
             var data = response.data;
             if (data.errcode == 0) {
               let _data=_this.chart_data;
-              _data.xdata=data.data.timelist;
-              _data.y1data=data.data.inlist;
-              _data.y2data=data.data.outlist;
-             _this.chart_data=_data;
+              
             } else {
               _this.$message({
                 message: data.errmsg,
@@ -351,72 +350,15 @@ export default {
        }
      }
   }
-  // background-color: $color-bg-1;
-  // border: 1px solid $color-border-1;
-  // .overview-info_title {
-  //   position: relative;
-  //   width: 96%;
-  //   border-bottom: 0.1rem solid $color-border-1;
-  //   font-family: Microsoft YaHei;
-  //   font-size: 1vw;
-  //   color: $color-white;
-  //   display: -webkit-box;
-  //   display: -ms-flexbox;
-  //   display: flex;
-  //   -webkit-box-align: center;
-  //   -ms-flex-align: center;
-  //   align-items: center;
-  //   padding: 0.6rem 2%;
-  //   font-weight: bolder;
-  // }
-//   .overview-info--tab {
-//     width: 100%;
-//     height: 5vh;
-//    @include flex(row, center);
-
-//     > div {
-//       width: 100%;
-//       height: 5vh;
-//       font-size: 0.8vw;
-//       @include flex(row, center);
-//       border: 1px solid $color-text-normal;
-//       margin: 2%;
-
-//       .--tab-title {
-//         font-size: 0.9vw;
-//         width: 40%;
-//         @include flex(row, center);
-//       }
-//       .statics--tab--value {
-//         width: 60%;
-//         @include flex(row, center);
-//         .statics_value {
-//           color: $color-active;
-//         }
-//         .statics_value.sum {
-//           font-size: 1.4vw;
-//         }
-//       }
-//       .--tab-title {
-//         .el-icon-bell:before {
-//           font-size: 1.5vw;
-//           color: #e70101;
-//           font-weight: 600;
-//         }
-//       }
-//     }
-// }
-  // .overview-info_content {
-  //   width: 98%;
-  //   height: 85%;
-  //   background-color: $color-bg-1;
-  //   margin: 1%;
-
-  //   #overview-info_sort {
-  //     width:100%;
-  //     height:15vh;
-  //   }
-  // }
+  >div:nth-child(1){
+    .tab{
+      margin-top:1vh;margin-left:1vw;
+      @include flex(row, center,center);
+      >span{
+        @include flex(column, center,center);
+      }
+    }
+  }
   .overview-info_sort {
   width:90%;
   height:10vh;

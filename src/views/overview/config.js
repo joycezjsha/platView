@@ -127,7 +127,14 @@ export const interf={
       params:data
     })
   },
-  
+  //获取境内路况监测数据
+  GET_DEVICE_MAP_API:data => {
+    return http.service({
+      url:`Overview/getMapActiveBayone`,
+      method:'get',
+      params:data
+    })
+  }
 }
 export const IMG={
   /*总览*/

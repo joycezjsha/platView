@@ -175,14 +175,20 @@ export default {
         xdata:[],
         y1data:[],
         y2data:[]
-      }
+      },
+       map_cover:{
+        sourceList:[],
+        lineList:[],
+        markers:[],
+        popups:[]
+      },
     }
   },
   components:{mTab:m_tab,mList:m_list,mTitle,mTitleCom,mLineChart},
   mounted() {
     this.map = this.$store.state.map;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
+    this.map.setZoom(4);
     this.getSumDev();
     this.initdeviceAnalysisChart();
     this.getAllStaticsData();
@@ -191,6 +197,7 @@ export default {
   destroyed() {
     this.flyRoutes = [];
     this.map.setPitch(0); //设置地图的俯仰角
+    this.clearMap();
   },
   methods: {
     /**
@@ -198,12 +205,15 @@ export default {
      * type:0->城市，1->道路  value：参数名称  flag：0->不显示‘返回全省’按钮，1->显示‘返回全省’按钮
      */
     initStatics(type,data,flag){
+      this.hideRoadLine();
+      if(!data) return;
       if(flag){
         this.isShowReturn=true;
         switch(type){
           case 0:{
             this.isShowMainDev=true;
             this.title=data.name;
+            this.clearMarker();
             this.getSumDev(type,data.value);
             this.initdeviceAnalysisChart(type,data.value);
             this.initAccurCharts(data.value);
@@ -212,8 +222,9 @@ export default {
             this.title=data.name;
             this.getSumDev(type,data.value);
             this.initdeviceAnalysisChart(type,data.value);
+            this.getRoadDevice(data.value);
             this.isShowMainDev=false;
-            this.show
+            break;
           }
         }
       }else{
@@ -355,7 +366,7 @@ export default {
              });
              _this.chart_data=_data;
           }else{
-            that.$message({
+            _this.$message({
               message: data.errmsg,
               type: "error",
               duration: 1500
@@ -371,6 +382,128 @@ export default {
       });
     },
     /**
+     * 获取道路上的设备
+     */
+    getRoadDevice(id){
+      let _this=this;
+      this.hideRoadLine();
+      this.map_cover.markers=[];
+      interf.GET_DEVICE_ROAD_API({dldm:id}).then(response=>{
+       if (response && response.status == 200){
+         var data = response.data;
+         if (data.errcode == 0) {
+             _this.addRoadLine(data.data);
+          }else{
+            _this.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+          } 
+        }
+     })
+     .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        _this.tableLoading = false;
+      });
+    },
+    /**
+     * 地图显示道路上的设备、线
+     */
+    addRoadLine(data){
+      let _this=this;
+      let points=[];
+      data.forEach(e=>{
+        _this.addRoadMarker(e);
+        points.push(e.JWD.split(' '));
+      });
+      let jsonData = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": points
+                    }
+                }
+            ]
+        };
+      if(_this.map.getSource("device_lineSource")!=undefined){
+        _this.map.getSource("device_lineSource").setData(jsonData);
+        if(this.map.getLayer('device_lineLayer')!=undefined){
+          this.map.setLayoutProperty('device_lineLayer', 'visibility', 'visible');
+        };
+      }else{
+        _this.map.addSource("device_lineSource", {
+            "type": "geojson",
+            "data": jsonData
+        });
+        _this.map.addLayer({
+          "id": "device_lineLayer",
+          "type": "line",
+          "source": "device_lineSource",
+          "layout": {
+              "line-join": "round",
+              "line-cap": "round"
+          },
+          "paint": {
+              "line-width": 8,
+              "line-color": {
+                  "type": "categorical",
+                  "property": "kind",
+                  "stops": [[1, "#ff0000"], [2, "#00ff00"]],
+                  "default": "#0CA6FF"
+              }
+          },
+          "minzoom": 3,
+          "maxzoom": 17.5
+        });
+      this.map_cover.sourceList.push('device_lineSource');
+      this.map_cover.lineList.push('device_lineLayer');
+      }
+      this.map.setCenter(points[0]);
+    },
+    /**
+     * 地图显示道路上的设备
+     */
+    addRoadMarker(e){
+      let lnglat=e.JWD.split(' ');
+      let mainDiv=document.createElement('div');
+      mainDiv.style.width='15vw';
+      mainDiv.style.fontSize='0.8vw';
+      mainDiv.className='dev_popup';
+      let title=document.createElement('p');
+      title.innerHTML=e.KKMC;
+      title.className='title';
+      mainDiv.appendChild(title);
+      
+
+      let p1="<p><span>设备ID：</span><span>"+e.KKBH+"</span></p>";
+      mainDiv.appendChild($(p1)[0]);
+
+      let p2="<p><span>地点：</span><span>"+e.DLMC+"</span></p>";
+      mainDiv.appendChild($(p2)[0]);
+
+      let p3="<p><span>类型：</span><span>"+e.LX+"</span></p>";
+      mainDiv.appendChild($(p3)[0]);
+      
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [0, -30]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv);
+
+      let el = document.createElement('div');
+      el.style["background-image"] = "url(./static/images/"+(e.KKZT>1?"kakou":"kakou_")+".png)";
+      el.style["background-size"] = "100% 100%";
+      el.style.width = "30px";
+      el.style.height = "30px";
+      el.style["border-radius"] = "50%";
+      let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
+      this.map_cover.markers.push(marker);
+      this.map_cover.popups.push(popup);
+    },
+    /**
      * 返回全省
      */
     returnAll(){
@@ -380,7 +513,62 @@ export default {
       this.getSumDev();
       this.initdeviceAnalysisChart();
       this.initAccurCharts();
+    },
+/*##清除地图加载点、线、面、弹框*/
+    clearMap(){
+      //清除source
+      if(this.map_cover.sourceList.length>0){
+        this.map_cover.sourceList.forEach(e=>{
+          if(this.map.getSource(e)!=undefined){
+            this.map.removeSource(e);
+          }
+        })
+      }
+      //清除layer
+      if(this.map_cover.lineList.length>0){
+        this.map_cover.lineList.forEach(e=>{
+          if(this.map.getLayer(e)!=undefined){
+            this.map.removeLayer(e);
+          }
+        })
+      }
+      //清除marker
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+      }
+      //清除popup框
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+      this. map_cover={
+          sourceList:[],
+          lineList:[],
+          markers:[],
+          popups:[]
+        }
+    },
+    hideRoadLine(){
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+      };
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+      if(this.map.getSource("device_lineSource")!=undefined){
+        if(this.map.getLayer('device_lineLayer')!=undefined){
+          this.map.setLayoutProperty('device_lineLayer', 'visibility', 'none');
+        };
+      }
     }
+/** */
   }
 };
 </script>
@@ -460,4 +648,13 @@ export default {
     }
 }
 
+</style>
+<style lang='scss'>
+@import "@/assets/css/color.scss";
+.dev_popup{
+  color:$color-white;
+  .title{
+    font-size:16px;
+  }
+}
 </style>

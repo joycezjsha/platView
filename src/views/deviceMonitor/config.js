@@ -21,10 +21,18 @@ export const interf={
       params:data
     })
   },
-  // 设备总览-城市统计 Device/getCityStatistics
+  // 设备总览-城市统计
   GET_CITY_STA_API:data=> {
     return http.service({
       url:`Device/getCityStatistics`,
+      method:'get',
+      params:data
+    })
+  },
+   // 设备总览-道路统计 
+   GET_ROAD_ORDER_API:data=> {
+    return http.service({
+      url:`Device/getRoadStatistics`,
       method:'get',
       params:data
     })
@@ -44,8 +52,31 @@ export const interf={
       method:'get',
       params:data
     })
+  },
+   /*获取热力图数据*/
+   GET_DEVICE_HEAT_API:data=> {
+    return http.service({
+      url:`Device/getDevHeat`,
+      method:'get',
+      params:data
+    })
+  },
+  /*获取区域填充数据*/
+  GET_DEVICE_AREA_API:data=> {
+    return http.service({
+      url:`Device/getDevArea`,
+      method:'get',
+      params:data
+    })
+  },
+  /*获取道路上的数据*/
+  GET_DEVICE_ROAD_API:data=> {
+    return http.service({
+      url:`Device/getRoadMapDev`,
+      method:'get',
+      params:data
+    })
   }
-  
 }
 export const IMG={
   /*路况巡航*/

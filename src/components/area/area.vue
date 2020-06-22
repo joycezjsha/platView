@@ -43,13 +43,18 @@ export default {
     isShowArea: {
       type: Boolean,
       default: true
+    },
+    indexData:{
+      type:Array,
+      default: () => {
+        return []
+      }
     }
   },
   watch:{
     isShowArea:{
       immediate: false,
       handler: function(cVAL, oVAL) {
-        // debugger;
         if(cVAL){
           this.initArea();
         }else{
@@ -65,17 +70,26 @@ export default {
   },
   methods: {
     hideArea(){
-      if(this.map.getLayer('area_polygon')!=undefined){
-        this.map.setLayoutProperty('area_polygon', 'visibility', 'none');
-      }
+      this.mapAddItems.polygons.forEach(e => {
+        if (this.map.getLayer(e) != undefined) {
+          this.map.setLayoutProperty(e, 'visibility', 'none');
+        }
+      });
     },
     /**
      *获取区域数据
      */
     initArea() {
       let that = this;
+      if(this.mapAddItems.polygons && this.mapAddItems.polygons.length>0){
+        this.mapAddItems.polygons.forEach(e => {
+          if (this.map.getLayer(e) != undefined) {
+            this.map.setLayoutProperty(e, 'visibility', 'visible');
+          }
+        });
+      }else{
       $.ajax({
-        url: "./static/json/index_data.json", //globals.CRUISE_ALL_INFO_URL,
+        url: "./static/json/cropsAreaJson.json", //globals.CRUISE_ALL_INFO_URL,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         },
@@ -86,38 +100,29 @@ export default {
           // token: window.localStorage.getItem("loginUserToken")
         },
         success: function(data) {
-          if (data.errcode == -2) {
-            that.$router.push({ name: "/login" });
-          }
-          if (data.errmsg == "success" && data.data.length > 0) {
+          if (data.errorcode == "0" && data.data.length > 0) {
             let datas = [];
             data.data.map(e => {
               datas.push({
-                city: e.areaName,
-                index: (Math.round(e.areaTpi) * 10) / 100,
-                week_radio: "+0.3%",
-                his_radio: "-0.1%"
+                city: e.Name,
+                adcode:e.AdminCode,
+                areaGeometry:e.geometry,
+                color:e.color
               });
             });
+            datas=that.sortArea(datas);
             that.indexDatas = datas;
-            // that.addArea(data.data);
+            that.addArea(datas);
             // that.addAreaIdentify(data.data);
           }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-          debugger;
         }
       });
+      }
     },
-    addArea(data) {
+    addArea(data) { 
       let _this = this;
-      if(this.map.getLayer('area_polygon')!=undefined){
-        this.map.setLayoutProperty('area_polygon', 'visibility', 'visible');
-      }else{
-        let jsonData = {
-          type: "FeatureCollection",
-          features: []
-        };
       data.forEach((e, i) => {
         let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
         lonlats = lonlats.map(e => {
@@ -127,46 +132,80 @@ export default {
             return [e.split(" ")[1], e.split(" ")[2]];
           }
         });
-        jsonData.features.push({
+        let jsonData = {
+          type: "FeatureCollection",
+          features: [{
               type: "Feature",
               geometry: {
                 type: "Polygon",
                 coordinates: [lonlats]
               },
               "properties": {
-                  "title": e.areaName
+                  "title": e.city
               }
-            });
-      });
-      _this.map.addSource('area_polygonSource', {
+            }]
+        };
+         _this.map.addSource('area_polygonSource_'+i, {
             'type': 'geojson',
             'data': jsonData
         });
-        /**
-         * 面的名称显示
-         */
+        //面的显示
         _this.map.addLayer({
-            "id": "area_polygon",
-            "type": "symbol",
-            "source": "area_polygonSource",
+            "id": "area_polygon_"+i,
+            "type": "fill",
+            "source": "area_polygonSource_"+i,
             "layout": {
-                "text-field": "{title}",
-                "text-offset": [0, 0.6],
-                "text-anchor": "top"
+                "visibility": "visible",
             },
             "paint": {
-                "icon-color": "#0000ff",
+                "fill-color": e.color,
+                "fill-opacity": 0.8,
+                "fill-outline-color": this.areaColors[i]
+            },
+            "minzoom": 4,
+            "maxzoom": 17.5
+        });
+        //面的名称显示
+        _this.map.addLayer({
+            "id": "area_polygon_txt_"+i,
+            "type": "symbol",
+            "source": "area_polygonSource_"+i,
+            "layout": {
+                // "icon-image": "{icon}-15",
+                "text-field": "{title}",
+                // "text-offset": [0, 0.6],
+                // "text-anchor": "top"
+            },
+            "paint": {
+                "icon-color": "white",
                  "text-color": {
                     "type": "categorical",
                     "property": "kind",
                     "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
-                    "default": "#ff0000"
+                    "default": "#FFF"
                 }
             }
         });
-      _this.mapAddItems.polygons.push("area_polygonSource");
-      _this.mapAddItems.sourceList.push("area_polygon");
-      }
+        _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
+        _this.mapAddItems.polygons.push("area_polygon_"+i);
+        _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
+      });
+    },
+    /**
+     * 根据一定权重给区域排序
+     */
+    sortArea(data){
+      let _this=this;
+      //返回数组合并、并排序的结果
+      this.indexData.forEach(e=>{
+        for(var j=0;j<data.length;j++){
+            if(data[j].city.indexOf(e.city)!=-1){
+                data[j].Num=e.Num;
+                break;
+            }
+        }
+      })
+      return data.sort((a,b)=>{return a.NUM -b.Num});
     },
     /**
      * 添加指数悬浮框
@@ -284,6 +323,14 @@ export default {
       if (this.mapAddItems.popups.length > 0) {
         this.mapAddItems.popups.forEach(e => {
           e.remove();
+        });
+      }
+      //清除polygons
+      if(this.mapAddItems.polygons && this.mapAddItems.polygons.length>0){
+         this.mapAddItems.polygons.forEach(e => {
+         if (this.map.getLayer(e) != undefined) {
+            this.map.removeLayer(e);
+          }
         });
       }
     },

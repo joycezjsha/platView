@@ -22,7 +22,7 @@
        <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.devcount}}</span></div>
        <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.activityRate}}</span></div>
     </div>
-     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.dj.keyactivityRate}}</span>个</div>
+     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.dj.keyactivityRate}}</span></div>
    </div>
   </div>
 </template>
