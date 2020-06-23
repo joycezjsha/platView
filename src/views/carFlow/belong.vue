@@ -17,37 +17,37 @@
         <div class="inout">
           <div class="left">
             <div style="padding-left:4.89vw" @click="changeIn(1)" class="inouttext">进入</div>
-            <!-- style="padding-left:1.4583vw" -->
             <div :class="fxlx==1? 'showline':'line'"></div>
             <div class="protext">
-              <span style="padding-left:1.5vw">
-                省内: {{belongData.provinceWithin}}
-                <span>{{belongData.provinceWithinProportion}}</span>
+              <span   :class="provinceInorOut=='1'? 'isSelected': 'noSelect'" style="padding-left:1.5vw;" >
+                省外: {{belongData.provinceExternal}}
+                <span>{{belongData.provinceExternalProportion}}</span>
               </span>
+            
             </div>
           </div>
           <div class="right">
             <div style="padding-left:4.89vw" @click="changeIn(2)" class="inouttext">流出</div>
             <div style :class="fxlx==2? 'showline':'line'"></div>
             <div class="protext">
-              <span>
-                省外: {{belongData.provinceExternal}}
-                <span>{{belongData.provinceExternalProportion}}</span>
+              <span  :class="provinceInorOut=='2'? 'isSelected': 'noSelect'"  style="margin-right:1vw">
+                省内: {{belongData.provinceWithin}}
+                <span> {{belongData.provinceWithinProportion}}</span>
               </span>
             </div>
           </div>
-          <!-- 切换省内省外的div -->
+          <!-- 切换省内省外的div  1--省外 2--省内-->
           <div class="change">
-            <div @click="province(1)" class="provinces"></div>
-            <div @click="province(2)" class="city"></div>
+            <div @click="province(1)" class="provinces" :class="provinceInorOut=='1'? 'isborder': ''"></div>
+            <div @click="province(2)" class="city"  :class="provinceInorOut=='2'? 'isborder': ''"></div>
           </div>
         </div>
-        <div style="padding:0 27px">
+        <div style="padding:0 2vw;height:100%">
           <el-table
             :data="indexDatas"
             style="width: 100%"
-            height="747"
-            :default-sort="{prop: 'week_radio', order: 'descending'}"
+            height="100%"
+            :default-sort="{prop: 'NUM', order: 'descending'}"
             :row-style="getRowClass"
             :header-row-style="getRowClass"
             :header-cell-style="getRowClass"
@@ -121,11 +121,6 @@ export default {
     mTab,
     blur
   },
-  watch: {
-    stime(newValue, oldValue) {
-      return newValue;
-    }
-  },
   methods: {
     /**
      * 接收table传过来的数据
@@ -188,7 +183,7 @@ export default {
     },
     //  OD地图函数
     getCityMapOD(itemlist){
-      this.clearMap();
+      // this.clearMap();
       var data = [] ;
       itemlist.forEach(item => {
         data.push([
@@ -551,9 +546,10 @@ export default {
           font-size: 16px;
           font-family: Source Han Sans CN;
           font-weight: 400;
-          color: rgba(255, 255, 255, 1);
+          // color: rgba(255, 255, 255, 1);
           margin-bottom: 3vh;
           margin-top: 1vh;
+          
         }
         .showline {
           width: 160px;
@@ -571,12 +567,21 @@ export default {
     }
   }
 }
+.isSelected{
+  color: #ffffff;
+}
+.noSelect{
+  color: #7cacbc;;
+}
 .change {
   position: absolute;
   top: 60px;
   left: 0;
   display: flex;
   padding: 0 30px;
+  .isborder{
+    border:1px solid #ffffff;
+  }
 }
 .provinces {
   width: 213px;

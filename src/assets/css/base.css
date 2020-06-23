@@ -77,3 +77,12 @@ input::-webkit-input-placeholder {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+#map .minemap-popup-content{
+  background-color: rgba(3, 12, 32, 0.74);
+  border:1px solid rgb(42, 76, 162);
+  font-family: 'SourceHanSansCN';
+  padding:0 15px;
+}
+#map .minemap-popup-tip{
+  border-top-color: rgba(3, 12, 32, 0.74);
+}

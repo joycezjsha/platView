@@ -10,7 +10,6 @@
       <vehicleBelong v-if="isShow==2" ref="belonginfo"></vehicleBelong>
       <vehicleHotcard  v-if="isShow==3" ref="hotcardinfo"></vehicleHotcard>
     </div>
-     <!-- <t-index-city v-show="isShowCity"></t-index-city> -->
   </div>
 </template>
 
@@ -48,6 +47,7 @@ export default {
     blur.$on('realtime',data=>{
       _this.isShow=data;
     })
+    
   },
   destroyed() {
   },

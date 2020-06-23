@@ -28,9 +28,9 @@
           </el-select>
           <el-table :data="roadDatas" @row-click="handle" style="width: 100%;height:100%;" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column fixed type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="road_name" label="道路名称"></el-table-column>
-            <el-table-column prop="index" label="设备数量" sortable></el-table-column>
-            <el-table-column prop="week_radio" label="活跃率" sortable></el-table-column>
+            <el-table-column prop="NAME" label="道路名称"></el-table-column>
+            <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
+            <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
           </el-table>
         </div>
 
@@ -51,7 +51,7 @@ export default {
     return {
       map: {},
       indexcityDatas: [],
-      roadDatas:[{"road_name":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"road_name":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}],
+      roadDatas:[],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -78,6 +78,7 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
+    that.getRoadData();
   },
   destroyed() {
     this.map.setPitch(0);
@@ -90,11 +91,12 @@ export default {
     handle(row, event, column){
       let data={};
       if(this.tableIndex){
-        data.name='G30连霍高速';
-        data.value='';
+        data.name=row.NAME;
+        data.value=row.DLDM;
       }else{
         data.name=row.city;
         data.value=row.XZQH;
+        this.centerTo(row.jwd.split(' '));
       }
       blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
     },
@@ -106,12 +108,11 @@ export default {
       this.tableIndex=t;
     },
     /**
-     * 获取设备总览，统计数据
+     * 获取设备总览，城市统计数据
      */
     getIndexData() {
       let that = this;
-      interf.GET_CITY_STA_API({})
-      .then(response=>{
+      interf.GET_CITY_STA_API({}).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
@@ -131,37 +132,32 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
-    // $.ajax({
-    //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     responseType: "json",
-    //     method: "get",
-    //     dataType: "json",
-    //     data: {
-    //       // token: window.localStorage.getItem("loginUserToken")
-    //     },
-    //     success: function(data) {
-    //       if (data.errcode == -2) {
-    //         that.$router.push({ name: "/login" });
-    //       }
-    //       if (data.errmsg == "success" && data.data.length > 0) {
-    //         let datas=[];
-    //         data.data.map(e=>{
-    //           datas.push(
-    //             {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
-    //           )
-    //         });
-    //         that.indexDatas=datas;
-    //         that.addArea(data.data);
-    //         // that.addAreaIdentify(data.data);
-    //       }
-    //     },
-    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       debugger
-    //     }
-    //   });
+    },
+    /**
+     * 获取设备总览，道路统计数据
+     */
+    getRoadData() {
+      let that = this;
+      interf.GET_ROAD_ORDER_API({}).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+               that.roadDatas=data.data;
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     },
     /**
      * 地图添加辖区面
@@ -275,6 +271,18 @@ export default {
   getLonlats(str){
     let regex = /[^\(\)]+(?=\))/g;
     return str.match(regex);
+  },
+  /**
+   * 地图移动到点击城市市中心
+   */
+  centerTo(center){
+    this.map.flyTo({
+            center: center,
+            zoom: 8,
+            bearing: 10,
+            pitch: 0,
+            duration: 2000
+        });
   },
   //清除地图加载点、线、面、弹框
   clearMap(){

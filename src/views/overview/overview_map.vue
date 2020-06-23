@@ -42,6 +42,7 @@ export default {
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getCityCarFlowData();
+    this.initDeviceMap();
   },
   components: {
   },
@@ -59,7 +60,6 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           let data= response.data;
-          console.log(data)
           if (data.errcode == 0){
            if(data.data.length>0){
              data.data.forEach(e=>{
@@ -132,6 +132,78 @@ export default {
       let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
       this.map_cover.markers.push(marker);
 
+    },
+    /**
+     * 获取卡口设备数据
+     */
+    initDeviceMap(){
+      
+      let that = this;
+      interf.GET_DEVICE_MAP_API({}).then(response=>{
+        if (response && response.status == 200){
+          let data= response.data;
+          if (data.errcode == 0){
+            data.data=[{
+              "XZQH": "6107",
+              "FX": "陕川界入陕",
+              "KKBH": "610700100366",
+              "KKMC": "汉中市南郑县S211211省道K61喜神坝中队西陕川界省际卡口",
+              "city": "汉中市",
+              "JWD": "106.865033 32.736208",
+              "TXCLZS": 1,
+              "DLMC": "南郑211省道61公里350米"
+          }];
+           if(data.data.length>0){
+             
+             data.data.forEach(e=>{
+               that.addDeviceMarker(e);
+             })
+           }
+          }
+        }
+
+      })
+    },
+    /**
+     * 打设备信息点
+     */
+    addDeviceMarker(e){
+      let lnglat=e.JWD.split(' ');
+      let mainDiv=document.createElement('div');
+      mainDiv.style.width='15vw';
+      mainDiv.style.fontSize='0.8vw';
+      mainDiv.style.color='white';
+      // mainDiv.className='overview_popup';
+      let title=document.createElement('p');
+      title.innerHTML='['+e.city+']-'+e.KKMC;
+      title.style.fontSize='0.8vw';
+      mainDiv.appendChild(title);
+      
+
+      let p1="<p><span>设备ID：</span><span>"+e.KKBH+"</span></p>";
+      mainDiv.appendChild($(p1)[0]);
+
+      let p2="<p><span>地点：</span><span>"+e.DLMC+"</span></p>";
+      mainDiv.appendChild($(p2)[0]);
+
+      let p3="<p><span>方向：</span><span>"+e.FX+"</span></p>";
+      mainDiv.appendChild($(p3)[0]);
+
+      let p4="<p style='color:#00C6FF;'><span>过车量：</span><span>"+e.TXCLZS+"</span></p>";
+      mainDiv.appendChild($(p4)[0]);
+      
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [0, -30]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv);
+
+      let el = document.createElement('div');
+      el.style.backgroundColor=e.TXCLZS>0?'#D01828':'#44b208';
+      el.style.width = "30px";
+      el.style.height = "30px";
+      el.style.borderRadius='50%';
+      el.style["border-radius"] = "50%";
+      let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
+      this.map_cover.markers.push(marker);
+      this.map_cover.popups.push(popup);
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){

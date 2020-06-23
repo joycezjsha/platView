@@ -28,6 +28,12 @@ export default {
       map: {},
       i:1,
       isShow:1, //显示对应的组件
+      map_cover:{
+        sourceList:[],
+        lineList:[],
+        markers:[],
+        popups:[]
+      },
     };
   },
   components:{

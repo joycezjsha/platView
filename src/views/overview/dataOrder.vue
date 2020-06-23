@@ -55,6 +55,14 @@ export default {
     },
     // indexDatascar,
   },
+  watch:{
+    order_value: {
+      immediate: false,
+      handler: function(cVAL, oVAL) {
+        this.getIndexData();
+      }
+    }
+  },
   data() {
     return {
       indexDatascar: [
@@ -84,9 +92,9 @@ export default {
     mTile: title
   },
   mounted() {
-      this.$nextTick(() => {
-        this.getIndexData()
-      })
+    this.$nextTick(() => {
+      this.getIndexData()
+    })
   },
   methods: {
      getIndexData() {
@@ -96,7 +104,6 @@ export default {
         interf.GET_TRAIL_LIST_API({}).then(response=>{
           if (response && response.status == 200){
             var data=response.data;
-            console.log(data)
             if(data.errcode==0){
               that.indexDatas=data.data;
             }

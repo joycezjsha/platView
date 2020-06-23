@@ -20,30 +20,38 @@
       </div>   
       <!-- 折线图 -->
         <div class="echarts">
-          <m-title label='流动趋势' img_type=1 style='width:6vw;'></m-title>
+          <div style="display:flex; position: relative;">
+            <div>
+              <m-title label='流动趋势' img_type=1 style='width:6vw;'></m-title>
+            </div>
+            <div class="button">
+              <span :class="{active: showTime == 1}" @click="changeTime(1)">今日</span>     
+              <span :class="{active: showTime == 2}" @click="changeTime(2)">昨日</span>
+              <span :class="{active: showTime == 3}" @click="changeTime(3)">近30天</span> 
+            </div>
+          </div>
           <div style="width:100%;height:100%" id="">
             <m-line-chart  style="width:100%;height:100%" :chart_data='flowchartsData' c_id='sumCountChange'></m-line-chart>
           </div>
         </div>
         <!-- 饼状图 -->
-        <div  class="echarts" style="position:relative;"  >
-          <m-title label='车辆类型分析' img_type=1 style='width:8vw;'></m-title>
-          <div class="typeanalysis">
-            <span :class="{active: isActive == 1}" @click="change(1)">进入</span>
-            <span :class="{active: isActive == 2}" @click="change(2)">流出</span>
+        <div  class="echarts" style=""  >
+          <div style="display:flex;position:relative;">
+            <div>
+              <m-title label='车辆类型分析' img_type=1 style='width:8vw;'></m-title>
+            </div>
+            <div  class="button">
+              <span :class="{active: isActive == 1}" @click="change(1)">进入</span>
+              <span :class="{active: isActive == 2}" @click="change(2)">流出</span>
+            </div>
           </div>
-          <div class="cars">
+          <!-- <div class="cars">
             <div>大车:{{echartsData.BIGCAR}}辆次</div>
             <div>小车:{{echartsData.SMALLCAR}}辆次</div>
-          </div>
-          <div style="width:67%;height:70%" id='accurCreateChange'></div>
-            <!-- <div class="text">122多少两次</div> -->
-          <!-- <div id="">
-             <m-line-chart c_id='accurCreateChange'></m-line-chart>
           </div> -->
+          <div style="width:85%;height:100%" id='accurCreateChange'></div>
         </div>
     </div>
-    <!-- <FlowMap /> -->
   </div>
 </template>
 
@@ -61,9 +69,11 @@ export default {
   data() {
     return {
       data:true,
+      showTime:'1',//	流动趋势 默认显示今日的数据
       city:'',
       fxlx:'1',   //1 进 2出
-      stime:'1',  //1 最近的时间 2 今天 3昨天  
+      stime:'1',  //1 最近的时间 2 今天 3昨天 
+      etime:"",  
       timeRange:'',
       isActive: 1,   //1进入  2流出
       xzqh:'', //行政区号
@@ -96,64 +106,64 @@ export default {
           trigger: 'item',
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
-        legend: {        
-            orient: 'vertical',         
-            x: 490,
+        legend: {
+             // orient 设置布局方式，默认水平布局，可选值：'horizontal'（水平） ¦ 'vertical'（垂直）
+            orient: 'vertical',
+            // x 设置水平安放位置，默认全图居中，可选值：'center' ¦ 'left' ¦ 'right' ¦ {number}（x坐标，单位px）
+            x: 'right',
+            // y 设置垂直安放位置，默认全图顶端，可选值：'top' ¦ 'bottom' ¦ 'center' ¦ {number}（y坐标，单位px）
             y: 'center',
-            itemWidth: 50,   // 设置图例图形的宽
-            itemHeight: 50,  // 设置图例图形的高          
-            itemGap: 50,
+            itemWidth: 24,   // 设置图例图形的宽
+            itemHeight: 18,  // 设置图例图形的高
             textStyle: {
-              fontSize: 45,
-              color: '#fff'
+              color: '#FFFFFF'  // 图例文字颜色
             },
+            // itemGap设置各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔
+            itemGap: 10,
             // backgroundColor: '#eee',  // 设置整个图例区域背景颜色
-            show:true,
-            data:['大车','小车'],
+            data: ['大车','小车']
           },
         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
-        series: [
+         series: [
             {
-              name: '',
+              name: '车辆类型分析',
               type: 'pie',
-              radius: ['50%', '70%'], 
-              avoidLabelOverlap: false,
-              label: {
-                show: false,
-                position: 'center'
-              },
-              // center: ['40%', '50%'], 
-              data:[
-                {value:'',name:'大车'},
-                {value:'',name:'小车'}
+              // radius: '50%',  // 设置饼状图大小，100%时，最大直径=整个图形的min(宽，高)
+              radius: ['50%', '70%'],  // 设置环形饼状图， 第一个百分数设置内圈大小，第二个百分数设置外圈大小
+              center: ['40%', '50%'],  // 设置饼状图位置，第一个百分数调水平位置，第二个百分数调垂直位置
+              data: [
+                  // {value:335, name:'大车'},
+                  // {value:310, name:'小车'},
               ],
               // itemStyle 设置饼状图扇形区域样式
               itemStyle: {
-                 normal : {
-                    label : {
-                      show : false
-                    },
-                    labelLine : {
-                      show : false
-                    }
-                  },
                 // emphasis：英文意思是 强调;着重;（轮廓、图形等的）鲜明;突出，重读
                 // emphasis：设置鼠标放到哪一块扇形上面的时候，扇形样式、阴影
-               emphasis: {
-                label: {
-                    show: true,
-                    fontSize: '15',
-                    fontWeight: 'bold'
-                  }
-               },
-               labelLine: {
-                show: false
-               },
+                emphasis: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(30, 144, 255，0.5)'
+                }
               },
-              
-            },
-            
+              // 设置值域的那指向线
+              labelLine: {
+                normal: {
+                  show: false   // show设置线是否显示，默认为true，可选值：true ¦ false
+                }
+              },
+              // 设置值域的标签
+              label: {
+                normal: {
+                  position: 'inner',  // 设置标签位置，默认在饼状图外 可选值：'outer' ¦ 'inner（饼状图上）'
+                  // formatter: '{a} {b} : {c}个 ({d}%)'   设置标签显示内容 ，默认显示{b}
+                  // {a}指series.name  {b}指series.data的name
+                  // {c}指series.data的value  {d}%指这一部分占总数的百分比
+                  formatter: '{c}'
+                }
+              }
+            }
           ],
+       
       },
       indexDatas: [
       //   {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
@@ -330,11 +340,11 @@ export default {
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getTrafficData();
-    that.getIndexDatas(that.stime,that.fxlx) 
+    // that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData(that.stime)
-    // that.carflowData(that.stime)
     that.getMapVehicleInData(that.stime)
-    that.initSumCharts();
+    that.initSumCharts(that.showTime);
+    that.getCarTypeDatas()
     // that.initAccurCharts();
     
   },
@@ -362,12 +372,15 @@ export default {
     // );
     // commonVariable.CURRENT_MAP.repaint = false;
   },
-  watch:{
-    stime(newValue, oldValue){
-      return newValue;
-    }
-  },
   methods: {
+    /*
+    * 流动趋势	可切换1--【今日】、2--【昨日】、3--【近30天】
+    */
+   changeTime(i){
+     let that = this;
+     that.showTime=i;
+     that.initSumCharts(that.showTime)
+   },
     //  地图上的显示 
     addCityMarker(item){
         let el = document.createElement('div');
@@ -491,18 +504,21 @@ export default {
       if(that.stime=='1'){
         that.getprovinceData('1')
         that.carflowData('1')
-        that.getIndexDatas('1','1')
       }
     },
     // 点击返回全省，调用默认显示全省的数据
     goback(){
       let that = this;
       that.showback=false;
+      that.stime='1';
+      that.fxlx='1';
+      that.isActive='1';
+      that.showTime='1';
+      that.xzqh='';
       that.getprovinceData('1')
-      that.getIndexDatas('1','1')
-      that.carflowData('1') 
-      that.initSumCharts()
-      // this.getprovinceData(stime,xzqh)
+      // that.carflowData('1') 
+      that.initSumCharts(that.showTime)
+      that.getCarTypeDatas() 
     },
     // 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
     
@@ -517,78 +533,38 @@ export default {
       blur.$on("gettime",time=>{
         that.stime=time;
         if(time!='4'){
-         that.getprovinceData(that.stime)  
-        }
-        // that.getIndexDatas(that.stime,that.fxlx,that.xzqh)
-        // that.getIndexDatas(that.stime,that.fxlx)
-        // that.initSumCharts(that.stime)  
-        // that.getprovinceData(that.stime)
-        // that.getIndexDatas(that.stime)       
+         that.getprovinceData(that.stime) 
+         that.getCarTypeDatas() 
+        }  
       }) 
       //接收自定义的  timeRange:自定义的时间
       blur.$on('determine',times=>{
         that.timeRange=times;
-        // console.log(that.timeRange)
-        // console.log(that.stime)
-        that.getprovinceData(that.stime)  
-        // if(that.stime=='4' && that.xzqh!=undefined && that.fxlx!=undefined){
-        //   that.getprovinceData(that.timeRange[0],that.xzqh,that.timeRange[1])
-        //   // that.getIndexDatas((that.timeRange[0],that.fxlx,that.xzqh,that.timeRange[1]))
-        // }      
+        that.getprovinceData(that.stime) 
+        that.getCarTypeDatas()  
+         
       })  
       blur.$on("paramxzqh",xzqh=>{
         that.xzqh=xzqh;
-        // console.log(that.stime,that.xzqh)
         that.getprovinceData(that.stime,that.xzqh);
-        // console.log(that.stime,that.xzqh);
-        // if(that.stime!='4'){
-        //   that.getprovinceData(that.stime,that.xzqh);
-        //   // that.getprovinceData(that.stime,that.xzqh,that.timeRange) 
-        //   that.getIndexDatas(that.stime,that.fxlx,that.xzqh);
-        // }
+        that.getCarTypeDatas()
        
       })
       blur.$on("paramcity",city=>{
         that.city=city;
         that.showback=true; 
-        // console.log(that.city)
       })
       blur.$on('sendTime',data=>{
-        // console.log(data)
       })
       blur.$on('realtime',i=>{
         this.i=i  //表示中间三个组件
       })
-      // 接受数据 点击城市获取对应城市  总计进入车辆辆次的数据
-      // blur.$on('getcitys',data=>{
-      //   // console.log(data)
-      //   let citys=data;
-      //   that.showback=true;  //显示返回全省
-      //   that.provinceData.addIn=citys.data.addIn;
-      //   that.provinceData.incount=citys.data.incount;
-      //   that.provinceData.outcount=citys.data.outcount;
-      //   that.provinceData.city=citys.data.city;
-      //   // console.log(citys)
-      // })
-      // 接受 车辆类型分析数据 默认显示进去的数据
-      // blur.$on('gettypeData',data=>{
-      //   // console.log(data)
-      //   this.showback=true;  //显示返回全省
-      //   let citytypedata=data;
-      //   this.echartsData.BIGCAR=citytypedata.data.BIGCAR;
-      //   this.echartsData.SMALLCAR=citytypedata.data.SMALLCAR;
-      // })
+     
       // 接受 如果不是日历选择的时间 车辆流动页面全省车辆统计 GET_VEH_PRO_API
-      blur.$on('getcitycardata',data=>{
-        // console.log(data)
-        let citycardatas=data;
-         //显示返回全省
-        // console.log(citycatdatas)
-        // that.provinceData.addIn=citycardatas.data.addIn;
-        // that.provinceData.incount=citycardatas.data.incount;
-        // that.provinceData.outcount=citycardatas.data.outcount;
-        // that.provinceData.city=citycardatas.data.city;
-      })
+      // blur.$on('getcitycardata',data=>{
+      //   // console.log(data)
+      //   let citycardatas=data;
+      // })
     },
     // 如果选择左侧的城市，显示对应城市的车辆类型分析
     //  点击进入和流出 触发 change事
@@ -598,7 +574,8 @@ export default {
       that.isActive = i.toString();
       that.fxlx = i.toString();
       blur.$emit("getfxlf",that.fxlx)
-      that.getIndexDatas(that.stime,that.isActive) 
+      that.getCarTypeDatas()
+      // that.getIndexDatas(that.stime,that.isActive) 
     },
     // 车辆流动页面全省车辆统计 xzqh===undefined && etime===undefined
     getprovinceData(type,xzqh){
@@ -647,126 +624,52 @@ export default {
         });
     },
     /**
-     * 车辆流动页面车辆类型分析  默认显示实时的数据
+     * 车辆流动页面车辆类型分析  默认显示实时的数据 Vehicle/getCarType
      * 如果客户没有点击进入或者流出，默认显示全省进入的数据  两个参数的 GET_VEH_TYPE_API
      */
-    getIndexDatas(stime,fxlx,xzqh,etime){
+    getCarTypeDatas(){
       let that=this; 
-      // console.log(xzqh)
-      // 如果2个参数stime  fxlx
-      if(xzqh===undefined && etime==undefined && stime!='4'){
-        interf.GET_VEH_TYPE_API({
-          id:"",
-          stime:stime,
-          fxlx:fxlx
-        })
-        .then(response=>{
-        if (response && response.status == 200){
-            var data = response.data;
-            //  console.log(data)
-            if (data.errcode == 0) {
-              that.echartsData.BIGCAR=data.data.BIGCAR;
-              that.echartsData.SMALLCAR=data.data.SMALLCAR;
-              // 绘制饼状图
-              this.options.series[0].data[0].value=that.echartsData.BIGCAR;
-              this.options.series[0].data[1].value=that.echartsData.SMALLCAR;
-              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
-              that.changechart.setOption(that.options);
-              window.addEventListener("resize",()=>{
-                that.changechart.resize();
-              })
-              //  console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR)
-              } else{
-                that.$message({
-                  message: data.errmsg,
-                  type: "error",
-                  duration: 1500
-                });
-            } 
-          }
-      })
-      .catch(err=>{
-          console.log(err);
-        })
-        .finally(() => {
-          that.tableLoading = false;
-        });
-      }
-      // 如果有三个参数 stime  xzqh   fxlx
-      if(xzqh!=undefined && etime===undefined && stime!='4'){
-        interf.GET_VEH_TYPE_API({
-          id:"",
-          stime:stime,
-          xzqh:xzqh,
-          fxlx:fxlx
-        })
-        .then(response=>{
-        if (response && response.status == 200){
-            var data = response.data;
-             console.log(data)
-            if (data.errcode == 0) {
-              that.echartsData.BIGCAR=data.data.BIGCAR;
-              that.echartsData.SMALLCAR=data.data.SMALLCAR;
-              // 绘制饼状图
-              this.options.series[0].data[0].value=that.echartsData.BIGCAR;
-              this.options.series[0].data[1].value=that.echartsData.SMALLCAR;
-              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
-              that.changechart.setOption(that.options);
-              //  console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR)
-              } else{
-                that.$message({
-                  message: data.errmsg,
-                  type: "error",
-                  duration: 1500
-                });
-            } 
-          }
-      })
-      .catch(err=>{
-          console.log(err);
-        })
-        .finally(() => {
-          that.tableLoading = false;
-        });
-      }
-      // 如果是四个参数 stime  xzqh,  fxlx,  etime
-      if(xzqh!=undefined && etime!=undefined){
-         interf.GET_VEH_TYPE_API({
-          id:"",
-          stime:stime,
-          xzqh:xzqh,
-          fxlx:fxlx,
-          etime:etime
-        })
-        .then(response=>{
-        if (response && response.status == 200){
-            var data = response.data;
-            //  console.log(data)
-            if (data.errcode == 0) {
-              that.echartsData.BIGCAR=data.data.BIGCAR;
-              that.echartsData.SMALLCAR=data.data.SMALLCAR;
-              // 绘制饼状图
-              this.options.series[0].data[0].value=that.echartsData.BIGCAR;
-              this.options.series[0].data[1].value=that.echartsData.SMALLCAR;
-              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
-              that.changechart.setOption(that.options);
-              //  console.log( that.echartsData.BIGCAR,that.echartsData.SMALLCAR) 
-              } else{
-                that.$message({
-                  message: data.errmsg,
-                  type: "error",
-                  duration: 1500
-                      });
-                  } 
-                }
-              })
-              .catch(err=>{
-                console.log(err);
-              })
-              .finally(() => {
-                that.tableLoading = false;
-              });
-      }
+      let getCarTypeData={};
+      getCarTypeData.stime=that.stime;
+      getCarTypeData.fxlx=that.fxlx;
+       // 如果传入xzqh
+      if(that.xzqh!=''){
+        getCarTypeData.xzqh=that.xzqh;
+      }
+      if(that.stime=='4'){
+        getCarTypeData.stime=that.timeRange[0];
+        getCarTypeData.etime=that.timeRange[1];
+      }
+      // 发送请求，获取
+    interf.GET_VEH_TYPE_API(getCarTypeData)
+      .then(response=>{
+        if (response && response.status == 200){
+            var data = response.data;
+            if (data.errcode == 0) {
+              that.echartsData.BIGCAR=data.data.BIGCAR;
+              that.echartsData.SMALLCAR=data.data.SMALLCAR;
+              // 绘制饼状图
+              this.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},{value:data.data.SMALLCAR, name:'小车'},]
+              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
+              that.changechart.setOption(that.options);
+              window.addEventListener("resize",()=>{
+                that.changechart.resize();
+              })
+           } else{
+              that.$message({
+               message: data.errmsg,
+               type: "error",
+               duration: 1500
+             });
+            } 
+          }
+      })
+      .catch(err=>{
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
     },
     //获取巡航数据
     getTrafficData() {
@@ -778,13 +681,11 @@ export default {
     /**
      * 车辆流动页面流动趋势 echarts  开始时间 1今天,2昨天,3,近30天
      */
-    initSumCharts(stime){
+    initSumCharts(time){
       let that = this;  
-      // 如果有两个参数stime,etime
-     if(stime!='4'){
-        interf.GET_FLOW_TREND_API({
-        stime:'3',
-      })
+      let SumChartsData={};
+      SumChartsData.stime=time;
+      interf.GET_FLOW_TREND_API(SumChartsData)
       .then(response=>{
        if (response && response.status == 200){
            var data = response.data;
@@ -802,6 +703,9 @@ export default {
                   that.countChart = echarts.init(document.getElementById('sumCountChange'));
                 };
                 that.countChart.setOption(that.accurChangeOption);
+                window.addEventListener("resize",()=>{
+                that.countChart.resize();
+              })
              })
             } else{
               that.$message({
@@ -818,8 +722,6 @@ export default {
         .finally(() => {
             that.tableLoading = false;
         })
-      }
-     
     },
    /*##清除地图加载点、线、面、弹框*/
   clearMap(){
@@ -953,21 +855,6 @@ position: fixed;
   top:0;
   right: 20vw;
 }
-.typeanalysis{
-  position: absolute;
-  right:1.5vw;
-  top:5vh;
-  cursor:pointer;
-  span{
-    border: 1px solid #fff;
-    color: #fff;
-    width: 3vw;
-    height: 2vh;
-    padding: 0.5vh 0.5vw;
-    border-radius: 5px;
-    // background: #aeaeae;
-  }
-}
 .cars{
   color: #fff;
   text-align:left;
@@ -1020,5 +907,21 @@ position: fixed;
   font-family:Source Han Sans CN;
   font-weight:400;
   color:rgba(254,254,254,1);
+}
+.car-info-div .button{
+  position: absolute;
+  top:1vh;
+  right:2vw;
+  span{
+    padding:5px;
+    border: 1px solid white;
+    border-radius: 3px;
+    background: #aeaeae;
+  }
+  .active{
+    background-color:#0079fe;
+    color: #efddfe;
+    cursor:pointer;
+    }
 }
 </style>

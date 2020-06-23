@@ -19,6 +19,7 @@ import etc from '@/views/ETCquality/ETCqualityIndex.vue'
 import measurement from '@/views/speedMeasurement/speedMeasurementIndex.vue'
 import user from '@/views/userManager/userManage.vue'
 import vehicleownership from '@/views/vehicleownership/vehicleownership.vue'
+import induction from '@/views/induction/induction'
 // 懒加载方式，当路由被访问的时候才加载对应组件       
 const Login = resolve => require(['@/views/Login/Login'], resolve)
 
@@ -51,10 +52,17 @@ const router = new Router({
           }
         },
         {
-          path: '/main/cruise', //巡航
+          path: '/main/cruise', //巡航 
           name: 'cruise',
           components: {
             default: cruise
+          }
+        },
+        {
+          path: '/main/induction', //巡航 /main/induction
+          name: 'induction',
+          components: {
+            default: induction
           }
         },
         {
@@ -78,6 +86,7 @@ const router = new Router({
             default: trafficIndex
           }
         },
+        
         {
           path: '/main/accident-distribution', //事故分析
           name: 'accidentDistribution',

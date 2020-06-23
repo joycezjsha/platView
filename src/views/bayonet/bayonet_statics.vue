@@ -143,9 +143,9 @@ export default {
     that.getdevcountData();
     that.getbayrankDatas()
     that.getData()
-    that.initdeviceStaticsChart();
+    // that.initdeviceStaticsChart();
     // setTimeout(()=>{
-        that.initAccurCharts();
+        // that.initAccurCharts();
     // },1000);
  
   },
@@ -186,13 +186,12 @@ export default {
       let that = this;
     //  如果没有参数
      if(xzqh===undefined){
-       interf.GET_BAY_RANK_API({
+      interf.GET_BAY_RANK_API({
           id: ""
        })
        .then(response=>{
          if (response && response.status == 200){
             var data = response.data;
-            console.log(data)
              if (data.errcode == 0) {
                that.tableDatas=data.data;
              } else{
@@ -218,7 +217,6 @@ export default {
        .then(response=>{
          if (response && response.status == 200){
             var data = response.data;
-            console.log(data)
              if (data.errcode == 0) {
                 that.tableDatas=data.data;
              } else{
@@ -281,7 +279,6 @@ export default {
        .then(response=>{
          if (response && response.status == 200){
             var data = response.data;
-            console.log(data)
              if (data.errcode == 0) {
                 // that.indexData=data.data;
                 that.todaynum=data.data.todaynum;
@@ -332,7 +329,7 @@ export default {
     },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
-                return "background:transparent;";
+      return "background:transparent;";
    },
   }
 };
@@ -435,7 +432,7 @@ export default {
     }
   }
 }
-.top {
+.bayonet_device-statics .top {
   margin-top: 3px;
     width: 474px;
     .back {

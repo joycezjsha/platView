@@ -29,7 +29,6 @@ $color-bg-3:rgb(26,26,35);
 
 /*白色*/
 $color-white:white;
-
 /*label颜色*/
 $color-label:#aaa;
 $color-text-label:#A6AFCD;
@@ -43,6 +42,8 @@ $color-yellow:#FFB005;
 $color-red:#FF421D;
 /**列表选中背景色**/
 $color-list_bg:#0367A6;
+$map_popup_bg:rgba(3, 12, 32, 0.74);
+$map_popup_border:rgb(42, 76, 162);
 
  /**总览界面*/
 .overview-left-div .el-card{
@@ -54,4 +55,25 @@ $color-list_bg:#0367A6;
       padding:0 0 10px 0;
       border:none;
     }
-  }
+  };
+
+  $_1:#556B2F;
+  $_2:#00FFFF;
+  $_3:#0000EE;
+  $_4:#8A2BE2;
+  $_5:#c48f58;
+  $_6:#6bac91;
+  $_7:#5ad2a0;
+  $_8:#f18a52;
+  $_9:#656bd4;
+  $_10:#7ca0cd;
+  $_11:#88b7dc;
+  $_12:#a08bd3;
+  $_13:#be7fcd;
+  $_14:#30a2c4;
+  $_15:#c0ccd7;
+  $_16:#dbddab;
+  $_17:#9cd076;
+  $_18:#69b38b;
+  $_19:#437fb9;
+  $_20:"rgb(255, 143, 109)"

@@ -24,7 +24,7 @@
     <div class='vehicle_monitor-div--bottom boxstyle'>
       <m-title label='超速预警' style='width:8vw;'></m-title>
        <ul class="traffic-index_content_table">
-          <li class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
+          <li @click="showMapData(item)" class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <div style="margin-bottom:3px">
                <span class="car-name">{{item.HPZL}}</span>
                <span class="">{{item.HPHM}}</span>
@@ -36,6 +36,10 @@
             <div class="address-name time">{{item.WFSJ}}</div>          
           </li>
         </ul>
+    </div>
+    <!-- 点击左侧的超速预警列表，显示对应的数据  -->
+    <div>
+      
     </div>
   </div>
 </template>
@@ -92,13 +96,17 @@ export default {
     // this.clearMap();
   },
   methods: {
+    /*
+    * 点击左侧的超速预警列表，显示对应的数据
+    */
+   showMapData(item){
+    //  console.log(item)
+   },
     // 传递city参数
     showCity(row){
       blur.$emit('getCity',row.CODE);
-      console.log(row.CODE)
-      console.log(row.CODE)
     },
-    //重点车辆监测  KeyVehicle/getKeyVehicle   GET_KEY_VEHICLE_API
+    //重点车辆监测  KeyVehicle/getKeyVehicle   GET_KEY_VEHICLE_API 
     getKeyVehicleDatas(){
      let that = this;
     interf.GET_KEY_VEHICLE_API({})
@@ -138,7 +146,7 @@ export default {
     .then(response=>{
         if (response && response.status == 200){
           var data= response.data;
-          console.log(data)
+          // console.log(data)
           if (data.errcode == 0) {
             that.trafficDatas=data.data;
             // console.log(that.trafficDatas)

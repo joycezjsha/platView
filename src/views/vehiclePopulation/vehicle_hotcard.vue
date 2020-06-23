@@ -13,7 +13,7 @@
           <div class="padding">
             <div class="table">
               <el-table :data="indexDatas"
-            style="width: 100%" height="100%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                   <el-table-column fixed type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
                   <el-table-column  prop="innum" label="进入辆次" sortable></el-table-column>
@@ -22,21 +22,23 @@
             </div> 
           </div>
         </div>
-        <div  class="hotroad" style="margin-top:2vh">
+        <div  class="hotroad" style="margin-top:2vh;height:40vh;">
           <m-title class="titletext"  label='热点卡口排名' ></m-title>
           <div  class="padding"> 
             <div  class="table">
               <el-table :data="indexDatas1"
-            style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                   <el-table-column  fixed type="index" label="No" width="60"></el-table-column>
                   <!-- <div v-if="showCity==null">
                        <el-table-column show-overflow-tooltip prop="KKMC"   label="卡口名称"></el-table-column>
-                  </div> -->
+                  </div>  :formatter="userTypeList"  -->
                   <div>
-                      <el-table-column :formatter="userTypeList"
-                      show-overflow-tooltip prop="city,KKMC"   label="卡口名称">
+                      <el-table-column 
+                      show-overflow-tooltip prop='city,KKMC'   label="卡口名称">
                         <template slot-scope="scope"> 
-                        [{{scope.row.city}}]{{scope.row.KKMC}}
+                            <span v-if="scope.row.city!=null">{{`[`+scope.row.city+`]`}}</span>
+                            <span>{{scope.row.KKMC}}</span>
+                        <!-- [{{scope.row.city}}]{{scope.row.KKMC}} -->
                         </template>
                       </el-table-column>
                   </div>
@@ -65,7 +67,7 @@ export default {
           code:'',
           stime:'1',
           xzqh:'',
-          showCity:'',  //用于判断table中的城市与卡口名称拼接
+          showCity:true,  //用于判断table中的城市与卡口名称拼接
           timeRange:'', //自定义时间
           showhotcard:false,
           map_cover:{
@@ -99,12 +101,7 @@ export default {
        that.getHotspotBayonetRankingDatas();
     },
     destroyed(){
-
-    },
-    watch:{
-      stime(newValue, oldValue){
-        return newValue;
-      }
+      this.clearMap();
     },
     methods:{
       /**
@@ -138,13 +135,22 @@ export default {
         // console.log(itemlist)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
-        el.style.border='1px solid rgba(42, 76, 162, 1)';
-        el.style.borderRadius='2px';
+        let el1 = document.createElement('div'); //
+        // el.style.border='1px solid rgba(42, 76, 162, 1)';
+        // el.style.borderRadius='2px';
         el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
-        el.style["padding"] = "10px 10px";
+        // el.style["padding"] = "10px 10px";
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
+        el1.id = 'marker'; //
+        // el1.style["border"] = "solid 1px #D01828"; // if(item.addIn<0) span2.style.color='#00DEC7';
+        el1.style.width='17px';
+        el1.style.height='17px';
+        el1.style.borderRadius='50%';
+        if(item.NUM>0) el1.style.backgroundColor='#D01828';
+        if(item.NUM<0) el1.style.backgroundColor='#00b429';
+
         let d1 = document.createElement('div');
        if(item.city){
           let citySpan= document.createElement('span');
@@ -162,7 +168,7 @@ export default {
         let d2 = document.createElement('div');
         let span1= document.createElement('span'); 
         let span2= document.createElement('span'); 
-        span1.innerHTML='设备ID: ';
+        span1.innerHTML='设备ID :  ';
         span2.innerHTML=item.KKBH;
         d2.fontFamily='Source Han Sans CN';
         d2.style.color = "rgba(255,255,255,1)";
@@ -173,7 +179,7 @@ export default {
         let d3 = document.createElement('div');
         let span3= document.createElement('span'); 
         let span4= document.createElement('span'); 
-        span3.innerHTML='地点: ';
+        span3.innerHTML='地点 :  ';
         span4.innerHTML=item.DLMC;
         d3.fontFamily='Source Han Sans CN';
         d3.style.color = "rgba(255,255,255,1)";
@@ -186,7 +192,7 @@ export default {
           let d4= document.createElement('div');
           let span5= document.createElement('span'); 
           let span6= document.createElement('span'); 
-          span5.innerHTML='方向: ';
+          span5.innerHTML='方向 :  ';
           span6.innerHTML=item.KKJC;
           d4.fontFamily='Source Han Sans CN';
           d4.style.color = "rgba(255,255,255,1)";
@@ -198,7 +204,7 @@ export default {
         let d5= document.createElement('div');
         let span7= document.createElement('span'); 
         let span8= document.createElement('span'); 
-        span7.innerHTML='过车辆: ';
+        span7.innerHTML='过车辆 :  ';
         span8.innerHTML=item.NUM;
         d5.fontFamily='Source Han Sans CN';
         d5.style.color = "rgba(0,198,255,1)";
@@ -209,11 +215,15 @@ export default {
         .setLngLat(lnglat)
         .setDOMContent(el)
         .addTo(this.map);
-        this.poPupList.push(popup)
+        this.map_cover.popups.push(popup)
         // (".minemap-popup-tip").style.background='red';
+        let lnglat1 = [itemlist[0],itemlist[1]];
+        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).addTo(this.map);
+        this.map_cover.markers.push(marker);
+
       },
       /*
-      *热点卡口 KeyVehicle/getHotspotBayonetRanking  GET_HOT_BAY_RANK_API
+      *热点卡口数据 KeyVehicle/getHotspotBayonetRanking  GET_HOT_BAY_RANK_API
       */
      getHotspotBayonetRankingDatas(code){
         let that=this;
@@ -233,10 +243,8 @@ export default {
                     that.indexDatas1=data.data;
                     // console.log(that.indexDatas1)
                     that.indexDatas1.forEach(e=>{
-                        that.showCity=e.city;
-                        console.log(that.showCity)
-                        // if(that.showCity!=null){
-                        //     // that.indexDatas1.city=
+                        // if(e.city!=null){
+                        //     that.showCity=false;
                         // }
                     })
                         if(that.indexDatas1.length>0){
@@ -318,11 +326,11 @@ export default {
           })
         }
         //清除marker
-        // if(this.map_cover.markers.length>0){
-        //   this.map_cover.markers.forEach(e=>{
-        //     e.remove();
-        //   })
-        // }
+        if(this.map_cover.markers.length>0){
+          this.map_cover.markers.forEach(e=>{
+            e.remove();
+          })
+        }
       },
       //设置表格样式
       getRowClass({ row, column, rowIndex, columnIndex }) {
@@ -334,6 +342,7 @@ export default {
 
 <style  scope lang='scss'>
 @import "@/assets/css/color.scss";
+@import "../../assets/css/base.css";
 .hotcard{
     position: fixed;
     top: 9.388vh;
@@ -398,11 +407,4 @@ export default {
     }
 }
 </style>
-<style>
-#map .minemap-popup-tip{
-  display: none !important;
-}
-#map  .minemap-popup-content{
-  background: none !important;
-}
-</style>
+

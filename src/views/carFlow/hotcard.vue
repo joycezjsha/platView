@@ -31,7 +31,7 @@
                   <el-table-column show-overflow-tooltip fixed type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="city,KKMC"   label="卡口名称">
                     <template slot-scope="scope">
-                     [{{scope.row.city}}]{{scope.row.KKMC}}
+                    [{{scope.row.city}}]{{scope.row.KKMC}}
                     </template>
                   </el-table-column>
                   <el-table-column show-overflow-tooltip prop="NUM" label="过车辆" sortable></el-table-column>     
@@ -92,12 +92,7 @@ export default {
      
     },
     destroyed(){
-
-    },
-    watch:{
-      stime(newValue, oldValue){
-        return newValue;
-      }
+      this.clearMap()
     },
     methods:{
       
@@ -107,6 +102,7 @@ export default {
       goback(){
         let that=this;
         that.showback=true;
+        that.stime='1';
         that.gethotcardDatas('1')
       },
       /**
@@ -154,13 +150,21 @@ export default {
         // console.log(itemlist)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
-        el.style.border='1px solid rgba(42, 76, 162, 1)';
-        el.style.borderRadius='2px';
+        let el1 = document.createElement('div'); //
+        // el.style.border='1px solid rgba(42, 76, 162, 1)';
+        // el.style.borderRadius='2px';
         el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
-        el.style["padding"] = "10px 10px";
+        // el.style["padding"] = "10px 10px";
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
+        el1.id = 'marker'; //
+        // el1.style["border"] = "solid 1px #D01828"; // if(item.addIn<0) span2.style.color='#00DEC7';
+        el1.style.width='17px';
+        el1.style.height='17px';
+        el1.style.borderRadius='50%';
+        if(item.NUM>0) el1.style.backgroundColor='#D01828';
+        if(item.NUM<0) el1.style.backgroundColor='#00b429';
         let d1 = document.createElement('div');
         if(item.city){
           let citySpan= document.createElement('span');
@@ -226,7 +230,11 @@ export default {
         .setDOMContent(el)
         .addTo(this.map);
         this.poPupList.push(popup)
-        // (".minemap-popup-tip").style.background='red';
+
+        let lnglat1 = [item.KKJD,item.KKWD];
+        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).addTo(this.map);
+        this.map_cover.markers.push(marker);
+        
       },
       /**
        *车辆流动页面热点道路
@@ -351,11 +359,11 @@ export default {
           })
         }
         //清除marker
-        // if(this.map_cover.markers.length>0){
-        //   this.map_cover.markers.forEach(e=>{
-        //     e.remove();
-        //   })
-        // }
+        if(this.map_cover.markers.length>0){
+          this.map_cover.markers.forEach(e=>{
+            e.remove();
+          })
+        }
       },
       //设置表格样式
       getRowClass({ row, column, rowIndex, columnIndex }) {
@@ -367,6 +375,7 @@ export default {
 
 <style  scope lang='scss'>
 @import "@/assets/css/color.scss";
+@import "../../assets/css/base.css";
 .hotcard{
     position: fixed;
     top: 9.388vh;
@@ -429,13 +438,5 @@ export default {
       }
       
     }
-}
-</style>
-<style>
-#map .minemap-popup-tip{
-  display: none !important;
-}
-#map  .minemap-popup-content{
-  background: none !important;
 }
 </style>

@@ -88,7 +88,7 @@ export default {
               parent_id: '2',
               menu_name: "诱导简图",
               sorting: '0',
-              path:'/'
+              path:'/main/induction'
             },
             {
               id: '2-3',

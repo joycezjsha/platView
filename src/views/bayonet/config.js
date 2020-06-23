@@ -1,19 +1,40 @@
-/*
- * @Author: your name
- * @Date: 2020-05-22 11:56:01
- * @LastEditTime: 2020-06-14 20:42:22
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \one\src\views\bayonet\config.js
- */ 
-/**
- * Created by ThinkPad on 2019/4/10.
- */
+
 import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
-  
+  // 道路统计 Bayonet/getRoadStatistics
+  GET_ROAD_STATIS_API:data=> {
+    return http.service({
+      url:`Bayonet/getRoadStatistics`,
+      method:'get',
+      params:data
+    })
+  },
+  // 卡口热力分布  Bayonet/getBayonetHeat
+  GET_BAY_HEAT_API:data=> {
+    return http.service({
+      url:`Bayonet/getBayonetHeat`,
+      method:'get',
+      params:data
+    })
+  },
+  // 活跃卡口点位  Bayonet/getBayonetActive
+  GET_BAY_ACTIVE_API:data=> {
+    return http.service({
+      url:`Bayonet/getBayonetActive`,
+      method:'get',
+      params:data
+    })
+  },
+  // 道路上的设备 Bayonet/getRoadMapDev
+  GET_BAY_ROAD_MAP_DEV_API:data=> {
+    return http.service({
+      url:`Bayonet/getRoadMapDev`,
+      method:'get',
+      params:data
+    })
+  },
   // 卡口监测-今日卡口数据回传排名 Bayonet/getBayonetEchoRanking
   GET_BAY_RANK_API:data=> {
     return http.service({

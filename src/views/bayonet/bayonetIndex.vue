@@ -12,7 +12,7 @@ import blur from '../../blur.js';
 import index from "./bayonet_city.vue";
 import t_index from "./bayonet_statics.vue";
 import t_index_city from "./accident_statics_city.vue";
-import middle from "./middle.vue";
+import middle from "./bayonet_middle.vue";
 // activebaypoint  "
 export default {
   name: "TafficIndex",

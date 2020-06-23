@@ -79,7 +79,7 @@
        <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
             <p><span class='number'>{{i+1}}</span><span class='road'>{{item.roadname}}</span>
-              <!-- <span class="address-name">{{item.startRoad}}--->{{item.endRoad}}</span> -->
+              <span class="address-name">{{item.stratname}}--->{{item.endname}}</span>
             </p>
             <p>
               <span class='road'>平均速度:<span class="text">{{item.sd}}km/h</span></span>
@@ -192,7 +192,7 @@ export default {
         }
       })
       .catch(err=>{
-         console.log(err);
+        //  console.log(err);
       })
       .finally(() => {
         that.tableLoading = false;
@@ -231,7 +231,7 @@ export default {
       }
     })
     .catch(err=>{
-      console.log(err);
+      // console.log(err);
     })
     .finally(() => {
       that.tableLoading = false;
@@ -258,7 +258,7 @@ export default {
       }
     })
     .catch(err=>{
-      console.log(err);
+      // console.log(err);
     })
     .finally(() => {
       that.tableLoading = false;
