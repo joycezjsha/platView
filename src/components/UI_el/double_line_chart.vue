@@ -9,7 +9,7 @@ export default {
       option: {
           color:['#8ec6add6','#d68262bf'],
           grid:{
-            top:'35%',
+            top:'25%',
             left:'15%',
             right:'15%',
             bottom:'15%'
@@ -76,16 +76,11 @@ export default {
                   type: 'line',
                   data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
                   areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        offset: 0,
-                        color: "#8ec6add6"
-                      },
-                      {
-                        offset: 1,
-                        color: "transparent"
-                      }
-                    ])
+                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                          { offset: 0, color: "#030b29" },
+                          { offset: 0.5, color: "#002651" },
+                          { offset: 1, color: "#f0f0f0" }
+                        ])
                   }
               },
               {
@@ -95,16 +90,11 @@ export default {
                   yAxisIndex: 1,
                   data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
                   areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        offset: 0,
-                        color: "#00D8FFbf"
-                      },
-                      {
-                        offset: 1,
-                        color: "transparent"
-                      }
-                    ])
+                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: "#030b29" },
+                        { offset: 0.5, color: "#2a4869" },
+                        { offset: 1, color: "#00527b" }
+                      ])
                   }
               }
           ]

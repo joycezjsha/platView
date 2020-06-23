@@ -5,16 +5,14 @@ import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
-  /*获取巡航数据*/
-  getCityIndexData:(data,callback,err)=>{
-    return http._httpConnect("get", "AreaList/list",data,
-          function(data){
-            callback(data);
-          },function(e){
-            // _this.$message({type: 'warning', message: '服务异常'});
-            err(e);
-          })
-  }
+  /*获取汽车保有量排名数据*/
+  GET_CITY_ORDER_API:data=> {
+    return http.service({
+      url:`VehiclePopulation/getVehiclePopulation`,
+      method:'get',
+      params:data
+    })
+  },
 }
 export const IMG={
   /*路况巡航*/

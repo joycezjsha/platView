@@ -197,6 +197,9 @@ export default {
     sortArea(data){
       let _this=this;
       //返回数组合并、并排序的结果
+      if(this.indexData.length<data.length){
+        return data;
+      }
       this.indexData.forEach(e=>{
         for(var j=0;j<data.length;j++){
             if(data[j].city.indexOf(e.city)!=-1){

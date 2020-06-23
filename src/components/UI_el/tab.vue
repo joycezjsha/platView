@@ -79,6 +79,7 @@ export default {
     width:50%;
     align-items: start;
     font-size: 16px;
+    font-style:italic;
   }
   .value{
     width:30%;

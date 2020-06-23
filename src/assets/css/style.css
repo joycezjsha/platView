@@ -25,7 +25,7 @@
 .topbar-bar .el-menu--horizontal li{
   margin: 0 10px;
   /* background-color: #3a3c4c; */
-  color: white;
+  color: #BEC5DE;
   width: 14vh;
   font-size:20px;
 }
@@ -104,8 +104,8 @@ line-height:2vh;
 }
 .el-button--primary {
   color: #FFF;
-  background-color: #409EFF;
-  border-color: #409EFF;
+  background-color: #047DC2;
+  border-color: #047DC2;
 }
 .el-submenu__icon-arrow{
   right:4px;
@@ -161,6 +161,18 @@ line-height:2vh;
 /**
 *公共样式
 **/
+.el-table th{
+  color:#1D99AB;
+  font-size: 16px;
+}
+.el-table .sort-caret.descending{
+  border-top-color: #1D99AB;
+  font-size: 16px;
+}
+.el-table .sort-caret.ascending{
+  border-bottom-color: #1D99AB;
+  font-size: 16px;
+}
 .boxstyle{
   background: url('../images/box_bg.png') no-repeat;
   background-size: 100% 100%;
