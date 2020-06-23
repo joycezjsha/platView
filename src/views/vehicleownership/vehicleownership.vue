@@ -2,13 +2,15 @@
   <div class="vehicleownership">
       <ranking></ranking>   
       <!-- <middle class="middle"></middle> -->
-      <right></right>
+      <right ref='statics'></right>
+      <v-map ref='vehicleMap'></v-map>
   </div>
 </template>
 <script>
+import blur from "@/blur";
 import ranking from "./ranking.vue";
-import middle from "./middle.vue";
 import right from "./right.vue";
+import v_map from "./vehicle_map.vue";
 export default {
   name: "vehicleownership",
   data() {
@@ -18,16 +20,15 @@ export default {
   },
   components:{
     ranking,
-    middle,
-    right
-
+    right,
+    vMap:v_map
   },
    mounted() {
     let _this=this;
     _this.$store.commit("setRight", '26vw');
-    // blur.$on('isShowEvent',function(flag){
-    //   _this.isShowCity=flag;
-    // })
+    blur.$on('initVehicleStatics',function(data){
+      _this.$refs.statics.initStatics(data);
+    })
   },
   destroyed() {
   },

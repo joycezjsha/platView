@@ -5,7 +5,7 @@
         <m-title label='汽车保有量排名' style='width:10vw;'></m-title>
       </div>
       <div class='ranking--table'>
-        <el-table :data="tableDatas" style="width: 100%" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+        <el-table :data="tableDatas" style="width: 100%" @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column fixed type="index" label="No." width="50"></el-table-column>
           <el-table-column prop="name" label="城市"></el-table-column>
           <el-table-column prop="num" label="汽车保有量" sortable></el-table-column>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import blur from "@/blur";
 import {interf} from './config'
 import mTitle from '@/components/UI_el/title_com.vue'
 export default {
@@ -39,15 +40,10 @@ export default {
        */
       handle(row, event, column){
         let data={};
-        // if(this.tableIndex){
-        //   data.name=row.NAME;
-        //   data.value=row.DLDM;
-        // }else{
-        //   data.name=row.city;
-        //   data.value=row.XZQH;
-        //   this.centerTo(row.jwd.split(' '));
-        // }
-        // blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
+        data.name=row.name;
+        data.value=row.xzqh;
+      
+        blur.$emit('initVehicleStatics',data);
       },
       /**
        * 获取车辆保有量，排名数据

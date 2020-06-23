@@ -177,3 +177,12 @@ line-height:2vh;
   background: url('../images/box_bg.png') no-repeat;
   background-size: 100% 100%;
 }
+#map .minemap-popup-content{
+  background-color: rgba(3, 12, 32, 0.74);
+  border:1px solid rgb(42, 76, 162);
+  font-family: 'SourceHanSansCN';
+  padding:14px 15px;
+}
+#map .minemap-popup-tip{
+  border-top-color: rgba(3, 12, 32, 0.74);
+}
