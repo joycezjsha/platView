@@ -186,3 +186,36 @@ line-height:2vh;
 #map .minemap-popup-tip{
   border-top-color: rgba(3, 12, 32, 0.74);
 }
+
+.el-message-box {
+  background-color: #01245d;
+  border: 1px solid #0361f9;
+  font-size: .9vw;
+  -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+.el-message-box__title {
+  color: #e6a23c;
+}
+.el-message-box__content {
+  color: #ecf5ff;
+}
+.el-message-box__btns button{
+  color:white;
+}
+.el-message-box__btns .el-button{
+  background: #0c46a4;
+  border:none;
+}
+.el-message-box__btns .el-button:hover{
+  background: #1355be;
+  color:#409eff;
+}
+.el-dropdown-menu{
+  background-color: #01245d;
+  color:white;
+  border-color: #3b91ee;
+}
+.el-dropdown-menu .el-dropdown-menu__item{
+  color:white;
+}

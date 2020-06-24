@@ -29,9 +29,6 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
-    this.map.repaint = true;
     that.getIndexData();
   },
   destroyed() {

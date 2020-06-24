@@ -1,18 +1,13 @@
 <template>
-  <div class="device-statics">
-    <div class="device-statics_container">
-      <div class="device-statics_title">
-        <div>
-          <i class="el-icon-collection-tag">全省统计</i>
-        </div>
+  <div class="speed-measurement-statics">
+      <div class="speed-measurement_title">
+        <m-title :label='title' img_type=1></m-title>
+        <div v-show='isShowReturn' class='return' @click='returnAll'><<返回全省</div>
+        <m-tab label='设备总数' value='2328'></m-tab>
+        <m-tab label='活跃龙门架设备数' value='2328'></m-tab>
+        <m-tab label='今日回传过车数据' value='5316'></m-tab>
       </div>
-      <div class="device-statics_content">
-        <div>
-          <m-tab label='设备总数' value='2328'></m-tab>
-          <m-tab label='活跃龙门架设备数' value='2328'></m-tab>
-            <m-tab label='今日回传过车数据' value='5316'></m-tab>
-        </div>
-        <div>
+      <div class="speed-measurement_content boxstyle">
           <div class="vehicle-statics--tab">
             <m-item :tabList='tabItems'></m-item>
           </div>
@@ -22,21 +17,17 @@
             </div>
             <div id='vehicle-statics_circle'></div>
           </div>
-           <div class="device-statics_title">
-            <div>
-              <i class="el-icon-collection-tag">今日卡口数据回传排名:</i>
-            </div>
-          </div>
-          <div class="device-statics_data">
-            <el-table :data="tableDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-              <el-table-column fixed type="index" label="No" width="50"></el-table-column>
-              <el-table-column prop="name" label="电警名称"></el-table-column>
-              <el-table-column prop="value" label="过车辆" sortable></el-table-column>
-            </el-table>
-          </div>
+      </div>
+      <div class="speed-measurement_order boxstyle">
+        <m-title-com label='今日卡口数据回传排名:' img_type=1 style='width:12vw;'></m-title-com>
+        <div class="speed-measurement_data">
+          <el-table :data="tableDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+            <el-table-column prop="name" label="电警名称"></el-table-column>
+            <el-table-column prop="value" label="过车辆" sortable></el-table-column>
+          </el-table>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -48,13 +39,62 @@ import m_item from '@/components/UI_el/tab_item.vue'
 import m_tab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list.vue'
 import m_list_o from '@/components/UI_el/list_o.vue'
+import mTitleCom from "@/components/UI_el/title_com.vue";
+import mTitle from "@/components/UI_el/title.vue";
 export default {
   name: "TIndex",
   data() {
     return {
       map: {},
+      title:'全省统计',
+      isShowReturn:false,
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
+      statics_sort_option: {
+        color: ["#2D55C3", "#333C73"],
+        tooltip: {
+          show: false,
+          showContent: false
+        },
+        series: [
+          {
+            name: "",
+            type: "pie",
+            radius: ["70%", "90%"],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: "center"
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: "10",
+                fontWeight: "bold"
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: [],
+            label: {
+              normal: {
+                show: true,
+                position: "center",
+                formatter: function(argument) {
+                  var html;
+                  html = "本月业绩\r\n\r\n" + "50单";
+                  return html;
+                },
+                textStyle: {
+                  fontSize: 10,
+                  color: "#39CCCC"
+                }
+              }
+            }
+          }
+        ]
+      },
       device_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
@@ -104,17 +144,16 @@ export default {
       listItems:[{'label':'超速次数',value:'12'},{'label':'总检测数',value:'12345'}]
     }
   },
-  components:{mTab:m_tab,mList:m_list,mListO:m_list,mItem:m_item},
+  components:{mTab:m_tab,mList:m_list,mListO:m_list,mItem:m_item,mTitle,mTitleCom},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
-    this.getIndexData();
+    this.map.setZoom(6);
     that.initMainStaticsChart();
-    this.initdeviceStaticsChart();
+    // this.initdeviceStaticsChart();
     // setTimeout(()=>{
-        that.initAccurCharts();
+        // that.initAccurCharts();
     // },1000);
   },
   destroyed() {
@@ -124,16 +163,12 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
-    //获取统计数据
-    getIndexData() {
-      let that = this;
-    },
     /**
      * 生成警情分别类统计echarts
      */
     initdeviceStaticsChart(){
        if(!this.device_chart){
-        this.device_chart = echarts.init(document.getElementById('device-statics_sort'));
+        this.device_chart = echarts.init(document.getElementById('speed-measurement_sort'));
       };
       // this.device_option.legend.data=['视频设备','电警','其他'];
       this.staticsSort=[{color:'#02FDF4',label:'视频设备',value:2328},{color:'#4D76F9',label:'电警',value:1232},{color:'#01D647',label:'其他',value:24}];
@@ -161,6 +196,21 @@ export default {
         return '10%';
       }
       this.sort_chart.setOption(this.statics_sort_option);
+    },
+    /**
+     * 返回全省
+     */
+    returnAll(){
+      this.isShowMainDev=true;
+      this.isShowReturn=false;
+      this.title='全省统计';
+      this.getSumDev();
+      this.initdeviceAnalysisChart();
+      this.initAccurCharts();
+    },
+    //设置表格样式
+    getRowClass({ row, column, rowIndex, columnIndex }) {
+      return "background:transparent;cursor:pointer;";
     }
   }
 };
@@ -173,132 +223,57 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-.device-statics {
+.speed-measurement-statics {
   position: fixed;
   z-index: 10;
-  right: 1vw;
-  width: 17vw;
-  height: 85vh;
-  top: 9vh;
+  right: 13px;
+  width: 474px;
+  height: 900px;
+  top: 99px;
   color: white;
-}
-.device-statics_container {
-  width: 100%;
-  height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
-  .device-statics_title {
+  .speed-measurement_title {
     position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
-    color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
+    margin:0 auto;
+    .return{
+      position: absolute;
+      left: 5%;
+      cursor: pointer;
+    }
+    .return:hover{
+      color:$color-primary;
+    }
   }
-  .device-statics--tab {
-  width: 100%;
-  height: 5vh;
 
-    > div {
+  .speed-measurement_content {
+    width:100%;
+    height:237px;
+    margin-top:44px;
+    .vehicle-statics--tab {
       width: 100%;
       height: 5vh;
-      font-size: 0.8vw;
       @include flex(row, center);
-
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
-    }
-}
-  .device-statics_content {
-    width: 98%;
-    height: 85%;
-    background-color: $color-bg-1;
-    margin: 1%;
-      .vehicle-statics--tab {
-    width: 100%;
-    height: 5vh;
-   @include flex(row, center);
-
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
-      margin: 2%;
-
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
-    }
-}
-    .vehicle-statics_sort {
-      width:90%;
-      height:8vh;
-      margin:2vh auto;
-      @include flex(row, center,center);
-      >div{
+      .vehicle-statics_sort {
+        width:90%;
+        height:8vh;
+        margin:2vh auto;
         @include flex(row, center,center);
-        width:50%;
-      }
-      >div:nth-child(2){
-        height: 100%;
-        width: 40%;
+        >div{
+          @include flex(row, center,center);
+          width:50%;
+        }
+        >div:nth-child(2){
+          height: 100%;
+          width: 40%;
+        }
       }
     }
-    .device-statics_sort_list{
+    #vehicle-statics_circle{
       width:50%;
-      height:10vh;
-      margin-top:2vh;
+      height:15vh;
       float:right;
     }
-    #device-statics_sort {
+    #speed-measurement_sort {
       width:50%;
       height:15vh;
       float:left;
@@ -311,6 +286,12 @@ export default {
       width:100%;
       height:25vh;
     }
+  }
+
+  .speed-measurement_order{
+    width:100%;
+    height:494px;
+    margin-top:30px;
   }
 }
 

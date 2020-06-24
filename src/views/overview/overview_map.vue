@@ -13,14 +13,14 @@
         <li><div>事故</div><div><img :src='sgImg' /></div></li>
       </ul>
     </div>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
   </div>
 </template>
 
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import dataOrder from "./dataOrder.vue";
-import mTitle from "@/components/UI_el/title_com.vue";
+import tArea from "@/components/area/area.vue";
 export default {
   name: "overview_left",
     data() {
@@ -39,12 +39,11 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
     this.getCityCarFlowData();
     this.initDeviceMap();
   },
   components: {
+    tArea
   },
   destroyed() {
     this.map.setPitch(0);

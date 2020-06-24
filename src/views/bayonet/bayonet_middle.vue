@@ -1,10 +1,10 @@
 <template>
   <div class="bayonet-middle">
     <div @click="change(1)">
-      <m-title label="卡口热力分布" :img_type="tableIndex==1?"1":"0"" class="car"></m-title>
+      <m-title label="卡口热力分布" :img_type="tableIndex==1?'1':'0'" class="car"></m-title>
     </div>
     <div @click="change(2)">
-      <m-title label="活跃卡口点位" :img_type="tableIndex==2?"1":"0"" class="car"></m-title>
+      <m-title label="活跃卡口点位" :img_type="tableIndex==2?'1':'0'" class="car"></m-title>
     </div>
     <!-- <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area> -->
   </div>

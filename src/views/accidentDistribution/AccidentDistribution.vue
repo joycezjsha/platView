@@ -1,16 +1,16 @@
 <template>
   <div class="traffic-index">
     <index></index>
-    <t-index></t-index>
-     <t-index-city v-show="isShowCity"></t-index-city>
+    <t-index ref='staticsModule'></t-index>
+     <ditribution-map ref='mapModule'></ditribution-map>
   </div>
 </template>
 
 <script>
 import blur from "@/blur";
-import index from "./accident_city.vue";
-import t_index from "./accident_statics.vue";
-import t_index_city from "./accident_statics_city.vue";
+import index from "./distribution_city.vue";
+import t_index from "./distribution_statics.vue";
+import ditributionMap from "./ditribution_map.vue";
 export default {
   name: "TafficIndex",
   data() {
@@ -21,13 +21,16 @@ export default {
   components:{
     index,
     TIndex:t_index,
-    TIndexCity:t_index_city
+    ditributionMap
   },
   mounted() {
     let _this=this;
-    _this.$store.commit("setRight", '20vw');
-    blur.$on('isShowEvent',function(flag){
-      _this.isShowCity=flag;
+    _this.$store.commit("setRight", '26vw');
+    blur.$on('addCityMainAcci',function(data){
+      _this.$refs.mapModule.addCityAccident(data);
+    });
+    blur.$on('addCityMainAcci',function(type,value,flag){
+      _this.$refs.staticsModule.initDistributionStatics(type,value,flag);
     })
   },
   destroyed() {
