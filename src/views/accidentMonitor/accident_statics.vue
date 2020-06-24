@@ -2,12 +2,13 @@
   <div class="accident-statics">
     <div class="accident-statics_container">
       <div class="accident-statics_title boxstyle">
-        <m-title label='全省统计' style='width:100%;'></m-title>
+        <m-title :label='title' style='width:100%;'></m-title>
+         <div v-show='isShowReturn' class='return' @click='returnAll'><<返回全省</div>
       </div>
       <div class="accident-statics--tab boxstyle">
-        <m-com-title label='警情统计' style='width:6vw;'></m-com-title>
-        <m-tab label='警情总计' :value='staticsData.sum'></m-tab>
-        <m-tab label='重大警情' :value='staticsData.mainCount'></m-tab>
+        <m-com-title label='警情统计' style='width:6vw;margin-bottom:1vh;'></m-com-title>
+        <m-tab :isShowIcon='isShowIcon' label='警情总计' :value='staticsData.sum' style='width:90%;margin:0 auto;'></m-tab>
+        <m-tab :isShowIcon='isShowIcon' label='重大警情' :value='staticsData.mainCount' style='width:90%;margin:10px auto 5px auto;'></m-tab>
         <div class="accident-statics_sort">
           
           <div id="accident-statics_sort">
@@ -44,6 +45,9 @@ export default {
   data() {
     return {
       map: {},
+      isShowIcon:false,
+      isShowReturn:false,
+      title:'全省统计',
       staticsData: {sum: 10,mainCount:0},
       listItems:[{'label':'122',value:'12'},{'label':'互联网',value:'12345'},{'label':'视频巡查',value:'122'}],
       accident_option: {
@@ -243,14 +247,8 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
     this.getIndexData();
     this.initAccidentStaticsChart();
-    // setTimeout(()=>{
-        // that.initSumCharts();
-        // that.initAccurCharts();
-    // },1000);
   },
   destroyed() {
     this.flyRoutes = [];
@@ -290,7 +288,14 @@ export default {
         this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
       };
       this.accurChart.setOption(this.accurChangeOption);
-    }
+    },
+    /**
+     * 返回全省
+     */
+    returnAll(){
+      this.isShowReturn=false;
+      this.title='全省统计';
+    },
   }
 };
 </script>
@@ -305,9 +310,9 @@ export default {
 .accident-statics {
   position: fixed;
   z-index: 10;
-  right: 1vw;
-  width: 17vw;
-  height: 80vh;
+  right: 13px;
+  width: 474px;
+  height: 900px;
   top: 9vh;
   color: white;
 }
@@ -319,7 +324,6 @@ export default {
   .accident-statics_title {
     position: relative;
     width: 100%;
-    font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
     display: -webkit-box;
@@ -328,8 +332,6 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    // padding: 0.6rem 2%;
-    font-weight: bolder;
   }
   .accident-statics--tab {
     width: 100%;

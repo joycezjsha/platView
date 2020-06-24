@@ -73,7 +73,7 @@ const router = new Router({
           }
         },
         {
-          path: '/main/vehicleownership', //巡航
+          path: '/main/vehicleownership', //车辆保有量
           name: 'vehicleownership',
           components: {
             default: vehicleownership

@@ -1,7 +1,7 @@
 <template>
   <div class="device-map">
-    <div @click='changeTable(0)'><m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
-    <div @click='changeTable(1)'><m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div>
+    <!-- <div @click='changeTable(0)'><m-title label='城市' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
+    <div @click='changeTable(1)'><m-title label='区县' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div> -->
     <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
   </div>
 </template>
@@ -19,17 +19,16 @@ export default {
       map: {},
       tableIndex:0,
       map_cover:{
-        sourceList:[],
-        lineList:[]
+        popups:[]
       },
-      showArea:false,
+      showArea:true,
       areaIndexs:[]
     };
   },
   mounted() {
     this.map = this.$store.state.map;
     this.getAreaData();
-    setTimeout(this.addHeatMap,3000);
+    this.map.setZoom(6);
   },
   components: {
     mTitle,tArea
@@ -40,19 +39,19 @@ export default {
   },
   methods: {
     /**
-     * 切换显示设备分布热力/区域填充
+     * 切换显示城市/区县
      * @param 0->设备分布热力，1->区域填充
      */
     changeTable(t){
-      this.tableIndex=t;
-      if(t){
-        this.showArea=true;
-        this.hideHeatMap();
-      }else{
-        this.showArea=false;
-        this.addHeatMap();
-      }
-       blur.$emit('initCityOrRoadStatics',null,null,false);
+      // this.tableIndex=t;
+      // if(t){
+      //   this.showArea=true;
+      //   this.hideHeatMap();
+      // }else{
+      //   this.showArea=false;
+      //   this.addHeatMap();
+      // }
+      //  blur.$emit('initCityOrRoadStatics',null,null,false);
     },
     /**
      * 显示设备分布热力图
@@ -123,11 +122,15 @@ export default {
      */
     getAreaData(){
       let that=this;
-      interf.GET_DEVICE_AREA_API({}).then(response=>{
+      interf.GET_MAP_AREA_API({}).then(response=>{
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
+            debugger;
               that.areaIndexs=data.data;
+              data.data.map(e=>{
+                that.addCityPopup(e)
+                })
           } else{
             
           }
@@ -150,6 +153,28 @@ export default {
       if(this.map.getLayer('heatmapLayer')!=undefined){
         this.map.setLayoutProperty('heatmapLayer', 'visibility', 'none');
       };
+    },
+    addCityPopup(e){
+      debugger;
+      let lnglat=e.jwd.split(' ');
+      let mainDiv=document.createElement('div');
+      mainDiv.style.width='13vw';
+      mainDiv.style.fontSize='0.7vw';
+      mainDiv.style.color='white';
+      // mainDiv.className='dev_popup';
+
+      let title=document.createElement('p');
+      title.innerHTML=e.name;
+      title.className='title';
+      mainDiv.appendChild(title);
+
+      let p1="<p style='color:#00C6FF'><span>汽车保有量：</span><span>"+e.num+"</span></p>";
+      mainDiv.appendChild($(p1)[0]);
+      
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-3, -15]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+
+      this.map_cover.popups.push(popup);
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){

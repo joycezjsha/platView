@@ -1,35 +1,16 @@
 <template>
-  <div class="ranking" style="border:1px silid">
+  <div class="ranking boxstyle">
       <!-- <div class="rank" style="border:#0A94FF">汽车保有量排名</div> -->
       <div  class="rank"  style="border:#0A94FF">
         <m-title label='汽车保有量排名' style='width:10vw;'></m-title>
       </div>
-      <div>
-        <div class="titles">
-          <span class="No">No.</span>
-          <span class="city">城市</span>
-          <span class="car" >汽车保有量</span>
-          <i style="" class='iconfont icon-shaixuan'></i>
-          <span class="cargo">客货车数量
-          <i style="width:15px;height:17px; color:rgba(29,153,171,1);" class='iconfont icon-shaixuan'></i>
-          </span>        
-        </div>
-         <xopacity></xopacity>
-         <!-- <xopacity></xopacity> -->
-          <x></x>
-          <xopacity></xopacity>
-          <x></x>
-          <xopacity></xopacity>
-          <x></x>
-          <!-- <xcenter></xcenter> -->
-          <xopacity></xopacity>
-          <x></x>
-          <xopacity></xopacity>
-          <x></x>
-          <xopacity></xopacity>
-          <x></x>
-          <xopacity></xopacity>
-          <x></x>
+      <div class='ranking--table'>
+        <el-table :data="tableDatas" style="width: 100%" @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+          <el-table-column fixed type="index" label="No." width="50"></el-table-column>
+          <el-table-column prop="name" label="城市"></el-table-column>
+          <el-table-column prop="num" label="汽车保有量" sortable></el-table-column>
+          <el-table-column prop="khcnum" label="客货车数量" sortable></el-table-column>
+        </el-table>
       </div>
       
      
@@ -37,22 +18,72 @@
 </template>
 
 <script>
-import xopacity from "./xopacity.vue";
-import x from "./x.vue";
-import xcenter from "./xcenter.vue";
+import blur from "@/blur";
+import {interf} from './config'
 import mTitle from '@/components/UI_el/title_com.vue'
 export default {
     name:"ranking",
     data(){
-        return{
-
-        }
+      return{
+        tableDatas:[]
+      }
     },
     components:{
-        xopacity,
-        x,
-        xcenter,
         mTitle
+    },
+    mounted(){
+      this.getCityOrderData();
+    },
+    methods:{
+      /**
+       * 表格点击事件
+       */
+      handle(row, event, column){
+        let data={};
+        data.name=row.name;
+        data.value=row.xzqh;
+      
+        blur.$emit('initVehicleStatics',data);
+      },
+      /**
+       * 获取车辆保有量，排名数据
+       */
+      getCityOrderData() {
+        let that = this;
+        interf.GET_CITY_ORDER_API({}).then(response=>{
+          if (response && response.status == 200){
+            var data = response.data;
+              if (data.errcode == 0) {
+                that.tableDatas=data.data;
+              } else{
+                that.$message({
+                  message: data.errmsg,
+                  type: "error",
+                  duration: 1500
+                });
+              }
+          }
+        })
+        .catch(err=>{
+          that.$message({
+                  message: '服务请求失败！',
+                  type: "error",
+                  duration: 1500
+                });
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
+      },
+      /**
+       * 设置表格样式
+       */
+      getRowClass({ row, column, rowIndex, columnIndex }) {
+        return "background:transparent;cursor:pointer;";
+      },
+    },
+    destroyed:{
+
     }
 }
 </script>
@@ -60,73 +91,28 @@ export default {
 <style  scoped lang="scss">
 
 .ranking{
-  top: 0.67708vw;
-  left: 0.625vw;
-  margin-left: 0.6vw;
-  width: 24.6875vw;
-  height: 50.9375vw;
-  background: #02061F;
-  border: 1px solid #0A94FF;
-  margin-top: 13px;
-}
-.rank{
-  width:120px;
-  height:39px;
-  font-size:16px;
-  font-family:Source Han Sans CN;
-  font-weight:400;
-  padding-top: 9px;
-  padding-bottom: 6px;
-  color:rgba(255,255,255,1);
-  margin-bottom: 36px;
-  border-bottom: 1px solid #fff;
-}
-.titles{
-  width: 100%;
-  padding-left: 30px;
-  padding-right: 33px;
-  .No{
-    width:23px;
-    height:12px;
+  position: absolute;;
+  top: 11px;
+  left: 10px;
+  width: 474px;
+  height: 900px;
+  .rank{
+    width:120px;
+    height:39px;
     font-size:16px;
     font-family:Source Han Sans CN;
     font-weight:400;
-    color:rgba(29,153,171,1);
-    line-height:25px;
-    margin-right: 45px;
-  };
-  .city{
-    width:31px;
-    height:16px;
-    font-size:16px;
-    font-family:Source Han Sans CN;
-    font-weight:400;
-    color:rgba(29,153,171,1);
-    line-height:60px;
-    margin-right: 30px;
-  };
-  .car{
-    width:79px;
-    height:16px;
-    font-size:16px;
-    font-family:Source Han Sans CN;
-    font-weight:400;
-    color:rgba(29,153,171,1);
-    line-height:40px;
-
-  };
-  .cargo{
-    width:79px;
-    height:16px;
-    font-size:16px;
-    font-family:Source Han Sans CN;
-    font-weight:400;
-    color:rgba(29,153,171,1);
-    line-height:60px;
+    padding-top: 9px;
+    padding-bottom: 6px;
+    color:rgba(255,255,255,1);
+    margin-bottom: 36px;
+    border-bottom: 1px solid #fff;
+  }
+  &--table{
+    width:90%;
+    margin:0 auto;
   }
 }
-.ranking i{
-  width:15px;height:17px; color:rgba(29,153,171,1); margin-right:35px;
-}
+
 
 </style>

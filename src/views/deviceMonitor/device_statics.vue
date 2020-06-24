@@ -6,7 +6,7 @@
          <div v-show='isShowReturn' class='return' @click='returnAll'><<返回全省</div>
       </div>
       <div class="device-statics_content boxstyle">
-        <m-title-com label='设备类型分析' style='width:8vw;height:4vh;line-height:4vh;'></m-title-com>
+        <m-title-com label='设备类型分析' style='width:8vw;height:4vh;line-height:4vh;margin-bottom:10px;'></m-title-com>
         <m-tab :value="num" label='设备总数' icon='icon-shebei1'></m-tab>
         <div>
           <div class='device-statics_sort_list'><m-list :list='staticsSort'></m-list></div>
@@ -187,8 +187,6 @@ export default {
   components:{mTab:m_tab,mList:m_list,mTitle,mTitleCom,mLineChart},
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(4);
     this.getSumDev();
     this.initdeviceAnalysisChart();
     this.getAllStaticsData();
@@ -472,8 +470,8 @@ export default {
     addRoadMarker(e){
       let lnglat=e.JWD.split(' ');
       let mainDiv=document.createElement('div');
-      mainDiv.style.width='15vw';
-      mainDiv.style.fontSize='0.8vw';
+      mainDiv.style.width='13vw';
+      mainDiv.style.fontSize='0.7vw';
       mainDiv.className='dev_popup';
       let title=document.createElement('p');
       title.innerHTML=e.KKMC;
@@ -490,7 +488,7 @@ export default {
       let p3="<p><span>类型：</span><span>"+e.LX+"</span></p>";
       mainDiv.appendChild($(p3)[0]);
       
-      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [0, -30]});
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-3, -15]});
       popup.setLngLat(lnglat).setDOMContent(mainDiv);
 
       let el = document.createElement('div');
@@ -499,7 +497,7 @@ export default {
       el.style.width = "30px";
       el.style.height = "30px";
       el.style["border-radius"] = "50%";
-      let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
+      let marker = new minemap.Marker(el, {offset: [-15, -15]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
       this.map_cover.markers.push(marker);
       this.map_cover.popups.push(popup);
     },
@@ -595,6 +593,7 @@ export default {
   .device-statics_title {
     position: relative;
     width: 100%;
+    margin-bottom: 9px;
     color: $color-white;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -654,7 +653,11 @@ export default {
 .dev_popup{
   color:$color-white;
   .title{
-    font-size:16px;
+    font-size:14px;
+    margin:0 0 15px 0;
+  }
+  >p{
+    margin:7px 0;
   }
 }
 </style>
