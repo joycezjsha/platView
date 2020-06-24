@@ -49,15 +49,15 @@ export default {
      blur.$on('realtime',showcarinfo=>{
        if(!showcarinfo) this.isShow=1;
        this.isShow=showcarinfo;
-       if(that.$refs.hotcardinfo){
-         let poplist=that.$refs.hotcardinfo.poPupList;
-         if(showcarinfo!==3){
-           poplist.map(item=>{
-             item.remove();
-           })
-           poplist=[];
-         }
-       }
+      //  if(that.$refs.hotcardinfo){
+      //    let poplist=that.$refs.hotcardinfo.poPupList;
+      //    if(showcarinfo!==3){
+      //      poplist.map(item=>{
+      //        item.remove();
+      //      })
+      //      poplist=[];
+      //    }
+      //  }
        if(that.$refs.belonginfo){
           let belonglist=that.$refs.belonginfo.belongList;
           if(showcarinfo!==2){
@@ -67,15 +67,15 @@ export default {
            belonglist=[];
          }
        }
-       if(that.$refs.carinfo){
-          let marklist=that.$refs.carinfo.map_cover.markers;
-          if(showcarinfo!==1){
-           marklist.map(item=>{
-             item.remove();
-           })
-           marklist=[];
-         }
-       }
+      //  if(that.$refs.carinfo){
+      //     let marklist=that.$refs.carinfo.map_cover.markers;
+      //     if(showcarinfo!==1){
+      //      marklist.map(item=>{
+      //        item.remove();
+      //      })
+      //      marklist=[];
+      //    }
+      //  }
       // console.log(showcarinfo)
     })
      

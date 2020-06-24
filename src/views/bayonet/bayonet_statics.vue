@@ -171,7 +171,6 @@ export default {
         if(this.XZQH!=''){
           this.showback=false;
         }
-        console.log(this.XZQH)
         this.getbayrankDatas(this.XZQH)
         this.getdevcountData(this.XZQH)
       })
@@ -242,7 +241,6 @@ export default {
    getdevcountData(xzqh){
       let that = this;
     //  如果没有参数
-    console.log(xzqh)
     if(xzqh===undefined){
       interf.GET_DEV_COUNT_API({
           id: ""
@@ -250,7 +248,6 @@ export default {
        .then(response=>{
          if (response && response.status == 200){
             var data = response.data;
-            console.log(data)
              if (data.errcode == 0) {
                 // that.indexData=data.data;
                 that.todaynum=data.data.todaynum.toString();

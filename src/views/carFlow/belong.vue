@@ -112,9 +112,10 @@ export default {
            
   },
   destroyed(){
-    this.belongList.map(item=>{  
-      item.remove();
-    })
+    this.clearMap()
+    // this.belongList.map(item=>{  
+    //   item.remove();
+    // })
   },
   components: {
     mTitle,
@@ -311,6 +312,8 @@ export default {
         var echartslayer = minemap.Template.create({map: this.map, type: 'od'});
         echartslayer.chart.setOption(option);
         this.belongList.push(echartslayer)
+        // this.map_cover.lineList.push(echartslayer)
+
 
         
     },

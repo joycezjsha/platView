@@ -397,7 +397,7 @@ export default {
     that.getToadyKeyVehicleInAndOutDatas();
     // that.initSumCharts();
     that.initAccurCharts();
-    that.getMapBayonetRankingDatas();
+    // that.getMapBayonetRankingDatas();
     that.onShowLayer()
   },
   destroyed() {

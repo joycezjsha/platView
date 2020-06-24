@@ -308,11 +308,19 @@ export default {
             }
             //清除layer
             if(this.map_cover.lineList.length>0){
-            this.map_cover.lineList.forEach(e=>{
-                if(this.map.getLayer(e)!=undefined){
-                this.map.removeLayer(e);
-                }
-            })
+                this.map_cover.lineList.forEach(e=>{
+                    if(this.map.getLayer(e)!=undefined){
+                    this.map.removeLayer(e);
+                    }
+                })
+            }
+            //清除layer
+            if(this.map_cover.lineList2.length>0){
+                this.map_cover.lineList2.forEach(e=>{
+                    if(this.map.getLayer(e)!=undefined){
+                    this.map.removeLayer(e);
+                    }
+                })
             }
         },
     }

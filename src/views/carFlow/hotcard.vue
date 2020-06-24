@@ -229,7 +229,8 @@ export default {
         .setLngLat(lnglat)
         .setDOMContent(el)
         .addTo(this.map);
-        this.poPupList.push(popup)
+        this.map_cover.popups.push(popup);
+        // this.poPupList.push(popup)
 
         let lnglat1 = [item.KKJD,item.KKWD];
         let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).addTo(this.map);

@@ -280,7 +280,6 @@ export default {
       .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
             that.roadDatas=data.data;
           }else{

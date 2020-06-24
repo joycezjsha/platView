@@ -39,8 +39,11 @@ export default {
         this.map = this.$store.state.map;
         this.map.setCenter([108.967368, 34.302634]);
         this.map.setZoom(11);
-        // this.getMapBayonetRankingDatas()
+        this.getMapBayonetRankingDatas()
         
+    },
+    destroyed(){
+      this.clearMap()
     },
     methods:{
       /* 
@@ -67,6 +70,7 @@ export default {
               this.onHideLayer()
             }else{
               this.onShowLayer()
+              this.getMapBayonetRankingDatas()
             }
             
         },
@@ -101,120 +105,120 @@ export default {
     /**
     *	车辆实时监测   聚合图
     */
-    // getBayonetMapRank(item){
-    //   let that=this;
-    //   that.map = that.$store.state.map;
-    //   if(that.map.getLayer('unclustered-points')!=undefined){
-    //     that.map.setLayoutProperty('unclustered-points', 'visibility', 'visible');
-    //   }else{
-    //     let jsonData={
-    //       "type": "FeatureCollection", 
-    //       "features": []
-    //     }
-    //     item.forEach(e=>{
-    //       if(e.JWD){
-    //         for(let i=0;i<e.NUM;i++){
-    //           jsonData.features.push({
-    //             "type": "Feature",
-    //             "geometry": {
-    //               "type": "Point",
-    //               "coordinates":e.JWD.split(" "),
-    //             }
-    //           })
-    //         }    
-    //       }
-    //     })
-    //     that.map.addSource("data-point", {
-    //       type: "geojson",
-    //       data: jsonData,  //"//117.157.231.168:80/minemapapi/demo/assets/poi_suzhou.json",
-    //       cluster: true,
-    //       clusterMaxZoom: 15,                    
-    //       clusterRadius: 50,
-    //       enableQueryChildren:false /*是否显示聚合详细信息，默认为false，如果为true，则开启显示详细信息功能，备注（如果开启显示详细信息功能，会引发性能问题，建议数据量较少（1000点以内）时使用）*/
-    //     })
-    //       that.map_cover.sourceList.push('data-point');
-    //        //添加非聚合图层
-    //        that.map.addLayer({
-    //          "id": "unclustered-points",
-    //          "type": "symbol",
-    //          "source": "data-point",
-    //          "filter": ["!has", "point_count"],
-    //          "layout": {
-    //            "icon-image": "bank-15"
-    //            }
-    //         })
-    //         that.map_cover.lineList.push("unclustered-points"); 
-    //         //添加聚合图层
-    //           var layers = [
-    //           [3,'#ff5a0f'], [5,'#D25C06'], [1,'#6C9B06']
-    //           ];
-    //           layers.forEach(function (layer, i) {
-    //             let clusterId="cluster"+i;
-    //             that.map.addLayer({
-    //               "id": clusterId, //+ i,
-    //               "type": "circle",
-    //               "source": "data-point",
-    //               "paint": {
-    //                 "circle-color": layer[1],
-    //                 "circle-radius": 18
-    //               },
-    //               "filter": i === 0 ?
-    //                 [">=", "point_count", layer[0]] :
-    //                 ["all", [">=", "point_count", layer[0]], ["<", "point_count", layers[i - 1][0]]]
-    //               })
-    //               that.map_cover.lineList.push(clusterId)
-    //             });
-    //             //添加数量图层
-    //              that.map.addLayer({
-    //                 "id": "cluster-count",
-    //                 "type": "symbol",
-    //                 "source": "data-point",
-    //                 "layout": {
-    //                     "text-field": "{point_count}",
-    //                     "text-size": 14
-    //                 },
-    //                 "paint":{
-    //                     "text-color":"#ffffff"
-    //                 },
-    //                 "filter": ["has", "point_count"]
-    //             }); 
-    //             that.map_cover.lineList.push("cluster-count"); 
-    //         }
-    // },
+    getBayonetMapRank(item){
+      let that=this;
+      that.map = that.$store.state.map;
+      if(that.map.getLayer('unclustered-points')!=undefined){
+        that.map.setLayoutProperty('unclustered-points', 'visibility', 'visible');
+      }else{
+        let jsonData={
+          "type": "FeatureCollection", 
+          "features": []
+        }
+        item.forEach(e=>{
+          if(e.JWD){
+            for(let i=0;i<e.NUM;i++){
+              jsonData.features.push({
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates":e.JWD.split(" "),
+                }
+              })
+            }    
+          }
+        })
+        that.map.addSource("data-point", {
+          type: "geojson",
+          data: jsonData,  //"//117.157.231.168:80/minemapapi/demo/assets/poi_suzhou.json",
+          cluster: true,
+          clusterMaxZoom: 15,                    
+          clusterRadius: 50,
+          enableQueryChildren:false /*是否显示聚合详细信息，默认为false，如果为true，则开启显示详细信息功能，备注（如果开启显示详细信息功能，会引发性能问题，建议数据量较少（1000点以内）时使用）*/
+        })
+          that.map_cover.sourceList.push('data-point');
+           //添加非聚合图层
+           that.map.addLayer({
+             "id": "unclustered-points",
+             "type": "symbol",
+             "source": "data-point",
+             "filter": ["!has", "point_count"],
+             "layout": {
+               "icon-image": "bank-15"
+               }
+            })
+            that.map_cover.lineList.push("unclustered-points"); 
+            //添加聚合图层
+              var layers = [
+              [3,'#ff5a0f'], [5,'#D25C06'], [1,'#6C9B06']
+              ];
+              layers.forEach(function (layer, i) {
+                let clusterId="cluster"+i;
+                that.map.addLayer({
+                  "id": clusterId, //+ i,
+                  "type": "circle",
+                  "source": "data-point",
+                  "paint": {
+                    "circle-color": layer[1],
+                    "circle-radius": 18
+                  },
+                  "filter": i === 0 ?
+                    [">=", "point_count", layer[0]] :
+                    ["all", [">=", "point_count", layer[0]], ["<", "point_count", layers[i - 1][0]]]
+                  })
+                  that.map_cover.lineList.push(clusterId)
+                });
+                //添加数量图层
+                 that.map.addLayer({
+                    "id": "cluster-count",
+                    "type": "symbol",
+                    "source": "data-point",
+                    "layout": {
+                        "text-field": "{point_count}",
+                        "text-size": 14
+                    },
+                    "paint":{
+                        "text-color":"#ffffff"
+                    },
+                    "filter": ["has", "point_count"]
+                }); 
+                that.map_cover.lineList.push("cluster-count"); 
+            }
+    },
      /**
       * 车辆实时监测  地图显示  KeyVehicle/getMapBayonetRanking  GET_MAP_BAY_RANK_API
       */
-      // getMapBayonetRankingDatas(code){
-      //   let that=this;
-      //   let MapBayonetData={};
-      //   //  如果默认显示
-      //   // 如果传入车辆类型code参数
-      //   if(code!=undefined){
-      //     MapBayonetData.code=code;
-      //   }
-      //     interf.GET_MAP_BAY_RANK_API(MapBayonetData)
-      //     .then(response=>{
-      //       if (response && response.status == 200){
-      //         var data= response.data;
-      //         console.log(data)
-      //         if (data.errcode == 0) {
-      //           that.getBayonetMapRank(data.data)
-      //         }else{
-      //           that.$message({
-      //           message: data.errmsg,
-      //           type: "error",
-      //           duration: 1500
-      //         });
-      //       }
-      //     }
-      //   })
-      //   .catch(err=>{
-      //     console.log(err);
-      //   })
-      //   .finally(() => {
-      //     that.tableLoading = false;
-      //   });
-      // },  
+      getMapBayonetRankingDatas(code){
+        let that=this;
+        let MapBayonetData={};
+        //  如果默认显示
+        // 如果传入车辆类型code参数
+        if(code!=undefined){
+          MapBayonetData.code=code;
+        }
+          interf.GET_MAP_BAY_RANK_API(MapBayonetData)
+          .then(response=>{
+            if (response && response.status == 200){
+              var data= response.data;
+              console.log(data)
+              if (data.errcode == 0) {
+                that.getBayonetMapRank(data.data)
+              }else{
+                that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
+      },  
     /*##清除地图加载点、线、面、弹框*/
       clearMap(){
         //清除source
@@ -234,17 +238,17 @@ export default {
           })
         }
         //清除popup
-        if(this.map_cover.popups.length>0){
-          this.map_cover.popups.forEach(e=>{
-            e.remove();
-          })
-        }
+        // if(this.map_cover.popups.length>0){
+        //   this.map_cover.popups.forEach(e=>{
+        //     e.remove();
+        //   })
+        // }
         //清除marker
-        if(this.map_cover.markers.length>0){
-          this.map_cover.markers.forEach(e=>{
-            e.remove();
-          })
-        }
+        // if(this.map_cover.markers.length>0){
+        //   this.map_cover.markers.forEach(e=>{
+        //     e.remove();
+        //   })
+        // }
       },
        
     }
