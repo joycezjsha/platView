@@ -187,7 +187,6 @@ export default {
     newValue: {
       immediate: false,
       handler: function(cVAL, oVAL) {
-        debugger;
         this.initAccidentStaticsChart();
       }
     }

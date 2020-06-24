@@ -111,12 +111,14 @@ export default {
     * 点击城市统计  触发事件
     */
     handdle(row){
+      let that=this;
       // console.log(row.XZQH)
-      this.XZQH=row.XZQH;
-      this.city=row.city;
-      blur.$emit("getXZQH",this.XZQH)
-      blur.$emit("getcity",this.city)
-      this.centerTo(row.jwd.split(' '));
+      that.XZQH=row.XZQH;
+      that.city=row.city;
+      // console.log(row,row.XZQH)
+      blur.$emit("getXZQH",that.XZQH)
+      blur.$emit("getcity",that.city)
+      that.centerTo(row.jwd.split(' '));
     },
     /**
     * 点击道路统计  触发事件
@@ -367,7 +369,6 @@ export default {
           }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-          debugger
         }
       });
     },

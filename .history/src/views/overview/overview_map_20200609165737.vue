@@ -68,7 +68,6 @@ export default {
       
     },
     addCityMarker(item){
-      debugger;
       var el = document.createElement('div');
       el.id = 'marker';
       el.style["border"] = "solid 1px #333333";

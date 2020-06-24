@@ -285,7 +285,6 @@ export default {
      * 初始化省内车辆运行态势echarts
      */
     initAccidentStaticsChart(){
-      debugger;
       let that=this;
       interf.GET_PRO_CAR_API({
           id:""

@@ -135,7 +135,6 @@ export default {
   },
   computed:{
     center_time(){
-      debugger;
       return new Date().getHours()+'：00-'+(new Date().getHours()+1)+':00'
     }
   },

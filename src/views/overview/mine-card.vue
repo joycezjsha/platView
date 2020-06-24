@@ -68,7 +68,7 @@ export default {
     //       }
     //     },
     //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       debugger
+    //       
     //     }
     //   });
     },

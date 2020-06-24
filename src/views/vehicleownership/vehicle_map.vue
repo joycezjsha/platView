@@ -126,7 +126,6 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-            debugger;
               that.areaIndexs=data.data;
               data.data.map(e=>{
                 that.addCityPopup(e)
@@ -155,7 +154,6 @@ export default {
       };
     },
     addCityPopup(e){
-      debugger;
       let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
       mainDiv.style.width='13vw';

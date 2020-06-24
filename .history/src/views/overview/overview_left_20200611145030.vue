@@ -241,7 +241,6 @@ export default {
       if (response && response.status == 200){
         var data= response.data;
         if (data.errcode == 0) {
-          debugger;
           that.trafficDatas=data.data;
         }else{
           that.$message({
