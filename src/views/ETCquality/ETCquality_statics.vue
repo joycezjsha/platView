@@ -2,21 +2,16 @@
   <div class="device-statics">
     <div class="device-statics_container">
       <div class="device-statics_title">
-        <div>
-          <i class="el-icon-collection-tag">全省统计</i>
+         <m-title label='全省统计' style='width:100%;'></m-title>
+         <div>
+          <m-tab label='设备总数' :value='allStatics.deviceCount' icon='icon-shebei1' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='活跃龙门架设备数' :value='allStatics.activeCount' icon='icon-liantonglongmenjia' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='今日回传过车数据' :value='allStatics.carCount' icon='icon-shujuhuichuan' icon_style='color:#FFFFFF' class='item'></m-tab>
         </div>
       </div>
-      <div class="device-statics_content">
-        <div>
-          <m-tab label='设备总数' value='2328'></m-tab>
-          <m-tab label='活跃龙门架设备数' value='2328'></m-tab>
-            <m-tab label='今日回传过车数据' value='5316'></m-tab>
-        </div>
-        <div>
-           <div class="device-statics_title">
-            <div>
-              <i class="el-icon-collection-tag">今日卡口数据回传排名:</i>
-            </div>
+      <div class="device-statics_content boxstyle">
+        <div class="device-statics_title">
+            <m-title-com label='今日卡口数据回传排名:' style='width:11vw;'></m-title-com>
           </div>
           <div class="device-statics_data">
             <el-table :data="tableDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -25,7 +20,6 @@
               <el-table-column prop="value" label="过车辆" sortable></el-table-column>
             </el-table>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -35,13 +29,16 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
+import mTitle from "@/components/UI_el/title.vue";
 import m_tab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list.vue'
+import mTitleCom from '@/components/UI_el/title_com.vue'
 export default {
   name: "TIndex",
   data() {
     return {
       map: {},
+      allStatics:{deviceCount:'2125',activeCount:2328,carCount:'245'},
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
@@ -91,13 +88,12 @@ export default {
       ]
     }
   },
-  components:{mTab:m_tab,mList:m_list},
+  components:{mTab:m_tab,mList:m_list,mTitle,mTitleCom},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
-    this.getIndexData();
+    this.map.setZoom(6);
     this.initdeviceStaticsChart();
     // setTimeout(()=>{
         that.initAccurCharts();
@@ -149,67 +145,27 @@ export default {
 .device-statics {
   position: fixed;
   z-index: 10;
-  right: 1vw;
-  width: 17vw;
-  height: 85vh;
-  top: 9vh;
+  right: 13px;
+  width: 474px;
+  height: 900px;
+  top: 99PX;
   color: white;
 }
 .device-statics_container {
   width: 100%;
   height: 100%;
-  background-color: $color-bg-1;
-  border: 1px solid $color-border-1;
   .device-statics_title {
     position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0.6rem 2%;
-    font-weight: bolder;
-  }
-  .device-statics--tab {
-  width: 100%;
-  height: 5vh;
-
-    > div {
-      width: 100%;
-      height: 5vh;
-      font-size: 0.8vw;
-      @include flex(row, center);
-
-      .--tab-title {
-        font-size: 0.9vw;
-        width: 40%;
-        @include flex(row, center);
-      }
-      .statics--tab--value {
-        width: 60%;
-        @include flex(row, center);
-        .statics_value {
-          color: $color-active;
-        }
-        .statics_value.sum {
-          font-size: 1.4vw;
-        }
-      }
-      .--tab-title {
-        .el-icon-bell:before {
-          font-size: 1.5vw;
-          color: #e70101;
-          font-weight: 600;
-        }
-      }
+    margin-bottom:10px;
+    .item{
+      width:95%;
+      margin:5px auto;
     }
-}
+  }
   .device-statics_content {
     width: 98%;
     height: 85%;

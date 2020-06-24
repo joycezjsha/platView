@@ -42,7 +42,7 @@
                     </template>
                   </el-input>
                 </el-form-item> -->
-                <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
+                <el-button size="default" :loading="loginLoading" @click="submit" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
           </div>
@@ -123,7 +123,8 @@ export default {
         ]
       },
       //验证码图片
-      captchaPath:''
+      captchaPath:'',
+      loginLoading:false
     };
   },
   components: {
@@ -181,23 +182,34 @@ export default {
         // } else {
         //   // 登录表单校验失败
         //   this.$message.error("请求失败，请检查服务");
+      _this.loginLoading=true;
       let data={
           'username': _this.formLogin.username,
           'password': _this.formLogin.password,
       }
       axios.post(interf.LOGIN_URL,data).then(res => {
         let data=res.data;
-        console.log(data)
+        _this.loginLoading=false;
         if(data.code==200){
-          // _this.$alert('登陆成功')
+          _this.$message({
+            message: '登陆成功',
+            type: 'success'
+          });
           window.sessionStorage.setItem('token',data.data.token)
             _this.$router.push('/')
         }else{
-          _this.$alert("登录失败，账号或密码不正确")
+          _this.$message({
+            message: '登录失败，账号或密码不正确！',
+            type: 'warn'
+          });
         }
       })
       .catch(err => {
-        console.log(err); 
+        this.$message({
+            message: '请求服务失败！',
+            type: 'error'
+          });
+        _this.loginLoading=false;
       })
         }
       });

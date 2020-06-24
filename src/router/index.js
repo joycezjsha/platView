@@ -59,7 +59,7 @@ const router = new Router({
           }
         },
         {
-          path: '/main/induction', //巡航 /main/induction
+          path: '/main/induction', //诱导简图
           name: 'induction',
           components: {
             default: induction
@@ -137,7 +137,7 @@ const router = new Router({
           }
         },
         {
-          path: '/main/measurement',//ETC龙门架数量
+          path: '/main/measurement',//区间测速
           name: 'measurement',
           components: {
             default: measurement

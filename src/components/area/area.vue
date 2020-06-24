@@ -177,7 +177,7 @@ export default {
                 // "text-anchor": "top"
             },
             "paint": {
-                "icon-color": "white",
+                "icon-color": "#696d79",
                  "text-color": {
                     "type": "categorical",
                     "property": "kind",
