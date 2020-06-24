@@ -4,8 +4,15 @@
       <div class="illegal-city_title">
         <m-title label='违法分析' style='width:6vw;'></m-title>
       </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 3vw;">
+        <el-tab-pane label="近7天" name="1"></el-tab-pane>
+        <el-tab-pane label="近30天" name="2"></el-tab-pane>
+        <el-tab-pane label="近3月" name="3"></el-tab-pane>
+        <el-tab-pane label="自定义" name="4"></el-tab-pane>
+      </el-tabs>
       <div class='illegal-city-query'>
-        <span class="illegal-city-query--label">时间：</span><span class="illegal-city-query--time">
+        <span class="illegal-city-query--label">时间：</span>
+        <span class="illegal-city-query--time">
           <el-date-picker width="100%"
             v-model="timeRange"
             type="daterange"
@@ -16,16 +23,21 @@
             end-placeholder="结束日期"
             >
           </el-date-picker>
-          </span><span class="illegal-city-query--btn"><el-button type="primary">确定</el-button></span></div>
+        </span>
+        <span class="illegal-city-query--btn">
+          <el-button type="primary">确定</el-button>
+        </span>
+      </div>
       <div class="illegal-city_content">
-         <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
+         <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 3vw;">
           <el-tab-pane label="全部" name="first"></el-tab-pane>
           <el-tab-pane label="122" name="second"></el-tab-pane>
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs>
         <div style="padding:0 5px">
-          <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          <el-table @row-click="handel"
+          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="60"></el-table-column>
             <el-table-column prop="COUNTNUM" label="全部违法" sortable></el-table-column>
             <el-table-column prop="SNUM" label="超速"  sortable></el-table-column>
@@ -41,11 +53,13 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import mTitle from "@/components/UI_el/title_com.vue";
+import blur from '../../blur';
 export default {
   name: "TCruise",
   data() {
     return {
       map: {},
+      xzqh:'',
       indexDatas: [
         {"CITY":"西安","COUNTNUM":"2.1","SNUM":"+0.3%","TRNUM":"-0.1%"}
         ],
@@ -77,6 +91,19 @@ export default {
     this.clearMap();
   },
   methods: {
+    /**
+     * 点击表格事件
+    */
+   handel(row){
+     this.xzqh=row.xzqh;
+     blur.$emit('getxzqh',this.xzqh)
+   },
+   /**
+    * 超速违法 IllegalAnalysis/getSpeedingViolation   GET_SPEED_VIOLA_API
+   */
+    getSpeedingViolationDatas(){
+
+    },
     /** 
     * 违法分析  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALY_API
     */
@@ -383,11 +410,11 @@ export default {
     .illegal-city-query{
       color: $color-white;
       width: 100%;
-      height: 3vh;
+      height: 6vh;
       line-height: 3vh;
       text-align: center;
       font-size: 0.8vw;
-      margin: 2% 0;
+      // margin: 2% 0;
       @include flex(row,center);
       &--label{
         width:15%;

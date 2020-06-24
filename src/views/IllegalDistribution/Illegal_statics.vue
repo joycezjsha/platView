@@ -1,49 +1,66 @@
 <template>
   <div class="accident-statics">
     <div class="accident-statics_container">
-      <div class="accident-statics_title">
-        <m-title label='全省统计' style='width:100%;'></m-title>
-        <!-- <div>
-          <i class="el-icon-collection-tag">全省统计</i>
-        </div> -->
+      <div class="accident-statics_title top boxstyle">
+        <div class="title" v-if="showback==true" >全省统计</div>
+          <div class="back" v-else @click="goback()" >&lt;&lt; 返回全省
+            <span> {{city}}</span>
+          </div>
       </div>
-      <div class="accident-statics--tab">
-        <div>
-          <span class="--tab-title">
-            <i class="el-icon-bell"></i>全部违法数量总计
-          </span>
-          <span class="statics--tab--value">
-            <span class="statics_value sum">{{staticsData.sum}}</span>
-          </span>
-        </div>
-        <div>
-          <span>超速行驶：{{staticsData.over}}</span>
-          <el-divider direction="vertical"></el-divider>
-          <span>尾号限行：{{staticsData.lastNumberLimit}}</span>
-        </div>
-      </div>
-      <div class="accident-statics_content">
-        <div class="accident-statics_title">
+      <!-- 点击中间的三个按钮，切换对应的template -->
+      <div v-show="isShow=='1'">
+        <div class="accident-statics--tab">
           <div>
-            <i class="el-icon-collection-tag">违法类别Top5:</i>
+            <span class="--tab-title">
+              <i class="el-icon-bell"></i>全部违法数量总计
+            </span>
+            <span class="statics--tab--value">
+              <span class="statics_value sum">{{staticsData.sum}}</span>
+            </span>
+          </div>
+          <div>
+            <span>超速行驶：{{staticsData.over}}</span>
+            <el-divider direction="vertical"></el-divider>
+            <span>尾号限行：{{staticsData.lastNumberLimit}}</span>
           </div>
         </div>
-        <div id="accident-statics_sort">
-          
-        </div>
-        <div class='accident-statics_table'>
-          <div class="accident-statics_title">
-            <div>
-              <i class="el-icon-collection-tag">高发道路排名:</i>
-            </div>
-          </div>
-          <el-table :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column fixed type="index" label="No" width="50"></el-table-column>
-              <el-table-column prop="city" label="道路名称"></el-table-column>
-              <el-table-column prop="index" label="违法数量" sortable></el-table-column>
-            </el-table>
+        <div class="accident-statics_content Top5">
+          <m-title label='违法类别Top5' style='width:7vw;margin-left:1vw'></m-title>
+          <div id="accident-statics_sort"></div>
         </div>
       </div>
+      <!-- 点击中间的三个按钮，切换对应的div style="paddin:1vh 1vw" style="paddin:1vh 1vw" -->
+        <div v-show="isShow=='2'">
+          <div class="speed">
+            <m-tab label='超速违法数量总计' :value=speed.NUM></m-tab>
+          </div>
+          <div class="speedecharts" >
+            <m-title  label='超速违法分类' style='width:9vw;margin-left:1vw'></m-title>
+          </div>
+        </div>
+      <!-- 点击中间的三个按钮，切换对应的div -->
+         <div v-show="isShow=='3'">
+            <div class="speed" >
+              <m-tab  label='违法限行数量总计' :value=countnum></m-tab>
+            </div>
+            <div class="speedecharts">
+              <m-title label='限行日期分布' style='width:9vw;margin-left:1vw'></m-title>
+            </div>
+         </div>
+         
+      <!-- 高发道路排名 -->
+      <div class='accident-statics_table'>
+          <div class="accident-statics_title">
+            <m-title label='高发道路排名' style='width:9vw;'></m-title>
+          </div>
+          <div style="padding:0 1vw">
+            <el-table :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+              <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+              <el-table-column prop="roadName" label="道路名称"></el-table-column>
+              <el-table-column prop="NUM" label="违法数量" sortable></el-table-column>
+            </el-table>
+          </div>
+        </div>
     </div>
   </div>
 </template>
@@ -51,15 +68,29 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import echarts from 'echarts'
-import mTitle from "@/components/UI_el/title.vue";
+import echarts from 'echarts';
+import m_tab from '@/components/UI_el/tab.vue';
+import blur from '../../blur.js';
+import mTitle from '@/components/UI_el/title_com.vue';
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
 export default {
   name: "TIndex",
   data() {
     return {
+      showback:true, //是否显示返回按钮
       map: {},
-      staticsData: {sum: 10,over:123,lastNumberLimit:1224},
+      speed:{
+        NUM:''
+      },
+      illegal:{
+        NUM:''
+      },
+      isShow:'1',  //默认显示全部违法 2--超速  3--限行
+      staticsData: {
+        sum:'',
+        over:'',
+        lastNumberLimit:''
+      },
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
@@ -68,15 +99,17 @@ export default {
           },
           legend: {
               orient: 'vertical',
-              right: 10,
+              right: 20,
+              top:50,
               data: [],
               textStyle:{color:'white'}
           },
           series: [
               {
-                  name: '警情统计',
+                  name: '违法类别',
                   type: 'pie',
-                  radius: ['40%', '60%'],
+                  radius: ['50%', '70%'],
+                  center: ['40%', '50%'],  
                   avoidLabelOverlap: false,
                   label: {
                       show: false,
@@ -85,7 +118,7 @@ export default {
                   emphasis: {
                       label: {
                           show: true,
-                          fontSize: '30',
+                          fontSize: '15',
                           fontWeight: 'bold'
                       }
                   },
@@ -104,10 +137,13 @@ export default {
         { name: "机动车与非机动车", value: "122", radio: "32%" },
         { name: "行人", value: "2", radio: "32%" }
       ],
-      indexDatas: [{"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}]
+      indexDatas: [
+        {"roadName":"","index":"","NUM":""}
+        // ,{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}
+      ]
     }
   },
-  components: { mTitle,mLineChart },
+  components: { mTitle,mLineChart,mTab:m_tab },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -115,6 +151,10 @@ export default {
     this.map.setZoom(11);
     this.getIndexData();
     this.initAccidentStaticsChart();
+    this.getData()
+    this.getAllProvinceIllegalStatisticsDatas();
+    this.getIllegalAnalysisDatas();
+
   },
   destroyed() {
     this.flyRoutes = [];
@@ -123,6 +163,160 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
+    /**
+     * blur.$emit('getIndex',this.tableIndex)
+     */
+    getData(){
+      blur.$on('getIndex',data=>{
+        this.isShow=data;
+        if(this.isShow==2){
+          this.getSpeedingViolationDatas()
+        }
+        if(this.isShow==3){
+          this.getlastTrafficRestrictionDatas()
+        }
+      })
+      blur.$on('getxzqh',data=>{
+        this.xzqh=xzqh;
+        if(this.isShow==1){
+          this.getAllProvinceIllegalStatisticsDatas(this.xzqh);
+          this.getIllegalAnalysisDatas(xzqh);
+        }
+        if(this.isShow==2){
+          this.getSpeedingViolationDatas(this.xzqh);
+        }
+        if(this.isShow==3){
+          this.getlastTrafficRestrictionDatas(this.xzqh)
+        }
+        
+      })
+    },
+    /**
+     * 尾号限行 IllegalAnalysis/getlastTrafficRestriction  GET_LAST_TRAFF_API
+    */
+   getlastTrafficRestrictionDatas(){
+     let that = this;
+      let param={};
+      if(xzqh!=undefined){
+        param.xzqh=xzqh;
+      }
+      interf.GET_LAST_TRAFF_API(param)
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          if(data.errcode == 0){
+            that.illegal.NUM=data.data.NUM;
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
+   },
+    /**
+    * 超速违法 IllegalAnalysis/getSpeedingViolation   GET_SPEED_VIOLA_API
+    */
+    getSpeedingViolationDatas(){
+       let that = this;
+      let param={};
+      if(xzqh!=undefined){
+        param.xzqh=xzqh;
+      }
+      interf.GET_SPEED_VIOLA_API(param)
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          if(data.errcode == 0){
+            that.speed.NUM=data.data.NUM;
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
+    },
+    /**
+     * 高发道路排名  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALYSIS_API
+    */
+   getIllegalAnalysisDatas(xzqh){
+     let that = this;
+      let param={};
+      if(xzqh!=undefined){
+        param.xzqh=xzqh;
+      }
+      interf.GET_ILL_ANALYSIS_API(param)
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          if(data.errcode == 0){
+            that.indexDatas=data.data;
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
+   },
+    /**
+     * 全省统计  IllegalAnalysis/getAllProvinceIllegalStatistics  GET_ILL_PRO_STATIS_API
+    */
+    getAllProvinceIllegalStatisticsDatas(xzqh){
+      let that = this;
+      let param={};
+      if(xzqh!=undefined){
+        param.xzqh=xzqh;
+      }
+      interf.GET_ILL_PRO_STATIS_API(param)
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          if(data.errcode == 0){
+            that.staticsData.sum=data.data.COUNTNUM;
+            that.staticsData.over=data.data.SNUM;
+            that.staticsData.lastNumberLimit=data.data.TRNUM;
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
+    },
     //获取统计数据
     getIndexData() {
       let that = this;
@@ -161,7 +355,6 @@ export default {
   z-index: 10;
   right: 1vw;
   width: 474px;
-  height: 80vh;
   top: 9vh;
   color: white;
 }
@@ -184,7 +377,11 @@ export default {
   }
   .accident-statics--tab {
   width: 100%;
-  height: 9vh;
+  height:153px;
+  margin-bottom: 19px;
+  background:rgba(2,6,31,0);
+  border:1px solid;
+  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 
     > div {
       width: 100%;
@@ -217,14 +414,15 @@ export default {
     }
 }
   .accident-statics_content {
-    width: 98%;
-    height: 85%;
+    width:474px;
+    height:299px;
     background-color: $color-bg-1;
-    margin: 1%;
-
+    margin-bottom: 10px;
+    border:1px solid;
+    border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
     #accident-statics_sort {
       width:100%;
-      height:15vh;
+      height:80%;
     }
     #sumCountChange{
       width:100%;
@@ -236,5 +434,67 @@ export default {
     }
   }
 }
-
+.accident-statics .top{
+  width: 100%;
+  height:34px;
+  background-color: $color-bg-1;
+  border:1px solid;
+  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+  margin-bottom: 1vh;
+  .back{
+        height:34px;
+        font-size:16px;
+        padding-top: 5px;
+        font-family:Source Han Sans CN;
+        font-weight:400;
+        color:rgba(0,198,255,1);
+        padding-left: 17px;
+        cursor:pointer;
+        span{
+          width:53px;
+          height:18px;
+          font-size:18px;
+          font-family:Source Han Sans CN;
+          font-weight:400;
+          color:rgba(254,254,254,1);
+          padding-left: 108px;
+          cursor:pointer;
+        }
+      }
+     .title{
+        width: 100%;
+        height:34px;
+        font-size:18px;
+        padding-top: 5px;
+        text-align: center;
+        font-family:Source Han Sans CN;
+        font-weight:400;
+        color:rgba(254,254,254,1);
+        cursor:pointer;
+      }
+}
+.accident-statics_table{
+  width:474px;
+  height:299px;
+  background:rgba(2,6,31,0);
+  border:1px solid;
+  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+}
+.accident-statics .speed{  
+  width:474px;
+  height:69px;
+  padding:5px;
+  background:rgba(2,6,31,0);
+  border:1px solid;
+  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+}
+.accident-statics .speedecharts{
+  width:474px;
+  height:299px;
+  margin-top: 29px;
+  margin-bottom: 29px;
+  background:rgba(2,6,31,0);
+  border:1px solid;
+  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+}
 </style>

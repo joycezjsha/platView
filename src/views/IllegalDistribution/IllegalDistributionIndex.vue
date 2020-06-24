@@ -3,6 +3,7 @@
     <index></index>
     <t-index></t-index>
      <t-index-city v-show="isShowCity"></t-index-city>
+    <middle></middle>
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import blur from "@/blur";
 import index from "./Illegal_city.vue";
 import t_index from "./Illegal_statics.vue";
 import t_index_city from "./accident_statics_city.vue";
+import middle from "./Illegal_middle.vue";
 export default {
   name: "TafficIndex",
   data() {
@@ -21,7 +23,8 @@ export default {
   components:{
     index,
     TIndex:t_index,
-    TIndexCity:t_index_city
+    TIndexCity:t_index_city,
+    middle
   },
   mounted() {
     let _this=this;

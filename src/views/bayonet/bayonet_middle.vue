@@ -45,9 +45,6 @@ export default {
         this.map.setZoom(6);
         this.getBayonetHeatMap()
         this.getDatas()
-        // this.map.repaint = true;
-        // this.getBayonetHeatDatas();
-        
     },
     destroyed() {
         this.map.setPitch(0);

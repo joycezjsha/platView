@@ -1,13 +1,13 @@
 <template>
-  <div class="carFlow-middle" >
+  <div class="Illegal_middle" >
     <div @click="realtime(1)" >
-        <m-title label='城市车辆分析' class="car" :img_type='tableIndex==1?"1":"0"'></m-title>
+        <m-title label='违法分析' class="car" :img_type='tableIndex==1?"1":"0"'></m-title>
     </div>
     <div @click="realtime(2)" >
-        <m-title label='车辆归属地OD' class="car" :img_type='tableIndex==2?"1":"0"'></m-title>
+        <m-title label='超速' class="car" :img_type='tableIndex==2?"1":"0"'></m-title>
     </div>
    <div @click="realtime(3)">
-        <m-title  label='热点卡口道路' class="car" :img_type='tableIndex==3?"1":"0"'></m-title>
+        <m-title  label='限行' class="car" :img_type='tableIndex==3?"1":"0"'></m-title>
    </div>
   </div>
 </template>
@@ -29,11 +29,9 @@ export default {
         blur
     },
     methods:{
-        // 车辆实时监测
         realtime(i){    
             this.tableIndex=i;
-            let els=document.getElementsByClassName('.custom-popup-class');
-            blur.$emit('realtime',this.tableIndex)
+            blur.$emit('getIndex',this.tableIndex)
         },
     }
 }
@@ -41,7 +39,7 @@ export default {
 
 <style scope lang='scss'>
 
-.carFlow-middle{
+.Illegal_middle{
     position: fixed;
     top:95.6vh;
     left:34.53vw;
