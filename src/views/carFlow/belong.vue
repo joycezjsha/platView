@@ -164,12 +164,7 @@ export default {
         }
       });
       blur.$on('realtime',data=>{
-        console.log(data)
         that.isZoom=data;
-        console.log(that.isZoom,typeof(that.isZoom))
-        // if(that.isZoom==2){
-        //   that.map.setZoom(4);
-        // }
       })
     },
     // 是否显示返回

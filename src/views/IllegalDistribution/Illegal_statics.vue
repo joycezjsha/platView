@@ -160,7 +160,7 @@ export default {
   position: fixed;
   z-index: 10;
   right: 1vw;
-  width: 17vw;
+  width: 474px;
   height: 80vh;
   top: 9vh;
   color: white;

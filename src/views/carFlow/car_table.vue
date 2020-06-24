@@ -136,8 +136,6 @@ export default {
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.map.repaint = true;
-    // that.getFlowData();
-    // that.showdata1()
     that.getIndexData();
     that.realtimeData()
   
@@ -163,7 +161,6 @@ export default {
     //  全省流动情况  默认显示实时的数据   
     realtimeData(){
       let that = this;
-      console.log(that.stime)
        interf.GET_VEH_FLOW_API({
          id: "",
          stime:that.stime
@@ -171,19 +168,18 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
            var data = response.data;
-          //  console.log(data)
             if (data.errcode == 0) {
              that.allStatics.incount=data.data.incount;
              that.allStatics.outcount=data.data.outcount;
              that.allStatics.addIn=data.data.addIn;
              that.allStatics.inoutProportion=data.data.inoutProportion;
-             var obj=data.data.data
-            //  console.log(obj)
-            for(var key in obj){
-              obj[key].city=key
-              that.flowDatas.push(obj[key])
-            }
-          //  console.log(that.flowDatas[0])
+             var obj=data.data.data;
+             if((JSON.stringify(obj)=='{}')==false){
+                for(var key in obj){
+                  obj[key].city=key
+                  that.flowDatas.push(obj[key])
+                }
+              }
             } else{
               that.$message({
                 message: data.errmsg,
@@ -207,38 +203,34 @@ export default {
         // console.log(that.timeRange[0],that.timeRange[1])
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
-        console.log(time1,time2)
         let timeData={
           time1,
           time2
         }
-        console.log(timeData)
         blur.$emit("sendTime",timeData)
-        console.log('000000')
   
       // 用日历选择时间 获取车辆流动页面全省流动情况
        interf.GET_VEH_FLOW_API({
-         id: "",
-        //  timeRange:that.timeRange
          stime:that.timeRange[0],
          etime:that.timeRange[1]
        })
        .then(response=>{
         if (response && response.status == 200){
            var data = response.data;
-          //  console.log(data)
             if (data.errcode == 0) {
              that.allStatics.incount=data.data.incount;
              that.allStatics.outcount=data.data.outcount;
              that.allStatics.addIn=data.data.addIn;
              that.allStatics.inoutProportion=data.data.inoutProportion;
              var obj=data.data.data
-            //  console.log(obj)
-            for(var key in obj){
-              obj[key].city=key
-              that.flowDatas.push(obj[key])
-            }
-          //  console.log(that.flowDatas)
+             if(!(JSON.stringify(obj)=='{}')){
+                for(var key in obj){
+                  obj[key].city=key
+                  that.flowDatas.push(obj[key])
+                }
+              }else{
+                that.flowDatas=[]
+              }
             } else{
               that.$message({
                 message: data.errmsg,
@@ -258,92 +250,7 @@ export default {
     },
     getIndexData(){
      let that = this;
-    //  interf.GET_MAP_HOT_BAY_API({
-    //    id:"",
-    //    stime:'1'
-    //  })
-    //  .then(response=>{
-    //    if (response && response.status == 200){
-    //        var data = response.data;
-    //        console.log('11111')
-    //       //  console.log(data)
-    //        if (data.errcode == 0) {
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //        } 
-    //     }
-    //  })
-    //  .catch(err=>{
-    //      console.log(err);
-    //   })
-    //   .finally(() => {
-    //     that.tableLoading = false;
-    //   });
-      
-    // //车辆流动页面全省车辆统计 GET_VEH_PRO_API
-    //  interf.GET_VEH_PRO_API({
-    //    id:"",
-    //    etime:'',
-    //    stime:''
-    //  })
-    //  .then(response=>{
-    //    if (response && response.status == 200){
-    //        var data = response.data;
-    //       //  console.log(data)
-    //        if (data.errcode == 0) {
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //        } 
-    //     }
-    //  })
-    //  .catch(err=>{
-    //      console.log(err);
-    //   })
-    //   .finally(() => {
-    //     that.tableLoading = false;
-    //   });
-      
-      
     },
-    //获取车辆流动数据
-    // getFlowData() {
-    //   let that = this;
-    //   $.ajax({
-    //     url: "./static/json/carFlow.json", //globals.CRUISE_ALL_INFO_URL,
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     responseType: "json",
-    //     method: "get",
-    //     dataType: "json",
-    //     data: {
-    //       // token: window.localStorage.getItem("loginUserToken")
-    //     },
-    //     success: function(data) {
-    //       if (data.errcode == -2) {
-    //         that.$router.push({ name: "/login" });
-    //       }
-    //       if (data.errmsg == "success" && data.data.length > 0) {
-            
-    //         that.flowDatas = data.data;
-    //         //that.fly();
-    //       }
-    //     },
-    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       console.log(XMLHttpRequest);
-    //       console.log(textStatus);
-    //       console.log(errorThrown);
-    //     }
-    //   });
-    // },
     
     //清除地图加载点、线、面、弹框
     clearMap(){
@@ -405,40 +312,6 @@ export default {
         that.tableLoading = false;
       });
     }
-    //  console.log(this.activeName)
-    
-    //  console.log(this.activeName)
-    // 如果选择的是的实时，今天，昨天 
-    // 车辆类型分析
-    // if(this.activeName!='4'){
-    //   interf.GET_BELONG_API({
-    //     id: "",
-    //     stime:that.activeName,
-    //     fxlx:'',
-    //     xzqh:''
-    //   })
-    //   .then(response=>{
-    //     if (response && response.status == 200){
-    //        var data = response.data;
-    //        console.log(data)
-    //         if (data.errcode == 0) {
-    //           // blur.$emit('getroadtimes',data)
-    //         } else{
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //         }
-    //     }
-    //   })
-    //   .catch(err=>{
-    //      console.log(err);
-    //   })
-    //   .finally(() => {
-    //     that.tableLoading = false;
-    //   });
-    // }
     // 热点道路
     if(that.activeName!='4'){
       interf.GET_HOT_ROAD_API({
@@ -450,7 +323,7 @@ export default {
            var data = response.data;
           //  console.log(data)
             if (data.errcode == 0) {
-              blur.$emit('getroadtimes',data)
+              // blur.$emit('getroadtimes',data)
             } else{
               that.$message({
                 message: data.errmsg,
@@ -505,19 +378,25 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
            var data = response.data;
-          //  console.log(data)
             if (data.errcode == 0) {
              that.allStatics.incount=data.data.incount;
              that.allStatics.outcount=data.data.outcount;
              that.allStatics.addIn=data.data.addIn;
              that.allStatics.inoutProportion=data.data.inoutProportion;
-             var obj=data.data.data
-            //  console.log(obj)
-            for(var key in obj){
-
-              obj[key].city=key
-              that.flowDatas.push(obj[key])
+             var obj=data.data.data;
+             if(!(JSON.stringify(obj)=='{}')){
+                for(var key in obj){
+                  obj[key].city=key
+                  that.flowDatas.push(obj[key])
+                }
+            }else{
+              that.flowDatas=[]
             }
+            // for(var key in obj){
+
+            //   obj[key].city=key
+            //   that.flowDatas.push(obj[key])
+            // }
           //  console.log(that.flowDatas)
             } else{
               that.$message({

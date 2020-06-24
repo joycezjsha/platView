@@ -24,12 +24,14 @@
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs>
-        <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
-              <el-table-column prop="city" label="城市"></el-table-column>
-              <el-table-column prop="index" label="全部违法" sortable></el-table-column>
-              <el-table-column prop="over" label="超速" sortable></el-table-column>
-              <el-table-column prop="limit" label="限行" sortable></el-table-column>
-            </el-table>
+        <div style="padding:0 5px">
+          <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
+            <el-table-column prop="CITY" label="城市" width="60"></el-table-column>
+            <el-table-column prop="COUNTNUM" label="全部违法" sortable></el-table-column>
+            <el-table-column prop="SNUM" label="超速"  sortable></el-table-column>
+            <el-table-column prop="TRNUM" label="限行"  sortable></el-table-column>
+        </el-table>
+        </div>
       </div>
     </div>
   </div>
@@ -44,7 +46,9 @@ export default {
   data() {
     return {
       map: {},
-      indexDatas: [{"city":"西安","index":"2.1","over":"+0.3%","limit":"-0.1%"},{"city":"渭南","index":"1.1","over":"+0.3%","limit":"-0.1%"}],
+      indexDatas: [
+        {"CITY":"西安","COUNTNUM":"2.1","SNUM":"+0.3%","TRNUM":"-0.1%"}
+        ],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -66,12 +70,41 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
+    that.getIllegalAnalysisDatas()
   },
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
   },
   methods: {
+    /** 
+    * 违法分析  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALY_API
+    */
+   getIllegalAnalysisDatas(){
+     let that = this;
+     interf.GET_ILL_ANALY_API({})
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          console.log(data)
+          if(data.errcode == 0){
+            that.indexDatas=data.data;
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
+   },
     //获取巡航数据
     getIndexData() {
       let that = this;
@@ -270,10 +303,10 @@ export default {
 .illegal-city-div {
   position: absolute;
   z-index: 10;
-  left: 1vw;
-  width: 23vw;
-  height: 80vh;
-  top: 9vh;
+  left:12px;
+  width: 474px;
+  height:977px;
+  top:12px;
 }
 .illegal-city_container {
   width: 100%;
