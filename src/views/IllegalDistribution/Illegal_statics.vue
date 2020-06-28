@@ -36,12 +36,13 @@
           </div>
           <div class="speedecharts" >
             <m-title  label='超速违法分类' style='width:9vw;margin-left:1vw'></m-title>
+            <div id="speeding-offences"></div>
           </div>
         </div>
       <!-- 点击中间的三个按钮，切换对应的div -->
          <div v-show="isShow=='3'">
             <div class="speed" >
-              <m-tab  label='违法限行数量总计' :value=countnum></m-tab>
+              <m-tab  label='违法限行数量总计' :value=countnum1></m-tab>
             </div>
             <div class="speedecharts">
               <m-title label='限行日期分布' style='width:9vw;margin-left:1vw'></m-title>
@@ -52,6 +53,12 @@
       <div class='accident-statics_table'>
           <div class="accident-statics_title">
             <m-title label='高发道路排名' style='width:9vw;'></m-title>
+            <div style="position:absolute;left:15vw;top:1vh">
+              <select
+              style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px;border-radius:4px; line-height:14px" id="sortdata" >
+                <option  v-for="(item,i) in roadClassification" :key="i">{{item.NAME}}</option>
+              </select>
+            </div>
           </div>
           <div style="padding:0 1vw">
             <el-table :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -77,6 +84,19 @@ export default {
   name: "TIndex",
   data() {
     return {
+      stime:'1',
+      city:'',
+      xzqh:'',
+      timeRange:{ //自定义时间
+        time1:'',
+        time2:''
+      },
+      countnum1:'',
+      roadClassification:[],  //道路分类
+      // roadClassification:{  
+      //   DLLX:'', //道路类型
+      //   NAME:'' //道路类型名称
+      // },
       showback:true, //是否显示返回按钮
       map: {},
       speed:{
@@ -91,45 +111,90 @@ export default {
         over:'',
         lastNumberLimit:''
       },
+      speeding_chart:null,
+      speeding_option:{
+        title: {
+        text: '世界人口总量',
+        subtext: '数据来自网络'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+          }
+        },
+        legend: {
+            data: ['2011年', '2012年']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        yAxis: {
+            type: 'category',
+            data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)']
+        },
+        series: [
+            {
+                name: '2011年',
+                type: 'bar',
+                data: [18203, 23489, 29034, 104970, 131744, 630230]
+            },
+            {
+                name: '2012年',
+                type: 'bar',
+                data: [19325, 23438, 31000, 121594, 134141, 681807]
+            }
+        ]
+      },
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
-              trigger: 'item',
-              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
           legend: {
-              orient: 'vertical',
-              right: 20,
-              top:50,
-              data: [],
-              textStyle:{color:'white'}
-          },
-          series: [
-              {
-                  name: '违法类别',
-                  type: 'pie',
-                  radius: ['50%', '70%'],
-                  center: ['40%', '50%'],  
-                  avoidLabelOverlap: false,
-                  label: {
-                      show: false,
-                      position: 'center'
-                  },
-                  emphasis: {
-                      label: {
-                          show: true,
-                          fontSize: '15',
-                          fontWeight: 'bold'
-                      }
-                  },
-                  labelLine: {
-                      show: false
-                  },
-                  data: [
-                     
-                  ]
-              }
-          ]
+                orient: 'vertical',
+                right: 30,
+                top:20,
+                data: [],
+                textStyle:{color:'white'},
+                formatter: function(name){
+            　　　return name.length>5?name.substr(0,5)+"...":name;
+            　　}
+            },
+            series: [
+                {
+                    name: '违法类别',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    center: ['30%', '50%'],  
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '15',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                      
+                    ]
+                }
+            ]
       },
       accident_chart:null,
       sg_sort_data: [
@@ -149,11 +214,14 @@ export default {
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
-    this.getIndexData();
-    this.initAccidentStaticsChart();
+    // this.getIndexData();
+  
     this.getData()
-    this.getAllProvinceIllegalStatisticsDatas();
-    this.getIllegalAnalysisDatas();
+    this.getAllProvinceIllegalStatisticsDatas(that.stime);
+    this.initAccidentStaticsChart(that.stime);
+    this.getRoadCategoryDatas()
+    this.getSpeedingViolationDatas(that.stime)
+    this.getIllegalAnalysisDatas(that.stime);
 
   },
   destroyed() {
@@ -164,32 +232,131 @@ export default {
   },
   methods: {
     /**
+    * 点击返回按钮
+    */
+   goback(){
+      let that=this;
+      that.stime='1';
+      that.showback=true;
+      that.getAllProvinceIllegalStatisticsDatas(that.stime);
+      that.initAccidentStaticsChart(that.stime);
+      that.getSpeedingViolationDatas(that.stime)
+      // that.getIllegalAnalysisDatas(that.stime);
+   },
+    /**
      * blur.$emit('getIndex',this.tableIndex)
+     * getstime--传入对应的时间  
+     * sendTime--时间对象 {time1: "2020-06-15 00:00:00", time2: "2020-06-17 23:59:59"}
      */
     getData(){
-      blur.$on('getIndex',data=>{
-        this.isShow=data;
-        if(this.isShow==2){
-          this.getSpeedingViolationDatas()
+      let that=this;
+      blur.$on('getcity',data=>{
+        that.city=data;
+        that.showback=false;
+      })
+      blur.$on("sendTime",data=>{
+        that.timeRange.time1=data.time1;
+        that.timeRange.time2=data.time2;
+        that.stime=='4'
+        console.log(that.stime)
+        console.log(that.timeRange)
+        that.getAllProvinceIllegalStatisticsDatas(that.stime)
+        that.initAccidentStaticsChart(that.stime);
+        that.getSpeedingViolationDatas(that.stime)
+        // that.getIllegalAnalysisDatas(that.stime);
+        // if(that.xzqh!=''){
+        //   that.getAllProvinceIllegalStatisticsDatas(that.stime,that.xzqh);
+        // }
+      })
+
+      blur.$on('getstime',data=>{
+        that.stime=data;
+        if(that.stime!='4'){
+          that.getAllProvinceIllegalStatisticsDatas(that.stime);
+          that.initAccidentStaticsChart(that.stime);
+          that.getSpeedingViolationDatas(that.stime)
+          // that.getIllegalAnalysisDatas(that.stime);
         }
-        if(this.isShow==3){
-          this.getlastTrafficRestrictionDatas()
+      })
+      blur.$on('getIndex',data=>{
+        that.isShow=data;
+        if(that.isShow==2){
+          // that.getSpeedingViolationDatas(that.stime)
+        }
+        if(that.isShow==3){
+          // that.getlastTrafficRestrictionDatas()
         }
       })
       blur.$on('getxzqh',data=>{
-        this.xzqh=xzqh;
-        if(this.isShow==1){
-          this.getAllProvinceIllegalStatisticsDatas(this.xzqh);
-          this.getIllegalAnalysisDatas(xzqh);
+        that.xzqh=data;
+        if(that.isShow==1 ){
+          that.getAllProvinceIllegalStatisticsDatas(that.stime,that.xzqh);
+          that.initAccidentStaticsChart(that.stime,that.xzqh);
+          // that.getIllegalAnalysisDatas(that.xzqh);
         }
-        if(this.isShow==2){
-          this.getSpeedingViolationDatas(this.xzqh);
+        if(that.isShow==2){
+          that.getSpeedingViolationDatas(that.stime,that.xzqh);
+          // that.getIllegalAnalysisDatas(that.stime);
         }
-        if(this.isShow==3){
-          this.getlastTrafficRestrictionDatas(this.xzqh)
+        if(that.isShow==3){
+          // that.getlastTrafficRestrictionDatas(that.xzqh)
         }
         
       })
+    },
+    /*
+    * 超速违法分类  IllegalAnalysis/getIllegalAnalysis  GET_IllE_GAL_ANALY_API
+    */
+    getIllegalAnalysisDatas(type,xzqh){
+      let that = this;
+      let param={};
+      if(xzqh!=undefined){
+        param.xzqh=xzqh;
+      }
+      //如果传入的时间type！='4'
+      if(type!='4'){
+        param.stime=type;
+      }
+      if(type=='4' ){
+        param.stime=that.timeRange.time1;
+        param.etime=that.timeRange.time2;
+      }
+      interf.GET_IllE_GAL_ANALY_API(param)
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          console.log(data)
+          if(data.errcode == 0){
+            //  if(!that.accident_chart){
+            //   that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
+            // };
+            // data.data.forEach(e=>{
+            //   that.accident_option.legend.data.push(e.CATEGORY);
+            // })
+            // that.accident_option.series[0].data=[
+            //   {name:data.data[0].CATEGORY,value:data.data[0].NUM},
+            //   {name:data.data[1].CATEGORY,value:data.data[1].NUM},
+            //   {name:data.data[2].CATEGORY,value:data.data[2].NUM},
+            //   {name:data.data[3].CATEGORY,value:data.data[3].NUM},
+            //   {name:data.data[4].CATEGORY,value:data.data[4].NUM},
+            //   {name:data.data[5].CATEGORY,value:data.data[5].NUM},
+            //   ]
+            // that.accident_chart.setOption(that.accident_option);
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
     },
     /**
      * 尾号限行 IllegalAnalysis/getlastTrafficRestriction  GET_LAST_TRAFF_API
@@ -204,6 +371,7 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
+          console.log(data)
           if(data.errcode == 0){
             that.illegal.NUM=data.data.NUM;
           }else{
@@ -225,16 +393,25 @@ export default {
     /**
     * 超速违法 IllegalAnalysis/getSpeedingViolation   GET_SPEED_VIOLA_API
     */
-    getSpeedingViolationDatas(){
-       let that = this;
+    getSpeedingViolationDatas(type,xzqh){
+      let that = this;
       let param={};
       if(xzqh!=undefined){
         param.xzqh=xzqh;
+      }
+      //如果传入的时间type！='4'
+      if(type!='4'){
+        param.stime=type;
+      }
+      if(type=='4' ){
+        param.stime=that.timeRange.time1;
+        param.etime=that.timeRange.time2;
       }
       interf.GET_SPEED_VIOLA_API(param)
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
+          console.log(data)
           if(data.errcode == 0){
             that.speed.NUM=data.data.NUM;
           }else{
@@ -254,7 +431,8 @@ export default {
       });
     },
     /**
-     * 高发道路排名  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALYSIS_API
+    * 高发道路排名  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALYSIS_API
+    * stime   etime  xzqh   dllx     type 超速 (1) 限行(2)
     */
    getIllegalAnalysisDatas(xzqh){
      let that = this;
@@ -284,19 +462,58 @@ export default {
         that.tableLoading = false; 
       });
    },
-    /**
-     * 全省统计  IllegalAnalysis/getAllProvinceIllegalStatistics  GET_ILL_PRO_STATIS_API
+    /*
+    * 道路分类 IllegalAnalysis/getRoadCategory  GET_ROAD_CATE_GORY_API
     */
-    getAllProvinceIllegalStatisticsDatas(xzqh){
+    getRoadCategoryDatas(){
+      let that = this;
+      interf.GET_ROAD_CATE_GORY_API({})
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          console.log(data)
+          if(data.errcode == 0){
+            that.roadClassification=data.data;
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
+    },
+    /**
+     * 全省统计  IllegalAnalysis/getAllProvinceIllegalStatistics  GET_ILL_PRO_STATIS_API 
+     * stime   etime    xzqh
+     * type--时间类型 7天 (1)  30天(2)  3个月 (3)  自定义 2020-01-24 00:00:00  2020-06-25 23:59:59
+    */
+    getAllProvinceIllegalStatisticsDatas(type,xzqh){
       let that = this;
       let param={};
       if(xzqh!=undefined){
         param.xzqh=xzqh;
       }
+      //如果传入的时间type！='4'
+      if(type!='4'){
+        param.stime=type;
+      }
+      if(type=='4' ){
+        param.stime=that.timeRange.time1;
+        param.etime=that.timeRange.time2;
+      }
       interf.GET_ILL_PRO_STATIS_API(param)
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
+          console.log(data)
           if(data.errcode == 0){
             that.staticsData.sum=data.data.COUNTNUM;
             that.staticsData.over=data.data.SNUM;
@@ -322,15 +539,59 @@ export default {
       let that = this;
     },
     /**
-     * 生成警情分别类统计echarts
+     * 违法类别 -- IllegalAnalysis/getIllegalCategory GET_ILL_CATE_GORY_API
+     * echarts stime  etime   xzqh
      */
-    initAccidentStaticsChart(){
-       if(!this.accident_chart){
-        this.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
-      };
-      this.accident_option.legend.data=['122','互联网','视频巡查'];
-      this.accident_option.series[0].data=[{name:'122',value:120},{name:'互联网',value:120},{name:'视频巡查',value:10}]
-      this.accident_chart.setOption(this.accident_option);
+    initAccidentStaticsChart(type,xzqh){
+      let that = this;
+       let param={};
+      if(xzqh!=undefined){
+        param.xzqh=xzqh;
+      }
+      //如果传入的时间type！='4'
+      if(type!='4'){
+        param.stime=type;
+      }
+      if(type=='4' ){
+        param.stime=that.timeRange.time1;
+        param.etime=that.timeRange.time2;
+      }
+      interf.GET_ILL_CATE_GORY_API(param)
+     .then(response=>{
+        if(response && response.status==200){
+          var data = response.data;
+          console.log(data)
+          if(data.errcode == 0){
+            if(!that.accident_chart){
+              that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
+            };
+            data.data.forEach(e=>{
+              that.accident_option.legend.data.push(e.CATEGORY);
+            })
+            that.accident_option.series[0].data=[
+              {name:data.data[0].CATEGORY,value:data.data[0].NUM},
+              {name:data.data[1].CATEGORY,value:data.data[1].NUM},
+              {name:data.data[2].CATEGORY,value:data.data[2].NUM},
+              {name:data.data[3].CATEGORY,value:data.data[3].NUM},
+              {name:data.data[4].CATEGORY,value:data.data[4].NUM},
+              {name:data.data[5].CATEGORY,value:data.data[5].NUM},
+              ]
+            that.accident_chart.setOption(that.accident_option);
+          }else{
+            that.$message({ 
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => { 
+        that.tableLoading = false; 
+      });
     },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
@@ -361,20 +622,21 @@ export default {
 .accident-statics_container {
   width: 100%;
   height: 100%;
-  .accident-statics_title {
-    position: relative;
-    width: 100%;
-    font-family: Microsoft YaHei;
-    font-size: 1vw;
-    color: $color-white;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    font-weight: bolder;
-  }
+  // .accident-statics_title {
+  //   position: relative;
+  //   width: 100%;
+  //   height: 3vh;
+  //   font-family: Microsoft YaHei;
+  //   font-size: 1vw;
+  //   color: $color-white;
+  //   display: -webkit-box;
+  //   display: -ms-flexbox;
+  //   display: flex;
+  //   -webkit-box-align: center;
+  //   -ms-flex-align: center;
+  //   align-items: center;
+  //   font-weight: bolder;
+  // }
   .accident-statics--tab {
   width: 100%;
   height:153px;
@@ -476,6 +738,7 @@ export default {
 .accident-statics_table{
   width:474px;
   height:299px;
+  position: relative;
   background:rgba(2,6,31,0);
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;

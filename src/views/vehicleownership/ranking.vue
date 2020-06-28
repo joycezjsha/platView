@@ -5,15 +5,14 @@
         <m-title label='汽车保有量排名' style='width:10vw;'></m-title>
       </div>
       <div class='ranking--table'>
-        <el-table :data="tableDatas" style="width: 100%" @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+        <!-- -->
+        <el-table :data="tableDatas" style="width: 100%"  @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column fixed type="index" label="No." width="50"></el-table-column>
-          <el-table-column prop="name" label="城市"></el-table-column>
-          <el-table-column prop="num" label="汽车保有量" sortable></el-table-column>
-          <el-table-column prop="khcnum" label="客货车数量" sortable></el-table-column>
+          <el-table-column prop="name" label="城市"  width="70"></el-table-column>
+          <el-table-column prop="num" label="汽车保有量"  width="100" sortable></el-table-column>
+          <el-table-column prop="khcnum" label="客货车数量"  width="100" sortable></el-table-column>
         </el-table>
-      </div>
-      
-     
+      </div>  
     </div>
 </template>
 
@@ -25,14 +24,17 @@ export default {
     name:"ranking",
     data(){
       return{
-        tableDatas:[]
+        tableDatas:[
+          {"index":"","name":"","num":"","khcnum":""}
+        ]
       }
     },
     components:{
         mTitle
     },
     mounted(){
-      this.getCityOrderData();
+      let that = this;
+      that.getCityOrderData();
     },
     methods:{
       /**
@@ -42,12 +44,12 @@ export default {
         let data={};
         data.name=row.name;
         data.value=row.xzqh;
-      
         blur.$emit('initVehicleStatics',data);
       },
       /**
-       * 获取车辆保有量，排名数据
-       */
+      * 获取车辆保有量，排名数据 
+      * VehiclePopulation/getVehiclePopulation  GET_CITY_ORDER_API
+      */
       getCityOrderData() {
         let that = this;
         interf.GET_CITY_ORDER_API({}).then(response=>{
@@ -55,7 +57,7 @@ export default {
             var data = response.data;
               if (data.errcode == 0) {
                 that.tableDatas=data.data;
-              } else{
+              }else{
                 that.$message({
                   message: data.errmsg,
                   type: "error",

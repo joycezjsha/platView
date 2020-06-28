@@ -17,7 +17,7 @@
             <el-table-column prop="COUNT" label="设备数量" sortable></el-table-column>
             <el-table-column prop="ACTIVENUM" label="活跃个数"  width="85" sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
-            <el-table-column prop="XZQH"  width="0"></el-table-column>
+            <el-table-column prop="XZQH" v-if='showXZQH'  ></el-table-column>
           </el-table>
         </div>
         <div v-else>
@@ -55,6 +55,7 @@ export default {
       map: {},
       XZQH:'',
       city:'',
+      showXZQH:false,
       map_cover:{
         sourceList:[],
         lineList:[],

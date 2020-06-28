@@ -19,7 +19,8 @@ export default {
       map: {},
       tableIndex:0,
       map_cover:{
-        popups:[]
+        popups:[],
+        sourceList:[]
       },
       showArea:true,
       areaIndexs:[]

@@ -17,8 +17,14 @@ export const interf={
       params:data
     })
   },
-  // 	超速违法分类 -返回格式暂时提供不了
-
+  // 	超速违法分类  IllegalAnalysis/getIllegalAnalysis
+  GET_IllE_GAL_ANALY_API:data=> {
+    return http.service({
+      url:`IllegalAnalysis/getIllegalAnalysis`,
+      method:'get',
+      params:data
+    })
+  },
   //	超速违法 IllegalAnalysis/getSpeedingViolation
   GET_SPEED_VIOLA_API:data=> {
     return http.service({
@@ -27,16 +33,30 @@ export const interf={
       params:data
     })
   },
-  //	高发道路排名  IllegalAnalysis/getIllegalAnalysis
+  //	高发道路排名 IllegalAnalysis/getHighRoadRanking
   GET_ILL_ANALYSIS_API:data=> {
     return http.service({
-      url:`IllegalAnalysis/getIllegalAnalysis`,
+      url:`IllegalAnalysis/getHighRoadRanking`,
       method:'get',
       params:data
     })
   },
-  //  违法类别 -- 暂时提供不了
-
+  // 	道路分类 IllegalAnalysis/getRoadCategory
+  GET_ROAD_CATE_GORY_API:data=> {
+    return http.service({
+      url:`IllegalAnalysis/getRoadCategory`,
+      method:'get',
+      params:data
+    })
+  },
+  //  违法类别 -- IllegalAnalysis/getIllegalCategory
+  GET_ILL_CATE_GORY_API:data=> {
+    return http.service({
+      url:`IllegalAnalysis/getIllegalCategory`,
+      method:'get',
+      params:data
+    })
+  },
   //	全省统计  IllegalAnalysis/getAllProvinceIllegalStatistics
   GET_ILL_PRO_STATIS_API:data=> {
     return http.service({
@@ -46,7 +66,7 @@ export const interf={
     })
   },
 
-  // 	违法分析  IllegalAnalysis/getIllegalAnalysis
+  // 	违法分析  IllegalAnalysis/getIllegalAnalysis  IllegalAnalysis/getIllegalAnalysis
   GET_ILL_ANALY_API:data=> {
     return http.service({
       url:`IllegalAnalysis/getIllegalAnalysis`,

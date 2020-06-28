@@ -5,7 +5,7 @@ import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
 export const interf={
-  /*获取汽车保有量排名数据*/
+  /*获取汽车保有量排名数据 VehiclePopulation/getVehiclePopulation*/
   GET_CITY_ORDER_API:data=> {
     return http.service({
       url:`VehiclePopulation/getVehiclePopulation`,

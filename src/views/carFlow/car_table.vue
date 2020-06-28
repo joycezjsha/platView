@@ -155,6 +155,7 @@ export default {
       blur.$emit("paramxzqh",xzqh)
       blur.$emit("paramcity",city)
       blur.$emit("paramxzqh",xzqh)
+      // that.centerTo(row.jwd.split(' '));
       that.xzqh=xzqh;
       that.city=city;
     },
