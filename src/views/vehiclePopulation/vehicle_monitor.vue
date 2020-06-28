@@ -9,7 +9,7 @@
       </div>
       <m-tiptxt class="tiptxt" text='“活跃”是指：30分钟内有被卡口监测到车辆'></m-tiptxt>
       <!-- <div class='right-time'><i class="iconfont icon-shijian" style='margin-right:1vw;'></i>{{time}}</div> -->
-      <m-tab label='实时监控车辆活跃数：' :value=countnum></m-tab>
+      <m-tab :isShowIcon="isShowIcon" label='实时监控车辆活跃数：' :value=countnum></m-tab>
       <div class='center_table'>
          <el-table @row-click="showCity"
           :data="indexDatas" style="width: 100%" height="32.5vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -57,6 +57,7 @@ export default {
     return {
       map: {},
       isShowCity:false,
+      isShowIcon:false,
       map_cover:{
         sourceList:[],
         markers:[],

@@ -86,40 +86,45 @@ export default {
       this.tableIndex=t;
     },
     //获取巡航数据
-    // getIndexData() {
-    //   let that = this;
-    //   $.ajax({
-    //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     responseType: "json",
-    //     method: "get",
-    //     dataType: "json",
-    //     data: {
-    //       // token: window.localStorage.getItem("loginUserToken")
-    //     },
-    //     success: function(data) {
-    //       if (data.errcode == -2) {
-    //         that.$router.push({ name: "/login" });
-    //       }
-    //       if (data.errmsg == "success" && data.data.length > 0) {
-    //         let datas=[];
-    //         data.data.map(e=>{
-    //           datas.push(
-    //             {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
-    //           )
-    //         });
-    //         that.indexDatas=datas;
-    //         that.addArea(data.data);
-    //         // that.addAreaIdentify(data.data);
-    //       }
-    //     },
-    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       debugger
-    //     }
-    //   });
-    // },
+    getIndexData() {
+      let that = this;
+    //  interf.getCityIndexData({index:1},(data) => {
+    //     console.log(data);
+    //       },(e)=>{
+
+    //       })
+    $.ajax({
+        url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        responseType: "json",
+        method: "get",
+        dataType: "json",
+        data: {
+          // token: window.localStorage.getItem("loginUserToken")
+        },
+        success: function(data) {
+          if (data.errcode == -2) {
+            that.$router.push({ name: "/login" });
+          }
+          if (data.errmsg == "success" && data.data.length > 0) {
+            let datas=[];
+            data.data.map(e=>{
+              datas.push(
+                {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
+              )
+            });
+            that.indexDatas=datas;
+            that.addArea(data.data);
+            // that.addAreaIdentify(data.data);
+          }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+         
+        }
+      });
+    },
     /**
      * 地图添加辖区面
      * careated by ..

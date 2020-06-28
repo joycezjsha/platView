@@ -12,7 +12,7 @@
       <div class="bayonet_city_content">
         <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:17px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
-        <div v-if="!tableIndex" style="padding:0 3px">
+        <div v-if="!tableIndex" style="padding:0 5px">
           <el-table :data="indexData" style="width: 100%" height="800px" 
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
           @row-click="handdle"
@@ -111,13 +111,14 @@ export default {
     * 点击城市统计  触发事件
     */
     handdle(row){
+      let that=this;
       // console.log(row.XZQH)
-      this.XZQH=row.XZQH;
-      this.city=row.city;
-      this.centerTo(row.jwd.split(' '));
-      blur.$emit("getXZQH",this.XZQH)
-      blur.$emit("getcity",this.city)
-
+      that.XZQH=row.XZQH;
+      that.city=row.city;
+      // console.log(row,row.XZQH)
+      blur.$emit("getXZQH",that.XZQH)
+      blur.$emit("getcity",that.city)
+      that.centerTo(row.jwd.split(' '));
     },
     /**
     * 点击道路统计  触发事件
@@ -368,7 +369,6 @@ export default {
           }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-          debugger
         }
       });
     },

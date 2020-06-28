@@ -59,6 +59,7 @@ export default {
           city:'',
           stime:'1',
           xzqh:'',
+          tableIndex:'', //中间对应三个组件传来的值
           timeRange:'', //自定义时间
           showhotcard:false,
           map_cover:{
@@ -113,22 +114,32 @@ export default {
         /**
         *gettime  传入对应的时间 1  2  3  4
         *paramcity 对应城市
-        *determine 定义时间
+        *determine 定义时间  realtime--中间按钮对应的组件
         */
+       //
+       blur.$on('realtime',data=>{
+         that.tableIndex=data;
+       })
         //  接收对应的行政区划
         blur.$on("paramxzqh",xzqh=>{
           that.xzqh=xzqh;
-          that.getHotCarDatas(that.stime,that.xzqh); 
+          if(that.tableIndex==3){
+            that.getHotCarDatas(that.stime,that.xzqh); 
+          }
+        
         })
         // 接收自定义的时间 that.timeRange[0]->stime   that.timeRange[1]->etime
         blur.$on('determine',times=>{
           that.timeRange=times;
-          that.getHotCarDatas(that.stime)
+           if(that.tableIndex==3){
+             that.getHotCarDatas(that.stime)
+           }
+          
         })  
         // 接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
          blur.$on('gettime',time=>{
           that.stime=time;
-          if(that.stime!='4'){
+          if(that.stime!='4' && that.tableIndex==3){
             that.getHotCarDatas(that.stime)
           }        
           

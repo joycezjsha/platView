@@ -379,7 +379,7 @@ export default {
   }
 }
 
-.top {
+.electricPolice-statics .top {
   margin-top: 3px;
     width: 100%;
     .back {
@@ -428,16 +428,6 @@ export default {
         )
         1 1;
     }
-    // .back{
-    //   // border: 1px solid;
-    //   // background-color: $color-bg-1;
-    //   // border-image: linear-gradient(
-    //       182deg,
-    //       rgba(10, 148, 255, 1),
-    //       rgba(255, 255, 255, 0)
-    //     )
-    //     1 1;
-    // }
   }
   .bottom{
     margin-top: 3vh;

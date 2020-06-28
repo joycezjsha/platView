@@ -71,6 +71,7 @@ export default {
   data() {
     return {
       city: "",
+      tableIndex:'',
       isActive:'4', //实时活跃 4  今日入陕1  出陕2
       param:{
         stime:'4', //实时活跃 传4  今日入陕 出陕传2
@@ -131,7 +132,7 @@ export default {
            this.param.stime='2';
            this.getVehicleOwnershipDatas();
        }
-       if(this.isActive==4){
+       if(this.isActive==4 ){
           this.param.stime='4';
           this.getVehicleOwnershipDatas();
        }
@@ -141,10 +142,16 @@ export default {
      */
     getData() {
       let that = this;
+      blur.$on('realtime',data=>{
+        that.tableIndex=data;
+      })  
       blur.$on('getCity',data=>{
           that.param.code=data;
           that.showback = false;
-          that.getVehicleOwnershipDatas();
+          if(that.tableIndex==2){
+            that.getVehicleOwnershipDatas();
+          }
+         
       })
     },
     // 是否显示返回

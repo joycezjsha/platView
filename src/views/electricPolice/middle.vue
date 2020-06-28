@@ -46,28 +46,36 @@ export default {
     methods:{
         // 切换卡口热力分布  与   活跃卡口点位
         change(i){   
-            this.tableIndex=i;
-            if(this.tableIndex==1){
-                this.getRoadStatisticsDatas();
-                this.onHideLayer(this.tableIndex)
+            let that=this;
+            that.tableIndex=i;
+            if(that.tableIndex==1){
+                that.getRoadStatisticsDatas();
+                that.onHideLayer(that.tableIndex)
             }else{
-                this.map.setZoom(6);
-                this.getActiveElDatas()
-                this.onShowLayer()
-                this.onHideLayer(this.tableIndex)
+                that.map.setZoom(6);
+                that.getActiveElDatas()
+                that.onShowLayer()
+                that.onHideLayer(that.tableIndex)
             }
         },
         /*
          *  接收城市统计传过来的数据  sendXZQH--XZQH  sendcity--city
          */
         getData(){
+            let that=this;
             blur.$on("sendXZQH",data=>{
-                this.xzqh=data;
-                this.getRoadStatisticsDatas()
+                that.xzqh=data;
+                console.log(that.xzqh)
+                if(that.tableIndex==1){
+                    that.getRoadStatisticsDatas(that.xzqh)
+                }else{
+                    that.getActiveElDatas(that.xzqh)
+                }
+                
             })
             
             blur.$on("sendcity",data=>{
-                this.city=data;
+                that.city=data;
             })
         },
          /*
@@ -112,20 +120,19 @@ export default {
         /*
         *  电警热力分布  Electronic/getElHeat  GET_EL_HEAT_API  传入参数xzqh
         */
-       getRoadStatisticsDatas(){
+       getRoadStatisticsDatas(xzqh){
         let that=this;
-        let param={};
-        if(that.xzqh!=''){
-            param.xzqh=that.xzqh;
-        }
-        this.map = this.$store.state.map;
-        if(this.map.getSource('heatmapSource')!=undefined){
-            this.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
+        that.map = that.$store.state.map;
+        if(that.map.getSource('heatmapSource')!=undefined){
+            that.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
         }else{
+            let param={}
+            if(xzqh!=undefined){
+                param.xzqh=xzqh
+            }  
             interf.GET_EL_HEAT_API(param).then(response=>{
             if (response && response.status == 200){
                 var data = response.data;
-                // console.log(data)
                 if (data.errcode == 0) {
                 data.data.features.map(e=>{
                     e.geometry.coordinates=e.geometry.coordinates[0].split(',');
@@ -181,9 +188,13 @@ export default {
         /*
         *  活跃电警点位 Electronic/getActiveEl  GET_ACTIVE_EL_API
         */
-       getActiveElDatas(){
+       getActiveElDatas(xzqh){
            let that=this;
-           interf.GET_ACTIVE_EL_API({})
+           let param={}
+           if(xzqh!=undefined){
+              param.xzqh=xzqh
+           }
+        interf.GET_ACTIVE_EL_API(param)
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
@@ -210,7 +221,7 @@ export default {
         *  活跃电警聚合图  Electronic/getActiveEl  GET_ACTIVE_EL_API
         */
         getActiveElMap(item){
-             let that=this;
+            let that=this;
             that.map = that.$store.state.map;
             if(that.map.getLayer('data-point')!=undefined){
                 that.map.setLayoutProperty('data-point', 'visibility', 'visible');

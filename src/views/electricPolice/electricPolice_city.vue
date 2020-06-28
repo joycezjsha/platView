@@ -104,11 +104,13 @@ export default {
      * 通过点击城市table表格传递参数  XZQH
     */
     handdleCity(row){
-      this.XZQH=row.XZQH;
-      this.city=row.city;
-      blur.$emit("sendXZQH",this.XZQH)
-      blur.$emit("sendcity",this.city)
-      this.centerTo(row.jwd.split(' '));
+      let that=this;
+      that.XZQH=row.XZQH;
+      that.city=row.city;
+      blur.$emit("sendXZQH",that.XZQH)
+      console.log(that.XZQH)
+      blur.$emit("sendcity",that.city)
+      that.centerTo(row.jwd.split(' '));
     },
     /*
     *	道路统计 Electronic/getRoadStatistics  GET_ROAD_STATIS_API
@@ -145,29 +147,28 @@ export default {
     */
     getCityStatisticsDatas(){
       let that = this;
-       interf.GET_CITY_STATIS_API({})
-        .then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-            if (data.errcode == 0) {
-             that.indexData=data.data;
-            //  console.length(that.indexDatas)
-            }else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-                });
-              }
+      interf.GET_CITY_STATIS_API({})
+      .then(response=>{
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+            that.indexData=data.data;
+          //  console.length(that.indexDatas)
+          }else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
             }
-          })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-
+          }
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+      });
     },
     changeTable(t){
       this.tableIndex=t;
@@ -343,7 +344,7 @@ export default {
           }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-          debugger
+          
         }
       });
     },

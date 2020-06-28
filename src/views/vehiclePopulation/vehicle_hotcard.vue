@@ -65,6 +65,7 @@ export default {
           poPupList:[], //熱點卡口界面popup存儲
           showback:true, //是否显示返回按钮
           code:'',
+          tableIndex:'',
           stime:'1',
           xzqh:'',
           showCity:true,  //用于判断table中的城市与卡口名称拼接
@@ -119,11 +120,17 @@ export default {
        */
      getData() {
       let that = this;
+      blur.$on('realtime',data=>{
+        that.tableIndex=data;
+      })  
       blur.$on('getCity',data=>{
           that.code=data;
           that.showback = false;
-          that.getHotspotRoadRankinDatas(that.code)
-          that.getHotspotBayonetRankingDatas(that.code)
+          if(that.tableIndex==3){
+            that.getHotspotRoadRankinDatas(that.code)
+            that.getHotspotBayonetRankingDatas(that.code)
+          }
+         
       })
     },
       /**

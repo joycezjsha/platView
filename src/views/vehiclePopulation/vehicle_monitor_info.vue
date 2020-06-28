@@ -29,8 +29,8 @@
         </div>
       </div>
       <div class="vehicle-statics_tab boxstyle">
-        <m-tab label="今日入陕辆次:" :value="incount"></m-tab>
-        <m-tab label="今日出陕辆次:" :value="outcount"></m-tab>
+        <m-tab :isShowIcon="isShowIcon" label="今日入陕辆次:" :value="incount"></m-tab>
+        <m-tab  :isShowIcon="isShowIcon" label="今日出陕辆次:" :value="outcount"></m-tab>
         <m-com-title label="进出陕车辆趋势" img_type="1" style="width:9vw;"></m-com-title>
         <m-line-chart
           style="width:100%;height:80%"
@@ -76,6 +76,7 @@ export default {
   data() {
     return {
       map: {},
+      isShowIcon:false, //控制tab组件图标的显示
       CODE: "",
       cscount: "",
       count: "",

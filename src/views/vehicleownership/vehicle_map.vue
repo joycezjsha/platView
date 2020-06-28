@@ -19,6 +19,8 @@ export default {
       map: {},
       tableIndex:0,
       map_cover:{
+        sourceList:[],
+        lineList:[],
         popups:[]
       },
       showArea:true,
@@ -183,6 +185,7 @@ export default {
           this.map.removeSource(e);
         }
       })
+       this.map_cover.sourceList=[];
     }
     //清除layer
     if(this.map_cover.lineList.length>0){
@@ -190,7 +193,15 @@ export default {
         if(this.map.getLayer(e)!=undefined){
           this.map.removeLayer(e);
         }
+      });
+      this.map_cover.lineList=[];
+    }
+    //清除popup
+    if(this.map_cover.popups.length>0){
+      this.map_cover.popups.forEach(e=>{
+        e.remove();
       })
+      this.map_cover.popups=[];
     }
   },
 /** */
