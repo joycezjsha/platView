@@ -13,7 +13,7 @@
         <li><div>事故</div><div><img :src='sgImg' /></div></li>
       </ul>
     </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea'></t-area>
   </div>
 </template>
 
@@ -34,7 +34,9 @@ export default {
         markers:[]
       },
       jqImg:IMG.jqImg,
-      sgImg:IMG.sgImg
+      sgImg:IMG.sgImg,
+      showArea:true,
+      isShowTxt:false
     };
   },
   mounted() {

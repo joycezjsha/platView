@@ -406,7 +406,7 @@ export default {
       display: block;
       padding: 0 15px;
       width: 90%;
-      height: 150px;
+      height: 80%;
       overflow-y: scroll;
       li{
         // border-bottom: 1px solid $color-info;
@@ -415,7 +415,7 @@ export default {
           margin:2% 0;
           >span{
             display: inline-block;
-            font-size: 0.8vw;
+            font-size: 14px;
             
             .text{
               // color:$color-text-label;

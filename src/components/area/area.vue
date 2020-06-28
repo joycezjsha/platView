@@ -44,6 +44,10 @@ export default {
       type: Boolean,
       default: true
     },
+    isShowTxt:{
+       type: Boolean,
+      default: true
+    },
     indexData:{
       type:Array,
       default: () => {
@@ -166,7 +170,8 @@ export default {
             "maxzoom": 17.5
         });
         //面的名称显示
-        _this.map.addLayer({
+        if(_this.isShowTxt){
+          _this.map.addLayer({
             "id": "area_polygon_txt_"+i,
             "type": "symbol",
             "source": "area_polygonSource_"+i,
@@ -186,9 +191,12 @@ export default {
                 }
             }
         });
+        _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
+        };
+        
         _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
         _this.mapAddItems.polygons.push("area_polygon_"+i);
-        _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
+        
       });
     },
     /**
