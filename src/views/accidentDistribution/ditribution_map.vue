@@ -16,7 +16,9 @@ export default {
       tableIndex:0,
       map_cover:{
         sourceList:[],
-        lineList:[]
+        lineList:[],
+        markers:[],
+        popups:[]
       },
       showArea:true,
       areaIndexs:[]
@@ -24,6 +26,7 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
+    setTimeout(()=>{this.getAreaData();},1000);
   },
   components: {
     tArea
@@ -54,13 +57,18 @@ export default {
      */
     getAreaData(){
       let that=this;
-      interf.GET_DEVICE_AREA_API({}).then(response=>{
+      interf.GET_CITY_MAP_API({stime:1}).then(response=>{
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
               that.areaIndexs=data.data;
-          } else{
-            
+              that.addCityAccident(data.data);
+          }else{
+            that.$message({
+            message: response.errmsg,
+            type: "error",
+            duration: 1500
+          });
           }
         }
       })
@@ -85,30 +93,32 @@ export default {
      * 地图显示各市重大事故数量
      */
     addCityPopup(e){
-      let lnglat=e.jwd.split(' ');
+      let lnglat=e.JWD.split(' ');
       let mainDiv=document.createElement('div');
-      mainDiv.style.width='13vw';
+      mainDiv.style.width='6vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
       // mainDiv.className='dev_popup';
 
       let title=document.createElement('p');
-      title.innerHTML=e.city;
+      title.innerHTML=e.CITY;
       title.className='title';
+      title.style.margin='5px 0';
       mainDiv.appendChild(title);
 
-      let p1="<p style='color:#00C6FF'><span>事故：</span><span>"+e.NUM+"</span></p>";
+      let p1="<p style='color:#00C6FF;margin:5px 0;'><span>事故：</span><span>"+e.ACCIDENTNUM+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
       
-      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-3, -15]});
-      popup.setLngLat(lnglat).setDOMContent(mainDiv);
+      let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -20]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
 
       let el = document.createElement('div');
-      el.style["background-image"] = "url(./static/images/"+(e.KKZT>1?"kakou":"kakou_")+".png)";
-      el.style["background-size"] = "100% 100%";
-      el.style.width = "30px";
-      el.style.height = "30px";
+      // el.style["background-image"] = "url(./static/images/"+(e.KKZT>1?"kakou":"kakou_")+".png)";
+      // el.style["background-size"] = "100% 100%";
+      el.style.width = "15px";
+      el.style.height = "15px";
       el.style["border-radius"] = "50%";
+      el.style.backgroundColor='red';
       let marker = new minemap.Marker(el, {offset: [-15, -15]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
       this.map_cover.markers.push(marker);
       this.map_cover.popups.push(popup);

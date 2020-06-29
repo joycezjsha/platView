@@ -45,6 +45,22 @@ export const interf={
       params:data
     })
   },
+  /*获取右侧-事故类型数据*/
+  GET_ACCIDENT_TYPE_API:data=> {
+    return http.service({
+      url:`AccidentAnalysis/getAccidentType`,
+      method:'get',
+      params:data
+    })
+  },
+  /*获取地图城市数据*/
+  GET_CITY_MAP_API:data=> {
+    return http.service({
+      url:`AccidentAnalysis/getCityAccident`,
+      method:'get',
+      params:data
+    })
+  },
 }
 export const IMG={
   /*路况巡航*/

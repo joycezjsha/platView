@@ -285,15 +285,14 @@ export default {
      */
     initAccurCharts(){
       let _this=this;
-      interf.GET_CAR_FLOW_API({})
-      .then(response => {
+      interf.GET_CAR_FLOW_API({}).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
               let _data=data.data;
-              _this.carStatics.count=_data.count?data.count:'';
-              _this.carStatics.this_month=_data.month?data.month:'';
-              _this.carStatics.front_month=_data.lastmonth?data.lastmonth:'';
+              _this.carStatics.count=_data.count?_data.count:'';
+              _this.carStatics.this_month=_data.month?_data.month:'';
+              _this.carStatics.front_month=_data.lastmonth?_data.lastmonth:'';
               let car_data=_this.car_chart_data;
               _data.list.forEach(e=>{
                 car_data.xdata.push(e.name);
@@ -350,6 +349,9 @@ export default {
        >span{
          text-align:center;
          padding:0 15px;
+       }
+       >span:nth-child(2){
+         font-size: 24px;
        }
      }
   }

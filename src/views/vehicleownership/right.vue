@@ -112,9 +112,16 @@ export default {
                   _data.xdata.push(e.rq);
                   _data.y1data.push(e.num);
                   _data.y2data.push(e.ratio.split('%')[0]);
-                })
+                });
+                that.chart_data=_data;
+              }else{
+                that.chart_data={ 
+                legend: ["注册车辆数", "同比上月(%)"], 
+                xdata:[],
+                y1data: [],
+                y2data:[]}
               }
-              that.chart_data=_data;
+              
             } else{
               that.$message({
                 message: data.errmsg,

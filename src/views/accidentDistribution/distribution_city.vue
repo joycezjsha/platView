@@ -6,7 +6,7 @@
           <m-title label="城市统计" :img_type="!tableIndex?'1':'0'" style="width:6vw;"></m-title>
         </div>
         <div @click="changeTable(1)">
-          <m-title label="道路统计" :img_type="tableIndex?'1':'0'" style="width:6vw;"></m-title>
+          <m-title label="区域统计" :img_type="tableIndex?'1':'0'" style="width:6vw;"></m-title>
         </div>
       </div>
       <div class="city-distribution-query">
@@ -30,8 +30,8 @@
       <div class="city-distribution_content">
         <el-table
           :data="indexDatas"
-          style="width: 100%"
-          height="55vh"
+          style="width: 90%"
+          height="80%"
           :default-sort="{prop: 'week_radio', order: 'descending'}"
           :row-style="getRowClass"
           :header-row-style="getRowClass"
@@ -39,7 +39,8 @@
           @row-click='handle'
         >
           <el-table-column fixed type="index" label="No" width="50"></el-table-column>
-          <el-table-column prop="CITY" label="城市"></el-table-column>
+          <el-table-column v-if='tableIndex==0' prop="CITY" label="城市"></el-table-column>
+           <el-table-column v-else prop="CITY" label="区域"></el-table-column>
           <el-table-column prop="ACCIDENTNUM" label="事故数量" sortable></el-table-column>
           <el-table-column prop="MAJORSNUM" label="重大事故" sortable v-if='tableIndex==0'></el-table-column>
         </el-table>
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+import blur from "@/blur";
 import { IMG } from "./config";
 import { interf } from "./config";
 import mTitle from "@/components/UI_el/title_com.vue";
@@ -75,7 +77,7 @@ export default {
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(6);
-    this.getCityStaticsData();
+    setTimeout(()=>{this.getCityStaticsData();},1000);
   },
   destroyed() {
     this.map.setPitch(0);
@@ -114,7 +116,7 @@ export default {
      */
     getCityStaticsData(){
       let that = this;
-      interf.GET_CITY_STA_API({}).then(response=>{
+      interf.GET_CITY_STA_API({stime:1}).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
@@ -140,7 +142,7 @@ export default {
      */
     getAreaStaticsData(){
       let that = this;
-      interf.GET_AREA_STA_API({}).then(response=>{
+      interf.GET_AREA_STA_API({stime:1}).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {

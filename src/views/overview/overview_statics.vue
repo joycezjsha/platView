@@ -1,27 +1,29 @@
 <template>
   <div class="overview-statics">
    <div class='overview-statics--tab'>
-     <div class='overview-statics--tab_title'><span>今日警情</span><span>{{datas.jq.count}}</span>起</div>
+     <div class='overview-statics--tab_title'><span>今日警情</span><span>{{datas.jq.todayNum}}</span>起</div>
      <div class='overview-statics--tab_radio'>
-       <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yestoday}}</span></div>
-       <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.history}}</span></div>
+       <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yesterNum}}</span></div>
+       <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.monthAvg}}</span></div>
     </div>
-     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span><span class='value'>{{datas.jq.main}}</span>起</div>
+     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span><span class='value'>{{datas.jq.importantNum}}</span>起</div>
    </div>
+   <div class='overview-statics--split'></div>
    <div class='overview-statics--tab' >
-     <div class='overview-statics--tab_title'><span>本月事故</span><span>{{datas.sg.count}}</span>起</div>
+     <div class='overview-statics--tab_title'><span>本月事故</span><span>{{datas.sg.sameMonthAccidentNum}}</span>起</div>
      <div class='overview-statics--tab_radio'>
-       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.hurt}}</span></div>
-       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.die}}</span></div>
+       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.injuryNum}}</span></div>
+       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.deathNum}}</span></div>
     </div>
-     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.main}}</span>起</div>
+     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.importantAccidentNum}}</span>起</div>
    </div>
+   <div class='overview-statics--split'></div>
     <div class='overview-statics--tab'  >
      <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.activeDev}}</span>个</div>
      <div class='overview-statics--tab_radio'>
        <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.devcount}}</span></div>
        <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.activityRate}}</span></div>
-    </div>
+     </div>
      <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.dj.keyactivityRate}}</span></div>
    </div>
   </div>
@@ -36,8 +38,8 @@ export default {
     return {
       map: {},
       datas:{
-        jq:{count:13512,history:'+123',yestoday:'-122',main:'2'},
-        sg:{count:13512,hurt:'123',die:'3',main:'0'},
+        jq:{"importantList":[{"xzqh":0,"city":"","num":0,"ratio":""}],"monthAvg":0,"importantNum":0,"todayNum":0,"yesterNum":0},
+        sg:{"injuryNum":0,"deathNum":0,"importantAccidentNum":0,"sameMonthAccidentNum":0},
         dj:{"activeDev":3,"devcount":6,"keyactivityRate":0,"activityRate":"50.0%"}
       },
       warn_img:IMG.warningInstanceIMG,
@@ -57,7 +59,39 @@ export default {
     getRowClass({ row, column, rowIndex, columnIndex }) {
                 return "background:transparent;";
    },
-    //获取巡航数据
+   /**
+     * 获取今日警情统计数据
+     **/
+    getSgData() {
+      let that = this;
+      interf.GET_ACCI_STATICS_API({}).then(response=>{
+        if (response && response.status == 200){
+          let data= response.data;
+          if (data.errcode == 0){
+           that.datas.jq=data.data;
+          }
+        }
+
+      })
+    },
+   /**
+     * 获取事故统计数据
+     **/
+    getSgData() {
+      let that = this;
+      interf.GET_SG_STATICS_API({}).then(response=>{
+        if (response && response.status == 200){
+          let data= response.data;
+          if (data.errcode == 0){
+           that.datas.sg=data.data;
+          }
+        }
+
+      })
+    },
+    /**
+     * 获取设备统计数据
+     **/
     getIndexData() {
       let that = this;
       interf.GET_DEV_STATICS_API({})
@@ -96,20 +130,19 @@ export default {
   left: 28vw;
   width: 835px;
   height: 147px;
-  top: 8vh;
+  top: 87px;
   color:$color-white;
-  // border-image: linear-gradient(-51deg,#19559a, #02082f);
-  // background-image: linear-gradient(#033a79cf, #02082fde);
   background: url('./image/center_bg.png') no-repeat;
     background-size: 100% 100%;
   @include flex(row, center,center);
   &--tab{
     width:33%;
     height:10vh;
-    border-right: 1px solid;
-    border-image: linear-gradient(rgba(0,255,255,0), #27345b 20%, #2f4162 80%, rgba(236, 239, 239, 0)) 1;
+    // border-right: 1px solid;
+    // border-image-source: url('./image/split.png');
+    // border-image: linear-gradient(rgba(0,255,255,0), #27345b 20%, #2f4162 80%, rgba(236, 239, 239, 0)) 1;
     padding: 2% 5%;
-     @include flex(column, center,center);
+    @include flex(column, center,center);
      >div{
        @include flex(row, center,center);
        width:100%;
@@ -175,5 +208,11 @@ export default {
     }
   }
   &--tab:last-child{border:none;} 
+  &--split{
+    @include flex(column, center,center);
+    width:1px;
+    height:119px;
+    background: radial-gradient(#f3f0f0, #757ba340,transparent);
+  }
 }
 </style>

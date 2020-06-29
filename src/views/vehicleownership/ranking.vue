@@ -31,7 +31,8 @@ export default {
         mTitle
     },
     mounted(){
-      this.getCityOrderData();
+      // this.getCityOrderData();
+      setTimeout(()=>{this.getCityOrderData();},1000);
     },
     methods:{
       /**
@@ -49,34 +50,11 @@ export default {
        */
       getCityOrderData() {
         let that = this;
-        debugger;
-        // interf.GET_CITY_ORDER_API({}).then(response=>{
-        //   if (response && response.status == 200){
-        //     var data = response.data;
-        //       if (data.errcode == 0) {
+        interf.GET_CITY_ORDER_API({}).then(response=>{
+          if (response && response.status == 200){
+            var data = response.data;
+              if (data.errcode == 0) {
                 
-        //         that.tableDatas=data.data;
-        //       } else{
-        //         that.$message({
-        //           message: data.errmsg,
-        //           type: "error",
-        //           duration: 1500
-        //         });
-        //       }
-        //   }
-        // })
-        // .catch(err=>{
-        //   that.$message({
-        //           message: '服务请求失败！',
-        //           type: "error",
-        //           duration: 1500
-        //         });
-        // })
-        // .finally(() => {
-        //   that.tableLoading = false;
-        // });
-        interf.GET_CITY_ORDER_API({},function(data){
-          if (data.errcode == 0) {
                 that.tableDatas=data.data;
               } else{
                 that.$message({
@@ -85,7 +63,29 @@ export default {
                   duration: 1500
                 });
               }
-        },function(err){})
+          }
+        })
+        .catch(err=>{
+          that.$message({
+                  message: '服务请求失败！',
+                  type: "error",
+                  duration: 1500
+                });
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
+        // interf.GET_CITY_ORDER_API({},function(data){
+        //   if (data.errcode == 0) {
+        //         that.tableDatas=data.data;
+        //       } else{
+        //         that.$message({
+        //           message: data.errmsg,
+        //           type: "error",
+        //           duration: 1500
+        //         });
+        //       }
+        // },function(err){})
       },
       /**
        * 设置表格样式
