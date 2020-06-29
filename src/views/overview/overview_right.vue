@@ -259,7 +259,11 @@ export default {
             var data = response.data;
             if (data.errcode == 0) {
               let _data=_this.chart_data;
+              _data.xdata=data.data.timelist;
+              _data.y1data=data.data.inlist;
+              _data.y2data=data.data.outlist;
               
+              _this.chart_data=_data;
             } else {
               _this.$message({
                 message: data.errmsg,

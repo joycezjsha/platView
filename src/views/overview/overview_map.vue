@@ -171,35 +171,36 @@ export default {
     addDeviceMarker(e){
       let lnglat=e.JWD.split(' ');
       let mainDiv=document.createElement('div');
-      mainDiv.style.width='15vw';
-      mainDiv.style.fontSize='0.8vw';
+      mainDiv.style.width='16vw';
       mainDiv.style.color='white';
+      mainDiv.style.fontSize='14px';
       // mainDiv.className='overview_popup';
       let title=document.createElement('p');
       title.innerHTML='['+e.city+']-'+e.KKMC;
-      title.style.fontSize='0.8vw';
+      title.style.fontSize='14px';
+      title.style.margin='10px 0';
       mainDiv.appendChild(title);
       
 
-      let p1="<p><span>设备ID：</span><span>"+e.KKBH+"</span></p>";
+      let p1="<p style='margin:5px 0;'><span>设备ID：</span><span>"+e.KKBH+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
 
-      let p2="<p><span>地点：</span><span>"+e.DLMC+"</span></p>";
+      let p2="<p style='margin:5px 0;'><span>地点：</span><span>"+e.DLMC+"</span></p>";
       mainDiv.appendChild($(p2)[0]);
 
-      let p3="<p><span>方向：</span><span>"+e.FX+"</span></p>";
+      let p3="<p style='margin:5px 0;'><span>方向：</span><span>"+e.FX+"</span></p>";
       mainDiv.appendChild($(p3)[0]);
 
-      let p4="<p style='color:#00C6FF;'><span>过车量：</span><span>"+e.TXCLZS+"</span></p>";
+      let p4="<p style='color:#00C6FF;margin:5px 0;'><span>过车量：</span><span>"+e.TXCLZS+"</span></p>";
       mainDiv.appendChild($(p4)[0]);
       
-      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [0, -30]});
-      popup.setLngLat(lnglat).setDOMContent(mainDiv);
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-13, -30]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
 
       let el = document.createElement('div');
       el.style.backgroundColor=e.TXCLZS>0?'#D01828':'#44b208';
-      el.style.width = "30px";
-      el.style.height = "30px";
+      el.style.width = "25px";
+      el.style.height = "25px";
       el.style.borderRadius='50%';
       el.style["border-radius"] = "50%";
       let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
