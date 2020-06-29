@@ -207,6 +207,7 @@ export default {
     .then(response=>{
       if (response && response.status == 200){
         var data= response.data;
+        debugger;
         if (data.errcode == 0) {
           that.centerstatics.incount=data.data.incount;
           that.centerstatics.addIn=data.data.addIn;

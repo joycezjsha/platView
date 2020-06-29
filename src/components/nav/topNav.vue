@@ -66,14 +66,14 @@ export default {
         {
           id: '1',
           parent_id: '0',
-          menu_name: "警情检测",
+          menu_name: "警情监测",
           sorting: 0,
           path:'/accident/monitor'
         },
         {
           id: '2',
           parent_id: '0',
-          menu_name: "交通检测",
+          menu_name: "交通监测",
           sorting: '0',
           node: [
             {

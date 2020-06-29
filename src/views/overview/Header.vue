@@ -11,7 +11,7 @@
         <div class="_inner_title_font">陕西交警总队集成指挥平台地图大数据</div>
       </div>
       <div class="_inner_btn">
-        <div class="_btn_content" @click="gotoSys">进入系统>></div>
+        <div class="_btn_content" @click="gotoSys">进入系统&nbsp;></div>
       </div>
     </div>
   </div>
@@ -85,8 +85,8 @@ $percent100: 100%;
     @include flex(row);
 
     ._inner_img {
-      width: 20%;
-      height: 100%;
+      width: 25%;
+      height: 90%;
       @include flex(row);
 
       ._img_police {
@@ -108,8 +108,8 @@ $percent100: 100%;
     }
 
     ._inner_title {
-      width: 70%;
-      height: 100%;
+      width: 50%;
+      height: 90%;
 
       // background: orange;
       @include flex(row, center);
@@ -118,13 +118,13 @@ $percent100: 100%;
         width: $percent100;
         height: $percent100;
         color: white;
-        font-size: 1.3vw;
+        font-size: 30px;
         @include flex(column, center);
       }
     }
     ._inner_yq_statics {
       width: 23%;
-      height: 100%;
+      height: 90%;
       @include flex(row, center);
       &_tab {
         width: 25%;
@@ -204,17 +204,19 @@ $percent100: 100%;
       }
     }
     ._inner_btn {
-      width: 18%;
-      height: 100%;
+      width: 25%;
+      height: 90%;
       text-align: right;
 
       @include flex(row, flex-end,center);
       ._btn_content {
-        width: 6vw;
-        height: 3vh;
+        width: 109px;
+        height: 45px;
         float: right;
-        text-align: center;
+        text-align: right;
         line-height: 3vh;
+        padding: 0 30px;
+        font-size:18px;
         background-image: url(./image/title_bg_checked.png);
         background-repeat: no-repeat;
         background-size: 100% 100%;
@@ -222,6 +224,7 @@ $percent100: 100%;
         // background-image: linear-gradient(to right, #0c123a , #19579D);
         cursor: pointer;
         @include flex(row, center);
+        justify-content: flex-end;
       }
     }
   }

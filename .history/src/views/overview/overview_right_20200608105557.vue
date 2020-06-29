@@ -328,6 +328,7 @@ export default {
             var data = response.data;
             //  console.log(data)
             if (data.errcode == 0) {
+              debugger;
             //  _this.chart_data.legend=
              setChartData=data.data;
              setChartData.legend=that.chart_data.legend;

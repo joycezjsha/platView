@@ -45,7 +45,7 @@
         <div style="padding:0 5px;height:73vh">
           <!--  -->
           <el-table  @row-click="handItem" 
-          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'CSNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="60"></el-table-column>
             <el-table-column prop="COUNTNUM" label="全部违法" sortable></el-table-column>
             <el-table-column prop="CSNUM" label="超速"  sortable></el-table-column>
@@ -72,9 +72,7 @@ export default {
       xzqh:'',
       showXZQH:false,
       activeName1:"1",
-      indexDatas: [
-        {"CITY":"","COUNTNUM":"","CSNUM":"","XNUM":"","XZQH":""}
-        ],
+      indexDatas: [],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -91,12 +89,14 @@ export default {
   components:{mTitle},
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
+    // let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.map.repaint = true;
-    that.getIndexData();
-    that.getIllegalAnalysisDatas(that.stime)
+    this.getIndexData();
+    console.log(this.stime)
+    this.getIllegalAnalysisDatas(this.stime)
+    
   },
   destroyed() {
     this.map.setPitch(0);
@@ -110,13 +110,10 @@ export default {
     let that=this;
     that.activeName1=item.name;
     blur.$emit('getstime',item.name)
-    // console.log(item.name)
     if(item.name!='4'){
       that.stime=item.name;
-      // blur.$emit('getstime',that.stime)
       that.getIllegalAnalysisDatas(that.stime)
     }
-    // console.log(that.stime)
   },
   /**
   * 日历选择的时间
@@ -156,10 +153,10 @@ export default {
    getIllegalAnalysisDatas(stime,etime){
      let that = this;
      let param={};
-     if(stime!=undefined){
+     if(etime===undefined){
       param.stime=stime;
      }
-     if(stime!=undefined && etime!=undefined){
+     if(etime!=undefined){
        param.stime=that.timeRange[0];
        param.etime=that.timeRange[1];
      }
@@ -215,7 +212,7 @@ export default {
                 {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
               )
             });
-            that.indexDatas=datas;
+            // that.indexDatas1=datas;
             that.addArea(data.data);
             // that.addAreaIdentify(data.data);
           }
@@ -256,7 +253,7 @@ export default {
         _this.areaColors[i];
         _this.mapAddItems.lineList.push('arealayerId_'+i);
         _this.mapAddItems.sourceList.push('areaSourceId_'+i);
-        this.map.addPolygons(jsonData,this.map,'areaSourceId_'+i,'arealayerId_'+i,_this.areaColors[i]);
+        // this.map.addPolygons(jsonData,this.map,'areaSourceId_'+i,'arealayerId_'+i,_this.areaColors[i]);
       })
       
     },
@@ -369,7 +366,7 @@ export default {
   }
 };
 </script>
-<style scope lang='scss'>
+<style scope scoped lang='scss'>
 @import '@/assets/css/color.scss';
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;

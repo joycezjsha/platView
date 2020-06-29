@@ -318,6 +318,7 @@ export default {
             var data = response.data;
             //  console.log(data)
             if (data.errcode == 0) {
+              debugger;
              _this.chart_data.timelist=data.data.timelist;
              data.data.inlist.forEach((e,index)=>{
                _this.chart_data.y1data.push([_this.chart_data.timelist[index],e]);

@@ -26,7 +26,7 @@
       </div>
       <div class="boxstyle">
         <m-title label='车辆保有量' img_type=1  style='width:7vw;'></m-title>
-        <m-tab label='陕西车辆保有量' :value='carStatics.count'></m-tab>
+        <m-tab :isShowIcon='showIcon' label='陕西车辆保有量' :value='carStatics.count'></m-tab>
         <div class='register'>
           <div><span>本月注册</span><span>{{carStatics.this_month}}</span></div>
           <div><span>上月注册</span><span>{{carStatics.front_month}}</span></div>
@@ -187,7 +187,8 @@ export default {
       },
       countChart:null,
       tableLoading:false,//加载中...控制
-      carStatics:{count:0,front_month:0,this_month:0}
+      carStatics:{count:0,front_month:0,this_month:0},
+      showIcon:false
     }
   },
   components: {
