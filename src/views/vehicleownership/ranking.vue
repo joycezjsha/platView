@@ -12,7 +12,6 @@
           <el-table-column prop="khcnum" label="客货车数量" sortable></el-table-column>
         </el-table>
       </div>
-      
      
     </div>
 </template>
@@ -50,10 +49,34 @@ export default {
        */
       getCityOrderData() {
         let that = this;
-        interf.GET_CITY_ORDER_API({}).then(response=>{
-          if (response && response.status == 200){
-            var data = response.data;
-              if (data.errcode == 0) {
+        debugger;
+        // interf.GET_CITY_ORDER_API({}).then(response=>{
+        //   if (response && response.status == 200){
+        //     var data = response.data;
+        //       if (data.errcode == 0) {
+                
+        //         that.tableDatas=data.data;
+        //       } else{
+        //         that.$message({
+        //           message: data.errmsg,
+        //           type: "error",
+        //           duration: 1500
+        //         });
+        //       }
+        //   }
+        // })
+        // .catch(err=>{
+        //   that.$message({
+        //           message: '服务请求失败！',
+        //           type: "error",
+        //           duration: 1500
+        //         });
+        // })
+        // .finally(() => {
+        //   that.tableLoading = false;
+        // });
+        interf.GET_CITY_ORDER_API({},function(data){
+          if (data.errcode == 0) {
                 that.tableDatas=data.data;
               } else{
                 that.$message({
@@ -62,18 +85,7 @@ export default {
                   duration: 1500
                 });
               }
-          }
-        })
-        .catch(err=>{
-          that.$message({
-                  message: '服务请求失败！',
-                  type: "error",
-                  duration: 1500
-                });
-        })
-        .finally(() => {
-          that.tableLoading = false;
-        });
+        },function(err){})
       },
       /**
        * 设置表格样式
@@ -113,6 +125,4 @@ export default {
     margin:0 auto;
   }
 }
-
-
 </style>

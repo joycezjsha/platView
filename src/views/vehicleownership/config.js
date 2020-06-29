@@ -13,6 +13,16 @@ export const interf={
       params:data
     })
   },
+  /*获取巡航数据*/
+  GET_CITY_ORDER_API:(data,callback,err)=>{
+    return http.httpConnect("get", "VehiclePopulation/getVehiclePopulation",data,
+          function(data){
+            callback(data);
+          },function(e){
+            // _this.$message({type: 'warning', message: '服务异常'});
+            err(e);
+          })
+  },
   /*获取汽车保有量统计数据*/
   GET_CITY_STATICS_API:data=> {
     return http.service({
