@@ -44,7 +44,9 @@ export default {
         blur
     },
     destroyed(){
-        this.clearMap()
+        if(this.map){
+            this.clearMap()
+        }
     },
     mounted(){
         this.map = this.$store.state.map;
@@ -129,16 +131,21 @@ export default {
         */
        getMapDatas(item){
         let that = this;
+        // item.features.forEach(e=>{
+        //     // console.log(e)
+        //     let levels=e.properties.levels.toString()
+        //     console.log(levels,typeof(levels))
+        // })
         if (that.map.getLayer("histogram-source") != undefined) {
             that.map.setLayoutProperty("histogram-source", "visibility", "visible");
-            that.map.getLayer("histogram-source").setData(jsonData);
+            that.map.getLayer("histogram-source").setData(item);
         }else{
             that.map.addSource('histogram-source', {
             'type': 'geojson',
             'data': item
         })
         that.map_cover.sourceList.push("histogram-source");
-
+       
         that.map.addLayer({
             "id": "histogram-layer",
             'type': 'histogram',
