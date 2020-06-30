@@ -10,7 +10,7 @@ export default {
           color:['#8ec6add6','#d68262bf'],
           grid:{
             top:'15%',
-            left:'15%',
+            left:'16%',
             right:'15%',
             bottom:'15%'
           },
@@ -23,7 +23,8 @@ export default {
                   show:true,
                   axisLabel:{
                       show:true,
-                      color:'white'
+                      color:'white',
+                      fontSize :10 
                   },
                   data:[],
                   axisTick:{show:false},
@@ -44,7 +45,8 @@ export default {
                   axisLine:{show:false,lineStyle:{color:'white'}},
                   axisLabel: {
                       formatter: '{value}',
-                      color:'white'
+                      color:'white',
+                      fontSize :10
                   },
                   nameTextStyle:{
                     color:'white'

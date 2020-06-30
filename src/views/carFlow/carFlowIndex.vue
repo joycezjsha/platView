@@ -141,7 +141,7 @@ export default {
   }
 };
 </script>
-<style scope lang='scss'>
+<style scope scoped lang='scss'>
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;
   flex-direction: $direction;

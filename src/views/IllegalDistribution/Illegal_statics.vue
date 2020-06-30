@@ -437,7 +437,6 @@ export default {
       // console.log(event.target.value)  //12 序号
       let that = this; 
       that.dllx=event.target.value;
-      // console.log(that.dllx)  26
       that.getIllegalAnalysisDatas(that.time)
 
     },
@@ -462,7 +461,6 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
              if(!that.current_chart){
               that.current_chart = echarts.init(document.getElementById('current-date'));
@@ -513,7 +511,6 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
              if(!that.speeding_chart){
               that.speeding_chart = echarts.init(document.getElementById('speeding-offences'));
@@ -565,10 +562,8 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          // console.log(data)
           if(data.errcode == 0){
             that.illegal.NUM=data.data.NUM;
-            // console.log(that.illegal.NUM)
           }else{
             that.$message({ 
               message: data.errmsg,
@@ -606,7 +601,6 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
             that.speed.NUM=data.data.NUM;
           }else{
@@ -650,7 +644,6 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
             that.indexDatas=data.data;
           }else{
@@ -680,7 +673,6 @@ export default {
           var data = response.data;
           if(data.errcode == 0){
             that.roadClassification=data.data;
-             console.log( that.roadClassification)
           }else{
             that.$message({ 
               message: data.errmsg,
@@ -720,7 +712,6 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
             that.staticsData.sum=data.data.COUNTNUM;
             that.staticsData.over=data.data.SNUM;
@@ -767,7 +758,6 @@ export default {
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
             if(!that.accident_chart){
               that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));

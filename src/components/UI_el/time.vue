@@ -100,7 +100,7 @@ export default {
     }
 
     .time {
-      width: 100%;
+      width: 101%;
       height: 20px;
       font-size: 0.9vw !important;
       @include flex(row, flex-start,start);

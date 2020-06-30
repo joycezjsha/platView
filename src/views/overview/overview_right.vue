@@ -31,7 +31,10 @@
           <div><span>本月注册</span><span>{{carStatics.this_month}}</span></div>
           <div><span>上月注册</span><span>{{carStatics.front_month}}</span></div>
         </div>
-        <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" style='width:100%;height:20vh'></bar-chart>
+        <div style="height:25.32vh">
+          <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" ></bar-chart>
+        </div>
+        
       </div>
     </div>
   </div>
@@ -65,12 +68,18 @@ export default {
         y2data:[]
       },
       car_chart_data:{
-        legend: ["保有量", "城市"],
+        legend: [],
         xdata:[],
         ydata:[]
       },
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
+        grid:{
+          top:'35%',
+          left:'15%',
+          right:'15%',
+          bottom:'15%'
+        },
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
             show:false,
@@ -259,7 +268,11 @@ export default {
             var data = response.data;
             if (data.errcode == 0) {
               let _data=_this.chart_data;
+              _data.xdata=data.data.timelist;
+              _data.y1data=data.data.inlist;
+              _data.y2data=data.data.outlist;
               
+              _this.chart_data=_data;
             } else {
               _this.$message({
                 message: data.errmsg,
@@ -281,15 +294,15 @@ export default {
      */
     initAccurCharts(){
       let _this=this;
-      interf.GET_CAR_FLOW_API({})
-      .then(response => {
+      interf.GET_CAR_FLOW_API({}).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+            console.log(data)
             if (data.errcode == 0) {
               let _data=data.data;
-              _this.carStatics.count=_data.count?data.count:'';
-              _this.carStatics.this_month=_data.month?data.month:'';
-              _this.carStatics.front_month=_data.lastmonth?data.lastmonth:'';
+              _this.carStatics.count=_data.count?_data.count:'';
+              _this.carStatics.this_month=_data.month?_data.month:'';
+              _this.carStatics.front_month=_data.lastmonth?_data.lastmonth:'';
               let car_data=_this.car_chart_data;
               _data.list.forEach(e=>{
                 car_data.xdata.push(e.name);
@@ -326,7 +339,7 @@ export default {
 .overview-info {
   position: fixed;
   z-index: 10;
-  right: 1vw;
+  right: 13px;
   width: 480px;
   height: 80vh;
   top: 10vh;
@@ -346,6 +359,9 @@ export default {
        >span{
          text-align:center;
          padding:0 15px;
+       }
+       >span:nth-child(2){
+         font-size: 24px;
        }
      }
   }

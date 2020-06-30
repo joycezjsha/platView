@@ -61,7 +61,7 @@
        </div>
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->
-         <el-table :data="centerstatics.tableDatas" style="width:94%;margin:0 3%;"
+         <el-table :data="centerstatics.tableDatas" style="width:100%;"
            height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" v-loading='tableLoading'>
            <el-table-column fixed type="index" label="No" width="50"></el-table-column> 
@@ -69,22 +69,38 @@
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
             <el-table-column prop="proportion" label="进出比" sortable>
-             
+             <template slot-scope="scope">
+              <span>{{scope.row.proportion | number}}</span>
+            </template>
             </el-table-column>
           </el-table>
        </div>
     </div>
     <div class='overview-left-div--bottom  boxstyle'>
       <m-title label='境内路况监测' img_type=1  class='title'></m-title>
-       <ul class="traffic-index_content_table">
-          <li class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
-            <p><span class='number'>{{i+1}}</span><span class='road'>{{item.roadname}}</span>
-              <span class="address-name">{{item.stratname}}--->{{item.endname}}</span>
+       <ul class="traffic-index_content_table" style="margin-top:0.5vh">
+          <li style="display:flex;padding:0.5vh 0.5vw;margin:0 0.5vw" class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
+            <div style="flex:1">{{i+1}}</div>
+            <div style="flex:4.5">
+              <div>{{item.stratname}}</div>
+              <div style="color:#a6afcd">均速：
+                <span style="color:#0ca6ff">{{item.sd | number}}km/h</span>
+              </div>
+            </div>
+            <div style="flex:6.5;text-align:right">
+              <div>{{item.stratname}}---{{item.endname}}</div>
+              <div style="color:#a6afcd">路长:
+                <span style="color:#0ca6ff">{{item.cd | number}}km</span>
+              </div>
+            </div>
+            <!-- <p>
+              <span class='number'>{{i+1}}</span><span class='road'>{{item.roadname}}</span>
+              <span class="address-name">{{item.stratname}}---{{item.endname}}</span>
             </p>
             <p>
-              <span class='road'>平均速度:<span class="text">{{item.sd}}km/h</span></span>
-              <span class="address-name">路长:<span class="text">{{item.cd}}km</span></span>
-            </p>
+              <span class='road'>均速:<span class="text">{{item.sd | number}}km/h</span></span>
+              <span class="address-name">路长:<span class="text">{{item.cd | number}}km</span></span>
+            </p> -->
           </li>
         </ul>
     </div>
@@ -400,12 +416,12 @@ export default {
     width:100%;
     height:377px;
     margin-top:2px;
-    padding:0 10px;
+    // padding:0 10px;
     ul{
-      margin:3% 0 0 0;
+      // margin:3% 0 0 0;
       display: block;
-      padding: 0 15px;
-      width: 90%;
+      padding: 0 5px;
+      width: 100%;
       height: 80%;
       overflow-y: scroll;
       li{
@@ -437,7 +453,7 @@ export default {
           }
         }
         >p:nth-child(2){
-          margin-left:15%;
+          margin-left:5%;
           .road{
             width: 40%;
             color:$color-text-label;
@@ -461,7 +477,9 @@ export default {
     width:160px;
   }
 }
-
+.overview-left-div li:nth-of-type(odd){ 
+  background:rgba(72,84,108,0.2);
+}
 </style>
 <style lang='scss'>
 .data-order {

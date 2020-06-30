@@ -487,7 +487,7 @@ export default {
 };
 </script>
 
-<style scope lang='scss'>
+<style scope scoped lang='scss'>
 @import "@/assets/css/color.scss";
 .carmapOD {
   width: 746px;

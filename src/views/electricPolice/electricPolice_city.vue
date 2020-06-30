@@ -109,7 +109,6 @@ export default {
       that.XZQH=row.XZQH;
       that.city=row.city;
       blur.$emit("sendXZQH",that.XZQH)
-      console.log(that.XZQH)
       blur.$emit("sendcity",that.city)
       that.centerTo(row.jwd.split(' '));
     },
@@ -122,7 +121,6 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-             console.log(data)
             if (data.errcode == 0) {
              that.roadDatas=data.data;
             }else{
@@ -154,7 +152,6 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             that.indexData=data.data;
-          //  console.length(that.indexDatas)
           }else{
             that.$message({
               message: data.errmsg,
@@ -196,7 +193,6 @@ export default {
       interf.GET_ROAD_MAP_DEV_API({dldm:id}).then(response=>{
        if (response && response.status == 200){
          var data = response.data;
-         console.log(data)
          if (data.errcode == 0) {
              _this.addRoadLine(data.data);
           }else{

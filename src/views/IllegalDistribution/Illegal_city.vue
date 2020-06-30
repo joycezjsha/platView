@@ -122,7 +122,6 @@ export default {
     let that = this;
     blur.$emit('gettimeRange',that.timeRange)
     // blur.$emit("determine",that.timeRange)
-    console.log(that.timeRange)  //  ["2020-06-08", "2020-06-11"]
     that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1])
     let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
     let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
@@ -130,7 +129,6 @@ export default {
       time1,
       time2
     }
-    // console.log(timeData)
     blur.$emit("sendTime",timeData)
   },
     /**

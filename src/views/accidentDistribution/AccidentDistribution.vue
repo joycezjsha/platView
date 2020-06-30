@@ -29,7 +29,7 @@ export default {
     blur.$on('addCityMainAcci',function(data){
       _this.$refs.mapModule.addCityAccident(data);
     });
-    blur.$on('addCityMainAcci',function(type,value,flag){
+    blur.$on('initDistributionStatics',function(type,value,flag){
       _this.$refs.staticsModule.initDistributionStatics(type,value,flag);
     })
   },

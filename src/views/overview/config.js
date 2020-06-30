@@ -119,6 +119,22 @@ export const interf={
       params:data
     })
   },
+  //获取本月事故统计数据
+  GET_SG_STATICS_API:data => {
+    return http.service({
+      url:`Overview/getSameMonthAccident`,
+      method:'get',
+      params:data
+    })
+  },
+  //获取今日警情统计数据
+  GET_ACCI_STATICS_API:data => {
+    return http.service({
+      url:`Overview/getTodayPoliceSituation`,
+      method:'get',
+      params:data
+    })
+  },
   //获取境内路况监测数据
   GET_TAFFIC_ORDER_API:data => {
     return http.service({

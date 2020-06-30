@@ -385,7 +385,7 @@ export default {
 }
 </script>
 
-<style  scope lang='scss'>
+<style scoped  scope lang='scss'>
 @import "@/assets/css/color.scss";
 @import "../../assets/css/base.css";
 .hotcard{

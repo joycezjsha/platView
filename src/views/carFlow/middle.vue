@@ -39,7 +39,7 @@ export default {
 }
 </script>
 
-<style scope lang='scss'>
+<style scope scoped lang='scss'>
 
 .carFlow-middle{
     position: fixed;

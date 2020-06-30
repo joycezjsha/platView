@@ -12,7 +12,8 @@
           <el-table-column prop="num" label="汽车保有量"  width="100" sortable></el-table-column>
           <el-table-column prop="khcnum" label="客货车数量"  width="100" sortable></el-table-column>
         </el-table>
-      </div>  
+      </div>
+     
     </div>
 </template>
 
@@ -33,8 +34,8 @@ export default {
         mTitle
     },
     mounted(){
-      let that = this;
-      that.getCityOrderData();
+      // this.getCityOrderData();
+      setTimeout(()=>{this.getCityOrderData();},1000);
     },
     methods:{
       /**
@@ -56,6 +57,7 @@ export default {
           if (response && response.status == 200){
             var data = response.data;
               if (data.errcode == 0) {
+                
                 that.tableDatas=data.data;
               }else{
                 that.$message({
@@ -76,6 +78,17 @@ export default {
         .finally(() => {
           that.tableLoading = false;
         });
+        // interf.GET_CITY_ORDER_API({},function(data){
+        //   if (data.errcode == 0) {
+        //         that.tableDatas=data.data;
+        //       } else{
+        //         that.$message({
+        //           message: data.errmsg,
+        //           type: "error",
+        //           duration: 1500
+        //         });
+        //       }
+        // },function(err){})
       },
       /**
        * 设置表格样式
@@ -115,6 +128,4 @@ export default {
     margin:0 auto;
   }
 }
-
-
 </style>

@@ -423,7 +423,7 @@ export default {
   }
 };
 </script>
-<style scope lang='scss'>
+<style scope scoped lang='scss'>
 @import '@/assets/css/color.scss';
 @mixin flex($direction, $justify, $align: center) {
   display: flex;

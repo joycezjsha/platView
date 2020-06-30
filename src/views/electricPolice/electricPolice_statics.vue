@@ -134,7 +134,6 @@ export default {
     this.getData();
     // setTimeout(()=>{
     let that = this;
-    console.log('qqqqqqqq');
     // that.initAccurCharts();
     that.getDevCountDatas();
     that.getThirtyAlarm();
@@ -161,7 +160,6 @@ export default {
     */ 
     getData(){
       blur.$on("sendXZQH",data=>{
-        console.log(data)
         this.XZQH=data;
         this.getDevCountDatas(this.XZQH);
         this.getThirtyAlarm(this.XZQH);
@@ -170,10 +168,8 @@ export default {
         }
       })
       blur.$on("sendcity",data=>{
-        console.log(data)
         this.city=data;
       })
-      // console.log(this.XZQH,this.city)
     },
     /**
      * 近30天违法抓拍排名 Electronic/getThirtyAlarm   GET_THIRTY_ALARM_API
@@ -185,12 +181,10 @@ export default {
       if(xzqh!=undefined){
         ThirtyData.xzqh=xzqh;
       }
-      console.log(ThirtyData)
         interf.GET_THIRTY_ALARM_API(ThirtyData)
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-             console.log(data)
             if (data.errcode == 0) {
               that.tableDatas=data.data;
             }else{
@@ -223,7 +217,6 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-             console.log(data)
             if (data.errcode == 0) {
               that.numcount=data.data.numcount;
               that.thirtyActive=data.data.thirtyActive;
