@@ -7,6 +7,7 @@
 <script>
 import blur from "@/blur";
 import { interf } from "./config";
+import { IMG } from "./config";
 import tArea from "@/components/area/area.vue";
 export default {
   name: "overview_left",
@@ -26,7 +27,7 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
-    setTimeout(()=>{this.getAreaData();},1000);
+    setTimeout(()=>{this.getAreaData();this.getMainAcciData()},1000);
   },
   components: {
     tArea
@@ -36,28 +37,25 @@ export default {
     this.clearMap();
   },
   methods: {
-    
     /**
-     * 切换显示设备分布热力/区域填充
-     * @param 0->设备分布热力，1->区域填充
+     * 左侧选择时间范围，地图标注时间范围内的重大警情、
      */
-    changeTable(t){
-      this.tableIndex=t;
-      if(t){
-        this.showArea=true;
-        this.hideHeatMap();
-      }else{
-        this.showArea=false;
-        this.addHeatMap();
-      }
-       blur.$emit('initCityOrRoadStatics',null,null,false);
+    initDistributionMap(data){
+      this.clearMap();
+      this.getAreaData(data);
+      this.getMainAcciData(data);
     },
     /**
-     * 显示区域填充数据
+     * 显示各城市填充数据
      */
-    getAreaData(){
+    getAreaData(data){
       let that=this;
-      interf.GET_CITY_MAP_API({stime:1}).then(response=>{
+      let params={stime:1};
+      if(data){
+        params.stime=data.time[0];
+        params.etime=data.time[1];
+      }
+      interf.GET_CITY_MAP_API(params).then(response=>{
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
@@ -84,7 +82,6 @@ export default {
     },
     addCityAccident(data){
       let _this=this;
-      _this.clearMap();
       data.map(e=>{
         _this.addCityPopup(e);
       })
@@ -98,6 +95,10 @@ export default {
       mainDiv.style.width='6vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
+      mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
+      mainDiv.style.border='1px solid rgb(42, 76, 162)';
+      mainDiv.style.fontFamily='SourceHanSansCN';
+      mainDiv.style.padding='4px 13px';
       // mainDiv.className='dev_popup';
 
       let title=document.createElement('p');
@@ -109,17 +110,102 @@ export default {
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>事故：</span><span>"+e.ACCIDENTNUM+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
       
-      let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -20]});
-      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+      // let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
+      // popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+
+      // let el = document.createElement('div');
+      // // el.style["background-image"] = "url(./static/images/"+(e.KKZT>1?"kakou":"kakou_")+".png)";
+      // // el.style["background-size"] = "100% 100%";
+      // el.style.width = "8px";
+      // el.style.height = "8px";
+      // el.style["border-radius"] = "50%";
+      // el.style.backgroundColor='red';
+      let marker = new minemap.Marker(mainDiv, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map);
+      this.map_cover.markers.push(marker);
+      // this.map_cover.popups.push(popup);
+    },
+    /**
+     * 获取重大事故数据
+     */
+    getMainAcciData(data){
+      let that=this;
+     let params={stime:1};
+      if(data){
+        params.stime=data.time[0];
+        params.etime=data.time[1];
+      }
+      interf.GET_MAIN_ACCI_API(params).then(response=>{
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+              that.areaIndexs=data.data;
+              that.addMainAccident(data.data);
+          }else{
+            that.$message({
+            message: response.errmsg,
+            type: "error",
+            duration: 1500
+          });
+          }
+        }
+      })
+      .catch(err=>{
+         that.$message({
+            message: '请求服务失败',
+            type: "error",
+            duration: 1500
+          });
+      })
+      .finally(() => {
+      });
+    },
+    addMainAccident(data){
+      let _this=this;
+      data.map(e=>{
+        _this.addMainAccidentPopup(e);
+      })
+    },
+    /**
+     * 地图显示各市重大事故数量
+     */
+    addMainAccidentPopup(e){
+      let lnglat=e.JWD.split(' ');
+      let mainDiv=document.createElement('div');
+      mainDiv.style.width='13vw';
+      mainDiv.style.fontSize='0.7vw';
+      mainDiv.style.color='white';
+      // mainDiv.className='dev_popup';
+
+      let title=document.createElement('p');
+      title.innerHTML='重大事故';
+      title.className='title';
+      title.style.fontSize='0.7vw';
+      mainDiv.appendChild(title);
+
+      let p1="<p style='margin:5px 0;'><span>事故编号：</span><span>"+e.SGBH+"</span></p>";
+      mainDiv.appendChild($(p1)[0]);
+       let p2="<p style='margin:5px 0;'><span>发生时间：</span><span>"+e.SGFSSJ+"</span></p>";
+      mainDiv.appendChild($(p2)[0]);
+       let p3="<p style='color:#00C6FF;margin:5px 0;'><span>事故类型：</span><span>"+e.SGLX+"</span></p>";
+      mainDiv.appendChild($(p3)[0]);
+       let p4="<p style='margin:5px 0;'><span>伤亡情况：</span><span>"+e.SWQK+"</span></p>";
+      mainDiv.appendChild($(p4)[0]);
+      let p5="<p style='margin:5px 0;'><span>地点：</span><span>"+e.SGDD+"</span></p>";
+      mainDiv.appendChild($(p5)[0]);
+       let p6="<p style='margin:5px 0;'><span>所属辖区：</span><span>"+e.CITY+"</span></p>";
+      mainDiv.appendChild($(p6)[0]);
+       let p7="<p style='margin:5px 0;'><span>事故描述：</span><span>"+e.SGMS+"</span></p>";
+      mainDiv.appendChild($(p7)[0]);
+      
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [5, -5]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv);
 
       let el = document.createElement('div');
-      // el.style["background-image"] = "url(./static/images/"+(e.KKZT>1?"kakou":"kakou_")+".png)";
-      // el.style["background-size"] = "100% 100%";
-      el.style.width = "15px";
-      el.style.height = "15px";
-      el.style["border-radius"] = "50%";
-      el.style.backgroundColor='red';
-      let marker = new minemap.Marker(el, {offset: [-15, -15]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
+      el.style["background-image"] = "url("+IMG.ACCI_IMG+")";
+      el.style["background-size"] = "100% 100%";
+      el.style.width = "32px";
+      el.style.height = "32px";
+      let marker = new minemap.Marker(el, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
       this.map_cover.markers.push(marker);
       this.map_cover.popups.push(popup);
     },

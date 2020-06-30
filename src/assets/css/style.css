@@ -73,7 +73,7 @@
 .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
   background-color: transparent;color:white;
 }
-.el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td{
+.el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td,.el-table__body tr.hover-row>td{
 background-color: #0367A6;
 color:white;
 }
@@ -181,7 +181,7 @@ line-height:2vh;
   background-color: rgba(3, 12, 32, 0.74);
   border:1px solid rgb(42, 76, 162);
   font-family: 'SourceHanSansCN';
-  padding:14px 15px;
+  padding:4px 13px;
 }
 #map .minemap-popup-tip{
   border-top-color: rgba(3, 12, 32, 0.74);

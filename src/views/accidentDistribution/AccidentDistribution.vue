@@ -26,8 +26,8 @@ export default {
   mounted() {
     let _this=this;
     _this.$store.commit("setRight", '26vw');
-    blur.$on('addCityMainAcci',function(data){
-      _this.$refs.mapModule.addCityAccident(data);
+    blur.$on('initDistributionMapdata',function(data){
+      _this.$refs.mapModule.initDistributionMap(data);
     });
     blur.$on('initDistributionStatics',function(type,value,flag){
       _this.$refs.staticsModule.initDistributionStatics(type,value,flag);
