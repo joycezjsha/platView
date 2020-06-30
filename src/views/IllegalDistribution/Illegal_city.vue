@@ -4,16 +4,21 @@
       <div class="illegal-city_title">
         <m-title label='违法分析' style='width:6vw;'></m-title>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 3vw;">
-        <el-tab-pane label="近7天" name="1"></el-tab-pane>
-        <el-tab-pane label="近30天" name="2"></el-tab-pane>
-        <el-tab-pane label="近3月" name="3"></el-tab-pane>
-        <el-tab-pane label="自定义" name="4"></el-tab-pane>
-      </el-tabs>
-      <div class='illegal-city-query'>
+      <!-- @tab-click="handleClicktime" -->
+      <div style="display:flex">
+        <!-- <span class="" style="width:3vw;color:#fff">时间：</span> -->
+        <el-tabs v-model="activeName1" @tab-click="handleClickTime" style="padding:0 3vw;">
+          <el-tab-pane label="近7天" name="1"></el-tab-pane>
+          <el-tab-pane label="近30天" name="2"></el-tab-pane>
+          <el-tab-pane label="近3月" name="3"></el-tab-pane>
+          <el-tab-pane label="自定义" name="4"></el-tab-pane>
+        </el-tabs>
+      </div>
+      <div class='illegal-city-query'  v-if="activeName1=='4'">
         <span class="illegal-city-query--label">时间：</span>
         <span class="illegal-city-query--time">
           <el-date-picker width="100%"
+           value-format="yyyy-MM-dd"
             v-model="timeRange"
             type="daterange"
             align="right"
@@ -25,23 +30,27 @@
           </el-date-picker>
         </span>
         <span class="illegal-city-query--btn">
-          <el-button type="primary">确定</el-button>
+          <!--  -->
+          <el-button  @click="determine" type="primary">确定</el-button>
         </span>
       </div>
       <div class="illegal-city_content">
-         <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 3vw;">
+        <!-- @tab-click="handleClick" -->
+         <!-- <el-tabs v-model="activeName"   style="padding:0 3vw;">
           <el-tab-pane label="全部" name="first"></el-tab-pane>
           <el-tab-pane label="122" name="second"></el-tab-pane>
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
-        </el-tabs>
-        <div style="padding:0 5px">
-          <el-table @row-click="handel"
+        </el-tabs> -->
+        <div style="padding:0 5px;height:73vh">
+          <!--  -->
+          <el-table  @row-click="handItem" 
           :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="60"></el-table-column>
             <el-table-column prop="COUNTNUM" label="全部违法" sortable></el-table-column>
-            <el-table-column prop="SNUM" label="超速"  sortable></el-table-column>
-            <el-table-column prop="TRNUM" label="限行"  sortable></el-table-column>
+            <el-table-column prop="CSNUM" label="超速"  sortable></el-table-column>
+            <el-table-column prop="XNUM" label="限行"  sortable></el-table-column>
+            <el-table-column  v-if='showXZQH' prop="XZQH" label="行政区号"  ></el-table-column>
         </el-table>
         </div>
       </div>
@@ -58,11 +67,12 @@ export default {
   name: "TCruise",
   data() {
     return {
+      stime:"1",
       map: {},
       xzqh:'',
-      indexDatas: [
-        {"CITY":"西安","COUNTNUM":"2.1","SNUM":"+0.3%","TRNUM":"-0.1%"}
-        ],
+      showXZQH:false,
+      activeName1:"1",
+      indexDatas: [],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -79,12 +89,14 @@ export default {
   components:{mTitle},
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
+    // let that = this;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.map.repaint = true;
-    that.getIndexData();
-    that.getIllegalAnalysisDatas()
+    this.getIndexData();
+    console.log(this.stime)
+    this.getIllegalAnalysisDatas(this.stime)
+    
   },
   destroyed() {
     this.map.setPitch(0);
@@ -92,28 +104,66 @@ export default {
   },
   methods: {
     /**
+   * 点击标签页
+   */
+  handleClickTime(item){
+    let that=this;
+    that.activeName1=item.name;
+    blur.$emit('getstime',item.name)
+    if(item.name!='4'){
+      that.stime=item.name;
+      that.getIllegalAnalysisDatas(that.stime)
+    }
+  },
+  /**
+  * 日历选择的时间
+  */
+  determine(){
+    let that = this;
+    blur.$emit('gettimeRange',that.timeRange)
+    // blur.$emit("determine",that.timeRange)
+    console.log(that.timeRange)  //  ["2020-06-08", "2020-06-11"]
+    that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1])
+    let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
+    let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
+    let timeData={
+      time1,
+      time2
+    }
+    // console.log(timeData)
+    blur.$emit("sendTime",timeData)
+  },
+    /**
      * 点击表格事件
     */
-   handel(row){
-     this.xzqh=row.xzqh;
+   handItem(row){
+     this.xzqh=row.XZQH;
      blur.$emit('getxzqh',this.xzqh)
+     blur.$emit('getcity',row.CITY)
    },
    /**
     * 超速违法 IllegalAnalysis/getSpeedingViolation   GET_SPEED_VIOLA_API
-   */
+    */
     getSpeedingViolationDatas(){
 
     },
     /** 
-    * 违法分析  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALY_API
+    * 违法分析  IllegalAnalysis/getIllegalAnalysis   GET_ILL_ANALY_API 
     */
-   getIllegalAnalysisDatas(){
+   getIllegalAnalysisDatas(stime,etime){
      let that = this;
-     interf.GET_ILL_ANALY_API({})
+     let param={};
+     if(etime===undefined){
+      param.stime=stime;
+     }
+     if(etime!=undefined){
+       param.stime=that.timeRange[0];
+       param.etime=that.timeRange[1];
+     }
+     interf.GET_ILL_ANALY_API(param)
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
-          console.log(data)
           if(data.errcode == 0){
             that.indexDatas=data.data;
           }else{
@@ -162,7 +212,7 @@ export default {
                 {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
               )
             });
-            that.indexDatas=datas;
+            // that.indexDatas1=datas;
             that.addArea(data.data);
             // that.addAreaIdentify(data.data);
           }
@@ -203,7 +253,7 @@ export default {
         _this.areaColors[i];
         _this.mapAddItems.lineList.push('arealayerId_'+i);
         _this.mapAddItems.sourceList.push('areaSourceId_'+i);
-        this.map.addPolygons(jsonData,this.map,'areaSourceId_'+i,'arealayerId_'+i,_this.areaColors[i]);
+        // this.map.addPolygons(jsonData,this.map,'areaSourceId_'+i,'arealayerId_'+i,_this.areaColors[i]);
       })
       
     },
@@ -280,46 +330,43 @@ export default {
     getRowClass({ row, column, rowIndex, columnIndex }) {
                 return "background:transparent;";
    },
-  //取括号内数据
-  getLonlats(str){
-    let regex = /[^\(\)]+(?=\))/g;
-    return str.match(regex);
-  },
-  //清除地图加载点、线、面、弹框
-  clearMap(){
-    //清除source
-    if(this.mapAddItems.sourceList.length>0){
-      this.mapAddItems.sourceList.forEach(e=>{
-        if(this.map.getSource(e)!=undefined){
-          this.map.removeSource(e);
-        }
-      })
-    }
-    //清除layer
-    if(this.mapAddItems.lineList.length>0){
-      this.mapAddItems.lineList.forEach(e=>{
-        if(this.map.getLayer(e)!=undefined){
-          this.map.removeLayer(e);
-        }
-      })
-    }
-    //清除popup
-    if(this.mapAddItems.popups.length>0){
-      this.mapAddItems.popups.forEach(e=>{
-        e.remove();
-      })
-    }
-  },
-  /**
-   * 点击标签页
-   */
-  handleClick(){
+    //取括号内数据
+    getLonlats(str){
+      let regex = /[^\(\)]+(?=\))/g;
+      return str.match(regex);
+    },
+    //清除地图加载点、线、面、弹框
+    clearMap(){
+      //清除source
+      if(this.mapAddItems.sourceList.length>0){
+        this.mapAddItems.sourceList.forEach(e=>{
+          if(this.map.getSource(e)!=undefined){
+            this.map.removeSource(e);
+          }
+        })
+      }
+      //清除layer
+      if(this.mapAddItems.lineList.length>0){
+        this.mapAddItems.lineList.forEach(e=>{
+          if(this.map.getLayer(e)!=undefined){
+            this.map.removeLayer(e);
+          }
+        })
+      }
+      //清除popup
+      if(this.mapAddItems.popups.length>0){
+        this.mapAddItems.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+    },
     
-  }
+
+
   }
 };
 </script>
-<style scope lang='scss'>
+<style scope scoped lang='scss'>
 @import '@/assets/css/color.scss';
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;

@@ -140,6 +140,7 @@ export default {
       that.map = that.$store.state.map;
       if (that.map.getLayer("data-point") != undefined) {
         that.map.setLayoutProperty("data-point", "visibility", "visible");
+        // that.map.getLayer("data-point").setData(jsonData);
       } else {
         let jsonData = {
           type: "FeatureCollection",
@@ -238,6 +239,7 @@ export default {
       interf.GET_BAY_HEAT_API(param).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+            console.log(data)
             if (data.errcode == 0) {
               data.data.features.map(e => {
                 e.geometry.coordinates = e.geometry.coordinates[0].split(",");
@@ -374,7 +376,7 @@ export default {
 };
 </script>
 
-<style scope lang='scss'>
+<style scope scoped  lang='scss'>
 .bayonet-middle {
   position: fixed;
   top: 95.6vh;
