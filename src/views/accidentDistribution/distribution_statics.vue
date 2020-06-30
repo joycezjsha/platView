@@ -7,15 +7,16 @@
       </div>
       <div class="distribution-statics--tab boxstyle">
         <!--</div> +"(其中重大事故:"+staticsData.esplish+")"-->
-        <m-tab label='事故总数' :value='staticsData.sum' icon='icon-weifaguanli' icon_style='color:#FFFFFF'></m-tab>
+        <m-tab label='事故总数' :value='staticsData.ACCIDENTNUM' :right_value='"(其中重大事故:"+staticsData.MAJORACCIDENTNUM+")"' icon='icon-weifaguanli' icon_style='color:#FFFFFF' style="width:90%;margin:0 auto;"></m-tab>
+        
         <div class='item_content'>
             <div class='item'>
             受伤
-            <br/><span><span class="statics_value">{{staticsData.injury}}</span>人</span>
+            <br/><span><span class="statics_value">{{staticsData.INJURYNUM}}</span>人</span>
           </div>
           <div class='item'>
             死亡
-            <br/><span><span class="statics_value">{{staticsData.died}}</span>人</span>
+            <br/><span><span class="statics_value">{{staticsData.DEATHNUM}}</span>人</span>
           </div>
         </div>
       </div>
@@ -57,7 +58,7 @@ export default {
       map: {},
       title:'全省统计',
       isShowReturn:false,
-      staticsData: {sum: 10, esplish: 2, injury: 4, died: 2 },
+      staticsData: {"ACCIDENTNUM":"","MAJORACCIDENTNUM":"","INJURYNUM":"","DEATHNUM":""},
       sg_sort_data: [
         { NAME: "机动车与机动车", NUM: "12", radio: "32%" }
       ],
@@ -173,31 +174,40 @@ export default {
   },
   methods: {
     initDistributionStatics(type,data,flag){
-      if(!type){
-        this.isShowReturn=true;
+       this.isShowReturn=true;
         this.title=data.name;
-        this.getAllStatics(data.value);
-        this.initSumCharts(data.value);
-        this.initAccurCharts(data.value);
-        this.initSgTypes(data.value);
-      }
+        this.getAllStatics(type,data);
+        this.initSumCharts(type,data);
+        this.initAccurCharts(type,data);
+        this.initSgTypes(type,data);
     },
     //获取统计数据
-    getAllStatics(code) {
+    getAllStatics(type,data) {
       let that = this;
-      let params={};
-      if(code) params.xzqh=code;
+      let params={stime:1};
+      if(type!=undefined && data){
+        if(data.time!=''){
+          params.stime=data.time[0];
+          params.etime=data.time[1];
+        };
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
+      }
       interf.GET_ALL_STA_API(params).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
-               that.staticsData.sum=data.ACCIDENTNUM?data.ACCIDENTNUM:'';
-               that.staticsData.esplish=data.MAJORACCIDENTNUM?data.MAJORACCIDENTNUM:'';
-               that.staticsData.injury=data.INJURYNUM?data.INJURYNUM:'';
-               that.staticsData.died=data.DEATHNUM?data.DEATHNUM:'';
+               that.staticsData=data.data;
+              //  that.staticsData.sum=data.data.ACCIDENTNUM?data.data.ACCIDENTNUM:'';
+              //  that.staticsData.esplish=data.data.MAJORACCIDENTNUM?data.data.MAJORACCIDENTNUM:'';
+              //  that.staticsData.injury=data.data.INJURYNUM?data.data.INJURYNUM:'';
+              //  that.staticsData.died=data.data.DEATHNUM?data.data.DEATHNUM:'';
             } else{
               that.$message({
-                message: data.errmsg,
+                message: data.message,
                 type: "error",
                 duration: 1500
               });
@@ -214,19 +224,28 @@ export default {
     /**
      * 获取事故类型数据
      */
-    initSgTypes(code){
+    initSgTypes(type,data) {
       let that = this;
       let params={stime:1};
-      if(code) params.xzqh=code;
+      if(type!=undefined && data){
+        if(data.time!=''){
+          params.stime=data.time[0];
+          params.etime=data.time[1];
+        };
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
+      }
       interf.GET_ACCIDENT_TYPE_API(params).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
-              that.sg_sort_data=data.data;
-              
+              that.sg_sort_data=data.data;  
             } else{
               that.$message({
-                message: data.errmsg,
+                message: data.message,
                 type: "error",
                 duration: 1500
               });
@@ -242,9 +261,9 @@ export default {
      
     },
     /**
-     * 生成事故数量趋势echarts
+     * 生成事故发生数量变化echarts
      */
-    initSumCharts(code){
+    initSumCharts(type,data){
       let that = this;
        that.chart_data={
         legend: ["事故量", "同比上月(%)"], 
@@ -253,7 +272,13 @@ export default {
           y2data:[]
       }
       let params={};
-      if(code) params.xzqh=code;
+      if(type && data){
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
+      };
       interf.GET_ACCIDENT_CHANGE_API(params).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
@@ -266,13 +291,10 @@ export default {
                   _data.y2data.push(e.ratio*100);
                 })
                 that.chart_data=_data;
-              }else{
-               
               }
-              
             } else{
               that.$message({
-                message: data.errmsg,
+                message: data.message,
                 type: "error",
                 duration: 1500
               });
@@ -290,15 +312,21 @@ export default {
     /**
      * 生成重大事故发生趋势echarts
      */
-    initAccurCharts(code){
+    initAccurCharts(type,data){
       let _this = this;
       _this.bar_chart_data={
                   legend: ["数量", "城市"],
                   xdata:[],
                   ydata:[]
                 }
-      let params={};
-      if(code) params.xzqh=code;
+     let params={};
+      if(type!=undefined && data){
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
+      }
       interf.GET_ACCIDENT_TREND_API(params).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
@@ -306,21 +334,15 @@ export default {
               let car_data=_this.bar_chart_data;
               if(data.data && data.data.length>0){
                 data.data.forEach(e=>{
-                  car_data.xdata.push(e.city);
+                  car_data.xdata.push(e.RQ);
                   car_data.ydata.push(e.NUM);
                 });
                 _this.bar_chart_data=car_data;
                 // blur.$emit('addCityMainAcci',data.data);
-              }else{
-                _this.bar_chart_data={
-                  legend: ["数量", "城市"],
-                  xdata:[],
-                  ydata:[]
-                }
               }
             } else{
               _this.$message({
-                message: data.errmsg,
+                message: data.message,
                 type: "error",
                 duration: 1500
               });
@@ -344,6 +366,7 @@ export default {
       this.getAllStatics();
       this.initSumCharts();
       this.initAccurCharts();
+      this.initSgTypes();
     },
   }
 };

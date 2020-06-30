@@ -29,7 +29,7 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     this.getAreaData();
-    setTimeout(this.addHeatMap,3000);
+    setTimeout(this.addHeatMap,1000);
   },
   components: {
     mTitle,tArea

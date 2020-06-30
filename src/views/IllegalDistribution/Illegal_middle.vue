@@ -130,45 +130,41 @@ export default {
         *  柱形热力图
         */
        getMapDatas(item){
+           debugger;
         let that = this;
-        // item.features.forEach(e=>{
-        //     // console.log(e)
-        //     let levels=e.properties.levels.toString()
-        //     console.log(levels,typeof(levels))
-        // })
-        if (that.map.getLayer("histogram-source") != undefined) {
-            that.map.setLayoutProperty("histogram-source", "visibility", "visible");
-            that.map.getLayer("histogram-source").setData(item);
+        if (that.map.getLayer("histogram-layer") != undefined) {
+            that.map.setLayoutProperty("histogram-layer", "visibility", "visible");
+            that.map.getSource("histogram-source").setData(item);
         }else{
             that.map.addSource('histogram-source', {
-            'type': 'geojson',
-            'data': item
-        })
-        that.map_cover.sourceList.push("histogram-source");
-       
-        that.map.addLayer({
-            "id": "histogram-layer",
-            'type': 'histogram',
-            'source': 'histogram-source',
-            'layout': {
-                'histogram-max-height-render': true, /* 是否开启柱状图极大高度控制 */
-                "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
-            },
-            'paint': {
-                "histogram-colors": ['#72c3fc', '#ffd8a8', '#faa2c1', '#c5f6fa', '#C7F5FF'],
-                /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
-                'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
-                'histogram-height': {
-                    'type': 'identity',
-                    'property': 'levels'
-                }, /*高度*/
-                'histogram-base': 0,/*基础高度*/
-                'histogram-opacity': 0.8
+                'type': 'geojson',
+                'data': item//'./static/json/wuhuannei_level1.json'//
+            });
+            that.map.addLayer({
+                "id": "histogram-layer",
+                'type': 'histogram',
+                'source': 'histogram-source',
+                'layout': {
+                    'histogram-max-height-render': true, /* 是否开启柱状图极大高度控制 */
+                    "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
+                },
+                'paint': {
+                    "histogram-colors": ['#72c3fc', '#ffd8a8', '#faa2c1', '#c5f6fa', '#C7F5FF'],
+                    /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
+                    'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
+                    'histogram-height': {
+                        'type': 'identity',
+                        'property': 'levels'
+                    }, /*高度*/
+                    'histogram-base': 0,/*基础高度*/
+                    'histogram-opacity': 0.8
+                }
+            });
+            that.map_cover.sourceList.push("histogram-source");
+            that.map_cover.lineList.push("histogram-layer");
             }
-        })
-        that.map_cover.lineList.push("histogram-layer");
-        }
-       
+        that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
+        that.map.setPitch(60);
        },
         /**
         * 违法热力图数据及展示 IllegalAnalysis/getIllegalHeatMap  GET_HEAT_MAP_API
@@ -322,24 +318,24 @@ export default {
     //清除地图加载点、线、面、弹框
     clearMap() {
       //清除source
-      if (this.mapAddItems.sourceList.length > 0) {
-        this.mapAddItems.sourceList.forEach(e => {
+      if (this.map_cover.sourceList.length > 0) {
+        this.map_cover.sourceList.forEach(e => {
             if (this.map.getSource(e) != undefined) {
                 this.map.removeSource(e);
             }
             });
         }
         //清除layer
-        if (this.mapAddItems.lineList.length > 0) {
-            this.mapAddItems.lineList.forEach(e => {
+        if (this.map_cover.lineList.length > 0) {
+            this.map_cover.lineList.forEach(e => {
             if (this.map.getLayer(e) != undefined) {
                 this.map.removeLayer(e);
             }
             });
         }
         //清除popup
-        if (this.mapAddItems.popups.length > 0) {
-            this.mapAddItems.popups.forEach(e => {
+        if (this.map_cover.popups.length > 0) {
+            this.map_cover.popups.forEach(e => {
             e.remove();
             });
         }

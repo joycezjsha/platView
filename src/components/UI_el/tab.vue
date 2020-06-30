@@ -1,10 +1,11 @@
 <template>
-  <div class='tab' style='background-image: url(./static/images/ui_image/tab_bg.png);'>
+  <div :class="right_value==''?'tab':'tab_'" style='background-image: url(./static/images/ui_image/tab_bg.png);'>
     <div class='img' v-if='isShowIcon' >
       <i :class='"iconfont "+icon' :style='icon_style'/>
     </div>
     <div class='label'>{{label}}</div>
     <div class='value'>{{value}}</div>
+    <div class="rightValue" v-if='right_value!=""'>{{right_value}}</div>
   </div>
 </template>
 <script>
@@ -36,6 +37,10 @@ export default {
       // type: String,
       default: ''
     },
+    right_value: {
+      // type: String,
+      default: ''
+    }
   },
   components: {
     
@@ -84,6 +89,44 @@ export default {
   .value{
     width:30%;
     font-size: 24px;
+    .rightValue{
+      font-size: 16px;
+    }
+  }
+}
+.tab_{
+  width:98%;
+  height:37px;
+  margin:0 auto;
+  // border:1px solid $color-border-1;
+  // background: $color-primary;
+  background-size: 100% 100%;
+  color: $color-white;
+  @include flex(row, center,center);
+  .img,.label,.value,.rightValue{
+     @include flex(column, center,center);
+  }
+  .img{
+    width:20%;
+    i{
+      font-size: 20px;
+      color:#8B8EA4;
+    }
+  }
+  .label{
+    width:30%;
+    align-items: start;
+    font-size: 16px;
+    font-style:italic;
+  }
+  .value{
+    width:20%;
+    font-size: 24px;
+
+  }
+  .rightValue{
+    width:30%;
+    font-size: 16px;
   }
 }
 </style>

@@ -15,6 +15,8 @@
           <el-date-picker
             width="100%"
             v-model="timeRange"
+            :default-time="defaultTime"
+            value-format='yyyy-MM-dd HH:mm:ss'
             type="daterange"
             align="right"
             unlink-panels
@@ -24,7 +26,7 @@
           ></el-date-picker>
         </span>
         <span class="city-distribution-query--btn">
-          <el-button type="primary">确定</el-button>
+          <el-button type="primary" @click='changeTable()' v-loading='queryLoading'>确定</el-button>
         </span>
       </div>
       <div class="city-distribution_content">
@@ -62,13 +64,15 @@ export default {
       indexDatas: [],
       selectItem: { city: "西安", order: 8 },
       timeRange: "",
+      defaultTime:['00:00:00','23:59:59'],
       tableIndex: 0,
       mapAddItems: {
         polygons: [],
         sourceList: [],
         lineList: [],
         popups: []
-      }
+      },
+      queryLoading:false
     };
   },
   components: { mTitle },
@@ -89,8 +93,14 @@ export default {
      * @param 0->城市统计，1->道路统计
      */
     changeTable(t) {
-      this.tableIndex = t;
-      if(t){
+      let _this=this;
+      if(t!=undefined) {this.tableIndex = t;}
+      else{
+        this.queryLoading=true;
+        if(this.timeRange!='') blur.$emit('initDistributionMapdata',{time:this.timeRange});
+        setTimeout(()=>{_this.queryLoading=false;},500);
+      }
+      if(this.tableIndex){
         this.getAreaStaticsData();
       }else{
         this.getCityStaticsData();
@@ -101,13 +111,13 @@ export default {
      */
     handle(row, event, column){
       let data={};
+      data.time=this.timeRange;
       if(this.tableIndex){
         data.name=row.CITY;
-        data.value=row.areaid;
+        data.value=row.AREAID;
       }else{
         data.name=row.CITY;
         data.value=row.XZQH;
-        // this.centerTo(row.jwd.split(' '));
       }
       blur.$emit('initDistributionStatics',this.tableIndex,data);
     },
@@ -116,7 +126,12 @@ export default {
      */
     getCityStaticsData(){
       let that = this;
-      interf.GET_CITY_STA_API({stime:1}).then(response=>{
+      let param={stime:1};
+      if(this.timeRange!=''){
+        param.stime=this.timeRange[0];
+        param.etime=this.timeRange[1];
+      };
+      interf.GET_CITY_STA_API(param).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
@@ -142,7 +157,12 @@ export default {
      */
     getAreaStaticsData(){
       let that = this;
-      interf.GET_AREA_STA_API({stime:1}).then(response=>{
+       let param={stime:1};
+      if(this.timeRange!=''){
+        param.stime=this.timeRange[0];
+        param.etime=this.timeRange[1];
+      };
+      interf.GET_AREA_STA_API(param).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {

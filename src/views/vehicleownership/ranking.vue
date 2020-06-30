@@ -5,7 +5,6 @@
         <m-title label='汽车保有量排名' style='width:10vw;'></m-title>
       </div>
       <div class='ranking--table'>
-        <!-- -->
         <el-table :data="tableDatas" style="width: 100%"  @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column fixed type="index" label="No." width="50"></el-table-column>
           <el-table-column prop="name" label="城市"  width="70"></el-table-column>
@@ -13,7 +12,6 @@
           <el-table-column prop="khcnum" label="客货车数量"  width="100" sortable></el-table-column>
         </el-table>
       </div>
-     
     </div>
 </template>
 
@@ -34,7 +32,6 @@ export default {
         mTitle
     },
     mounted(){
-      // this.getCityOrderData();
       setTimeout(()=>{this.getCityOrderData();},1000);
     },
     methods:{
@@ -103,8 +100,7 @@ export default {
 }
 </script>
 
-<style  scoped lang="scss">
-
+<style scoped lang="scss">
 .ranking{
   position: absolute;;
   top: 11px;
