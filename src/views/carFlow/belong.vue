@@ -1,5 +1,5 @@
 <template>
-  <div class="carFlowBelong">
+  <div class="carFlowBelong ">
     <!-- 中间的OD地图 -->
     <!-- <div class="carmapOD" id="map"></div> -->
     <div class="belong">
@@ -10,7 +10,7 @@
           <span>{{city}}</span>
         </div>
       </div>
-      <div class="carFlow-main">
+      <div class="carFlow-main boxstyle">
         <div>
           <m-title class="analysis" label="车辆归属地分析"></m-title>
         </div>
@@ -42,7 +42,7 @@
             <div @click="province(2)" class="city"  :class="provinceInorOut=='2'? 'isborder': ''"></div>
           </div>
         </div>
-        <div style="padding:0 2vw;height:100%">
+        <div style="padding:0 2vw;height:100%;marfin-top:3vh">
           <el-table
             :data="indexDatas"
             style="width: 100%"
@@ -487,7 +487,7 @@ export default {
 };
 </script>
 
-<style scope lang='scss'>
+<style scoped lang='scss'>
 @import "@/assets/css/color.scss";
 .carmapOD {
   width: 746px;
@@ -555,14 +555,14 @@ export default {
   }
  .carFlow-main {
     height: 951px;
-    background-color: $color-bg-1;
-    border: 1px solid;
-    border-image: linear-gradient(
-        182deg,
-        rgba(10, 148, 255, 1),
-        rgba(255, 255, 255, 0)
-      )
-      1 1;
+    // background-color: $color-bg-1;
+    // border: 1px solid;
+    // border-image: linear-gradient(
+    //     182deg,
+    //     rgba(10, 148, 255, 1),
+    //     rgba(255, 255, 255, 0)
+    //   )
+    //   1 1;
     .analysis {
       width: 8.5vw;
       height: 3vh;

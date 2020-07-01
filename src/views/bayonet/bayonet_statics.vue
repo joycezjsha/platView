@@ -44,16 +44,16 @@
             </div>
           </div>
           <div class="device-statics_data">
-            <div style="padding:0 5px">
+            <div style="padding:0 8px">
               <el-table :data="tableDatas" style="width: 100%" height="680px" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                <el-table-column fixed type="index" label="No" width="38"></el-table-column>
-                <el-table-column  show-overflow-tooltip  prop="city,ROADNAME"  width="130" label="设备名称">
+                <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+                <el-table-column  show-overflow-tooltip  prop="city,ROADNAME"  width="190" label="设备名称">
                   <template slot-scope="scope">
                    [{{scope.row.city}}]{{scope.row.ROADNAME}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="TIMENUM" label="流量"  width="60" sortable></el-table-column>
-                <el-table-column prop="TODAYNUM" label="过车量"  width="70" sortable></el-table-column>
+                <el-table-column prop="TIMENUM" label="流量"  width="80" sortable></el-table-column>
+                <el-table-column prop="TODAYNUM" label="过车量"  width="110" sortable></el-table-column>
               </el-table>
             </div>          
           </div>
@@ -331,7 +331,7 @@ export default {
   }
 };
 </script>
-<style scope='true' lang='scss'>
+<style scoped lang='scss'>
 @import "@/assets/css/color.scss";
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;

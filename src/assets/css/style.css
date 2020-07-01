@@ -16,7 +16,8 @@
 .topbar-bar .el-submenu .el-submenu__title:hover,.topbar-bar .el-menu-item:hover {
   background-color: transparent;
   border-bottom: 1px solid #00C6FF;
-  color:#00C6FF;
+  /* color:#00C6FF; */
+  color: #004272;
 }
 .topbar-bar .el-menu.el-menu--horizontal{
   background-color: transparent;
@@ -71,12 +72,16 @@
 
 /*el样式改写*/
 .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
-  background-color: transparent;color:white;
+  background-color: #010d26;color:white;
+}
+.el-table tr:nth-of-type(odd){ 
+  background:rgba(72,84,108,0.2);color:white;
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td,.el-table__body tr.hover-row>td{
 background-color: #0367A6;
 color:white;
 }
+
 .el-input__inner,.el-range-editor .el-range-input {
   background: #0A173A;
   color:white;
@@ -162,7 +167,8 @@ line-height:2vh;
 *公共样式
 **/
 .el-table th{
-  color:#1D99AB;
+  /* color:#1D99AB; */
+  color:#a6afcd;
   font-size: 16px;
 }
 .el-table .sort-caret.descending{
@@ -174,7 +180,12 @@ line-height:2vh;
   font-size: 16px;
 }
 .boxstyle{
-  background: url('../images/box_bg.png') no-repeat;
+  /* background: url('../images/box_bg.png') no-repeat !important; */
+  background: url('../images/border.png') no-repeat;
+  background-size: 100% 100%;
+}
+.borstyle{
+  background: url('../images/box_bg.png') no-repeat ;
   background-size: 100% 100%;
 }
 #map .minemap-popup-content{

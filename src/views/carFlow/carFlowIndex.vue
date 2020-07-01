@@ -46,6 +46,7 @@ export default {
   },
   mounted() {
     let that = this;
+    that.$store.commit("setRight", '25.5vw');
      blur.$on('realtime',showcarinfo=>{
        if(!showcarinfo) this.isShow=1;
        this.isShow=showcarinfo;
@@ -141,7 +142,7 @@ export default {
   }
 };
 </script>
-<style scope lang='scss'>
+<style scoped lang='scss'>
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;
   flex-direction: $direction;

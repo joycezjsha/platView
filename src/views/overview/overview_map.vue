@@ -98,7 +98,7 @@ export default {
       
       let leftImgDiv=document.createElement('div');
       leftImgDiv.style.float='left';
-      leftImgDiv.style.width='20px';
+      leftImgDiv.style.width='15px';
       leftImgDiv.style.height='40px';
       leftImgDiv.style.lineHeight='30px';
       let img_i = document.createElement('i');
@@ -173,11 +173,11 @@ export default {
       let mainDiv=document.createElement('div');
       mainDiv.style.width='16vw';
       mainDiv.style.color='white';
-      mainDiv.style.fontSize='14px';
+      mainDiv.style.fontSize='10px';
       // mainDiv.className='overview_popup';
       let title=document.createElement('p');
       title.innerHTML='['+e.city+']-'+e.KKMC;
-      title.style.fontSize='14px';
+      title.style.fontSize='10px';
       title.style.margin='10px 0';
       mainDiv.appendChild(title);
       

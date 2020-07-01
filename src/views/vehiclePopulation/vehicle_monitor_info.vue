@@ -796,19 +796,13 @@ export default {
             if (data.errcode == 0) {
               let car_data = that.outboundEchartsData;
               data.data.forEach(e => {
+                that.outboundEchartsData.y1data=[];
+                that.outboundEchartsData.y2data=[];
+                that.outboundEchartsData.xdata=[];
                 that.outboundEchartsData.y1data.push(e.innum);
                 that.outboundEchartsData.y2data.push(e.outnum);
                 that.outboundEchartsData.xdata.push(e.date);
                 that.outboundEchartsData = car_data;
-                if (!that.accurChart) {
-                  that.accurChart = echarts.init(
-                    document.getElementById("outboundEcharts")
-                  );
-                }
-                that.accurChart.setOption(that.accurChangeOption);
-                window.addEventListener("resize", () => {
-                  that.accurChart.resize();
-                });
               });
             } else {
               that.$message({
@@ -897,7 +891,7 @@ export default {
   }
 };
 </script>
-<style scope lang='scss'>
+<style scoped lang='scss'>
 @import "@/assets/css/color.scss";
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;

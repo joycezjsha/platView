@@ -6,14 +6,17 @@
           <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
         </div>
         <div class="tab">
-          <span style="margin-right:2vw;">速度检测次数</span>
-          <el-divider direction="vertical"></el-divider>
-          <span style="margin-left:2vw;">平均行驶速度/限速</span>
+          <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-right:0.5vw"></span>
+          <span style="margin-right:1.5vw;">速度检测次数</span>
+          <!-- <el-divider direction="vertical"></el-divider> -->
+          <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-left:4.5vw"></span>
+          <span style="margin-left:0.5vw;">平均行驶速度/限速</span>
         </div>
         <div class="overview-info_sort">
           <div>
             <m-list-o :list='listItems'></m-list-o>
           </div>
+          <!-- <div style="width:1px;height:5vh;background:radial-gradient(#f3f0f0, #757ba340,transparent);"></div> -->
           <div class="avg">{{avg}}</div>
           <div id="overview-info_sort" v-loading='tableLoading'>
             
@@ -22,16 +25,22 @@
       </div>
       <div class="boxstyle">
         <m-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-title>
-        <m-line-chart :chart_data="chart_data" c_id='overViewsumCountChange' style='width:100%;height:28vh'></m-line-chart>
+        <div style='width:100%;height:28.99vh'> 
+          <m-line-chart style='width:100%;height:28.99vh' :chart_data="chart_data" c_id='overViewsumCountChange' ></m-line-chart>
+        </div>
       </div>
       <div class="boxstyle">
         <m-title label='车辆保有量' img_type=1  style='width:7vw;'></m-title>
+        
         <m-tab :isShowIcon='showIcon' label='陕西车辆保有量' :value='carStatics.count'></m-tab>
         <div class='register'>
           <div><span>本月注册</span><span>{{carStatics.this_month}}</span></div>
           <div><span>上月注册</span><span>{{carStatics.front_month}}</span></div>
         </div>
-        <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" style='width:100%;height:20vh'></bar-chart>
+        <div style="height:25.32vh">
+          <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" ></bar-chart>
+        </div>
+        
       </div>
     </div>
   </div>
@@ -65,13 +74,19 @@ export default {
         y2data:[]
       },
       car_chart_data:{
-        legend: ["保有量", "城市"],
+        legend: [],
         xdata:[],
         ydata:[]
       },
       staticsData: {sum: 10,mainCount:0},
       accident_option: {
-        color:['#02FDF4','#4D76F9','#01D647'],
+        grid:{
+          top:'35%',
+          left:'15%',
+          right:'15%',
+          bottom:'15%'
+        },
+        color:['#03baff','#333c73 '],
           tooltip: {
             show:false,
             trigger: 'item',
@@ -232,6 +247,9 @@ export default {
                 };
                 that.accident_option.series[0].data=[{name:'超速次数',value:that.listItems[0].value},{name:'总检测数',value:that.listItems[1].value}]
                 that.accident_chart.setOption(that.accident_option);
+                window.addEventListener("resize",()=>{
+                that.accident_chart.resize();
+              })
             } else {
               that.$message({
                 message: data.errmsg,
@@ -288,6 +306,7 @@ export default {
       interf.GET_CAR_FLOW_API({}).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+            console.log(data)
             if (data.errcode == 0) {
               let _data=data.data;
               _this.carStatics.count=_data.count?_data.count:'';
@@ -329,7 +348,7 @@ export default {
 .overview-info {
   position: fixed;
   z-index: 10;
-  right: 1vw;
+  right: 13px;
   width: 480px;
   height: 80vh;
   top: 10vh;
@@ -357,7 +376,7 @@ export default {
   }
   >div:nth-child(1){
     .tab{
-      margin-top:1vh;margin-left:1vw;
+      margin-top:1vh;margin-left:-3vw;
       @include flex(row, center,center);
       >span{
         @include flex(column, center,center);
@@ -392,6 +411,7 @@ export default {
   #accurCreateChange{
     width:100%;
     height:25vh;
+    
   }
 }
 

@@ -256,7 +256,7 @@ export default {
 }
 </script>
 
-<style scope lang='scss'>
+<style scoped lang='scss'>
 .vehicle-middle{
     position: fixed;
     top:95.6vh;

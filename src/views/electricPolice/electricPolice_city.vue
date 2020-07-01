@@ -12,10 +12,10 @@
           <el-table :data="indexData" 
              @row-click="handdleCity"
              style="width: 100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column fixed type="index" label="No." width="38"></el-table-column>
-            <el-table-column prop="city" label="城市" width="52"></el-table-column>
-            <el-table-column prop="COUNT" label="设备数量" sortable></el-table-column>
-            <el-table-column prop="ACTIVENUM" label="活跃个数"  width="85" sortable></el-table-column>
+            <el-table-column fixed type="index" label="No." width="50"></el-table-column>
+            <el-table-column prop="city" label="城市" width="70"></el-table-column>
+            <el-table-column prop="COUNT" label="设备数量" width="110" sortable></el-table-column>
+            <el-table-column prop="ACTIVENUM" label="活跃个数"  width="110" sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
             <el-table-column prop="XZQH" v-if='showXZQH'  ></el-table-column>
           </el-table>
@@ -109,7 +109,6 @@ export default {
       that.XZQH=row.XZQH;
       that.city=row.city;
       blur.$emit("sendXZQH",that.XZQH)
-      console.log(that.XZQH)
       blur.$emit("sendcity",that.city)
       that.centerTo(row.jwd.split(' '));
     },
@@ -122,12 +121,11 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-             console.log(data)
             if (data.errcode == 0) {
              that.roadDatas=data.data;
             }else{
               that.$message({
-                message: data.errmsg,
+                message: '道路统计请求服务失败',
                 type: "error",
                 duration: 1500
                 });
@@ -154,10 +152,9 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             that.indexData=data.data;
-          //  console.length(that.indexDatas)
           }else{
             that.$message({
-              message: data.errmsg,
+              message: '城市统计请求服务失败',
               type: "error",
               duration: 1500
               });
@@ -196,12 +193,11 @@ export default {
       interf.GET_ROAD_MAP_DEV_API({dldm:id}).then(response=>{
        if (response && response.status == 200){
          var data = response.data;
-         console.log(data)
          if (data.errcode == 0) {
              _this.addRoadLine(data.data);
           }else{
             _this.$message({
-              message: data.errmsg,
+              message: '道路上的设备获取数据失败',
               type: "error",
               duration: 1500
             });

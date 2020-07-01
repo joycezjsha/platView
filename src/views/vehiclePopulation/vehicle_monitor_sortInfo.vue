@@ -280,7 +280,7 @@ export default {
   }
 };
 </script>
-<style scope lang='scss'>
+<style scoped lang='scss'>
 @import "@/assets/css/color.scss";
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;

@@ -1,21 +1,27 @@
 <template>
   <div class="overview-statics">
    <div class='overview-statics--tab'>
-     <div class='overview-statics--tab_title'><span>今日警情</span><span>{{datas.jq.todayNum}}</span>起</div>
+     <div class='overview-statics--tab_title'>
+       <span>今日警情</span><span>{{datas.jq.todayNum}}</span>起
+      </div>
      <div class='overview-statics--tab_radio'>
        <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yesterNum}}</span></div>
        <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.monthAvg}}</span></div>
     </div>
-     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-shigu'></i></span><span class='label'>重大警情:</span><span class='value'>{{datas.jq.importantNum}}</span>起</div>
+     <div class='overview-statics--tab_main'>
+       <span class='img'><i class='iconfont icon-jingqing'></i></span>
+       <span class='label'>重大警情:</span><span class='value'>{{datas.jq.importantNum}}</span>起</div>
    </div>
    <div class='overview-statics--split'></div>
    <div class='overview-statics--tab' >
-     <div class='overview-statics--tab_title'><span>本月事故</span><span>{{datas.sg.sameMonthAccidentNum}}</span>起</div>
+     <div class='overview-statics--tab_title'>
+       <span>本月事故</span><span>{{datas.sg.sameMonthAccidentNum}}</span>起</div>
      <div class='overview-statics--tab_radio'>
        <div><span class='label'>伤:</span><span class='value'>{{datas.sg.injuryNum}}</span></div>
        <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.deathNum}}</span></div>
     </div>
-     <div class='overview-statics--tab_main'><span class='img'><i class='iconfont icon-jingqing'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.importantAccidentNum}}</span>起</div>
+     <div class='overview-statics--tab_main'><span class='img'>
+       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.importantAccidentNum}}</span>起</div>
    </div>
    <div class='overview-statics--split'></div>
     <div class='overview-statics--tab'  >

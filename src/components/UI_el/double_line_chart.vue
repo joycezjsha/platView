@@ -9,7 +9,7 @@ export default {
       option: {
           color:['#8ec6add6','#d68262bf'],
           grid:{
-            top:'25%',
+            top:'35%',
             left:'15%',
             right:'15%',
             bottom:'15%'
@@ -29,7 +29,8 @@ export default {
                   show:true,
                   axisLabel:{
                       show:true,
-                      color:'white'
+                      color:'white',
+                      fontSize :10  
                   },
                   data:[],
                   splitLine:{show:false},
@@ -48,7 +49,8 @@ export default {
                   axisLine:{lineStyle:{color:'white'}},
                   axisLabel: {
                       formatter: '{value}',
-                      color:'white'
+                      color:'white',
+                       fontSize :10  
                   },
                   nameTextStyle:{
                     color:'white'
@@ -62,7 +64,8 @@ export default {
                   splitLine:{show:false},
                   axisLabel: {
                       formatter: '{value}',
-                      color:'white'
+                      color:'white',
+                      fontSize :10  
                   },
                   nameTextStyle:{
                     color:'white'

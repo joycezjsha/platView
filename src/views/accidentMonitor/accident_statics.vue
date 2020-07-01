@@ -364,10 +364,10 @@ export default {
     }
     
   }
-  .accident-statics--tab>:nth-child(2){
+  .accident-statics--tab:nth-child(2){
     margin-top:38px;
   }
-  .accident-statics--tab>:nth-child(3){
+  .accident-statics--tab:nth-child(3){
     margin-top:21px;
   }
   .accident-statics_content {

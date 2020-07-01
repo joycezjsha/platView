@@ -30,7 +30,7 @@
       }
     },
     mounted(){
-      this.$store.commit("setRight", '26vw');
+      this.$store.commit("setRight", '25.88vw');
     },
     components:{top,lTable,tableInfo:table_info,statics,mapView}
   }

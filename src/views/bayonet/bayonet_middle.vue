@@ -59,10 +59,12 @@ export default {
     getDatas() {
       let that = this;
       blur.$on("getXZQH", data => {
-        if (that.tableIndex == 1) {
-          that.getBayonetHeatMap(data);
+        that.xzqh=data;
+        // that.getBayonetHeatMap(data);
+        if (that.tableIndex == '1') {
+          that.getBayonetHeatMap(that.xzqh);
         } else {
-          that.getBayonetActiveDatas(data);
+          that.getBayonetActiveDatas(that.xzqh);
         }
       });
       //    blur.$on("getcity",data=>{})
@@ -74,13 +76,13 @@ export default {
     change(i) {
       let that = this;
       that.tableIndex = i;
-      if (that.tableIndex == 1) {
+      if (that.tableIndex == '1') {
         that.onHideLayer(that.tableIndex);
         that.getBayonetHeatMap();
         // that.getBayonetHeatDatas();
       } else {
-        that.getBayonetActiveDatas();
         that.onHideLayer(that.tableIndex);
+        that.getBayonetActiveDatas();
         that.onShowLayer();
       }
       // blur.$emit('initCityOrRoadStatics',null,null,false);
@@ -239,7 +241,6 @@ export default {
       interf.GET_BAY_HEAT_API(param).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data)
             if (data.errcode == 0) {
               data.data.features.map(e => {
                 e.geometry.coordinates = e.geometry.coordinates[0].split(",");
@@ -307,7 +308,7 @@ export default {
         })
         .catch(err => {
           this.$message({
-            message: "请求服务失败",
+            message: "卡口热力分布请求服务失败",
             type: "error",
             duration: 1500
           });
@@ -326,12 +327,11 @@ export default {
       interf.GET_BAY_ACTIVE_API(param).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            // console.log(data)
             if (data.errcode == 0) {
               that.getBayonetMap(data.data);
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '活跃卡口点位请求服务失败',
                 type: "error",
                 duration: 1500
               });
@@ -376,7 +376,7 @@ export default {
 };
 </script>
 
-<style scope scoped  lang='scss'>
+<style scoped  lang='scss'>
 .bayonet-middle {
   position: fixed;
   top: 95.6vh;

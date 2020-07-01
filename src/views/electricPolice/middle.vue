@@ -36,6 +36,7 @@ export default {
         this.map.setCenter([108.967368, 34.302634]);
         this.map.setZoom(6);
         this.getRoadStatisticsDatas()
+        this.getData()
         // this.getAreaData();
         // setTimeout(this.addHeatMap,3000);
     },
@@ -48,14 +49,15 @@ export default {
         change(i){   
             let that=this;
             that.tableIndex=i;
-            if(that.tableIndex==1){
-                that.getRoadStatisticsDatas();
+            if(that.tableIndex=='1'){
                 that.onHideLayer(that.tableIndex)
+                that.getRoadStatisticsDatas(); 
             }else{
+                that.onHideLayer(that.tableIndex)
                 that.map.setZoom(6);
                 that.getActiveElDatas()
                 that.onShowLayer()
-                that.onHideLayer(that.tableIndex)
+               
             }
         },
         /*
@@ -65,7 +67,6 @@ export default {
             let that=this;
             blur.$on("sendXZQH",data=>{
                 that.xzqh=data;
-                console.log(that.xzqh)
                 if(that.tableIndex==1){
                     that.getRoadStatisticsDatas(that.xzqh)
                 }else{
@@ -121,78 +122,161 @@ export default {
         *  电警热力分布  Electronic/getElHeat  GET_EL_HEAT_API  传入参数xzqh
         */
        getRoadStatisticsDatas(xzqh){
-        let that=this;
-        that.map = that.$store.state.map;
-        if(that.map.getSource('heatmapSource')!=undefined){
-            that.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
-        }else{
-            let param={}
-            if(xzqh!=undefined){
-                param.xzqh=xzqh
-            }  
-            interf.GET_EL_HEAT_API(param).then(response=>{
-            if (response && response.status == 200){
-                var data = response.data;
-                if (data.errcode == 0) {
-                data.data.features.map(e=>{
-                    e.geometry.coordinates=e.geometry.coordinates[0].split(',');
-                    return e;
+        let _this = this;
+        _this.map = _this.$store.state.map;
+        let param = {};
+        if (xzqh != undefined) {
+            param.xzqh = xzqh;
+        }
+        interf.GET_EL_HEAT_API(param).then(response => {
+          if (response && response.status == 200) {
+            var data = response.data;
+            console.log(data)
+            if (data.errcode == 0) {
+              data.data.features.map(e => {
+                e.geometry.coordinates = e.geometry.coordinates[0].split(",");
+                return e;
+              });
+              if (_this.map.getSource("heatmapSource") != undefined) {
+                _this.map.getSource("heatmapSource").setData(data.data);
+                _this.map.setLayoutProperty(
+                  "heatmapLayer",
+                  "visibility",
+                  "visible"
+                );
+              } else {
+                _this.map.addSource("heatmapSource", {
+                  type: "geojson",
+                  data: data.data //"./static/json/heat.json"/*可以是具体的服务*/
                 });
-                that.map.addSource("heatmapSource", {
-                    type: "geojson",
-                    data: data.data//"./static/json/heat.json"/*可以是具体的服务*/
-                });
-              that.map.addLayer({
-                  "id": "heatmapLayer",
-                  "type": "heatmap",
-                  "source": "heatmapSource",
-                  "layout": {
-                      "visibility": "visible"
+                this.map.addLayer({
+                  id: "heatmapLayer",
+                  type: "heatmap",
+                  source: "heatmapSource",
+                  layout: {
+                    visibility: "visible"
                   },
-                  "paint": {
-                      // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                      "heatmap-radius": 30,
-                      //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
-                      "heatmap-weight": {
-                          "property": "mag",
-                          "stops": [[0, 0], [10, 1]]
-                      },
-                      // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
-                      "heatmap-intensity": 1,
-                      // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
-                      "heatmap-color": [
-                          "interpolate",
-                          ["linear"],
-                          ["heatmap-density"],
-                          0, "rgba(0, 0, 255, 0)", 0.1, "royalblue", 0.3, "cyan", 0.5, "lime", 0.7, "yellow", 1, "red"
-                      ],
-                      // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
-                      "heatmap-opacity": 1,
+                  paint: {
+                    // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
+                    "heatmap-radius": 30,
+                    //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
+                    "heatmap-weight": {
+                      property: "mag",
+                      stops: [
+                        [0, 0],
+                        [10, 1]
+                      ]
+                    },
+                    // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
+                    "heatmap-intensity": 1,
+                    // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
+                    "heatmap-color": [
+                      "interpolate",
+                      ["linear"],
+                      ["heatmap-density"],
+                      0,
+                      "rgba(0, 0, 255, 0)",
+                      0.1,
+                      "royalblue",
+                      0.3,
+                      "cyan",
+                      0.5,
+                      "lime",
+                      0.7,
+                      "yellow",
+                      1,
+                      "red"
+                    ],
+                    // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
+                    "heatmap-opacity": 1
                   }
                 });
-                that.map_cover.sourceList.push('heatmapSource');
-                that.map_cover.lineList2.push('heatmapLayer');
-                }
+                _this.map_cover.sourceList.push("heatmapSource");
+                _this.map_cover.lineList2.push("heatmapLayer");
+              }
             }
-            }).catch(err=>{
-            that.$message({
-                message: '请求服务失败',
-                type: "error",
-                duration: 1500
-                });
-            })
-            .finally(() => {
-            });
-        }
+          }
+        })
+        .catch(err => {
+          _this.$message({
+            message:  '电警热力分布请求服务失败',
+            type: "error",
+            duration: 1500
+          });
+        })
+        .finally(() => {});
+        // let that=this;
+        // that.map = that.$store.state.map;
+        // if(that.map.getSource('heatmapSource')!=undefined){
+        //     that.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
+        // }else{
+        //     let param={}
+        //     if(xzqh!=undefined){
+        //         param.xzqh=xzqh
+        //     }  
+        //     interf.GET_EL_HEAT_API(param).then(response=>{
+        //     if (response && response.status == 200){
+        //         var data = response.data;
+        //         if (data.errcode == 0) {
+        //         data.data.features.map(e=>{
+        //             e.geometry.coordinates=e.geometry.coordinates[0].split(',');
+        //             return e;
+        //         });
+        //         that.map.addSource("heatmapSource", {
+        //             type: "geojson",
+        //             data: data.data//"./static/json/heat.json"/*可以是具体的服务*/
+        //         });
+        //       that.map.addLayer({
+        //           "id": "heatmapLayer",
+        //           "type": "heatmap",
+        //           "source": "heatmapSource",
+        //           "layout": {
+        //               "visibility": "visible"
+        //           },
+        //           "paint": {
+        //               // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
+        //               "heatmap-radius": 30,
+        //               //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
+        //               "heatmap-weight": {
+        //                   "property": "mag",
+        //                   "stops": [[0, 0], [10, 1]]
+        //               },
+        //               // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
+        //               "heatmap-intensity": 1,
+        //               // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
+        //               "heatmap-color": [
+        //                   "interpolate",
+        //                   ["linear"],
+        //                   ["heatmap-density"],
+        //                   0, "rgba(0, 0, 255, 0)", 0.1, "royalblue", 0.3, "cyan", 0.5, "lime", 0.7, "yellow", 1, "red"
+        //               ],
+        //               // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
+        //               "heatmap-opacity": 1,
+        //           }
+        //         });
+        //         that.map_cover.sourceList.push('heatmapSource');
+        //         that.map_cover.lineList2.push('heatmapLayer');
+        //         }
+        //     }
+        //     }).catch(err=>{
+        //     that.$message({
+        //         message: '请求服务失败',
+        //         type: "error",
+        //         duration: 1500
+        //         });
+        //     })
+        //     .finally(() => {
+        //     });
+        // }
        },
         /*
         *  活跃电警点位 Electronic/getActiveEl  GET_ACTIVE_EL_API
         */
-       getActiveElDatas(xzqh){
+       getActiveElDatas(){
            let that=this;
            let param={}
-           if(xzqh!=undefined){
-              param.xzqh=xzqh
+           if(that.xzqh!=''){
+              param.xzqh=that.xzqh
            }
         interf.GET_ACTIVE_EL_API(param)
         .then(response => {
@@ -203,7 +287,7 @@ export default {
                 that.getActiveElMap(data.data)
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '活跃电警点位请求服务失败',
                 type: "error",
                 duration: 1500
               });
