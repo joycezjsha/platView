@@ -96,6 +96,10 @@ export default {
     c_id:{
       type: String,
       default:'chart_id'
+    },
+    chart_type:{
+       type: String,
+      default:''
     }
   },
   watch:{
@@ -133,6 +137,9 @@ export default {
       this.option.yAxis[0].name=this.chart_data.legend[0];
       this.option.series[0].name=this.chart_data.legend[0];
       this.option.series[0].data =this.chart_data.ydata;
+      if(this.chart_type!=''){
+        this.option.series[0].type=this.chart_type;
+      };
       this.chart.setOption(this.option);
     }
   }

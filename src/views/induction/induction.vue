@@ -23,8 +23,7 @@ export default {
     methods:{
         getDiagramData(){
             let that=this;
-            interf.GET_DIAGRAM_API({})
-            .then(response=>{
+            interf.GET_DIAGRAM_API({}).then(response=>{
                 if (response && response.status == 200){
                 var data= response.data;
                 if (data.errcode == 0) {

@@ -2,14 +2,16 @@
   <div class="city-accident-div boxstyle">
     <div class="city-accident_container">
       <div class='city-accident_header'>
-        <div @click='changeRange(1)'><m-title label='城市警情统计' :img_type='range_type?"1":"0"' style='width:8vw;height:4vh;line-height:4vh;'></m-title></div>
-        <div @click='changeRange(0)'><m-title label='大队警情统计' :img_type='range_type?"0":"1"' style='width:8vw;height:4vh;line-height:4vh;'></m-title></div>
+        <div @click='changeRange(0)'><m-title label='城市警情统计' :img_type='range_type?"0":"1"' style='width:8vw;height:4vh;line-height:4vh;'></m-title></div>
+        <div @click='changeRange(1)'><m-title label='大队警情统计' :img_type='range_type?"1":"0"' style='width:8vw;height:4vh;line-height:4vh;'></m-title></div>
       </div>
       <div class='city-accident-query'>
         <span class="city-accident-query--label">时间：</span><span class="city-accident-query--time">
           <el-date-picker width="100%"
             v-model="timeRange"
             type="daterange"
+            :default-time="defaultTime"
+            value-format='yyyy-MM-dd HH:mm:ss'
             align="right"
             unlink-panels
             range-separator="-"
@@ -17,23 +19,24 @@
             end-placeholder="结束日期"
             >
           </el-date-picker>
-          </span><span class="city-accident-query--btn"><el-button type="primary">确定</el-button></span></div>
+          </span><span class="city-accident-query--btn"><el-button type="primary" v-loading='queryLoading'>确定</el-button></span></div>
       <div class="city-accident_content">
-         <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
+         <!-- <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
           <el-tab-pane label="全部" name="first"></el-tab-pane>
           <el-tab-pane label="122" name="second"></el-tab-pane>
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
-        </el-tabs>
-        <el-table :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
-          <el-table-column prop="city" label="城市"></el-table-column>
-          <el-table-column prop="index" label="警情数量" sortable></el-table-column>
-          <el-table-column prop="week_radio" label="重大警情" sortable></el-table-column>
+        </el-tabs> -->
+        <el-table v-if='range_type==0' :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" @row-click='handle'>
+          <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          <el-table-column prop="NAME" label="城市"></el-table-column>
+          <el-table-column prop="NUM" label="警情数量" sortable></el-table-column>
+          <!-- <el-table-column prop="week_radio" label="重大警情" sortable></el-table-column> -->
         </el-table>
-        <el-table :data="groupDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
-          <el-table-column prop="city" label="城市"></el-table-column>
-          <el-table-column prop="index" label="警情数量" sortable></el-table-column>
-          <el-table-column prop="week_radio" label="重大警情" sortable></el-table-column>
+        <el-table v-else :data="groupDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" @row-click='handle'>
+          <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          <el-table-column prop="NAME" label="大队"></el-table-column>
+          <el-table-column prop="NUM" label="警情数量" sortable></el-table-column>
         </el-table>
       </div>
     </div>
@@ -42,6 +45,7 @@
 </template>
 
 <script>
+import blur from "@/blur";
 import { IMG } from "./config";
 import { interf } from "./config";
 import mTitle from "@/components/UI_el/title_com.vue";
@@ -52,7 +56,8 @@ export default {
     return {
       map: {},
       showArea:true,
-      indexDatas: [{"city":"西安","index":"2.1","week_radio":"+0.3%","his_radio":"-0.1%"},{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}],
+      indexDatas: [],
+      groupDatas:[],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -63,8 +68,10 @@ export default {
         popups:[]
       },
       activeName:'first',
-      range_type:1
-
+      range_type:0,
+      defaultTime:['00:00:00','23:59:59'],
+      tableLoading:false,
+      queryLoading:false
     };
   },
   components:{
@@ -76,46 +83,109 @@ export default {
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(6);
     this.map.repaint = true;
-    that.getAccidentData();
+    that.getAccidentCityData();
   },
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
   },
   methods: {
+     /**
+     * 切换：城市警情统计、大队警情统计
+     */
+    changeRange(t){
+      let _this=this;
+      if(t!=undefined) {if(this.range_type==t) return; else this.range_type = t;}
+      else{
+        this.queryLoading=true;
+        if(this.timeRange!='') blur.$emit('initAccidentMap',{time:this.timeRange});
+        setTimeout(()=>{_this.queryLoading=false;},500);
+      }
+      if(this.range_type){
+        this.getAccidentAreaData();
+      }else{
+        this.getAccidentCityData();
+      }
+    },
     /**
      * 获取城市-警情统计数据，并初始化城市警情列表
      */
-    getAccidentData(){
-      // interf.GET_TOTAL_NUM_API(params).then(response=>{
-      //   if (response && response.status == 200){
-      //      var data = response.data;
-      //       if (data.errcode == 0) {
-      //         _this.num=data.data.num;
-      //       } else{
-      //         that.$message({
-      //           message: data.errmsg,
-      //           type: "error",
-      //           duration: 1500
-      //         });
-      //       }
-      //   }
-      // })
-      // .catch(err=>{
-      //    console.log(err);
-      // })
-      // .finally(() => {
-      //   _this.tableLoading = false;
-      // });
+    getAccidentCityData(){
+      let _this=this;
+      let param={stime:1};
+      if(this.timeRange!=''){
+        param.stime=this.timeRange[0];
+        param.etime=this.timeRange[1];
+      };
+      interf.GET_ACCI_CITY_STA_API(param).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+              _this.indexDatas=data.data;
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        _this.tableLoading = false;
+      });
     },
+   
     /**
-     * 切换：城市警情统计、大队警情统计
+     * 获取城市-警情统计数据，并初始化大队警情列表
      */
-    changeRange(v){
-      if(this.range_type==v) return;
-      this.range_type=v;
+    getAccidentAreaData(){
+      let _this=this;
+      let param={stime:1};
+      if(this.timeRange!=''){
+        param.stime=this.timeRange[0];
+        param.etime=this.timeRange[1];
+      };
+      interf.GET_ACCI_AREA_STA_API(param).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+              _this.groupDatas=data.data;
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        _this.tableLoading = false;
+      });
     },
-    //设置表格样式
+  /**
+   * 点击标签页
+   */
+  handle(row, event, column){
+    let data={};
+    data.time=this.timeRange;
+    if(this.range_type){
+      data.name=row.NAME;
+      data.value=row.AREAID;
+    }else{
+      data.name=row.NAME;
+      data.value=row.XZQH;
+    }
+    blur.$emit('initAccidentStatics',this.range_type,data);
+  },
+  //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
                 return "background:transparent;border:none;";
    },
@@ -149,12 +219,7 @@ export default {
       })
     }
   },
-  /**
-   * 点击标签页
-   */
-  handleClick(){
-    
-  }
+  
   }
 };
 </script>
