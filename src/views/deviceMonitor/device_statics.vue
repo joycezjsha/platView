@@ -51,7 +51,7 @@ export default {
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
-        color:['#00B5B7','#0572ED','#4F35D0'],
+        color:['#00B5B7','#4f35d0','#4F35D0'],
           tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b}: {c} ({d}%)'

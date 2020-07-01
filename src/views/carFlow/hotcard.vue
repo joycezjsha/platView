@@ -2,13 +2,13 @@
   <div id='card-modal'>
     <div id="map" style=' width: 100%; height: 100%;'></div>
     <div class="hotcard">
-        <div class="top">
+        <div class="top borstyle">
           <div class="title" v-if="showback==true" >全部车辆监控</div>
             <div class="back" v-else @click="goback()" >&lt;&lt; 返回全省
               <span> {{city}}</span>
           </div>
         </div>
-        <div class="hotroad" style="height:41.29vh;">
+        <div class="hotroad borstyle" style="height:41.29vh;">
           <m-title class="titletext"  label='热点道路排名' ></m-title>
           <div class="padding">
             <div class="table">
@@ -22,7 +22,7 @@
             </div> 
           </div>
         </div>
-        <div  class="hotroad" style="margin-top:2vh">
+        <div  class="hotroad borstyle" style="margin-top:2vh">
           <m-title class="titletext"  label='热点卡口排名' ></m-title>
           <div  class="padding"> 
             <div  class="table">
@@ -104,7 +104,8 @@ export default {
         let that=this;
         that.showback=true;
         that.stime='1';
-        that.gethotcardDatas('1')
+        that.xzqh='';
+        that.getHotCarDatas(that.stime)
       },
       /**
        * 接收table传过来的数据 
@@ -123,25 +124,28 @@ export default {
         //  接收对应的行政区划
         blur.$on("paramxzqh",xzqh=>{
           that.xzqh=xzqh;
-          if(that.tableIndex==3){
-            that.getHotCarDatas(that.stime,that.xzqh); 
-          }
+          // if(that.tableIndex=='3'){
+            that.getHotCarDatas(that.stime); 
+          // }
         
         })
         // 接收自定义的时间 that.timeRange[0]->stime   that.timeRange[1]->etime
         blur.$on('determine',times=>{
           that.timeRange=times;
-           if(that.tableIndex==3){
+          //  if(that.tableIndex==3){
              that.getHotCarDatas(that.stime)
-           }
+          //  }
           
         })  
         // 接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
          blur.$on('gettime',time=>{
           that.stime=time;
-          if(that.stime!='4' && that.tableIndex==3){
+          if(that.stime!='4'){
             that.getHotCarDatas(that.stime)
-          }        
+          }
+          // if(that.stime!='4' && that.tableIndex==3){
+          
+          // }        
           
         }) 
         // 接收对应的城市名称
@@ -224,8 +228,6 @@ export default {
           d4.appendChild(span6)
           el.appendChild(d4);
         }
-        
-        
         let d5= document.createElement('div');
         let span7= document.createElement('span'); 
         let span8= document.createElement('span'); 
@@ -253,37 +255,24 @@ export default {
        *车辆流动页面热点卡口
        *{@params} type 1->实时，2->今天，3->昨天，4->自定义 xzqh：行政区划编码
       */
-      getHotCarDatas(type,xzqh){
+      getHotCarDatas(type){
         let that=this;
         var hotroadData={};  //存放热点道路参数
         var hotcardData={};  //存放热点卡口参数
-        // 如果type=1  2  3 时 并且没有xzqh 参数
-        if(type!='4' && xzqh===undefined ){
+        if(type!='4'){
           hotroadData.stime=type;
           hotcardData.stime=type;
-          // 如果type=4 时  并且没有xzqh 参数
-        }else if(type=='4' && xzqh===undefined){
+        }
+         if(type=='4'){
           hotroadData.stime=that.timeRange[0];
           hotroadData.etime=that.timeRange[1];
 
           hotcardData.stime=that.timeRange[0];
           hotcardData.etime=that.timeRange[1];
-          // 如果type=1  2  3 时 并且有xzqh 参数
-        }else if(type!='4' && xzqh!=undefined){
-          hotroadData.stime=type;
-          hotroadData.xzqh=xzqh;
-
-          hotcardData.stime=type;
-          hotcardData.xzqh=xzqh;
-          // 如果type=4 时 并且有xzqh 参数
-        }else if(type=='4' && xzqh!=undefined){
-          hotroadData.stime=that.timeRange[0];
-          hotroadData.xzqh=xzqh;
-          hotroadData.etime=that.timeRange[1];
-
-          hotcardData.stime=that.timeRange[0];
-          hotcardData.xzqh=xzqh;
-          hotcardData.etime=that.timeRange[1];
+        }
+        if(that.xzqh!=''){
+          hotroadData.xzqh=that.xzqh;
+          hotcardData.xzqh=that.xzqh;
         }
         // 请求热点卡口数据
         interf.GET_HOT_RANK_API(hotcardData)
@@ -294,12 +283,6 @@ export default {
              console.log(data)           
             if (data.errcode == 0) {
               if(that.indexDatas1.length>0){
-                // 清除上一次的popups
-                // if(this.map_cover.popups.length>0){
-                //   this.map_cover.popups.forEach(e=>{
-                //     e.remove();
-                //   })
-                // }
                 //  调用卡口地图方法
                 that.indexDatas1.forEach(element => {
                   that.getcardMapData(element)
@@ -385,7 +368,7 @@ export default {
 }
 </script>
 
-<style scoped  scope lang='scss'>
+<style scoped  lang='scss'>
 @import "@/assets/css/color.scss";
 @import "../../assets/css/base.css";
 .hotcard{

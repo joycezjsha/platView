@@ -34,14 +34,14 @@
           <m-tab label='近30天活跃电警' value='2328'></m-tab>
             <m-tab label='近30天抓拍违法数量' value='5316'></m-tab> -->
         </div>
-        <div class="table_right">
+        <div class="table_right boxstyle">
            <div class="electricPolice-statics_title">
             <div>
               <m-title  label='近30天违法抓拍量排名'></m-title>
               <!-- <i class="el-icon-collection-tag"></i> -->
             </div>
           </div>
-          <div class="electricPolice-statics_data" style="padding:0 5px;height:65vh">
+          <div class="electricPolice-statics_data " style="padding:0 8px;height:65vh">
             <el-table :data="tableDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
               <el-table-column fixed type="index" label="No" width="50"></el-table-column>
               <el-table-column show-overflow-tooltip  prop="city,ROADNAME" width="200" label="电警名称">
@@ -189,7 +189,7 @@ export default {
               that.tableDatas=data.data;
             }else{
               that.$message({
-                message: data.errmsg,
+                message:  '近30天违法抓拍排名请求服务失败',
                 type: "error",
                 duration: 1500
                 });
@@ -223,7 +223,7 @@ export default {
               that.thirtyAlarm=data.data.thirtyAlarm;
             }else{
               that.$message({
-                message: data.errmsg,
+                message: '全省统计请求服务失败',
                 type: "error",
                 duration: 1500
                 });
@@ -444,8 +444,5 @@ export default {
 .table_right{
   width:474px;
   height:771px;
-  background:rgba(2,6,31,0);
-  border:1px solid;
-  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }
 </style>

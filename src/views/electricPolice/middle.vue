@@ -123,7 +123,7 @@ export default {
         */
        getRoadStatisticsDatas(xzqh){
         let _this = this;
-        this.map = this.$store.state.map;
+        _this.map = _this.$store.state.map;
         let param = {};
         if (xzqh != undefined) {
             param.xzqh = xzqh;
@@ -131,20 +131,21 @@ export default {
         interf.GET_EL_HEAT_API(param).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+            console.log(data)
             if (data.errcode == 0) {
               data.data.features.map(e => {
                 e.geometry.coordinates = e.geometry.coordinates[0].split(",");
                 return e;
               });
-              if (this.map.getSource("heatmapSource") != undefined) {
-                this.map.getSource("heatmapSource").setData(data.data);
-                this.map.setLayoutProperty(
+              if (_this.map.getSource("heatmapSource") != undefined) {
+                _this.map.getSource("heatmapSource").setData(data.data);
+                _this.map.setLayoutProperty(
                   "heatmapLayer",
                   "visibility",
                   "visible"
                 );
               } else {
-                this.map.addSource("heatmapSource", {
+                _this.map.addSource("heatmapSource", {
                   type: "geojson",
                   data: data.data //"./static/json/heat.json"/*可以是具体的服务*/
                 });
@@ -190,15 +191,15 @@ export default {
                     "heatmap-opacity": 1
                   }
                 });
-                this.map_cover.sourceList.push("heatmapSource");
-                this.map_cover.lineList2.push("heatmapLayer");
+                _this.map_cover.sourceList.push("heatmapSource");
+                _this.map_cover.lineList2.push("heatmapLayer");
               }
             }
           }
         })
         .catch(err => {
-          this.$message({
-            message: "请求服务失败",
+          _this.$message({
+            message:  '电警热力分布请求服务失败',
             type: "error",
             duration: 1500
           });
@@ -286,7 +287,7 @@ export default {
                 that.getActiveElMap(data.data)
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '活跃电警点位请求服务失败',
                 type: "error",
                 duration: 1500
               });

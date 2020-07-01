@@ -8,7 +8,7 @@
           <span>{{param.code}}</span>
         </div>
       </div>
-      <div class="vehicle-main">
+      <div class="vehicle-main boxstyle">
         <div style="display:flex; position: relative;">
            <div>
             <m-title class="analysis" label="车辆归属地分析"></m-title>
@@ -382,7 +382,7 @@ export default {
 };
 </script>
 
-<style scope lang='scss'>
+<style scoped lang='scss'>
 @import "@/assets/css/color.scss";
 .carmapOD {
   width: 746px;
@@ -450,14 +450,14 @@ export default {
   }
   .vehicle-main {
     height: 951px;
-    background-color: $color-bg-1;
-    border: 1px solid;
-    border-image: linear-gradient(
-        182deg,
-        rgba(10, 148, 255, 1),
-        rgba(255, 255, 255, 0)
-      )
-      1 1;
+    // background-color: $color-bg-1;
+    // border: 1px solid;
+    // border-image: linear-gradient(
+    //     182deg,
+    //     rgba(10, 148, 255, 1),
+    //     rgba(255, 255, 255, 0)
+    //   )
+    //   1 1;
     .analysis {
       width: 8.5vw;
       height: 3vh;

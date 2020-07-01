@@ -1,7 +1,7 @@
 <template>
   <div class="accident-statics">
-    <div class="accident-statics_container">
-      <div class=" top boxstyle">
+    <div class="accident-statics_container ">
+      <div class=" top borstyle">
         <div class="title" v-if="showback==true" >全省统计</div>
           <div class="back" v-else @click="goback()" >&lt;&lt; 返回全省
             <span> {{city}}</span>
@@ -9,7 +9,7 @@
       </div>
       <!-- 点击中间的三个按钮，切换对应的template accident-statics_title -->
       <div v-show="isShow=='1'">
-        <div class="accident-statics--tab">
+        <div class="accident-statics--tab borstyle">
           <div>
             <span class="--tab-title">
               <i class="el-icon-bell"></i>全部违法数量总计
@@ -24,17 +24,17 @@
             <span>尾号限行：{{staticsData.lastNumberLimit}}</span>
           </div>
         </div>
-        <div class="accident-statics_content Top5">
+        <div class="accident-statics_content Top5 borstyle">
           <m-title label='违法类别Top5' style='width:7vw;margin-left:1vw'></m-title>
           <div id="accident-statics_sort"></div>
         </div>
       </div>
       <!--第二个按钮，切换对应的div style="paddin:1vh 1vw" style="paddin:1vh 1vw" -->
         <div v-show="isShow=='2'">
-          <div class="speed">
+          <div class="speed borstyle">
             <m-tab label='超速违法数量总计' :value=speed.NUM></m-tab>
           </div>
-          <div class="speedecharts" >
+          <div class="speedecharts borstyle" >
             <m-title  label='超速违法分类' style='width:8vw'></m-title>
             <div>
               <div style="width:360px;height:180px;" id="speeding-offences"></div>
@@ -43,10 +43,10 @@
         </div>
       <!-- 第三个按钮，切换对应的div -->
          <div v-show="isShow=='3'">
-            <div class="speed" >
+            <div class="speed borstyle" >
               <m-tab  label='违法限行数量总计' :value=illegal.NUM></m-tab>
             </div>
-            <div class="speedecharts">
+            <div class="speedecharts borstyle">
               <!-- <div> -->
                 <m-title label='限行日期分布' style='width:9vw'></m-title>
               <!-- </div> -->
@@ -57,7 +57,7 @@
          </div>
          
       <!-- 高发道路排名 -->
-      <div class='accident-statics_table'>
+      <div class='accident-statics_table borstyle'>
           <div class="">
             <m-title label='高发道路排名' style='width:9vw;'></m-title>
           </div>
@@ -177,7 +177,6 @@ export default {
       ],
       indexDatas: [
         {"NAME":"","index":"","NUM":""}
-        // ,{"city":"渭南","index":"1.1","week_radio":"+0.3%","his_radio":"-0.1%"}
       ],
       current_chart:null,
       current_option:{
@@ -465,6 +464,8 @@ export default {
              if(!that.current_chart){
               that.current_chart = echarts.init(document.getElementById('current-date'));
             };
+            that.current_option.yAxis.data=[];
+            that.current_option.series[0].data=[];
             data.data.forEach(e=>{
               that.current_option.yAxis.data.push(e.WEEK)
               that.current_option.series[0].data.push(e.NUM)
@@ -515,6 +516,8 @@ export default {
              if(!that.speeding_chart){
               that.speeding_chart = echarts.init(document.getElementById('speeding-offences'));
             };
+             that.speeding_option.yAxis.data=[];
+             that.speeding_option.series[0].data=[];
             data.data.forEach(e=>{
               that.speeding_option.yAxis.data.push(e.WFXW)
               that.speeding_option.series[0].data.push(e.NUM)
@@ -803,7 +806,7 @@ export default {
   }
 };
 </script>
-<style scope='true' scoped lang='scss'>
+<style scoped lang='scss'>
 @import "@/assets/css/color.scss";
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;
@@ -841,7 +844,7 @@ export default {
   width: 100%;
   height:153px;
   margin-bottom: 19px;
-  background:rgba(2,6,31,0);
+  // background:rgba(2,6,31,0);
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 
@@ -933,13 +936,16 @@ export default {
         font-weight:400;
         color:rgba(254,254,254,1);
         cursor:pointer;
+        // border:1px solid;
+        // border-image:linear-gradient(0deg, rgba(2,8,47,1), rgba(32,103,187,1)) 1 1;
+        // box-shadow:0px 0px 0px 0px rgba(7,12,43,1);
       }
 }
 .accident-statics_table{
   width:474px;
   height:422px;
   position: relative;
-  background:rgba(2,6,31,0);
+  // background:rgba(2,6,31,0);
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }
@@ -947,7 +953,7 @@ export default {
   width:474px;
   height:69px;
   padding:5px;
-  background:rgba(2,6,31,0);
+  // background:rgba(2,6,31,0);
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }
@@ -956,7 +962,7 @@ export default {
   height:299px;
   margin-top: 29px;
   margin-bottom: 29px;
-  background:rgba(2,6,31,0);
+  // background:rgba(2,6,31,0);
   border:1px solid;
   // padding:1vh 1vw;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;

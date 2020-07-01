@@ -2,7 +2,7 @@
   <div class="car-info-div">
     <div class="car-info_container">
       <!-- top部分  boxstyle  #082354-->
-      <div class="car-info_title">
+      <div class="car-info_title borstyle">
         <div class="top" style="">
           <span style="display:flex;height:4vh;line-height:2.2vh;"  >
             <span class="back"  @click="goback" v-if="showback">&lt;&lt; 返回全省</span>
@@ -11,7 +11,7 @@
           </span>
         </div>
       </div>
-      <div class="data" >
+      <div class="data borstyle" >
         <m-tab style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
         <div class='car-info_tab'>
           <span><div>进入辆次</div><div><span class=''>{{provinceData.incount}}</span></div></span>
@@ -19,7 +19,7 @@
         </div>
       </div>   
       <!-- 折线图 -->
-        <div class="echarts">
+        <div class="echarts borstyle">
           <div style="display:flex; position: relative;">
             <div>
               <m-title label='流动趋势' img_type=1 style='width:6vw;'></m-title>
@@ -35,7 +35,7 @@
           </div>
         </div>
         <!-- 饼状图 -->
-        <div  class="echarts" style=""  >
+        <div  class="echarts borstyle" style=""  >
           <div style="display:flex;position:relative;">
             <div>
               <m-title label='车辆类型分析' img_type=1 style='width:8vw;'></m-title>
@@ -49,7 +49,7 @@
             <div>大车:{{echartsData.BIGCAR}}辆次</div>
             <div>小车:{{echartsData.SMALLCAR}}辆次</div>
           </div> -->
-          <div style="width:85%;height:100%" id='accurCreateChange'></div>
+          <div style="width:70%;height:70%;padding-left:3vw" id='accurCreateChange'></div>
         </div>
     </div>
   </div>
@@ -101,69 +101,48 @@ export default {
         SMALLCAR:''
       },
       accurCreateChange:null,
-      options:{
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        legend: {
-             // orient 设置布局方式，默认水平布局，可选值：'horizontal'（水平） ¦ 'vertical'（垂直）
-            orient: 'vertical',
-            // x 设置水平安放位置，默认全图居中，可选值：'center' ¦ 'left' ¦ 'right' ¦ {number}（x坐标，单位px）
-            x: 'right',
-            // y 设置垂直安放位置，默认全图顶端，可选值：'top' ¦ 'bottom' ¦ 'center' ¦ {number}（y坐标，单位px）
-            y: 'center',
-            itemWidth: 24,   // 设置图例图形的宽
-            itemHeight: 18,  // 设置图例图形的高
-            textStyle: {
-              color: '#FFFFFF'  // 图例文字颜色
-            },
-            // itemGap设置各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔
-            itemGap: 10,
-            // backgroundColor: '#eee',  // 设置整个图例区域背景颜色
-            data: ['大车','小车']
-          },
+      options: {
         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
-         series: [
-            {
-              name: '车辆类型分析',
-              type: 'pie',
-              // radius: '50%',  // 设置饼状图大小，100%时，最大直径=整个图形的min(宽，高)
-              radius: ['50%', '70%'],  // 设置环形饼状图， 第一个百分数设置内圈大小，第二个百分数设置外圈大小
-              center: ['40%', '50%'],  // 设置饼状图位置，第一个百分数调水平位置，第二个百分数调垂直位置
-              data: [
-                  // {value:335, name:'大车'},
-                  // {value:310, name:'小车'},
-              ],
-              // itemStyle 设置饼状图扇形区域样式
-              itemStyle: {
-                // emphasis：英文意思是 强调;着重;（轮廓、图形等的）鲜明;突出，重读
-                // emphasis：设置鼠标放到哪一块扇形上面的时候，扇形样式、阴影
-                emphasis: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(30, 144, 255，0.5)'
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          },
+          legend: {
+                orient: 'vertical',
+                right: 30,
+                top:80,
+                data: ['大车','小车'],
+                textStyle:{color:'white'},
+                formatter: function(name){
+            　　　return name.length>5?name.substr(0,5)+"...":name;
+            　　}
+            },
+            series: [
+                {
+                    name: '车辆类型分析',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    center: ['30%', '50%'],  
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '15',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                      
+                    ]
                 }
-              },
-              // 设置值域的那指向线
-              labelLine: {
-                normal: {
-                  show: false   // show设置线是否显示，默认为true，可选值：true ¦ false
-                }
-              },
-              // 设置值域的标签
-              label: {
-                normal: {
-                  position: 'inner',  // 设置标签位置，默认在饼状图外 可选值：'outer' ¦ 'inner（饼状图上）'
-                  // formatter: '{a} {b} : {c}个 ({d}%)'   设置标签显示内容 ，默认显示{b}
-                  // {a}指series.name  {b}指series.data的name
-                  // {c}指series.data的value  {d}%指这一部分占总数的百分比
-                  formatter: '{c}'
-                }
-              }
-            }
-          ],
-       
+            ]
       },
       indexDatas: [
       //   {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
@@ -288,16 +267,6 @@ export default {
             }
         ],
         series: [
-          //   { // For shadow
-          //     type: 'bar',
-          //     itemStyle: {
-          //         color: 'rgba(0,0,0,0.05)'
-          //     },
-          //     barGap: '-100%',
-          //     barCategoryGap: '40%',
-          //     data: dataShadow,
-          //     animation: false
-          // },
           {
               type: 'bar',
               itemStyle: {
@@ -322,7 +291,7 @@ export default {
                       )
                   }
               },
-              data: [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220]
+              data: []
           }
         ]
       },
@@ -336,7 +305,6 @@ export default {
     this.getdata();
     this.map = this.$store.state.map;
     let that = this;
-    that.$store.commit("setRight", '26.5vw');
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.getTrafficData();
@@ -693,19 +661,14 @@ export default {
            if (data.errcode == 0) {
             let car_data= that.flowchartsData;
              data.data.forEach(e=>{
-               console.log(e)
+               that.flowchartsData.y1data=[];
+               that.flowchartsData.y2data=[];
+               that.flowchartsData.xdata=[];
                that.flowchartsData.y1data.push(e.innum)
                that.flowchartsData.y2data.push(e.outnum)
                that.flowchartsData.xdata.push(e.date)
                console.log(that.flowchartsData)
                that.flowchartsData=car_data;
-                if(!that.countChart){
-                  that.countChart = echarts.init(document.getElementById('sumCountChange'));
-                };
-                that.countChart.setOption(that.accurChangeOption);
-                window.addEventListener("resize",()=>{
-                that.countChart.resize();
-              })
              })
             } else{
               that.$message({
@@ -767,7 +730,7 @@ export default {
   }
 }
 </script>
-<style scope  scoped lang='scss'>
+<style scoped lang='scss'>
 @import '@/assets/css/color.scss';
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;
@@ -877,23 +840,17 @@ position: fixed;
   padding-left: 17px;
   cursor:pointer;
   margin-right: 108px;
-  // background:rgba(2,6,31,0);margin-top:15px;
-// border:1px solid;
-// border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
-
 }
 
 .echarts{
   width:474px;
   height:368px;
-  background:rgba(2,6,31,0);
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
   margin-bottom:20px;
 }
 .data{
   margin-bottom: 20px;
-  background:rgba(2,6,31,0);
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }

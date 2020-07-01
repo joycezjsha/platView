@@ -61,7 +61,7 @@ export default {
       blur.$on("getXZQH", data => {
         that.xzqh=data;
         // that.getBayonetHeatMap(data);
-        if (that.tableIndex == 1) {
+        if (that.tableIndex == '1') {
           that.getBayonetHeatMap(that.xzqh);
         } else {
           that.getBayonetActiveDatas(that.xzqh);
@@ -308,7 +308,7 @@ export default {
         })
         .catch(err => {
           this.$message({
-            message: "请求服务失败",
+            message: "卡口热力分布请求服务失败",
             type: "error",
             duration: 1500
           });
@@ -331,7 +331,7 @@ export default {
               that.getBayonetMap(data.data);
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '活跃卡口点位请求服务失败',
                 type: "error",
                 duration: 1500
               });
@@ -376,7 +376,7 @@ export default {
 };
 </script>
 
-<style scope scoped  lang='scss'>
+<style scoped  lang='scss'>
 .bayonet-middle {
   position: fixed;
   top: 95.6vh;

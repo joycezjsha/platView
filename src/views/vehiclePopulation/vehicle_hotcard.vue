@@ -2,13 +2,13 @@
   <div id='vehicle_hotcard-modal'>
     <div id="map" style=' width: 100%; height: 100%;'></div>
     <div class="hotcard">
-        <div class="top">
+        <div class="top ">
           <div class="title" v-if="showback==true" >全部车辆监控</div>
             <div class="back" v-else @click="goback()" >&lt;&lt; 返回全省
               <span> {{code}}</span>
           </div>
         </div>
-        <div class="hotroad" style="height:41.29vh;">
+        <div class="hotroad borstyle" style="height:41.29vh;">
           <m-title class="titletext"  label='热点道路排名' ></m-title>
           <div class="padding">
             <div class="table">
@@ -22,7 +22,7 @@
             </div> 
           </div>
         </div>
-        <div  class="hotroad" style="margin-top:2vh;height:40vh;">
+        <div  class="hotroad borstyle" style="margin-top:2vh;height:40vh;">
           <m-title class="titletext"  label='热点卡口排名' ></m-title>
           <div  class="padding"> 
             <div  class="table">
@@ -34,7 +34,7 @@
                   </div>  :formatter="userTypeList"  -->
                   <div>
                       <el-table-column 
-                      show-overflow-tooltip prop='city,KKMC'   label="卡口名称">
+                      show-overflow-tooltip prop='city,KKMC'  width="200" label="卡口名称">
                         <template slot-scope="scope"> 
                             <span v-if="scope.row.city!=null">{{`[`+scope.row.city+`]`}}</span>
                             <span>{{scope.row.KKMC}}</span>
@@ -96,7 +96,7 @@ export default {
       this.map.setCenter([108.967368, 34.302634]);
       this.map.setZoom(11);
        let that = this;
-       that.$store.commit("setRight", '26.5vw');
+      //  that.$store.commit("setRight", '25.5vw');
        that.getData()
        that.getHotspotRoadRankinDatas();
        that.getHotspotBayonetRankingDatas();
@@ -347,7 +347,7 @@ export default {
 }
 </script>
 
-<style  scope lang='scss'>
+<style  scoped lang='scss'>
 @import "@/assets/css/color.scss";
 @import "../../assets/css/base.css";
 .hotcard{
@@ -401,9 +401,9 @@ export default {
     }
     .hotroad{
       height: 41.29vh;
-      background-color: $color-bg-1;
-      border:1px solid;
-      border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+      // background-color: $color-bg-1;
+      // border:1px solid;
+      // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
       .padding{
         padding:0 1.5vw;
         .table{

@@ -1,6 +1,6 @@
 <template>
-  <div class="illegal-city-div boxstyle">
-    <div class="illegal-city_container">
+  <div class="illegal-city-div">
+    <div class="illegal-city_container boxstyle">
       <div class="illegal-city_title">
         <m-title label='违法分析' style='width:6vw;'></m-title>
       </div>
@@ -46,8 +46,8 @@
           <!--  -->
           <el-table  @row-click="handItem" 
           :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="CITY" label="城市" width="60"></el-table-column>
-            <el-table-column prop="COUNTNUM" label="全部违法" sortable></el-table-column>
+            <el-table-column prop="CITY" label="城市" width="70"></el-table-column>
+            <el-table-column prop="COUNTNUM" label="全部违法"  width="120"  sortable></el-table-column>
             <el-table-column prop="CSNUM" label="超速"  sortable></el-table-column>
             <el-table-column prop="XNUM" label="限行"  sortable></el-table-column>
             <el-table-column  v-if='showXZQH' prop="XZQH" label="行政区号"  ></el-table-column>
@@ -364,7 +364,7 @@ export default {
   }
 };
 </script>
-<style scope scoped lang='scss'>
+<style  scoped lang='scss'>
 @import '@/assets/css/color.scss';
 @mixin flex($direction: column, $justify: center, $align: center) {
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div class="city-index-div">
+  <div class="city-index-div carflow">
     <div class="city-index_container boxstyle">
       <div class="city-index_title">
         <div>
@@ -23,7 +23,8 @@
             type="daterange"
             align="right"
             unlink-panels
-            range-separator="至"
+            range-separator="-"
+            :picker-options="pickerOptions"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             >
@@ -37,7 +38,8 @@
         <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt>
         <div class='all_statics'>
           <div><span>陕西省</span><span>{{allStatics.addIn}}</span></div>
-          <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span><span>流出：-{{allStatics.outcount}}</span></div>
+          <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span>
+          <span >流出：-{{allStatics.outcount}}</span></div>
           <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
         </div>
         <div class="sort">
@@ -137,7 +139,7 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
-    that.realtimeData()
+    that.realtimeData(that.stime)
   
   },
   destroyed() {
@@ -160,12 +162,17 @@ export default {
       that.city=city;
     },
     //  全省流动情况  默认显示实时的数据   
-    realtimeData(){
+    realtimeData(type){
       let that = this;
-       interf.GET_VEH_FLOW_API({
-         id: "",
-         stime:that.stime
-      })
+      let param={};
+      if(type!='4'){
+        param.stime=type;
+      }
+      if(type=='4'){
+         param.stime=that.timeRange[0],
+         param.etime=that.timeRange[1]
+      }
+       interf.GET_VEH_FLOW_API(param)
       .then(response=>{
         if (response && response.status == 200){
            var data = response.data;
@@ -180,6 +187,8 @@ export default {
                   obj[key].city=key
                   that.flowDatas.push(obj[key])
                 }
+              }else{
+                  that.flowDatas=[];
               }
             } else{
               that.$message({
@@ -201,6 +210,7 @@ export default {
     determine(){
        let that = this;
        blur.$emit("determine",that.timeRange)
+       that.realtimeData(that.activeName)
         // console.log(that.timeRange[0],that.timeRange[1])
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
@@ -209,45 +219,6 @@ export default {
           time2
         }
         blur.$emit("sendTime",timeData)
-  
-      // 用日历选择时间 获取车辆流动页面全省流动情况
-       interf.GET_VEH_FLOW_API({
-         stime:that.timeRange[0],
-         etime:that.timeRange[1]
-       })
-       .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-            if (data.errcode == 0) {
-             that.allStatics.incount=data.data.incount;
-             that.allStatics.outcount=data.data.outcount;
-             that.allStatics.addIn=data.data.addIn;
-             that.allStatics.inoutProportion=data.data.inoutProportion;
-             var obj=data.data.data
-             if(!(JSON.stringify(obj)=='{}')){
-                for(var key in obj){
-                  obj[key].city=key
-                  that.flowDatas.push(obj[key])
-                }
-              }else{
-                that.flowDatas=[]
-              }
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-
     },
     getIndexData(){
      let that = this;
@@ -278,152 +249,23 @@ export default {
         })
       }
     },
+    /**
+    *  点击左上角的时间选择对应的时间
+    */
     handleClick(item){
      let that = this;
      that.activeName=item.name;  //对应的时间1  2  3  4
-     console.log(that.activeName)
+
      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
-     console.log(that.activeName)
-     //车辆流动页面地图热点卡口  Vehicle/getHotspotBayonetRanking  GET_MAP_HOT_BAY_API 默认实时的数据
-    if(that.activeName!='4'){
-    interf.GET_MAP_HOT_BAY_API({
-       id:"",
-       stime:that.activeName
-     })
-     .then(response=>{
-       if (response && response.status == 200){
-           var data = response.data;
-          //  console.log('11111')
-          //  console.log(data)
-           if (data.errcode == 0) {
-
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-           } 
-        }
-     })
-     .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-    }
-    // 热点道路
-    if(that.activeName!='4'){
-      interf.GET_HOT_ROAD_API({
-        id: "",
-        stime:that.activeName
-      })
-      .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-          //  console.log(data)
-            if (data.errcode == 0) {
-              // blur.$emit('getroadtimes',data)
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-    } 
-    // 热点卡口的数据 GET_HOT_RANK_API
-    if(this.activeName!='4'){
-      // interf.GET_HOT_RANK_API({
-      //   id: "",
-      //   stime:that.activeName
-      // })
-      // .then(response=>{
-      //   if (response && response.status == 200){
-      //      var data = response.data;
-      //     //  console.log(data)
-      //       blur.$emit('getbaytimes',data)
-      //       if (data.errcode == 0) {
-            
-      //       } else{
-      //         that.$message({
-      //           message: data.errmsg,
-      //           type: "error",
-      //           duration: 1500
-      //         });
-      //       }
-      //   }
-      // })
-      // .catch(err=>{
-      //    console.log(err);
-      // })
-      // .finally(() => {
-      //   that.tableLoading = false;
-      // });
-    }
-    // 获取车辆流动页面全省流动情况数据  GET_VEH_FLOW_API 
-      if(this.activeName!='4'){
-         interf.GET_VEH_FLOW_API({
-         id: "",
-         stime:that.activeName
-      })
-      .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-            if (data.errcode == 0) {
-             that.allStatics.incount=data.data.incount;
-             that.allStatics.outcount=data.data.outcount;
-             that.allStatics.addIn=data.data.addIn;
-             that.allStatics.inoutProportion=data.data.inoutProportion;
-             var obj=data.data.data;
-             if(!(JSON.stringify(obj)=='{}')){
-                for(var key in obj){
-                  obj[key].city=key
-                  that.flowDatas.push(obj[key])
-                }
-            }else{
-              that.flowDatas=[]
-            }
-            // for(var key in obj){
-
-            //   obj[key].city=key
-            //   that.flowDatas.push(obj[key])
-            // }
-          //  console.log(that.flowDatas)
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-         console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-      // 
+     if(that.activeName!='4'){
+       that.realtimeData(that.activeName)
      }
-    
   }
-
 
   }
 };
 </script>
-<style scope scoped lang='scss'>
+<style scoped lang='scss'>
 @import '@/assets/css/color.scss';
 @mixin flex($direction, $justify, $align: center) {
   display: flex;
@@ -434,7 +276,7 @@ export default {
 .city-index-div {
   position: absolute;
   z-index: 10;
-  left: 1vw;
+  left: 12px;
   width:474px;
   height:977px;
   top: 9vh;
@@ -463,17 +305,24 @@ export default {
       height: 7vh;
       line-height: 3vh;
       text-align: center;
+     
      @include flex(row,center);
      >div{
        width:30%;
        @include flex(column,center);
+       font-family:Source Han Sans CN;
+       font-style:italic;
      }
      >div:nth-child(2){
        span:nth-child(1){
          color: $color-yellow;
+          font-family:Source Han Sans CN;
+          font-style:italic;
        }
        span:nth-child(2){
-         color: $color-primary;
+         color: #00b8a8;
+          font-family:Source Han Sans CN;
+          font-style:italic;
        }
      }
     }
@@ -609,6 +458,9 @@ export default {
     height: 4vh;
    
   }
+}
+.carflow li:nth-of-type(odd){ 
+  background:rgba(72,84,108,0.2);
 }
 </style>
 <style>

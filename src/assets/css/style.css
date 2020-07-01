@@ -16,7 +16,8 @@
 .topbar-bar .el-submenu .el-submenu__title:hover,.topbar-bar .el-menu-item:hover {
   background-color: transparent;
   border-bottom: 1px solid #00C6FF;
-  color:#00C6FF;
+  /* color:#00C6FF; */
+  color: #004272;
 }
 .topbar-bar .el-menu.el-menu--horizontal{
   background-color: transparent;
@@ -166,7 +167,8 @@ line-height:2vh;
 *公共样式
 **/
 .el-table th{
-  color:#1D99AB;
+  /* color:#1D99AB; */
+  color:#a6afcd;
   font-size: 16px;
 }
 .el-table .sort-caret.descending{
@@ -178,7 +180,12 @@ line-height:2vh;
   font-size: 16px;
 }
 .boxstyle{
-  background: url('../images/box_bg.png') no-repeat;
+  /* background: url('../images/box_bg.png') no-repeat !important; */
+  background: url('../images/border.png') no-repeat;
+  background-size: 100% 100%;
+}
+.borstyle{
+  background: url('../images/box_bg.png') no-repeat ;
   background-size: 100% 100%;
 }
 #map .minemap-popup-content{

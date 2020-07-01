@@ -52,7 +52,7 @@ export default {
     @include flex(row, start,start);
   }
   .borderCls{
-    border-bottom: 1px solid $color-primary;
+    // border-bottom: 1px solid $color-primary;
   }
   .img,.label,.value{
      @include flex(column, center,center);

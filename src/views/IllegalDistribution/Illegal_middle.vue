@@ -52,7 +52,7 @@ export default {
         this.map = this.$store.state.map;
         let that = this;
         this.map.setCenter([108.967368, 34.302634]);
-        // this.map.setZoom(11);
+        this.map.setZoom(6);
         this.getIllegalHeatMapDatas(this.stime)
         this.gatData()
     },
@@ -130,7 +130,6 @@ export default {
         *  柱形热力图
         */
        getMapDatas(item){
-           debugger;
         let that = this;
         if (that.map.getLayer("histogram-layer") != undefined) {
             that.map.setLayoutProperty("histogram-layer", "visibility", "visible");
@@ -344,7 +343,7 @@ export default {
 }
 </script>
 
-<style scope scoped lang='scss'>
+<style scoped lang='scss'>
 
 .Illegal_middle{
     position: fixed;

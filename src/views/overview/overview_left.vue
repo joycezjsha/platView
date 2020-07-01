@@ -357,7 +357,7 @@ export default {
           width:50%;
         }
         >div:nth-child(1){
-            border-right: 1px solid $color-info
+            // border-right: 1px solid $color-info
         }
         .row_value_{
           text-align:center;
@@ -383,6 +383,7 @@ export default {
       height:4vh;
       line-height:4vh;
       padding-left:5%;
+      padding-bottom: 3vh;
       color:$color-info;     
     }
     .center_statics{
