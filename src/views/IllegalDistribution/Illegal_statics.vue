@@ -8,9 +8,20 @@
           </div>
       </div>
       <!-- 点击中间的三个按钮，切换对应的template accident-statics_title -->
-      <div v-show="isShow=='1'">
-        <div class="accident-statics--tab borstyle">
-          <div>
+      <div class="right-top-speed" v-show="isShow=='1'">
+        <div class="borstyle ">
+          <m-tab style="margin:5px" label='全部违法数量总计' :value="staticsData.sum"></m-tab>
+          <div style="padding:0.3vh 5vw;display:flex;height:9vh">
+            <div  class="left">
+              <div>超速行驶</div>
+              <div style="padding-bottom:0.5vh">{{staticsData.over}}</div>
+            </div>
+            <div class="right">
+              <div>尾号限行</div>
+              <div  style="padding-bottom:0.5vh">{{staticsData.lastNumberLimit}}</div>
+            </div>
+          </div>
+          <!-- <div>
             <span class="--tab-title">
               <i class="el-icon-bell"></i>全部违法数量总计
             </span>
@@ -22,7 +33,7 @@
             <span>超速行驶：{{staticsData.over}}</span>
             <el-divider direction="vertical"></el-divider>
             <span>尾号限行：{{staticsData.lastNumberLimit}}</span>
-          </div>
+          </div> -->
         </div>
         <div class="accident-statics_content Top5 borstyle">
           <m-title label='违法类别Top5' style='width:7vw;margin-left:1vw'></m-title>
@@ -84,7 +95,7 @@
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts';
-import m_tab from '@/components/UI_el/tab.vue';
+import mTab from '@/components/UI_el/tab.vue'
 import blur from '../../blur.js';
 import mTitle from '@/components/UI_el/title_com.vue';
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
@@ -313,7 +324,7 @@ export default {
       }
     }
   },
-  components: { mTitle,mLineChart,mTab:m_tab },
+  components: { mTitle,mLineChart,mTab },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
@@ -970,5 +981,14 @@ export default {
   //   width: 100%;
   //   height: 25vh;
   // }
+}
+.right-top-speed .left,.right-top-speed .right{
+  flex: 1;
+  font-size:16px;
+  font-family:Source Han Sans CN;
+  font-weight:400;
+  font-style:italic;
+  color:rgba(255,255,255,1);
+  line-height:40px;
 }
 </style>

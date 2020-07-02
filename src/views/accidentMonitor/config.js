@@ -3,6 +3,7 @@
  */
 import http from '../../common/httpUtil'
 import sgImg from './image/sg.png'
+import jqImg from './image/jq.png'
 export const interf={
   /*获取巡航数据*/
   getCityIndexData:(data,callback,err)=>{
@@ -81,5 +82,6 @@ export const interf={
 }
 export const IMG={
   /*路况巡航*/
-  SG_IMG: sgImg
+  SG_IMG: sgImg,
+  jqImg:jqImg
 }

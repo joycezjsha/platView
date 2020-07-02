@@ -291,8 +291,8 @@ export default {
       >li:nth-child(1){
         justify-content: end;
       }
-      >li:nth-child(3){
-        justify-content: end;
+      >li:nth-child(2){
+        padding-bottom: 13px;
       }
     }
    .legend{

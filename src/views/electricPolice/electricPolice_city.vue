@@ -541,8 +541,8 @@ export default {
   z-index: 10;
   left: 12px;
   width: 474px;
-  height: 80vh;
-  top: 9vh;
+  height:977px;
+  top: 9.5vh;
 }
 .electricPolice_city_container {
   width: 100%;

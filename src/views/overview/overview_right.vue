@@ -6,17 +6,18 @@
           <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
         </div>
         <div class="tab">
-          <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-right:0.5vw"></span>
-          <span style="margin-right:1.5vw;">速度检测次数</span>
-          <!-- <el-divider direction="vertical"></el-divider> -->
-          <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-left:4.5vw"></span>
-          <span style="margin-left:0.5vw;">平均行驶速度/限速</span>
+          <span style="margin-right:1.5vw;">
+            <i class="split"></i>
+            速度检测次数</span>
+          <span style="margin-left:0.5vw;">
+            <i class="split"></i>
+            平均行驶速度/限速</span>
         </div>
         <div class="overview-info_sort">
           <div>
             <m-list-o :list='listItems'></m-list-o>
           </div>
-          <div style="width:1px;height:5vh;background:radial-gradient(#f3f0f0,rgba(117,123,163,0.25098),transparent);"></div>
+          <div style="width:1px;height:10vh;background:radial-gradient(#f3f0f0,rgba(117,123,163,0.25098),transparent);"></div>
           <div class="avg">{{avg}}</div>
           <div id="overview-info_sort" v-loading='tableLoading'>
             
@@ -234,8 +235,7 @@ export default {
      */
     initAccidentStaticsChart(){
       let that=this;
-      interf.GET_PRO_CAR_API({})
-      .then(response => {
+      interf.GET_PRO_CAR_API({}).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -380,7 +380,19 @@ export default {
       @include flex(row, center,center);
       >span{
         @include flex(column, center,center);
+        .split{
+          width:2px;height:2vh;line-height:2vh;background:#116cf3;
+          position: absolute;
+          margin-left: -3vw;
+        }
+        
       }
+      >span:nth-child(2){
+        .split{
+          margin-left: -4vw;
+        }
+      }
+      
     }
   }
   .overview-info_sort {
@@ -398,7 +410,7 @@ export default {
     width: 50%;
     height: auto;
   }
-  >div:nth-child(3){
+  >div:nth-child(4){
     height: 100%;
     width: 40%;
   }

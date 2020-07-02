@@ -8,31 +8,36 @@
           <span>{{param.code}}</span>
         </div>
       </div>
-      <div class="vehicle-main boxstyle">
-        <div style="display:flex; position: relative;">
+      <div class="vehicle-main borstyle">
+        <div style="position: relative;">
            <div>
             <m-title class="analysis" label="车辆归属地分析"></m-title>
            </div>
           <div class="button">
-            <span :class="{active: isActive == 4}" @click="change(4)">实时活跃</span>     
+            <el-tabs v-model="fxlxName" @tab-click="handleClick" style="padding:0 15px;" >
+              <el-tab-pane label="实时活跃" name="4"></el-tab-pane>
+              <el-tab-pane label="今日入陕" name="1"></el-tab-pane>
+              <el-tab-pane label="今日出陕" name="2"></el-tab-pane>
+            </el-tabs>
+            <!-- <span :class="{active: isActive == 4}" @click="change(4)">实时活跃</span>     
             <span :class="{active: isActive == 1}" @click="change(1,1)">今日入陕</span>
-            <span :class="{active: isActive == 2}" @click="change(2,2)">今日出陕</span> 
+            <span :class="{active: isActive == 2}" @click="change(2,2)">今日出陕</span>  -->
           </div>
          
         </div>
         <div class="inout">         
-            <span class="text" style="padding-left:1.5vw">
+            <span class="text" :class="param.provinceInorOut=='1'? 'selecttext':'noselecttext'" style="padding-left:1.5vw">
                 省外: {{provinceExternal}}
-                <span style="margin-left:1vw">{{provinceExternalProportion}}</span>
+                <span style="margin-left:1vw">({{provinceExternalProportion}})</span>
             </span>
-            <span  class="text" style="margin-left:3vw">
+            <span :class="param.provinceInorOut=='1'? 'noselecttext':'selecttext'" class="text" style="margin-left:3vw">
                 省内:{{provinceWithin}}
-                <span  style="margin-left:1vw">{{provinceWithinProportion}}</span>
+                <span  style="margin-left:1vw">({{provinceWithinProportion}})</span>
             </span>
           <!-- 切换省内省外的div -->
           <div class="vehicle-change">
-            <div @click="province(1)" class="provinces"></div>
-            <div @click="province(2)" class="city"></div>
+            <div @click="province(1)" class="provinces" :class="param.provinceInorOut=='1'? 'bg':'changebg'" ></div>
+            <div @click="province(2)" class="city" :class="param.provinceInorOut=='1'? 'bg1':'changebg1'" ></div>
           </div>
         </div>
         <div class="vehicle-table" style="padding:0 27px;height:100%">
@@ -71,8 +76,9 @@ export default {
   data() {
     return {
       city: "",
+      fxlxName:'4', //	归属地分析  实时活跃 传4  今日入陕 出陕传2
       tableIndex:'',
-      isActive:'4', //实时活跃 4  今日入陕1  出陕2
+      // isActive:'4', //实时活跃 4  今日入陕1  出陕2
       param:{
         stime:'4', //实时活跃 传4  今日入陕 出陕传2
         code:'', //车辆类型
@@ -125,18 +131,36 @@ export default {
     /*
     * 切换实时活跃 传4  今日入陕1  出陕2
     */
-   change(i,j){
-       this.isActive=i;
-       this.param.fxlx=j;
-       if(this.isActive==1 || this.isActive==2){
-           this.param.stime='2';
-           this.getVehicleOwnershipDatas();
-       }
-       if(this.isActive==4 ){
-          this.param.stime='4';
-          this.getVehicleOwnershipDatas();
-       }
+   handleClick(i){
+     if(i.name=='1'){
+       this.param.stime='2';
+        this.getVehicleOwnershipDatas();
+     }else{
+       this.param.stime=i.name;
+        this.getVehicleOwnershipDatas();
+     }
+    //  if(i.name=='1'){
+    //    that.param.stime=='2';
+    //    console.log(that.param.stime)
+    //    that.getVehicleOwnershipDatas();
+    //  }else{
+    //    that.param.stime==i.name;
+    //    console.log(that.param.stime)
+    //  }
+
    },
+  //  change(i,j){
+  //      this.isActive=i;
+  //      this.param.fxlx=j;
+  //      if(this.isActive==1 || this.isActive==2){
+  //          this.param.stime='2';
+  //          this.getVehicleOwnershipDatas();
+  //      }
+  //      if(this.isActive==4 ){
+  //         this.param.stime='4';
+  //         this.getVehicleOwnershipDatas();
+  //      }
+  //  },
     /**
      * 接收table传过来的数据  getCity:城市
      */
@@ -466,35 +490,52 @@ export default {
       display: flex;
       width: 100%;
       height: 30px;
-      margin-top: 2vh;
-      position: relative;
-      color: white;
+      position: absolute;
+      top:14.5vh;
       .text{
-          flex: 1;
+        flex: 1;
+      }
+      .selecttext{
+        color:rgba(255,255,255,1);
+      }
+      .noselecttext{
+        color:rgba(166,175,205,1);
       }
     }
   }
 }
 .vehicle-change {
   position: absolute;
-  top: 20px;
+  top:3vh;
   left: 0;
   display: flex;
   padding: 0 30px;
+  .provinces {
+    width: 213px;
+    height: 32px;
+    // background: rgba(0, 198, 255, 1);
+    margin-top: 1vh;
+    cursor: pointer;
+    flex: 1;
+    margin-right: 2px;
+  }
 }
-.provinces {
-  width: 213px;
-  height: 32px;
-  background: rgba(0, 198, 255, 1);
-  margin-top: 1vh;
-  cursor: pointer;
-  flex: 1;
-  margin-right: 2px;
-}
-.city {
+.bg{
+    // border:1px solid #ffffff;
+    background: #00C6FF;
+  }
+.bg1{
+    background: #265E45;
+  }
+.changebg{
+     background:#0473B2;
+  }
+.changebg1{
+    background: #0DD77D;
+  }
+.vehicle-Belong .city {
   width: 207px;
   height: 32px;
-  background: rgba(38, 94, 69, 1);
   margin-top: 1vh;
   cursor: pointer;
   flex: 1;
@@ -502,7 +543,7 @@ export default {
 .vehicle-main .button {
     margin-top: 5px;
     position: absolute;
-    top:0;
+    top:3vh;
     right: 0;
     span{
         border: 1px solid white;
@@ -519,10 +560,10 @@ export default {
     cursor:pointer;
     }
 }
-.vehicle-table{
+.vehicle-Belong .vehicle-table{
+    width: 90%;
     position: absolute;
-   
-    top:160px;
+    top:23vh;
     left: 0;
 }
 </style>

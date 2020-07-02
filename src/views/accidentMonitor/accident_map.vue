@@ -1,6 +1,17 @@
 <template>
-  <div class="device-map">
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
+  <div class="accident-map">
+    <div class='accident-map--legend'>
+      <ul>
+        <li v-for='(item,index) in areaList' :key='index'>{{item}}</li>
+      </ul>
+      <div class='legend'></div>
+    </div>
+    <div class='accident-map--icon'>
+      <ul>
+        <li><div>警情</div><div><img :src='jqImg' /></div></li>
+      </ul>
+    </div>
+    <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
   </div>
 </template>
 
@@ -23,7 +34,9 @@ export default {
         popups:[]
       },
       showArea:false,
-      areaIndexs:[]
+      areaIndexs:[],
+      jqImg:IMG.jqImg,
+      areaList:[]
     };
   },
   mounted() {
@@ -57,15 +70,22 @@ export default {
         params.etime=data.time[1];
       }
       interf.GET_MAP_CITY_ACCI_API(params).then(response=>{
+         debugger;
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-              that.areaIndexs=data.data.map(e=>{
+            that.addCityAccident(data.data);
+            let max=0,min=0;
+              that.areaIndexs=[];
+              data.data.map(e=>{
                 e.Num=e.NUM;
+                max=e.Num>max?e.Num:max;
+                min=e.Num<min?e.Num:min;
+                 that.areaIndexs.push(e);
                 return e;
               });
+              that.areaList.push(max,(max-min)/2,min);
               that.showArea=true;
-              that.addCityAccident(data.data);
           }else{
             that.$message({
             message: response.errmsg,
@@ -95,7 +115,8 @@ export default {
      * 地图显示各市重大事故数量
      */
     addCityPopup(e){
-      let lnglat=e.JWD.split(' ');
+      debugger;
+      let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
       mainDiv.style.width='6vw';
       mainDiv.style.fontSize='0.7vw';
@@ -112,7 +133,7 @@ export default {
       title.style.margin='5px 0';
       mainDiv.appendChild(title);
 
-      let p1="<p style='color:#00C6FF;margin:5px 0;'><span>事故：</span><span>"+e.NUM+"</span></p>";
+      let p1="<p style='color:#00C6FF;margin:5px 0;'><span>警情：</span><span>"+e.NUM+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
       
       // let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
@@ -134,7 +155,6 @@ export default {
      */
     getConstructionData(){
       let that=this;
-      
       interf.GET_MAP_CONSTRUCTION_API({}).then(response=>{
         if (response && response.status == 200){
           var data = response.data;
@@ -150,6 +170,7 @@ export default {
         }
       })
       .catch(err=>{
+        debugger;
          that.$message({
             message: '请求服务失败',
             type: "error",
@@ -250,20 +271,73 @@ export default {
   align-items: $align;
 }
 
-.device-map {
+.accident-map {
   position: fixed;
   z-index: 10;
-  left: 691px;
-  width: 340px;
-  height: 39px;
-  bottom: 15px;
+  left: 500px;
+  width: 78px;
+  height: 245px;
+  bottom: 13px;
+  padding:20px 15px;
+  background-color:#010416;
   color:$color-white;
-  @include flex(row,center,center);
-  >div{
-    @include flex(column,center,center);
-    width:50%;
-    height:100%;
-    cursor:pointer;
+  // @include flex(column, center,center);
+  &--legend{
+    width:100%;
+    height:150px;
+    ul{
+      padding: 0 5px 0 0;
+      // display: inline-block;
+      width:50px;
+      height:100%;
+      text-align:center;
+      float:left;
+      @include flex(column, center,center);
+      li{
+        width:100%;
+        height:33%;
+        @include flex(column, center,center);
+        align-items: flex-end;
+      }
+      >li:nth-child(1){
+        justify-content: end;
+      }
+      >li:nth-child(2){
+        padding-bottom: 13px;
+      }
+    }
+   .legend{
+     display: inline-block;
+     width:12px;
+     height:140px;
+    //  opacity: 0.82;
+     border-radius: 8px;
+     background-image: linear-gradient(#402720, #2c3224, #05284b);
+
+   }
+  }
+  &--icon{
+    width:100%;
+    height:110px;
+    margin-top:20px;
+    ul{
+      padding:0;
+      li{
+        line-height:45px;
+        div{
+          display:inline-block;
+          width:50%;
+          text-align:center;
+          font-size: 14px;
+        }
+        div:nth-child(2){
+          img{
+            vertical-align: middle;
+            margin-bottom: 8px;
+          }
+        }
+      }
+    }
   }
 }
 

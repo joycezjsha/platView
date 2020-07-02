@@ -25,12 +25,17 @@
               <m-title label='流动趋势' img_type=1 style='width:6vw;'></m-title>
             </div>
             <div class="button">
-              <span :class="{active: showTime == 1}" @click="changeTime(1)">今日</span>     
+              <el-tabs v-model="timeName" @tab-click="handleClick" style="padding:0 15px;" >
+                <el-tab-pane label="今日" name="1"></el-tab-pane>
+                <el-tab-pane label="昨日" name="2"></el-tab-pane>
+                <el-tab-pane label="近30天" name="3"></el-tab-pane>
+              </el-tabs>
+              <!-- <span :class="{active: showTime == 1}" @click="changeTime(1)">今日</span>     
               <span :class="{active: showTime == 2}" @click="changeTime(2)">昨日</span>
-              <span :class="{active: showTime == 3}" @click="changeTime(3)">近30天</span> 
+              <span :class="{active: showTime == 3}" @click="changeTime(3)">近30天</span>  -->
             </div>
           </div>
-          <div style="width:100%;height:100%" id="">
+          <div style="width:95%;height:95%" id="">
             <m-line-chart  style="width:100%;height:100%" :chart_data='flowchartsData' c_id='sumCountChange'></m-line-chart>
           </div>
         </div>
@@ -41,8 +46,12 @@
               <m-title label='车辆类型分析' img_type=1 style='width:8vw;'></m-title>
             </div>
             <div  class="button">
-              <span :class="{active: isActive == 1}" @click="change(1)">进入</span>
-              <span :class="{active: isActive == 2}" @click="change(2)">流出</span>
+              <el-tabs v-model="fxlxName" @tab-click="fxlxNameClick" style="padding:0 15px;" >
+                <el-tab-pane label="进入" name="1"></el-tab-pane>
+                <el-tab-pane label="流出" name="2"></el-tab-pane>
+              </el-tabs>
+              <!-- <span :class="{active: isActive == 1}" @click="change(1)">进入</span>
+              <span :class="{active: isActive == 2}" @click="change(2)">流出</span> -->
             </div>
           </div>
           <!-- <div class="cars">
@@ -75,6 +84,8 @@ export default {
       stime:'1',  //1 最近的时间 2 今天 3昨天 
       etime:"",  
       timeRange:'',
+      timeName:'1', //流动趋势 时间
+      fxlxName:'1', //车辆类型分析流入和进出
       isActive: 1,   //1进入  2流出
       xzqh:'', //行政区号
       showback:false,  //显示返回全省
@@ -311,7 +322,7 @@ export default {
     // that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData(that.stime)
     that.getMapVehicleInData(that.stime)
-    that.initSumCharts(that.showTime);
+    that.initSumCharts(that.timeName);
     that.getCarTypeDatas()
     // that.initAccurCharts();
     
@@ -344,11 +355,17 @@ export default {
     /*
     * 流动趋势	可切换1--【今日】、2--【昨日】、3--【近30天】
     */
-   changeTime(i){
-     let that = this;
-     that.showTime=i;
-     that.initSumCharts(that.showTime)
+   handleClick(i){
+      let that = this;
+      that.timeName=i.name;
+      // console.log(that.timeName)
+      that.initSumCharts(that.timeName)
    },
+  //  changeTime(i){
+  //    let that = this;
+  //    that.showTime=i;
+  //    that.initSumCharts(that.showTime)
+  //  },
     //  地图上的显示 
     addCityMarker(item){
         let el = document.createElement('div');
@@ -481,11 +498,11 @@ export default {
       that.stime='1';
       that.fxlx='1';
       that.isActive='1';
-      that.showTime='1';
+      that.timeName='1';
       that.xzqh='';
       that.getprovinceData('1')
       // that.carflowData('1') 
-      that.initSumCharts(that.showTime)
+      that.initSumCharts(that.timeName)
       that.getCarTypeDatas() 
     },
     // 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
@@ -536,13 +553,20 @@ export default {
     },
     // 如果选择左侧的城市，显示对应城市的车辆类型分析
     //  点击进入和流出 触发 change事
+    fxlxNameClick(i){
+      let that = this;
+      that.isActive = i.name;
+       that.fxlx = i.name;
+       blur.$emit("getfxlf",that.fxlx);
+       that.getCarTypeDatas()
+    },
     change(i){  
       let that = this;
       // that.getIndexDatas(that.stime,i) 
-      that.isActive = i.toString();
-      that.fxlx = i.toString();
-      blur.$emit("getfxlf",that.fxlx)
-      that.getCarTypeDatas()
+      // that.isActive = i.toString();
+      // that.fxlx = i.toString();
+      // blur.$emit("getfxlf",that.fxlx)
+      // that.getCarTypeDatas()
       // that.getIndexDatas(that.stime,that.isActive) 
     },
     // 车辆流动页面全省车辆统计 xzqh===undefined && etime===undefined
@@ -847,10 +871,10 @@ position: fixed;
   height:368px;
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
-  margin-bottom:20px;
+  margin-bottom:1vh;
 }
 .data{
-  margin-bottom: 20px;
+  margin:1vh 0;
   border:1px solid;
   border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }

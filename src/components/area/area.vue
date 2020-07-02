@@ -98,7 +98,6 @@ export default {
               });
             });
             datas=that.sortArea(datas);
-            that.indexDatas = datas;
             that.addArea(datas);
             // that.addAreaIdentify(data.data);
           }
@@ -186,15 +185,16 @@ export default {
      * 根据一定权重给区域排序
      */
     sortArea(data){
+      debugger;
       let _this=this;
-      let max='',min='';
+      let max=0,min=0;
       //返回数组合并、并排序的结果
       if(this.indexData.length<data.length){
-        return data;
+        return [];
       }
       this.indexData.forEach(e=>{
         for(var j=0;j<data.length;j++){
-            if(data[j].city.indexOf(e.city)!=-1){
+            if(data[j].adcode.indexOf(e.XZQH)!=-1){
                 data[j].Num=e.Num;
                 max=max<e.Num?e.Num:max;
                 min=min>e.Num?e.Num:min;
