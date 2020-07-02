@@ -62,14 +62,23 @@ export default {
         if (response && response.status == 200){
           let data= response.data;
           if (data.errcode == 0){
-            let max=0,min=0,item=0;
+            let max,min,item=0;
             that.areaIndexs=data.data.map(e=>{
               e.Num=e.addIn;
-              max=e.Num>max?e.Num:max;
-              min=e.Num<min?e.Num:min;
+               if(!max){
+                  max=e.Num;
+                }else{
+                  max=max<e.Num?e.Num:max;
+                }
+                if(!min){
+                  min=e.Num;
+                }else{
+                  min=min>e.Num?e.Num:min;
+                }
+              
               return e;
             });
-            that.areaList.push(max,(max-min)/2,min);
+            that.areaList.push(max,(max-min)/2+min,min);
             that.showArea=true;
            if(data.data.length>0){
              data.data.forEach(e=>{
@@ -264,8 +273,8 @@ export default {
   position: fixed;
   z-index: 10;
   left: 500px;
-  width: 78px;
-  height: 245px;
+  width: 108px;
+  height: 285px;
   bottom: 13px;
   padding:20px 15px;
   background-color:#010416;
@@ -273,11 +282,11 @@ export default {
   // @include flex(column, center,center);
   &--legend{
     width:100%;
-    height:150px;
+    height:180px;
     ul{
-      padding: 0 5px 0 0;
+      padding: 0 20px 0 0;
       // display: inline-block;
-      width:50px;
+      width:60px;
       height:100%;
       text-align:center;
       float:left;
@@ -298,7 +307,7 @@ export default {
    .legend{
      display: inline-block;
      width:12px;
-     height:140px;
+     height:180px;
     //  opacity: 0.82;
      border-radius: 8px;
      background-image: linear-gradient(#402720, #2c3224, #05284b);

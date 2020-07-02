@@ -11,7 +11,8 @@
         <li><div>警情</div><div><img :src='jqImg' /></div></li>
       </ul>
     </div>
-    <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
+    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea'></t-area>
+    <!-- <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area> -->
   </div>
 </template>
 
@@ -70,21 +71,28 @@ export default {
         params.etime=data.time[1];
       }
       interf.GET_MAP_CITY_ACCI_API(params).then(response=>{
-         debugger;
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
             that.addCityAccident(data.data);
-            let max=0,min=0;
-              that.areaIndexs=[];
+            let max,min;
               data.data.map(e=>{
                 e.Num=e.NUM;
-                max=e.Num>max?e.Num:max;
-                min=e.Num<min?e.Num:min;
-                 that.areaIndexs.push(e);
+                if(!max){
+                  max=e.Num;
+                }else{
+                  max=max<e.Num?e.Num:max;
+                }
+                if(!min){
+                  min=e.Num;
+                }else{
+                  min=min>e.Num?e.Num:min;
+                };
                 return e;
               });
-              that.areaList.push(max,(max-min)/2,min);
+              that.areaIndexs=data.data;
+              console.log(that.areaIndexs);
+              that.areaList.push(max,(max-min)/2+min,min);
               that.showArea=true;
           }else{
             that.$message({
@@ -115,7 +123,6 @@ export default {
      * 地图显示各市重大事故数量
      */
     addCityPopup(e){
-      debugger;
       let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
       mainDiv.style.width='6vw';
@@ -170,7 +177,6 @@ export default {
         }
       })
       .catch(err=>{
-        debugger;
          that.$message({
             message: '请求服务失败',
             type: "error",
@@ -275,8 +281,8 @@ export default {
   position: fixed;
   z-index: 10;
   left: 500px;
-  width: 78px;
-  height: 245px;
+  width: 108px;
+  height: 240px;
   bottom: 13px;
   padding:20px 15px;
   background-color:#010416;
@@ -284,11 +290,11 @@ export default {
   // @include flex(column, center,center);
   &--legend{
     width:100%;
-    height:150px;
+    height:180px;
     ul{
-      padding: 0 5px 0 0;
+      padding: 0 20px 0 0;
       // display: inline-block;
-      width:50px;
+      width:60px;
       height:100%;
       text-align:center;
       float:left;
@@ -309,7 +315,7 @@ export default {
    .legend{
      display: inline-block;
      width:12px;
-     height:140px;
+     height:180px;
     //  opacity: 0.82;
      border-radius: 8px;
      background-image: linear-gradient(#402720, #2c3224, #05284b);
@@ -334,6 +340,7 @@ export default {
           img{
             vertical-align: middle;
             margin-bottom: 8px;
+            margin-left:5px;
           }
         }
       }
