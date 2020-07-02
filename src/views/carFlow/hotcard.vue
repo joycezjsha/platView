@@ -29,7 +29,7 @@
               <el-table :data="indexDatas1"
             style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                   <el-table-column show-overflow-tooltip fixed type="index" label="No" width="60"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="city,KKMC"   label="卡口名称">
+                  <el-table-column show-overflow-tooltip prop="city,KKMC"  width="160" label="卡口名称">
                     <template slot-scope="scope">
                     [{{scope.row.city}}]{{scope.row.KKMC}}
                     </template>

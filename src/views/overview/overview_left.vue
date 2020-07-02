@@ -383,7 +383,7 @@ export default {
       height:4vh;
       line-height:4vh;
       padding-left:5%;
-      padding-bottom: 3vh;
+      padding-bottom: 2vh;
       color:$color-info;     
     }
     .center_statics{

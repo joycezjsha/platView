@@ -361,7 +361,8 @@ export default {
       overflow-y: auto;
       color:white;
       padding: 1px 10px;
-      height: 86%;
+      // height: 8%;
+      overflow: hidden;
       .item{
         // border-bottom: 1px solid $color-white;
         box-sizing: border-box;
@@ -464,11 +465,11 @@ export default {
 }
 </style>
 <style>
-.el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
+/* .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
     background-color: transparent;color:white;
-}
-.el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td{
+} */
+/* .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td{
   background-color: rgb(14, 182, 233);
   color:white;
-}
+} */
 </style>

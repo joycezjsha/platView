@@ -569,7 +569,7 @@ export default {
   left: 12px;
   width: 474px;
   height: 977px;
-  top: 2vh;
+  top: 1vh;
 }
 .bayonet_city_container {
   width: 100%;

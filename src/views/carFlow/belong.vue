@@ -21,9 +21,8 @@
             <div class="protext">
               <span   :class="provinceInorOut=='1'? 'isSelected': 'noSelect'" style="padding-left:1.5vw;" >
                 省外: {{belongData.provinceExternal}}
-                <span>{{belongData.provinceExternalProportion}}</span>
+                <span>({{belongData.provinceExternalProportion}})</span>
               </span>
-            
             </div>
           </div>
           <div class="right">
@@ -32,17 +31,17 @@
             <div class="protext">
               <span  :class="provinceInorOut=='2'? 'isSelected': 'noSelect'"  style="margin-right:1vw">
                 省内: {{belongData.provinceWithin}}
-                <span> {{belongData.provinceWithinProportion}}</span>
+                <span> ({{belongData.provinceWithinProportion}})</span>
               </span>
             </div>
           </div>
           <!-- 切换省内省外的div  1--省外 2--省内-->
           <div class="change">
-            <div @click="province(1)" class="provinces" :class="provinceInorOut=='1'? 'isborder': ''"></div>
-            <div @click="province(2)" class="city"  :class="provinceInorOut=='2'? 'isborder': ''"></div>
+            <div @click="province(1)" class="provinces" :class="provinceInorOut=='1'? 'bg': 'changebg'"></div>
+            <div @click="province(2)" class="city"  :class="provinceInorOut=='1'? 'bg1': 'changebg1'"></div>
           </div>
         </div>
-        <div style="padding:0 2vw;height:100%;marfin-top:3vh">
+        <div class="belong-table" style="padding:0 2vw;height:100%;marfin-top:3vh">
           <el-table
             :data="indexDatas"
             style="width: 100%"
@@ -513,8 +512,8 @@ export default {
       font-family: Source Han Sans CN;
       font-weight: 400;
       color: rgba(0, 198, 255, 1);
-      // background-color: $color-bg-1;
-      // border:1px solid;
+      background-color: $color-bg-1;
+      border:1px solid;
       padding-left: 17px;
       cursor: pointer;
       border-image: linear-gradient(
@@ -555,14 +554,6 @@ export default {
   }
  .carFlow-main {
     height: 951px;
-    // background-color: $color-bg-1;
-    // border: 1px solid;
-    // border-image: linear-gradient(
-    //     182deg,
-    //     rgba(10, 148, 255, 1),
-    //     rgba(255, 255, 255, 0)
-    //   )
-    //   1 1;
     .analysis {
       width: 8.5vw;
       height: 3vh;
@@ -571,7 +562,7 @@ export default {
     .inout {
       display: flex;
       width: 100%;
-      height: 120px;
+      height: 15.2vh;
       position: relative;
       .left,
       .right {
@@ -615,25 +606,36 @@ export default {
   }
 }
 .isSelected{
-  color: #ffffff;
+  color:rgba(255,255,255,1);
 }
 .noSelect{
-  color: #7cacbc;;
+  color:rgba(166,175,205,1);
 }
-.change {
+.carFlowBelong .change {
   position: absolute;
   top: 60px;
   left: 0;
   display: flex;
   padding: 0 30px;
-  .isborder{
-    border:1px solid #ffffff;
+  .bg{
+    // border:1px solid #ffffff;
+    background: #00C6FF;
   }
+  .bg1{
+    background: #265E45;
+  }
+  .changebg{
+     background:#0473B2;
+  }
+  .changebg1{
+    background: #0DD77D;
+  }
+  
 }
 .provinces {
   width: 213px;
   height: 32px;
-  background: rgba(0, 198, 255, 1);
+  // background: rgba(0, 198, 255, 1);
   margin-top: 4vh;
   cursor: pointer;
   flex: 1;
@@ -642,9 +644,13 @@ export default {
 .city {
   width: 207px;
   height: 32px;
-  background: rgba(38, 94, 69, 1);
+  // background: rgba(38, 94, 69, 1);
   margin-top: 4vh;
   cursor: pointer;
   flex: 1;
 }
+// .carFlowBelong .belong-table{
+//   position: absolute;
+//   top:3vh;
+// }
 </style>

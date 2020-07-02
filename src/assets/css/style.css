@@ -11,7 +11,7 @@
   font-size:20px;
 }
 .topbar-bar .el-submenu.is-active .el-submenu__title{
-  color:#00C6FF;
+  color:#00b6e8;
 }
 .topbar-bar .el-submenu .el-submenu__title:hover,.topbar-bar .el-menu-item:hover {
   background-color: transparent;

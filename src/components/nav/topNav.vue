@@ -334,7 +334,7 @@ export default {
     @include flex(row, center);
     background: #3a3c4c;
     img{
-          width: 1vw;
+    width: 1vw;
     margin-top: 25%;
     }
     .top_div:nth-child(2){

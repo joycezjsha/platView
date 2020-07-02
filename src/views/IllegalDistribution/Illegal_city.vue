@@ -391,9 +391,8 @@ export default {
     margin: 5% 2% 0 2%;
     }
   .illegal-city_title{
-      position: relative;
+    position: relative;
     width: 96%;
-    border-bottom: 0.1rem solid $color-border-1;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;

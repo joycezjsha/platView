@@ -6,11 +6,12 @@
           <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
         </div>
         <div class="tab">
-          <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-right:0.5vw"></span>
-          <span style="margin-right:1.5vw;">速度检测次数</span>
-          <!-- <el-divider direction="vertical"></el-divider> -->
-          <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-left:4.5vw"></span>
-          <span style="margin-left:0.5vw;">平均行驶速度/限速</span>
+          <span style="margin-right:1.5vw;">
+            <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-right:0.5vw"></span>
+            速度检测次数</span>
+          <span style="margin-left:0.5vw;">
+            <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-left:4.5vw"></span>
+            平均行驶速度/限速</span>
         </div>
         <div class="overview-info_sort">
           <div>
