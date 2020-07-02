@@ -235,7 +235,7 @@ export default {
   z-index: 10;
   left: 13px;
   width: 474px;
-  height: 900px;
+  height: 977px;
   top: 11px;
 }
 .distribution_container {
@@ -298,7 +298,7 @@ export default {
 }
 </style>
 <style>
-.el-table,
+/* .el-table,
 .el-table__expanded-cell,
 .el-table th,
 .el-table tr {
@@ -337,5 +337,5 @@ export default {
 .el-button {
   height: 3vh;
   line-height: 0.5;
-}
+} */
 </style>

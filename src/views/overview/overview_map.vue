@@ -3,7 +3,6 @@
     <div class='overview-map--legend'>
       <ul>
         <li v-for='(item,index) in areaList' :key='index'>{{item}}</li>
-        <li></li>
       </ul>
       <div class='legend'></div>
     </div>
@@ -35,8 +34,9 @@ export default {
       },
       jqImg:IMG.jqImg,
       sgImg:IMG.sgImg,
-      showArea:true,
-      isShowTxt:false
+      showArea:false,
+      isShowTxt:false,
+      areaIndexs:[]
     };
   },
   mounted() {
@@ -62,6 +62,15 @@ export default {
         if (response && response.status == 200){
           let data= response.data;
           if (data.errcode == 0){
+            let max=0,min=0,item=0;
+            that.areaIndexs=data.data.map(e=>{
+              e.Num=e.addIn;
+              max=e.Num>max?e.Num:max;
+              min=e.Num<min?e.Num:min;
+              return e;
+            });
+            that.areaList.push(max,(max-min)/2,min);
+            that.showArea=true;
            if(data.data.length>0){
              data.data.forEach(e=>{
                that.addCityMarker(e);
@@ -266,11 +275,25 @@ export default {
     width:100%;
     height:150px;
     ul{
-      padding:0;
-      display: inline-block;
+      padding: 0 5px 0 0;
+      // display: inline-block;
       width:50px;
       height:100%;
       text-align:center;
+      float:left;
+      @include flex(column, center,center);
+      li{
+        width:100%;
+        height:33%;
+        @include flex(column, center,center);
+        align-items: flex-end;
+      }
+      >li:nth-child(1){
+        justify-content: end;
+      }
+      >li:nth-child(3){
+        justify-content: end;
+      }
     }
    .legend{
      display: inline-block;

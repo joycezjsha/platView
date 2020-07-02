@@ -206,7 +206,7 @@ export default {
  right: 0px;
  top: 99px;
  width: 474px;
- height:900px;
+ height:977px;
  &_title{
    position: relative;
     width: 100%;

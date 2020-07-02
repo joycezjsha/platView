@@ -285,7 +285,7 @@ export default {
   z-index: 10;
   left: 12px;
   width: 474px;
-  height: 900px;
+  height: 977px;
   top: 11px;
 }
 .speedMeasurement-city_container {

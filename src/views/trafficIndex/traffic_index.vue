@@ -172,15 +172,17 @@ export default {
     &_table {
       color: $color-white;
       margin: 0;
-      padding: 2% 5%;
+      padding: 23px 5% 2% 5%;
       width: 90%;
       height: 80%;
       overflow-y: auto;
       .index-item{
+        padding:10px 0 5px 0;
         >p:nth-child(1){
-          margin-bottom:0px;
+          margin:0px;
           @include flex(row,center,center);
           >span{
+            font-size: 14px;
             @include flex(row,center,center)
           }
           >span:nth-child(1){
@@ -196,11 +198,12 @@ export default {
           }
         }
         >p:nth-child(2){
-          margin-top:0px;
+          margin:0px;
           color: $color-text-label;
           font-size: 0.8vw;
           @include flex(row,center,center);
           >span{
+            font-size: 14px;
             @include flex(row,center,center)
           }
           >span:nth-child(1){
@@ -219,6 +222,9 @@ export default {
         span.value{
           color:$color-text-value;
         }
+      }
+      .index-item:nth-child(odd){
+        background-color: #13193c;
       }
     }
     

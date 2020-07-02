@@ -22,7 +22,7 @@ export default {
         markers:[],
         popups:[]
       },
-      showArea:true,
+      showArea:false,
       areaIndexs:[]
     };
   },
@@ -60,7 +60,11 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-              that.areaIndexs=data.data;
+              that.areaIndexs=data.data.map(e=>{
+                e.Num=e.NUM;
+                return e;
+              });
+              that.showArea=true;
               that.addCityAccident(data.data);
           }else{
             that.$message({

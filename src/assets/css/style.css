@@ -10,14 +10,21 @@
   width: 100%;
   font-size:20px;
 }
+.topbar-bar .el-submenu .el-submenu__title:active{
+  border:none;
+}
+.topbar-bar .el-submenu:focus, .topbar-bar .el-submenu .el-submenu__title:focus,.topbar-bar .el-menu-item:focus{
+    outline: 0;
+  }
+:focus {outline: 0;}
 .topbar-bar .el-submenu.is-active .el-submenu__title{
   color:#00C6FF;
 }
 .topbar-bar .el-submenu .el-submenu__title:hover,.topbar-bar .el-menu-item:hover {
   background-color: transparent;
   border-bottom: 1px solid #00C6FF;
-  /* color:#00C6FF; */
-  color: #004272;
+  color:#00C6FF;
+  /* color: #004272; */
 }
 .topbar-bar .el-menu.el-menu--horizontal{
   background-color: transparent;
@@ -59,7 +66,7 @@
 }
 .topbar-bar .el-menu--horizontal li.is-active,.el-menu--horizontal .el-menu-item.is-active{
   /* background-color: #3a8ee6; */
-  border-bottom: 1px solid #00C6FF;
+  border-bottom: 2px solid #00C6FF;
   color:#00C6FF;
 }
 
@@ -72,9 +79,9 @@
 
 /*el样式改写*/
 .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
-  background-color: #010d26;color:white;
+  background-color: transparent;color:white;
 }
-.el-table tr:nth-of-type(odd){ 
+.el-table tr:nth-child(odd) td{ 
   background:rgba(72,84,108,0.2);color:white;
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td,.el-table__body tr.hover-row>td{
@@ -94,8 +101,9 @@ color:white;
   background-color: #282d27eb;
 }
 .el-range-editor.el-input__inner{
-height:3vh;
-line-height:3vh
+  height:3vh;
+  line-height:3vh;
+  border-color: #27438B;
 }
 .el-date-editor .el-range__icon{
 line-height:2vh;
@@ -135,6 +143,24 @@ line-height:2vh;
 .el-table__fixed::before {
   content: none;
 }
+.el-select-dropdown__item, .el-select-dropdown__item{
+  background-color: transparent;
+  color:white;
+}
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
+  background-color: #0367A6;
+  color:white;
+}
+.el-scrollbar,.el-popper[x-placement^=bottom]{
+  border:none;
+  margin-top:2px;
+  width:124px;
+  background-color: transparent;
+}
+.el-popper[x-placement^=bottom] .popper__arrow{
+  display:none;
+}
+.el-select-dropdown__list{padding:0;}
 /*el样式改写 --END*/
 
 /*登陆单独界面样式改写*/

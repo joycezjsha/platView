@@ -5,7 +5,7 @@ document.writeln("<script src=\"./static/js/echarts-all-3.js\"></script>");
 document.writeln("<script src=\"./static/lib/minemap/v2.0/minemap.js\"></script>");
 document.writeln("<script src=\"./static/js/template.js\"></script>");
 
-var ip='192.168.0.180:8091/';//'117.48.214.220:9602';//window.location.host//'117.157.231.168';//'localhost:8080'//'117.48.214.220';//
+var ip='127.0.0.1:8091/';
 var mapConfig = {
   BASE_URL: '//113.141.73.223:11180',//"//minedata.cn",
   DOMAIN_URL: '//113.141.73.223:11180',
@@ -23,5 +23,6 @@ var mapConfig = {
 var urlConf = {
   /*接口地址*/
   BASE_URL: '//'+ip,
-  IMG_PATH :'./static/images/'
+  IMG_PATH :'./static/images/',
+  JT_PATH:'92.1.48.106/xasimg'
 }

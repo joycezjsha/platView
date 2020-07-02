@@ -61,8 +61,8 @@
        </div>
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->
-         <el-table :data="centerstatics.tableDatas" style="width:100%;"
-           height="100%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
+         <el-table :data="centerstatics.tableDatas" style="width:90%;margin:0 auto;"
+           height="90%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" v-loading='tableLoading'>
            <el-table-column fixed type="index" label="No" width="50"></el-table-column> 
            <el-table-column prop="city" label="城市" width="70"></el-table-column>
@@ -377,13 +377,11 @@ export default {
     margin-top:2px;
     overflow:hidden;
     // overflow:scroll;
-    padding:0 10px;
     .center_txt{
       width:100%;
       height:4vh;
       line-height:4vh;
-      padding-left:5%;
-      padding-bottom: 3vh;
+      padding:2% 6%;
       color:$color-info;     
     }
     .center_statics{
@@ -487,10 +485,20 @@ export default {
   .el-dialog{
       background: url(./image/dialog_bg.png) no-repeat;
       background-size:100% 100%;
+      width: 1322px;
+      height: 778px;
+      margin-top:122px;
     }
   .el-dialog__title{
     color:white;
     font-size:20px;
+  }
+  .el-dialog__header{
+    padding:63px 0 0 87px;
+  }
+  .el-dialog__body{
+    width:100%;
+    height:100%;
   }
 }
 </style>

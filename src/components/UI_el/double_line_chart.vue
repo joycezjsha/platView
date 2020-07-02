@@ -204,7 +204,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-#chart_id {
+#chart_id{
   width: 100%;
   height:100%;
 }

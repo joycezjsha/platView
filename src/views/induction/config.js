@@ -8,7 +8,7 @@ export const interf={
 //induce/getDiagram 
    GET_DIAGRAM_API:data=> {
      return http.service({
-       url:`induce/getDiagram`,
+       url:JT_PATH,
        method:'get',
        params:data
      })

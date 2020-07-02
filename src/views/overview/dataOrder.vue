@@ -1,12 +1,11 @@
 <template>
   <div class="city_index_chart">
     <!-- <m-tile  :label="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'"></m-tile> -->
-    <div v-if="order_value==0">
+    <div v-if="order_value==0" style='width:90%;margin:0 auto;height:80%;'>
       <el-table
-         
           :data="indexDatascar"
           highlight-current-row
-          height="55vh"
+          height="100%"
           :default-sort="{prop: 'TODAYNUM', order: 'descending'}"
           :row-style="getRowClass"
           :header-row-style="getRowClass"
@@ -23,7 +22,7 @@
       <el-table
           :data="indexDatas"
           highlight-current-row
-          height="55vh"
+          height="100%"
           :default-sort="{prop: 'YESTERDAYNUM', order: 'descending'}"
           :row-style="getRowClass"
           :header-row-style="getRowClass"
@@ -133,7 +132,7 @@ export default {
 <style scoped='true' lang='scss'>
 .city_index_chart {
   width: 100%;
-  height: 45vh;
+  height: 85%;
   
   .title{
     width:60%;
