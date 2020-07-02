@@ -94,8 +94,10 @@ export default {
      */
     changeTable(t) {
       let _this=this;
-      if(t!=undefined) {this.tableIndex = t;}
-      else{
+      if(t!=undefined) {
+        if(this.range_type==t) return; 
+        else this.tableIndex = t;
+      }else{
         this.queryLoading=true;
         if(this.timeRange!='') blur.$emit('initDistributionMapdata',{time:this.timeRange});
         setTimeout(()=>{_this.queryLoading=false;},500);

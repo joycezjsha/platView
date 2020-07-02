@@ -41,9 +41,11 @@ export default {
   align-items: $align;
 }
 .list{
-  width:8vw;
+  width:10vw;
   height:auto;
   position:absolute;
+  max-height: 150px;
+  overflow: auto; 
   .list_item{
     width:100%;
     height:2vh;
@@ -58,12 +60,12 @@ export default {
      @include flex(column, center,center);
   }
   .label{
-    max-width:60%;
+    max-width:70%;
     padding:0 5px;
     @include flex(column, start,start);
   }
   .value{
-    width:40%;
+    width:30%;
   }
 }
 </style>

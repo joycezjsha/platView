@@ -272,7 +272,7 @@ export default {
           y2data:[]
       }
       let params={};
-      if(type && data){
+      if(type!=undefined && data){
         if(type){
           params.areaid=data.value;
         }else{

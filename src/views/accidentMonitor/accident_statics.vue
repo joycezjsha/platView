@@ -7,8 +7,8 @@
       </div>
       <div class="accident-statics--tab boxstyle">
         <m-com-title label='警情统计' style='width:6vw;margin-bottom:1vh;'></m-com-title>
-        <m-tab :isShowIcon='isShowIcon' label='警情总计' :value='staticsData.sum' style='width:90%;margin:0 auto;'></m-tab>
-        <m-tab :isShowIcon='isShowIcon' label='重大警情' :value='staticsData.mainCount' style='width:90%;margin:10px auto 5px auto;'></m-tab>
+        <m-tab :isShowIcon='isShowIcon' label='警情总计' :value='staticsData.NUM' style='width:90%;margin:0 auto;'></m-tab>
+        <!-- <m-tab :isShowIcon='isShowIcon' label='重大警情' :value='staticsData.mainCount' style='width:90%;margin:10px auto 5px auto;'></m-tab> -->
         <div class="accident-statics_sort">
           
           <div id="accident-statics_sort">
@@ -21,11 +21,11 @@
       </div>
       <div class="accident-statics--tab boxstyle">
         <m-com-title label='近30天警情发生趋势' style='width:12vw;'></m-com-title>
-        <m-line-chart c_id='accidentsumCountChange' style='width:100%;height:18vh'></m-line-chart>
+        <bar-chart c_id='accidentsumCountChange' :chart_data="chart_data" style='width:100%;height:20vh' chart_type='line'></bar-chart>
       </div>
       <div class="accident-statics--tab boxstyle">
         <m-com-title label='重大警情发生趋势' style='width:10vw;'></m-com-title>
-        <m-line-chart c_id='accidentaccurCreateChange' style='width:100%;height:18vh'></m-line-chart>
+        <bar-chart c_id='accidentaccurCreateChange' :chart_data="bar_chart_data" style='width:100%;height:20vh'></bar-chart>
       </div>
     </div>
   </div>
@@ -37,7 +37,7 @@ import { interf } from "./config";
 import echarts from 'echarts'
 import mTitle from "@/components/UI_el/title.vue";
 import mComTitle from "@/components/UI_el/title_com.vue";
-import mLineChart from "@/components/UI_el/double_line_chart.vue";
+import barChart from "@/components/UI_el/bar_chart.vue";
 import mTab from '@/components/UI_el/tab.vue'
 import m_list from '@/components/UI_el/list_o.vue'
 export default {
@@ -57,10 +57,15 @@ export default {
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
+          // legend:{
+          //   data:[],
+          //   orient: 'vertical',
+          //   right: 10},
           series: [
               {
                   name: '警情统计',
                   type: 'pie',
+                  // center:['30%','50%'],
                   radius: ['60%', '75%'],
                   avoidLabelOverlap: false,
                   label: {
@@ -78,177 +83,26 @@ export default {
           ]
       },
       accident_chart:null,
-      sg_sort_data: [
-        { name: "机动车与机动车", value: "12", radio: "32%" },
-        { name: "机动车与非机动车", value: "122", radio: "32%" },
-        { name: "行人", value: "2", radio: "32%" }
-      ],
-      countChangeOption:{
-        title: {
-            text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        },
-        xAxis: {
-            data:['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'],
-            axisLabel: {
-                inside: true,
-                textStyle: {
-                    color: '#fff'
-                }
-            },
-            axisTick: {
-                show: false
-            },
-            axisLine: {
-                show: false
-            },
-            z: 10
-        },
-        yAxis: {
-            axisLine: {
-                show: false
-            },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                textStyle: {
-                    color: '#999'
-                }
-            }
-        },
-        dataZoom: [
-            {
-                type: 'inside'
-            }
-        ],
-        series: [
-          //   { // For shadow
-          //     type: 'bar',
-          //     itemStyle: {
-          //         color: 'rgba(0,0,0,0.05)'
-          //     },
-          //     barGap: '-100%',
-          //     barCategoryGap: '40%',
-          //     data: dataShadow,
-          //     animation: false
-          // },
-          {
-              type: 'bar',
-              itemStyle: {
-                  color: new echarts.graphic.LinearGradient(
-                      0, 0, 0, 1,
-                      [
-                          {offset: 0, color: '#83bff6'},
-                          {offset: 0.5, color: '#188df0'},
-                          {offset: 1, color: '#188df0'}
-                      ]
-                  )
-              },
-              emphasis: {
-                  itemStyle: {
-                      color: new echarts.graphic.LinearGradient(
-                          0, 0, 0, 1,
-                          [
-                              {offset: 0, color: '#2378f7'},
-                              {offset: 0.7, color: '#2378f7'},
-                              {offset: 1, color: '#83bff6'}
-                          ]
-                      )
-                  }
-              },
-              data: [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220]
-          }
-        ]
+      chart_data:{
+        legend: ["全部警情", "日期"],
+        xdata:[],
+        ydata:[]
       },
-      countChart:null,
-      accurChangeOption:{
-        title: {
-            text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        },
-        xAxis: {
-            data:['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'],
-            axisLabel: {
-                inside: true,
-                textStyle: {
-                    color: '#fff'
-                }
-            },
-            axisTick: {
-                show: false
-            },
-            axisLine: {
-                show: false
-            },
-            z: 10
-        },
-        yAxis: {
-            axisLine: {
-                show: false
-            },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                textStyle: {
-                    color: '#999'
-                }
-            }
-        },
-        dataZoom: [
-            {
-                type: 'inside'
-            }
-        ],
-        series: [
-          //   { // For shadow
-          //     type: 'bar',
-          //     itemStyle: {
-          //         color: 'rgba(0,0,0,0.05)'
-          //     },
-          //     barGap: '-100%',
-          //     barCategoryGap: '40%',
-          //     data: dataShadow,
-          //     animation: false
-          // },
-          {
-              type: 'bar',
-              itemStyle: {
-                  color: new echarts.graphic.LinearGradient(
-                      0, 0, 0, 1,
-                      [
-                          {offset: 0, color: '#83bff6'},
-                          {offset: 0.5, color: '#188df0'},
-                          {offset: 1, color: '#188df0'}
-                      ]
-                  )
-              },
-              emphasis: {
-                  itemStyle: {
-                      color: new echarts.graphic.LinearGradient(
-                          0, 0, 0, 1,
-                          [
-                              {offset: 0, color: '#2378f7'},
-                              {offset: 0.7, color: '#2378f7'},
-                              {offset: 1, color: '#83bff6'}
-                          ]
-                      )
-                  }
-              },
-              data: [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220]
-          }
-        ]
-      },
-      accurChart:null
+      bar_chart_data:{
+        legend: ["重大警情", "日期"],
+        xdata:[],
+        ydata:[]
+      }
     }
   },
-  components:{mLineChart,mTitle,mComTitle,mTab,mListO:m_list},
+  components:{barChart,mTitle,mComTitle,mTab,mListO:m_list},
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.getIndexData();
+    this.getAllStatics();
     this.initAccidentStaticsChart();
+    this.initAcciAccurCharts();
+    this.initAccurCharts();
   },
   destroyed() {
     this.flyRoutes = [];
@@ -257,37 +111,195 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
+    initAccidentStatics(type,data,flag){
+      this.isShowReturn=true;
+      this.title=data.name;
+      this.getAllStatics(type,data);
+      this.initAccidentStaticsChart(type,data);
+      this.initAcciAccurCharts(type,data);
+      this.initAccurCharts(type,data);
+    },
     //获取统计数据
-    getIndexData() {
+    getAllStatics(type,data) {
       let that = this;
+      let params={stime:1};
+      if(type!=undefined && data){
+        if(data.time!=''){
+          params.stime=data.time[0];
+          params.etime=data.time[1];
+        };
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
+      }
+      interf.GET_ALL_ACCI_STA_API(params).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+               that.staticsData=data.data;
+            } else{
+              that.$message({
+                message: data.message,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     },
     /**
      * 生成警情分别类统计echarts
      */
-    initAccidentStaticsChart(){
-       if(!this.accident_chart){
-        this.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
-      };
-      this.accident_option.series[0].data=[{name:'122',value:120},{name:'互联网',value:120},{name:'视频巡查',value:10}]
-      this.accident_chart.setOption(this.accident_option);
+    initAccidentStaticsChart(type,data){
+      let that = this;
+      this.accident_option.series[0].data=[];
+      let params={stime:1};
+      if(type!=undefined && data){
+        if(data.time!=''){
+          params.stime=data.time[0];
+          params.etime=data.time[1];
+        };
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
+      }
+      interf.GET_ACCI_SORT_API(params).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+              let _data=[];
+              if(data.data && data.data.length>0){
+                data.data.map(e=>{
+                  _data.push({name:e.NAME,value:e.NUM});
+                  that.listItems.push({label:e.NAME,value:e.NUM});
+                  // this.accident_option.legend.data.push(e.NAME);             
+                })
+              };
+               if(!this.accident_chart){
+                  this.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
+                };
+                this.accident_option.series[0].data=_data;
+                this.accident_chart.setOption(this.accident_option);
+            } else{
+              that.$message({
+                message: data.message,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
+       
     },
     /**
-     * 生成发生数量趋势echarts
+     * 生成警情发生趋势echarts
      */
-    initSumCharts(){
-      if(!this.countChart){
-        this.countChart = echarts.init(document.getElementById('sumCountChange'));
+    initAcciAccurCharts(type,data){
+      let that = this;
+      that.chart_data={
+                  legend: ["全部警情", "日期"],
+                  xdata:[],
+                  ydata:[]
+                }
+      this.accident_option.series[0].data=[];
+      let params={};
+      if(type!=undefined && data){
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
       };
-      this.countChart.setOption(this.accurChangeOption);
+      interf.GET_ACCI_ACCUR_API(params).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+              let car_data=that.chart_data;
+              if(data.data && data.data.length>0){
+                data.data.forEach(e=>{
+                  car_data.xdata.push(e.DATE);
+                  car_data.ydata.push(e.NUM);
+                });
+                that.chart_data=car_data;
+              }
+            } else{
+              that.$message({
+                message: data.message,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     },
     /**
      * 生成重大事故发生趋势echarts
      */
-    initAccurCharts(){
-      if(!this.accurChart){
-        this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
+    initAccurCharts(type,data){
+      let that = this;
+      that.bar_chart_data={
+                  legend: ["重大警情", "日期"],
+                  xdata:[],
+                  ydata:[]
+                }
+      this.accident_option.series[0].data=[];
+      let params={};
+      if(type!=undefined && data){
+        if(type){
+          params.areaid=data.value;
+        }else{
+          params.xzqh=data.value;
+        }
       };
-      this.accurChart.setOption(this.accurChangeOption);
+      interf.GET_MAIN_ACCI_ACCUR_API(params).then(response=>{
+        if (response && response.status == 200){
+           var data = response.data;
+            if (data.errcode == 0) {
+              let car_data=that.bar_chart_data;
+              if(data.data && data.data.length>0){
+                data.data.forEach(e=>{
+                  car_data.xdata.push(e.DATE);
+                  car_data.ydata.push(e.NUM);
+                });
+                that.bar_chart_data=car_data;
+              }
+            } else{
+              that.$message({
+                message: data.message,
+                type: "error",
+                duration: 1500
+              });
+            }
+        }
+      })
+      .catch(err=>{
+         console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
     },
     /**
      * 返回全省
@@ -338,7 +350,7 @@ export default {
     height: 28vh;
     .accident-statics_sort {
       width:90%;
-      height:12vh;
+      height:13vh;
       margin:2vh auto;
       @include flex(row, center,center);
       >div{
@@ -351,6 +363,12 @@ export default {
       }
     }
     
+  }
+  .accident-statics--tab:nth-child(2){
+    margin-top:38px;
+  }
+  .accident-statics--tab:nth-child(3){
+    margin-top:21px;
   }
   .accident-statics_content {
     width: 98%;
