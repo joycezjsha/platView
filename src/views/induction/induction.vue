@@ -16,9 +16,14 @@ export default {
     },
     mounted(){
         // this.getDiagramData()
-        setInterval(() => {
+        let timer=setInterval(() => {
             // this.getDiagramData()
         },1000*60);
+    },
+    destroyed(){
+        if(this.timer){
+        clearInterval(this.timer)
+        }
     },
     methods:{
         getDiagramData(){

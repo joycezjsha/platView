@@ -2,6 +2,10 @@
 @import './color.scss';
 @import './base.css';
 /* top */
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
+  background: #545a8a;
+  color:#00C6FF;
+}
 .topbar-bar .el-menu,.topbar-bar .el-submenu ,.topbar-bar .el-menu-item,.topbar-bar .el-submenu .el-submenu__title{
   height: 4vh;
   line-height: 4vh;
@@ -81,7 +85,7 @@
 .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
   background-color: transparent;color:white;
 }
-.el-table tr:nth-child(odd) td{ 
+.el-table tr:nth-child(odd) td{
   background:rgba(72,84,108,0.2);color:white;
 }
 

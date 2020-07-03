@@ -9,10 +9,10 @@ export default {
       option: {
           color:['#8ec6add6','#d68262bf'],
           grid:{
-            top:'15%',
+            top:'18%',
             left:'16%',
             right:'15%',
-            bottom:'15%'
+            bottom:'10%'
           },
           tooltip: {
             trigger: 'axis'

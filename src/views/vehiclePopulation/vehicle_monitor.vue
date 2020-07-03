@@ -91,7 +91,7 @@ export default {
     this.map.repaint = true;
     that.getIndexData();
     that.getKeyVehicleDatas();
-    setInterval(() => {
+    let timer=setInterval(() => {
       that.getIndexData();
       that.getKeyVehicleDatas();
     },1000*60);
@@ -99,6 +99,9 @@ export default {
   destroyed() {
     this.map.setPitch(0);
     // this.clearMap();
+    if(this.timer){
+      clearInterval(this.timer)
+    }
   },
   methods: {
     /*

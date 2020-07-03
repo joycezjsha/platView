@@ -18,7 +18,7 @@
           :header-cell-style="getRowClass"
           @row-click="clickHandle"
         >
-          <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column prop="name" label="城市" width="70"></el-table-column>
           <el-table-column prop="ydzs" label="拥堵指数"></el-table-column>
           <el-table-column prop="tbsz" label="同比上周" sortable></el-table-column>
@@ -29,7 +29,7 @@
     <el-dialog :title="city+'拥堵指数分析'" :visible.sync="drawer" append-to-body class='traffic-echarts'>
       <traffic-index-charts :adcode='adcode'></traffic-index-charts>
     </el-dialog>
-    <!-- <module-area></module-area> -->
+    <t-area v-if='showArea' :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea'></t-area>
   </div>
 </template>
 
@@ -41,6 +41,7 @@ import TrafficIndexCharts from "./TrafficIndexCharts.vue";
 // import moduleArea from "@/components/area/area.vue";
 import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue'
+import tArea from "@/components/area/area.vue";
 export default {
   name: "TCruise",
   data() {
@@ -55,23 +56,37 @@ export default {
       drawer: false,
       adcode:'610100',
       city:'西安市',
-      isShowIcon:false
+      isShowIcon:false,
+      isShowTxt:false,
+      showArea:false,
+      areaIndexs:[],
+      interval:null
     };
   },
   components: {
     TrafficIndexCharts,
     mTitle,
-    mTab
+    mTab,
+    tArea
   },
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
+    let _this = this;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(4);
+    this.map.setZoom(6);
     this.getCityIndexData();
+    this.interval=setInterval(()=>{
+      _this.showArea=false;
+      _this.clearMap();
+      _this.getCityIndexData();
+    },1000*60)
   },
   destroyed() {
     this.map.setPitch(0);
+    this.clearMap();
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
     //设置表格样式
@@ -92,12 +107,14 @@ export default {
      */
     getXianIndexOrder(){
       let that=this;
+      
       interf.GET_Xian_TAFFIC_ORDER({stime:1})
       .then(response=>{
         if (response && response.status == 200){
           var data= response.data;
           if (data.errcode == 0) {
             that.indexDatas=data.data;
+            
             data.data.forEach(e=>{
               that.addCityMarker(e);
             })
@@ -107,11 +124,17 @@ export default {
               type: "error",
               duration: 1500
             });
+            that.tableLoading = false;
           }
         }
       })
       .catch(err=>{
-        console.log(err);
+        that.$message({
+              message: '获取拥堵排名数据失败',
+              type: "error",
+              duration: 1500
+            });
+        that.tableLoading = false;
       })
       .finally(() => {
         that.tableLoading = false;
@@ -122,15 +145,24 @@ export default {
      */
     getCityIndexData(){
       let that=this;
+      that.tableLoading = true;
       interf.GET_CITY_TAFFIC_ORDER_API({stime:1})
       .then(response=>{
+        that.tableLoading = false;
         if (response && response.status == 200){
           var data= response.data;
           if (data.errcode == 0) {
             that.indexDatas=data.data;
             data.data.forEach(e=>{
               that.addCityMarker(e);
-            })
+            });
+            data.data.map(e=>{
+              e.XZQH=e.id;
+              e.Num=e.ydzs;
+              return e;
+            });
+            that.areaIndexs=data.data;
+            that.showArea=true;
           }else{
             that.$message({
               message: data.errmsg,
@@ -141,7 +173,11 @@ export default {
         }
       })
       .catch(err=>{
-        console.log(err);
+        that.$message({
+          message: '获取拥堵排名数据失败',
+          type: "error",
+          duration: 1500
+        });
       })
       .finally(() => {
         that.tableLoading = false;
@@ -192,7 +228,7 @@ export default {
       el.appendChild(rightDiv);
       //添加marker
       let lnglat = item.jwd.split(' ');
-      let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
+      let marker = new minemap.Marker(el, {offset: [-10, -20]}).setLngLat(lnglat).addTo(this.map);
       this.map_cover.markers.push(marker);
 
     },

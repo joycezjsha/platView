@@ -7,17 +7,17 @@
         </div>
         <div class="tab">
           <span style="margin-right:1.5vw;">
-            <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-right:0.5vw"></span>
+            <i class="split"></i>
             速度检测次数</span>
           <span style="margin-left:0.5vw;">
-            <span style="width:2px;height:2vh;line-height:2vh;background:#116cf3;margin-left:4.5vw"></span>
+            <i class="split"></i>
             平均行驶速度/限速</span>
         </div>
         <div class="overview-info_sort">
           <div>
             <m-list-o :list='listItems'></m-list-o>
           </div>
-          <div style="width:1px;height:5vh;background:radial-gradient(#f3f0f0,rgba(117,123,163,0.25098),transparent);"></div>
+          <div style="width:1px;height:10vh;background:radial-gradient(#f3f0f0,rgba(117,123,163,0.25098),transparent);"></div>
           <div class="avg">{{avg}}</div>
           <div id="overview-info_sort" v-loading='tableLoading'>
             
@@ -204,7 +204,8 @@ export default {
       countChart:null,
       tableLoading:false,//加载中...控制
       carStatics:{count:0,front_month:0,this_month:0},
-      showIcon:false
+      showIcon:false,
+      interval:null
     }
   },
   components: {
@@ -222,12 +223,18 @@ export default {
     this.initAccidentStaticsChart();
     that.initSumCharts();
     that.initAccurCharts();
+    this.interval=setInterval(()=>{
+      _this.initAccidentStaticsChart();
+    },1000*60)
   },
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
     let that = this;
     that.map.setPitch(0); //设置地图的俯仰角
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
     /**
@@ -235,8 +242,10 @@ export default {
      */
     initAccidentStaticsChart(){
       let that=this;
-      interf.GET_PRO_CAR_API({})
-      .then(response => {
+      that.accident_option.series[0].data=[];
+      that.tableLoading=true;
+      interf.GET_PRO_CAR_API({}).then(response => {
+        that.tableLoading=false;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -262,6 +271,7 @@ export default {
         })
        .catch(err => {
           console.error(err);
+          that.tableLoading=false;
         })
         .finally(() => {
           that.tableLoading = false;
@@ -381,7 +391,19 @@ export default {
       @include flex(row, center,center);
       >span{
         @include flex(column, center,center);
+        .split{
+          width:2px;height:2vh;line-height:2vh;background:#116cf3;
+          position: absolute;
+          margin-left: -3vw;
+        }
+        
       }
+      >span:nth-child(2){
+        .split{
+          margin-left: -4vw;
+        }
+      }
+      
     }
   }
   .overview-info_sort {
@@ -399,7 +421,7 @@ export default {
     width: 50%;
     height: auto;
   }
-  >div:nth-child(3){
+  >div:nth-child(4){
     height: 100%;
     width: 40%;
   }

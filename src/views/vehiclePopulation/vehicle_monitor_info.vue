@@ -415,7 +415,7 @@ export default {
     that.initAccurCharts();
     // that.getMapBayonetRankingDatas();
     that.onShowLayer()
-    setInterval(() => {
+    let timer=setInterval(() => {
       that.getDomesticVehicleRankingDatas();
       that.initMainStaticsChart();
       that.getToadyKeyVehicleInAndOutDatas()
@@ -424,6 +424,9 @@ export default {
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
+    if(this.timer){
+      clearInterval(this.timer)
+    }
     // let that = this;
     this.map.setPitch(0); //设置地图的俯仰角
     // this.onHideLayer();

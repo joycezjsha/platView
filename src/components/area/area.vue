@@ -98,7 +98,7 @@ export default {
               });
             });
             datas=that.sortArea(datas);
-            that.indexDatas = datas;
+            that.clearMap();
             that.addArea(datas);
             // that.addAreaIdentify(data.data);
           }
@@ -111,6 +111,7 @@ export default {
     addArea(data) { 
       let _this = this;
       data.forEach((e, i) => {
+        if(e.color=='#aN') return;
         let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
         lonlats = lonlats.map(e => {
           if (e.split(" ")[0] != "") {
@@ -187,17 +188,27 @@ export default {
      */
     sortArea(data){
       let _this=this;
-      let max='',min='';
+      let max,min;
       //返回数组合并、并排序的结果
       if(this.indexData.length<data.length){
-        return data;
+        return [];
       }
+       this.indexData.forEach(e=>{
+        if(!max){
+          max=e.Num;
+        }else{
+          max=max<e.Num?e.Num:max;
+        }
+        if(!min){
+          min=e.Num;
+        }else{
+          min=min>e.Num?e.Num:min;
+        }
+      })
       this.indexData.forEach(e=>{
         for(var j=0;j<data.length;j++){
-            if(data[j].city.indexOf(e.city)!=-1){
+            if(data[j].adcode.indexOf(e.XZQH)!=-1){
                 data[j].Num=e.Num;
-                max=max<e.Num?e.Num:max;
-                min=min>e.Num?e.Num:min;
                 break;
             }
         }
@@ -346,19 +357,20 @@ export default {
      * 清除地图加载点、线、面、弹框
      */
     clearMap() {
+      let _this=this;
       //清除source
       if (this.mapAddItems.sourceList.length > 0) {
         this.mapAddItems.sourceList.forEach(e => {
-          if (this.map.getSource(e) != undefined) {
-            this.map.removeSource(e);
+          if (_this.map.getSource(e) != undefined) {
+            _this.map.removeSource(e);
           }
         });
       }
       //清除layer
       if (this.mapAddItems.lineList.length > 0) {
         this.mapAddItems.lineList.forEach(e => {
-          if (this.map.getLayer(e) != undefined) {
-            this.map.removeLayer(e);
+          if (_this.map.getLayer(e) != undefined) {
+            _this.map.removeLayer(e);
           }
         });
       }
@@ -371,10 +383,16 @@ export default {
       //清除polygons
       if(this.mapAddItems.polygons && this.mapAddItems.polygons.length>0){
          this.mapAddItems.polygons.forEach(e => {
-         if (this.map.getLayer(e) != undefined) {
-            this.map.removeLayer(e);
+         if (_this.map.getLayer(e) != undefined) {
+            _this.map.removeLayer(e);
           }
         });
+      this.mapAddItems={
+          polygons: [],
+          sourceList: [],
+          lineList: [],
+          popups: []
+        }
       }
     },
     /**
@@ -399,6 +417,9 @@ export default {
     }
   },
   destroyed: function() {
+    this.clearMap();
+  },
+  beforeDestroy(){
     this.clearMap();
   }
 };

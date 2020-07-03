@@ -2,7 +2,7 @@
   <div class="device-map">
     <!-- <div @click='changeTable(0)'><m-title label='城市' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
     <div @click='changeTable(1)'><m-title label='区县' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div> -->
-    <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
   </div>
 </template>
 
@@ -21,9 +21,10 @@ export default {
       map_cover:{
         sourceList:[],
         lineList:[],
-        popups:[]
+        markers:[]
       },
-      showArea:true,
+      showArea:false,
+      isShowTxt:false,
       areaIndexs:[]
     };
   },
@@ -131,9 +132,19 @@ export default {
               that.areaIndexs=data.data;
               data.data.map(e=>{
                 that.addCityPopup(e)
-                })
+              });
+              data.data.map(e=>{
+                e.Num=e.num;
+                return e;
+              });
+              that.areaIndexs=data.data;
+              that.showArea=true;
           } else{
-            
+            that.$message({
+            message: e.message,
+            type: "error",
+            duration: 1500
+          });
           }
         }
       })
@@ -158,23 +169,26 @@ export default {
     addCityPopup(e){
       let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
-      mainDiv.style.width='13vw';
+      mainDiv.style.width='6vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
+      mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
+      mainDiv.style.border='1px solid rgb(42, 76, 162)';
+      mainDiv.style.fontFamily='SourceHanSansCN';
+      mainDiv.style.padding='4px 13px';
       // mainDiv.className='dev_popup';
 
       let title=document.createElement('p');
       title.innerHTML=e.name;
       title.className='title';
+      title.style.margin='5px 0';
       mainDiv.appendChild(title);
 
-      let p1="<p style='color:#00C6FF'><span>汽车保有量：</span><span>"+e.num+"</span></p>";
+      let p1="<p style='color:#00C6FF;margin:5px 0;'><span>汽车保有量：</span><span>"+e.num+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
       
-      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-3, -15]});
-      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
-
-      this.map_cover.popups.push(popup);
+      let marker = new minemap.Marker(mainDiv, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
+      this.map_cover.markers.push(marker);
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){
@@ -197,11 +211,11 @@ export default {
       this.map_cover.lineList=[];
     }
     //清除popup
-    if(this.map_cover.popups.length>0){
-      this.map_cover.popups.forEach(e=>{
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
         e.remove();
       })
-      this.map_cover.popups=[];
+      this.map_cover.markers=[];
     }
   },
 /** */

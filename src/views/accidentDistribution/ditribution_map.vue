@@ -1,6 +1,6 @@
 <template>
   <div class="device-map">
-    <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
   </div>
 </template>
 
@@ -21,7 +21,8 @@ export default {
         markers:[],
         popups:[]
       },
-      showArea:true,
+      showArea:false,
+      isShowTxt:false,
       areaIndexs:[]
     };
   },
@@ -59,8 +60,13 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-              that.areaIndexs=data.data;
               that.addCityAccident(data.data);
+              data.data.map(e=>{
+                e.Num=e.ACCIDENTNUM;
+                return e;
+              })
+              that.areaIndexs=data.data;
+              that.showArea=true;
           }else{
             that.$message({
             message: response.errmsg,
@@ -138,7 +144,6 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-              that.areaIndexs=data.data;
               that.addMainAccident(data.data);
           }else{
             that.$message({

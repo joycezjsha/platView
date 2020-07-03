@@ -1,6 +1,6 @@
 <template>
   <div class="overview-statics">
-   <div class='overview-statics--tab'>
+   <div class='overview-statics--tab' v-loading='jqLoading'>
      <div class='overview-statics--tab_title'>
        <span>今日警情</span><span>{{datas.jq.todayNum}}</span>起
       </div>
@@ -13,15 +13,15 @@
        <span class='label'>重大警情:</span><span class='value'>{{datas.jq.importantNum}}</span>起</div>
    </div>
    <div class='overview-statics--split'></div>
-   <div class='overview-statics--tab' >
+   <div class='overview-statics--tab' v-loading='sgLoading'>
      <div class='overview-statics--tab_title'>
-       <span>本月事故</span><span>{{datas.sg.sameMonthAccidentNum}}</span>起</div>
+       <span>本月事故</span><span>{{datas.sg.ACCIDENTNUM}}</span>起</div>
      <div class='overview-statics--tab_radio'>
-       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.injuryNum}}</span></div>
-       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.deathNum}}</span></div>
+       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.INJURYNUM}}</span></div>
+       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.DEATHNUM}}</span></div>
     </div>
      <div class='overview-statics--tab_main'><span class='img'>
-       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.importantAccidentNum}}</span>起</div>
+       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.MAJORACCIDENTNUM}}</span>起</div>
    </div>
    <div class='overview-statics--split'></div>
     <div class='overview-statics--tab'  >
@@ -49,18 +49,31 @@ export default {
         dj:{"activeDev":3,"devcount":6,"keyactivityRate":0,"activityRate":"50.0%"}
       },
       warn_img:IMG.warningInstanceIMG,
-      accident_img:IMG.accidentIMG
+      accident_img:IMG.accidentIMG,
+      interval:null,
+      jqLoading:false,
+      sgLoading:false
     };
   },
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
+    let that = this,i=0;
     that.getIndexData();
     that.getJqData();
     that.getSgData();
+    this.interval=setInterval(()=>{
+      that.getJqData();
+      if(i%5==0){
+        that.getSgData();
+      }
+      i++;
+    },1000*60);
   },
   destroyed() {
     this.map.setPitch(0);
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
     //设置表格样式
@@ -72,6 +85,7 @@ export default {
      **/
     getJqData() {
       let that = this;
+      that.jqLoading=true;
       interf.GET_ACCI_STATICS_API({}).then(response=>{
         if (response && response.status == 200){
           let data= response.data;
@@ -79,23 +93,43 @@ export default {
            that.datas.jq=data.data;
           }
         }
-
+        }).catch(err => {
+        that.$message({
+          message: '请求今日警情数据失败！',
+          type: "error",
+          duration: 1500
+        });
+        that.jqLoading=false;
       })
+      .finally(() => {
+        that.jqLoading = false;
+      });
     },
    /**
      * 获取事故统计数据
      **/
     getSgData() {
       let that = this;
+      that.sgLoading=true;
       interf.GET_SG_STATICS_API({}).then(response=>{
+        that.sgLoading=false;
         if (response && response.status == 200){
           let data= response.data;
           if (data.errcode == 0){
            that.datas.sg=data.data;
           }
         }
-
+      }).catch(err => {
+        that.$message({
+          message: '请求本月事故数据失败！',
+          type: "error",
+          duration: 1500
+        });
+        that.sgLoading=false;
       })
+      .finally(() => {
+        that.sgLoading = false;
+      });
     },
     /**
      * 获取设备统计数据

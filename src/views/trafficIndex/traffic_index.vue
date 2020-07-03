@@ -36,7 +36,8 @@ export default {
       indexDatas: [],
       selectItem:{"road":"全省",order:8},
       isShowCharts:true,
-      isShowIcon:false
+      isShowIcon:false,
+      interval:null
     };
   },
   components: {
@@ -45,11 +46,15 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
     this.getRoadIndexData();
+    this.interval=setInterval(()=>{
+      _this.getRoadIndexData();
+    },1000*60)
   },
   destroyed() {
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
     /**

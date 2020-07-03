@@ -82,7 +82,7 @@ export default {
      
     this.map = this.$store.state.map;
     // this.map.setCenter([108.967368, 34.302634]);  carinfolist
-    this.map.setZoom(6);
+    // this.map.setZoom(6);
     this.map.repaint = true;
     $(window).resize(function() {
     });

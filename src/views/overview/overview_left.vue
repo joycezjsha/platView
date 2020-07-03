@@ -51,7 +51,7 @@
          <div class='center_statics--inout'>
              <span style="color:#FFB005" >进入:
               <span class="row_value_">{{centerstatics.incount}}</span>
-            </span>       
+            </span>
             <span style="color:#00DFC7" >流出:
               <span   class="row_value_">{{centerstatics.outcount}}</span>
             </span>
@@ -62,9 +62,9 @@
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->
          <el-table :data="centerstatics.tableDatas" style="width:90%;margin:0 auto;"
-           height="90%" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
+           height="90%" :default-sort = "{prop: 'week_radio', order: 'descending'}"
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" v-loading='tableLoading'>
-           <el-table-column fixed type="index" label="No" width="50"></el-table-column> 
+           <el-table-column type="index" label="No" width="50"></el-table-column>
            <el-table-column prop="city" label="城市" width="70"></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
@@ -78,7 +78,7 @@
     </div>
     <div class='overview-left-div--bottom  boxstyle'>
       <m-title label='境内路况监测' img_type=1  class='title'></m-title>
-       <ul class="traffic-index_content_table" style="margin-top:0.5vh">
+       <ul class="traffic-index_content_table" style="margin-top:0.5vh" v-loading='trafficLoading'>
           <li style="display:flex;padding:0.5vh 0.5vw;margin:0 0.5vw" class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
             <div style="flex:1">{{i+1}}</div>
             <div style="flex:4.5">
@@ -144,17 +144,29 @@ export default {
       selectItem:{"road":"西安",order:8},
       order_value:'',
       drawer:false,
-      tableLoading:false
+      tableLoading:false,
+      interval:null,
+      trafficLoading:false
     };
   },
   computed:{},
   mounted() {
+    let _this=this,i=0;
     this.map = this.$store.state.map;
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(6);
     this.getIndexData();
     this.getTrafficMonitorData();
     this.getTrafficorder();
+
+    this.interval=setInterval(()=>{
+      _this.getIndexData();
+      _this.getTrafficorder();
+      if(i%5==0){
+        _this.getTrafficMonitorData();
+      }
+      i++;
+    },1000*60)
   },
   components: {
     dataOrder,
@@ -162,6 +174,9 @@ export default {
   },
   destroyed() {
     this.map.setPitch(0);
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
   /**
@@ -218,11 +233,13 @@ export default {
    */
   getTrafficMonitorData(){
     let that=this;
+    that.tableLoading = true;
     interf.GET_TRA_API({
       stime:new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
       etime:new Date()
     })
     .then(response=>{
+      that.tableLoading = false;
       if (response && response.status == 200){
         var data= response.data;
         if (data.errcode == 0) {
@@ -230,7 +247,7 @@ export default {
           that.centerstatics.addIn=data.data.addIn;
           that.centerstatics.outcount=data.data.outcount;
           that.centerstatics.inoutProportion=data.data.inoutProportion;
-    
+
           var obj=data.data.data;
           for(var key in obj){
             obj[key].city=key;
@@ -246,19 +263,26 @@ export default {
       }
     })
     .catch(err=>{
-      // console.log(err);
+      that.$message({
+          message: '请求交通动态监测数据失败！',
+          type: "error",
+          duration: 1500
+        });
+      that.tableLoading = false;
     })
     .finally(() => {
       that.tableLoading = false;
     });
   },
   /**
-   * 点击标签页
+   * 获取境内路况监测数据
    */
   getTrafficorder(){
     let that=this;
+    that.trafficLoading = true;
     interf.GET_TAFFIC_ORDER_API({})
     .then(response=>{
+      that.trafficLoading = false;
       if (response && response.status == 200){
         var data= response.data;
         if (data.errcode == 0) {
@@ -273,10 +297,15 @@ export default {
       }
     })
     .catch(err=>{
-      // console.log(err);
+      that.$message({
+          message: '请求境内路况监测数据失败！',
+          type: "error",
+          duration: 1500
+        });
+      that.trafficLoading = false;
     })
     .finally(() => {
-      that.tableLoading = false;
+      that.trafficLoading = false;
     });
   }
   }
@@ -382,7 +411,7 @@ export default {
       height:4vh;
       line-height:4vh;
       padding:2% 6%;
-      color:$color-info;     
+      color:$color-info;
     }
     .center_statics{
       width:100%;
@@ -408,7 +437,7 @@ export default {
     .center_table{
       height:240px;
       width:100%;
-      
+
     }
   }
   &--bottom{
@@ -431,7 +460,7 @@ export default {
           >span{
             display: inline-block;
             font-size: 14px;
-            
+
             .text{
               // color:$color-text-label;
               color: $color-text-value;
@@ -476,7 +505,7 @@ export default {
     width:160px;
   }
 }
-.overview-left-div li:nth-of-type(odd){ 
+.overview-left-div li:nth-of-type(odd){
   background:rgba(72,84,108,0.2);
 }
 </style>

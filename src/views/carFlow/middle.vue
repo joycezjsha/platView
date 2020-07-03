@@ -9,12 +9,14 @@
    <div @click="realtime(3)">
         <m-title  label='热点卡口道路' class="car" :img_type='tableIndex=="3"?"1":"0"'></m-title>
    </div>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
   </div>
 </template>
 
 <script>
 import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
+import tArea from "@/components/area/area.vue";
 import blur from '../../blur.js';
 import { IMG } from "./config";
 import { interf } from "./config";
@@ -27,6 +29,9 @@ export default {
             tableIndex:'1',
             indexDatas:[],
             timeRange:'',
+            showArea:false,
+            areaIndexs:[],
+            isShowTxt:false,
              map_cover:{
                 sourceList:[],
                 markers:[],
@@ -38,19 +43,19 @@ export default {
     components:{
         mTitle,
         mTab,
-        blur
+        blur,
+        tArea
     },
     mounted(){
       this.map = this.$store.state.map;
       this.map.setCenter([108.967368, 34.302634]);
-      this.map.setZoom(6);
       let that=this;
-      that.getData()
+      that.getData();
       that.getMapVehicleInData(that.stime)
     //   that.getHotspotBayonetRanking(that.stime)
     },
     destroyed(){
-        this.clearMarkers();
+      this.clearMarkers();
     },
     methods:{
     // 车辆实时监测
@@ -62,14 +67,6 @@ export default {
             this.clearMarkers();
             this.getMapVehicleInData(this.stime)
         }
-        
-        // if(this.timeRange!=''){
-        //     this.clearMarkers();
-        //     this.getMapVehicleInData(this.stime)
-        // }else{
-        //     this.clearMarkers();
-        //     this.getMapVehicleInData(this.timeRange[0],this.timeRange[1])
-        // }
         let els=document.getElementsByClassName('.custom-popup-class');
         blur.$emit('realtime',this.tableIndex)
     },
@@ -97,6 +94,7 @@ export default {
         that.getMapVehicleInData(that.timeRange[0],that.timeRange[1])
       })  
     },
+
     /**
     * 车辆流动页面地图  地图城市流动数据  Vehicle/getMapVehicleIn   GET_MAP_CITY_FLOW_API
     */
@@ -118,8 +116,15 @@ export default {
                 if (data.errcode == 0) {
                     if(data.data.length>0){
                         data.data.forEach(e=>{
-                        that.addCityMarker(e);
+                          that.addCityMarker(e);
                         })
+                        data.data.map(e=>{
+                            e.XZQH=e.XZQH;
+                            e.Num=e.addIn;
+                            return e;
+                        })
+                        that.areaIndexs=data.data;
+                        that.showArea=true;
                     }
                 } else{
                   that.$message({

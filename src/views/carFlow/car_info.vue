@@ -318,14 +318,11 @@ export default {
     this.map = this.$store.state.map;
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(6);
+    // this.map.setZoom(6);
     this.getTrafficData();
-    // that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData(that.stime)
-    // that.getMapVehicleInData(that.stime)
     that.initSumCharts(that.timeName);
     that.getCarTypeDatas()
-    // that.initAccurCharts();
     
   },
   destroyed() {

@@ -110,7 +110,7 @@ export default {
     that.getBelongData();      
   },
   destroyed(){
-    this.clearBelongMap()
+    // this.clearBelongMap()
     
   },
   components: {
@@ -127,7 +127,6 @@ export default {
       blur.$on('realtime',data=>{
         that.isZoom=data;
         that.tableIndex=data;
-        
       })
       // blur.$on('realtime',data=>{
       //   that.tableIndex=data;
@@ -140,10 +139,9 @@ export default {
       */
       blur.$on("paramxzqh", xzqh => {
         that.xzqh = xzqh;
-        alert(that.tableIndex,typeof(that.indexDatas))
-        if(that.tableIndex=='2'){
+        // if(that.tableIndex=='2'){
           that.getBelongData();
-        }
+        // }
        
       });
 
