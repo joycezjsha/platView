@@ -296,7 +296,7 @@ export default {
     ul{
       padding: 0 20px 0 0;
       // display: inline-block;
-      width:60px;
+      width:55px;
       height:100%;
       text-align:center;
       float:left;
@@ -320,8 +320,8 @@ export default {
      height:180px;
     //  opacity: 0.82;
      border-radius: 8px;
-     background-image: linear-gradient(#402720, #2c3224, #05284b);
-
+     background-image:linear-gradient(0deg,rgba(6,143,230,0.82),rgba(246,197,0,0.82),rgba(255,127,64,0.82));
+     opacity:0.3
    }
   }
   &--icon{

@@ -36,7 +36,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="goUser">账号管理</el-dropdown-item>
+            <!-- <el-dropdown-item @click.native="goUser">账号管理</el-dropdown-item> -->
             <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -273,7 +273,7 @@ export default {
     },
     goUser() {
       this.$router.push('/main/user');
-      }
+    }
   },
   mounted() {
     let user = window.localStorage.getItem("access-user");

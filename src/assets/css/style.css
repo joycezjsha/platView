@@ -45,6 +45,9 @@
   outline: 0;
   color: #00C6FF;
 }
+.el-loading-mask{
+  background: transparent;
+}
 /*菜单-子级*/
 .el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title {
   background-color: #3a3c4c;
@@ -73,7 +76,12 @@
   border-bottom: 2px solid #00C6FF;
   color:#00C6FF;
 }
-
+.el-date-range-picker .el-picker-panel__body {
+  background: #282d27eb;
+}
+.el-date-table td.in-range div{
+  background: #3c413beb;
+}
 /*巡航*/
 /*警情检测*/
 .el-tabs__item{color:white;}
@@ -85,7 +93,7 @@
 .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
   background-color: transparent;color:white;
 }
-.el-table tr:nth-child(odd) td{
+.el-table tr:nth-child(odd) td,.el-table__body tr.current-row>td{
   background:rgba(72,84,108,0.2);color:white;
 }
 
@@ -142,6 +150,7 @@ line-height:2vh;
 }
 .el-table td, .el-table th.is-leaf {
   border-bottom:none;
+  text-align: center;
 }
 .el-tabs__nav-wrap::after {
   background-color: transparent;

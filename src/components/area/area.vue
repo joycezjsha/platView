@@ -10,9 +10,9 @@ export default {
     return {
       map: "",
       areaColors: [
-        [3,39,76],
-        [41,39,39],
-        [64,36,35]
+        [6,143,230,0.82],
+        [246,197,0,0.82],
+        [255,127,64,0.82]
       ],
       mapAddItems: {
         polygons: [],
@@ -147,8 +147,8 @@ export default {
             },
             "paint": {
                 "fill-color": e.color,
-                "fill-opacity": 0.8,
-                "fill-outline-color": e.color
+                "fill-opacity": 0.3,
+                "fill-outline-color": '#00b3ff'
             },
             "minzoom": 4,
             "maxzoom": 17.5
@@ -218,6 +218,7 @@ export default {
         e.color=_this.multiply(max,min,e.Num);
         return e;
       });
+      console.log(data);
       return data;
     },
     /**
@@ -247,8 +248,8 @@ export default {
         }
         default:break;
       }
-      
-      return this.colorRGBtoHex('rgba('+result[0]+','+result[1]+','+result[2]+')');
+      return 'rgba('+result[0]+','+result[1]+','+result[2]+',0.82)';
+      // return this.colorRGBtoHex('rgba('+result[0]+','+result[1]+','+result[2]+',0.82)');
     },
      /**
      * rgb转16进制
