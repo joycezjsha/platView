@@ -2,6 +2,10 @@
 @import './color.scss';
 @import './base.css';
 /* top */
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
+  background: #545a8a;
+  color:#00C6FF;
+}
 .topbar-bar .el-menu,.topbar-bar .el-submenu ,.topbar-bar .el-menu-item,.topbar-bar .el-submenu .el-submenu__title{
   height: 4vh;
   line-height: 4vh;

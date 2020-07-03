@@ -110,11 +110,11 @@ export default {
             }
           }
         }).catch(err=>{
-          that.$message({
-              message: '请求服务失败',
-              type: "error",
-              duration: 1500
-            });
+          // that.$message({
+          //     message: '请求服务失败',
+          //     type: "error",
+          //     duration: 1500
+          //   });
         })
         .finally(() => {
         });
