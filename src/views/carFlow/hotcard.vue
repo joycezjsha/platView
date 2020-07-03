@@ -86,9 +86,9 @@ export default {
       this.map=this.$store.state.map;
       this.map.setCenter([108.967368, 34.302634]);
       this.map.setZoom(6);
-       let that = this;
-       that.$store.commit("setRight", '26.5vw');
-       that.getData()
+      let that = this;
+      that.$store.commit("setRight", '26.5vw');
+      that.getData()
       that.getHotCarDatas(that.stime)
      
     },
@@ -96,7 +96,6 @@ export default {
       this.clearMap()
     },
     methods:{
-      
       /**
        * 点击返回按钮
        */
@@ -117,36 +116,29 @@ export default {
         *paramcity 对应城市
         *determine 定义时间  realtime--中间按钮对应的组件
         */
-       //
        blur.$on('realtime',data=>{
-         that.tableIndex=data;
+        that.tableIndex=data;
        })
         //  接收对应的行政区划
         blur.$on("paramxzqh",xzqh=>{
           that.xzqh=xzqh;
           // if(that.tableIndex=='3'){
-            that.getHotCarDatas(that.stime); 
+            that.getHotCarDatas(that.xzqh); 
           // }
-        
         })
         // 接收自定义的时间 that.timeRange[0]->stime   that.timeRange[1]->etime
         blur.$on('determine',times=>{
           that.timeRange=times;
-          //  if(that.tableIndex==3){
-             that.getHotCarDatas(that.stime)
+          //  if(that.tableIndex=='3'){
+            that.getHotCarDatas(that.stime)
           //  }
-          
         })  
         // 接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
          blur.$on('gettime',time=>{
           that.stime=time;
           if(that.stime!='4'){
             that.getHotCarDatas(that.stime)
-          }
-          // if(that.stime!='4' && that.tableIndex==3){
-          
-          // }        
-          
+          }    
         }) 
         // 接收对应的城市名称
         blur.$on("paramcity",city=>{
@@ -259,10 +251,11 @@ export default {
         let that=this;
         var hotroadData={};  //存放热点道路参数
         var hotcardData={};  //存放热点卡口参数
-        if(type!='4'){
+
+        // if(type!='4'){
           hotroadData.stime=type;
           hotcardData.stime=type;
-        }
+        // }
          if(type=='4'){
           hotroadData.stime=that.timeRange[0];
           hotroadData.etime=that.timeRange[1];
@@ -371,7 +364,7 @@ export default {
 <style scoped  lang='scss'>
 @import "@/assets/css/color.scss";
 @import "../../assets/css/base.css";
-.hotcard{
+#card-modal .hotcard{
     position: fixed;
     top: 9.388vh;
     right:13px;
@@ -387,7 +380,7 @@ export default {
         font-weight:400;
         color:rgba(0,198,255,1);
         // background-color: $color-bg-1;
-        // border:1px solid;
+        border:1px solid;
         padding-left: 17px;
         cursor:pointer;
         border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;

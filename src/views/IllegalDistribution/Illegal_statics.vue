@@ -7,10 +7,15 @@
             <span> {{city}}</span>
           </div>
       </div>
-      <!-- 点击中间的三个按钮，切换对应的template accident-statics_title -->
+      <!-- 点击中间的三个按钮，切换对应的template accident-statics_title   -->
       <div class="right-top-speed" v-show="isShow=='1'">
-        <div class="borstyle ">
-          <m-tab style="margin:5px" label='全部违法数量总计' :value="staticsData.sum"></m-tab>
+        <div class="borstyle " style="padding:0.5vh 0.5vw;">
+          <!-- <m-tab style="margin:5px"  class='iconfont icon-weifaguanli' label='全部违法数量总计' :value="staticsData.sum"></m-tab> -->
+          <div style="width:90%;height:4vh;background:rgba(52,67,78,0.3);border:1px solid rgba(139,142,164,1);padding:0.5vh 1vw;">
+            <i style="margin-left:1vw;margin-right:0.4vw" class='iconfont icon-weifaguanli'></i>
+            <span style="margin-right:10vw">全部违法数量总计</span>
+            <span>{{staticsData.sum}}</span>
+          </div>
           <div style="padding:0.3vh 5vw;display:flex;height:9vh">
             <div  class="left">
               <div>超速行驶</div>
@@ -43,7 +48,12 @@
       <!--第二个按钮，切换对应的div style="paddin:1vh 1vw" style="paddin:1vh 1vw" -->
         <div v-show="isShow=='2'">
           <div class="speed borstyle">
-            <m-tab label='超速违法数量总计' :value=speed.NUM></m-tab>
+            <!-- <m-tab label='超速违法数量总计' :value=speed.NUM></m-tab> -->
+            <div style="width:90%;height:4vh;background:rgba(52,67,78,0.3);border:1px solid rgba(139,142,164,1);padding:0.5vh 1vw;margin:0.5vh 0.3vw;">
+            <i style="margin-left:1vw;margin-right:0.4vw" class='iconfont icon-chaosu'></i>
+            <span style="margin-right:10vw">全部违法数量总计</span>
+            <span>{{staticsData.sum}}</span>
+          </div>
           </div>
           <div class="speedecharts borstyle" >
             <m-title  label='超速违法分类' style='width:8vw'></m-title>
@@ -55,7 +65,12 @@
       <!-- 第三个按钮，切换对应的div -->
          <div v-show="isShow=='3'">
             <div class="speed borstyle" >
-              <m-tab  label='违法限行数量总计' :value=illegal.NUM></m-tab>
+              <div style="width:90%;height:4vh;background:rgba(52,67,78,0.3);border:1px solid rgba(139,142,164,1);padding:0.5vh 1vw;margin:0.5vh 0.3vw;">
+            <i style="margin-left:1vw;margin-right:0.4vw" class='iconfont icon-xianhangmian'></i>
+            <span style="margin-right:10vw">全部违法数量总计</span>
+            <span>{{staticsData.sum}}</span>
+          </div>
+              <!-- <m-tab  label='违法限行数量总计' :value=illegal.NUM></m-tab> -->
             </div>
             <div class="speedecharts borstyle">
               <!-- <div> -->
@@ -107,6 +122,8 @@ export default {
       stime:'1',
       city:'',
       xzqh:'',
+      isShowIcon:false,
+      icon:'iconfont icon-weifaguanli',
       timeRange:{ //自定义时间
         time1:'',
         time2:''
