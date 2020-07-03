@@ -40,7 +40,7 @@
           :header-cell-style="getRowClass"
           @row-click='handle'
         >
-          <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column v-if='tableIndex==0' prop="CITY" label="城市"></el-table-column>
            <el-table-column v-else prop="CITY" label="区域"></el-table-column>
           <el-table-column prop="ACCIDENTNUM" label="事故数量" sortable></el-table-column>

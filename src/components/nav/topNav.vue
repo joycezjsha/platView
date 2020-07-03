@@ -174,7 +174,7 @@ export default {
             {
               id: '5-1',
               parent_id: '5',
-              menu_name: "车辆保有量",
+              menu_name: "汽车保有量",
               sorting: 0,
               path:'/main/vehicleownership'
             },

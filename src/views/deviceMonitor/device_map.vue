@@ -2,7 +2,7 @@
   <div class="device-map">
     <div @click='changeTable(0)'><m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
     <div @click='changeTable(1)'><m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
   </div>
 </template>
 
@@ -19,10 +19,10 @@ export default {
       map: {},
       tableIndex:0,
       map_cover:{
-        sourceList:[],
-        lineList:[]
+        markers:[]
       },
       showArea:false,
+      isShowTxt:false,
       areaIndexs:[]
     };
   },
@@ -47,9 +47,11 @@ export default {
       this.tableIndex=t;
       if(t){
         this.showArea=true;
+        this.addCityToMap();
         this.hideHeatMap();
       }else{
         this.showArea=false;
+        this.clearMap();
         this.addHeatMap();
       }
        blur.$emit('initCityOrRoadStatics',null,null,false);
@@ -127,6 +129,10 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
+              data.data.map(e=>{
+                e.Num=e.NUM;
+                return e;
+              });
               that.areaIndexs=data.data;
           } else{
             
@@ -151,25 +157,48 @@ export default {
         this.map.setLayoutProperty('heatmapLayer', 'visibility', 'none');
       };
     },
+    addCityToMap(){
+      let that=this;
+      that.areaIndexs.forEach(e=>{
+        that.addCityPopup(e);
+      })
+    },
+    addCityPopup(e){
+      let lnglat=e.jwd.split(' ');
+      let mainDiv=document.createElement('div');
+      mainDiv.style.width='6vw';
+      mainDiv.style.fontSize='0.7vw';
+      mainDiv.style.color='white';
+      mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
+      mainDiv.style.border='1px solid rgb(42, 76, 162)';
+      mainDiv.style.fontFamily='SourceHanSansCN';
+      mainDiv.style.padding='4px 13px';
+      // mainDiv.className='dev_popup';
+
+      let title=document.createElement('p');
+      title.innerHTML=e.city;
+      title.className='title';
+      title.style.margin='5px 0';
+      mainDiv.appendChild(title);
+
+      let p1="<p style='color:#00C6FF;margin:5px 0;'><span>设备数量：</span><span>"+e.NUM+"</span></p>";
+      mainDiv.appendChild($(p1)[0]);
+      
+      let marker = new minemap.Marker(mainDiv, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
+      this.map_cover.markers.push(marker);
+    },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){
-    //清除source
-    if(this.map_cover.sourceList.length>0){
-      this.map_cover.sourceList.forEach(e=>{
-        if(this.map.getSource(e)!=undefined){
-          this.map.removeSource(e);
-        }
+    //清除popup
+    if(this.map_cover.markers.length>0){
+      this.map_cover.markers.forEach(e=>{
+        e.remove();
       })
+      this.map_cover.markers=[];
     }
-    //清除layer
-    if(this.map_cover.lineList.length>0){
-      this.map_cover.lineList.forEach(e=>{
-        if(this.map.getLayer(e)!=undefined){
-          this.map.removeLayer(e);
-        }
-      })
-    }
-  },
+  }
+
+  
 /** */
   }
 };

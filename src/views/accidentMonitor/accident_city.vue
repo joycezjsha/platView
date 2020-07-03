@@ -27,14 +27,14 @@
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs> -->
-        <el-table v-if='range_type==0' :data="indexDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" @row-click='handle'>
-          <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+        <el-table v-if='range_type==0' :data="indexDatas" style="width: 100%" height="80%" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" @row-click='handle'>
+          <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column prop="NAME" label="城市"></el-table-column>
           <el-table-column prop="NUM" label="警情数量" sortable></el-table-column>
           <!-- <el-table-column prop="week_radio" label="重大警情" sortable></el-table-column> -->
         </el-table>
         <el-table v-else :data="groupDatas" style="width: 100%" height="80%" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" @row-click='handle'>
-          <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+          <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column prop="NAME" label="大队"></el-table-column>
           <el-table-column prop="NUM" label="警情数量" sortable></el-table-column>
         </el-table>

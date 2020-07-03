@@ -215,7 +215,6 @@ export default {
       })
       data=data.sort((a,b)=>{return a.Num -b.Num});
       data.map(e=>{
-        debugger;
         e.color=_this.multiply(max,min,e.Num);
         return e;
       });

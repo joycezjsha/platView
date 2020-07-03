@@ -4,8 +4,10 @@ document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v2.0/minema
 document.writeln("<script src=\"./static/js/echarts-all-3.js\"></script>");
 document.writeln("<script src=\"./static/lib/minemap/v2.0/minemap.js\"></script>");
 document.writeln("<script src=\"./static/js/template.js\"></script>");
-
+//测试地址
 var ip='127.0.0.1:8091/';
+//正式地址
+//var ip=window.location.host;
 var mapConfig = {
   BASE_URL: '//113.141.73.223:11180',//"//minedata.cn",
   DOMAIN_URL: '//113.141.73.223:11180',

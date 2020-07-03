@@ -204,7 +204,8 @@ export default {
       countChart:null,
       tableLoading:false,//加载中...控制
       carStatics:{count:0,front_month:0,this_month:0},
-      showIcon:false
+      showIcon:false,
+      interval:null
     }
   },
   components: {
@@ -222,12 +223,18 @@ export default {
     this.initAccidentStaticsChart();
     that.initSumCharts();
     that.initAccurCharts();
+    this.interval=setInterval(()=>{
+      _this.initAccidentStaticsChart();
+    },1000*60)
   },
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
     let that = this;
     that.map.setPitch(0); //设置地图的俯仰角
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
     /**
@@ -235,7 +242,10 @@ export default {
      */
     initAccidentStaticsChart(){
       let that=this;
+      that.accident_option.series[0].data=[];
+      that.tableLoading=true;
       interf.GET_PRO_CAR_API({}).then(response => {
+        that.tableLoading=false;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -261,6 +271,7 @@ export default {
         })
        .catch(err => {
           console.error(err);
+          that.tableLoading=false;
         })
         .finally(() => {
           that.tableLoading = false;

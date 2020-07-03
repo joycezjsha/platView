@@ -304,12 +304,13 @@ export default {
         height:33%;
         @include flex(column, center,center);
         align-items: flex-end;
+        justify-content: flex-end;
       }
       >li:nth-child(1){
         justify-content: end;
       }
       >li:nth-child(2){
-        padding-bottom: 13px;
+       padding-bottom: 25px;
       }
     }
    .legend{

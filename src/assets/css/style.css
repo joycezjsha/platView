@@ -81,7 +81,7 @@
 .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
   background-color: transparent;color:white;
 }
-.el-table tr:nth-child(odd) td{ 
+.el-table tr:nth-child(odd) td{
   background:rgba(72,84,108,0.2);color:white;
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td,.el-table__body tr.hover-row>td{

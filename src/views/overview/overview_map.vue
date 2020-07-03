@@ -36,13 +36,20 @@ export default {
       sgImg:IMG.sgImg,
       showArea:false,
       isShowTxt:false,
-      areaIndexs:[]
+      areaIndexs:[],
+      interval:null
     };
   },
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
     this.getCityCarFlowData();
     this.initDeviceMap();
+    this.interval=setInterval(()=>{
+      _this.clearMap();
+      _this.getCityCarFlowData();
+      _this.initDeviceMap();
+    },1000*60*5)
   },
   components: {
     tArea
@@ -50,6 +57,9 @@ export default {
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
+    if(this.interval){
+      clearInterval(this.interval);
+    }
   },
   methods: {
     /**
@@ -75,7 +85,7 @@ export default {
                 }else{
                   min=min>e.Num?e.Num:min;
                 }
-              
+
               return e;
             });
             that.areaList.push(max,(max-min)/2+min,min);
@@ -104,7 +114,7 @@ export default {
     //     }
 
     //   })
-      
+
     },
     addCityMarker(item){
       let el = document.createElement('div');
@@ -113,7 +123,7 @@ export default {
       // el.style["backgroundColor"] = "#333";
       el.style["padding"] = "4px 6px";
       el.style.color='white';
-      
+
       let leftImgDiv=document.createElement('div');
       leftImgDiv.style.float='left';
       leftImgDiv.style.width='15px';
@@ -122,11 +132,11 @@ export default {
       let img_i = document.createElement('i');
       img_i.className='iconfont icon-shangsheng';
       img_i.style.color='#FFAF05';
-     
+
       if(item.addIn<0){
         img_i.style.color='#00DFC7';
         leftImgDiv.style.transform='rotate(180deg)';
-        leftImgDiv.style.lineHeight='50px';  
+        leftImgDiv.style.lineHeight='50px';
       }
       leftImgDiv.appendChild(img_i);
       el.appendChild(leftImgDiv);
@@ -156,24 +166,24 @@ export default {
      * 获取卡口设备数据
      */
     initDeviceMap(){
-      
+
       let that = this;
       interf.GET_DEVICE_MAP_API({}).then(response=>{
         if (response && response.status == 200){
           let data= response.data;
           if (data.errcode == 0){
-            data.data=[{
-              "XZQH": "6107",
-              "FX": "陕川界入陕",
-              "KKBH": "610700100366",
-              "KKMC": "汉中市南郑县S211211省道K61喜神坝中队西陕川界省际卡口",
-              "city": "汉中市",
-              "JWD": "106.865033 32.736208",
-              "TXCLZS": 1,
-              "DLMC": "南郑211省道61公里350米"
-          }];
-           if(data.data.length>0){
-             
+          //   data.data=[{
+          //     "XZQH": "6107",
+          //     "FX": "陕川界入陕",
+          //     "KKBH": "610700100366",
+          //     "KKMC": "汉中市南郑县S211211省道K61喜神坝中队西陕川界省际卡口",
+          //     "city": "汉中市",
+          //     "JWD": "106.865033 32.736208",
+          //     "TXCLZS": 1,
+          //     "DLMC": "南郑211省道61公里350米"
+          // }];
+           if(data.data && data.data.length>0){
+
              data.data.forEach(e=>{
                that.addDeviceMarker(e);
              })
@@ -198,7 +208,7 @@ export default {
       title.style.fontSize='10px';
       title.style.margin='10px 0';
       mainDiv.appendChild(title);
-      
+
 
       let p1="<p style='margin:5px 0;'><span>设备ID：</span><span>"+e.KKBH+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
@@ -211,7 +221,7 @@ export default {
 
       let p4="<p style='color:#00C6FF;margin:5px 0;'><span>过车量：</span><span>"+e.TXCLZS+"</span></p>";
       mainDiv.appendChild($(p4)[0]);
-      
+
       let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-13, -30]});
       popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
 
