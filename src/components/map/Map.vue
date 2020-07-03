@@ -104,8 +104,8 @@
               that.map.setLayoutProperty(that.trafficArr[i], 'visibility', val);
                  that.map.setLayoutProperty(that.trafficArr[i], 'line-cap', 'butt');
                  that.map.setLayoutProperty(that.trafficArr[i], 'line-round-limit', '2');
-               that.map.setLayoutProperty(that.trafficArr[i], 'line-miter-limit', '3');
-               that.map.setLayoutProperty(that.trafficArr[i], 'strokeStyle', '');
+                that.map.setLayoutProperty(that.trafficArr[i], 'line-miter-limit', '3');
+                // that.map.setLayoutProperty(that.trafficArr[i], 'strokeStyle', '');
             }
           }
           for (let i = 0; i < that.trafficParticleIds.length; i++) {
@@ -146,22 +146,49 @@
       //获取路况图层数据
       getTrafficLayer(){
         let that=this;
-        conf.interf.TRAFFIC_API(mapConfig.BASE_URL+"/service/solu/"+mapConfig.SOLUTION+'?token='+mapConfig.ACCESS_TOKEN,{}).then((res) => {
-          let data=res.data;
-          if(data.data.rows[0].layers){
-            let arr = data.data.rows[0].layers;
-            let idarr = [];
-            for (let i = 0; i < arr.length; i++) {
-              let content = JSON.parse(arr[i].content || '{}')
-              if (content['source'] == 'Traffic'  && content['source-layer'] == 'Trafficrtic') {
-                that.trafficArr.push(arr[i].id);
-              };
-              if(content['source'] == 'DynamicTraffic' && content['source-layer'] == 'link'){
-                that.trafficParticleIds.push(arr[i].id);
+         $.ajax({
+            url: mapConfig.BASE_URL+"/service/solu/"+mapConfig.SOLUTION+'?token='+mapConfig.ACCESS_TOKEN, //globals.CRUISE_ALL_INFO_URL,
+            // headers: {
+            //   "Content-Type": "application/x-www-form-urlencoded"
+            // },
+            responseType: "json",
+            method: "get",
+            dataType: "json",
+            data: {
+              // token: window.localStorage.getItem("loginUserToken")
+            },
+            success: function(data) {
+              if(data.data.rows[0].layers){
+                let arr = data.data.rows[0].layers;
+                let idarr = [];
+                for (let i = 0; i < arr.length; i++) {
+                  let content = JSON.parse(arr[i].content || '{}')
+                  if (content['source'] == 'Traffic'  && content['source-layer'] == 'Trafficrtic') {
+                    that.trafficArr.push(arr[i].id);
+                  };
+                  if(content['source'] == 'DynamicTraffic' && content['source-layer'] == 'link'){
+                    that.trafficParticleIds.push(arr[i].id);
+                  }
+                }
               }
             }
-          }
-        });
+         })
+        // conf.interf.TRAFFIC_API('http:'+mapConfig.BASE_URL+"/service/solu/"+mapConfig.SOLUTION+'?token='+mapConfig.ACCESS_TOKEN,{}).then((res) => {
+        //   let data=res.data;
+        //   if(data.data.rows[0].layers){
+        //     let arr = data.data.rows[0].layers;
+        //     let idarr = [];
+        //     for (let i = 0; i < arr.length; i++) {
+        //       let content = JSON.parse(arr[i].content || '{}')
+        //       if (content['source'] == 'Traffic'  && content['source-layer'] == 'Trafficrtic') {
+        //         that.trafficArr.push(arr[i].id);
+        //       };
+        //       if(content['source'] == 'DynamicTraffic' && content['source-layer'] == 'link'){
+        //         that.trafficParticleIds.push(arr[i].id);
+        //       }
+        //     }
+        //   }
+        // });
       },
       bindMethods(map,sourceId,layerId,upFloorId){
         map.addPoints=this.addPoints;

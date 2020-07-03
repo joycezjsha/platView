@@ -45,12 +45,12 @@
         <div class="sort">
           <div class="text">排序方式 ：</div>
           <div style="width:120px;margin-left:3px;display:flex" class="dropdown">
-              <select style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" >
-                  <option>进入辆次</option>
-                  <option>流出辆次</option>
-                  <option>进出比</option>
-                  <option>保有量</option>
-                  <option>流动变化</option>
+              <select v-model="orderType" style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" @change='orderChange'>
+                  <option value="0">进入辆次</option>
+                  <option value="1">流出辆次</option>
+                  <option value="2">进出比</option>
+                  <option value="3">保有量</option>
+                  <option value="4">流动变化</option>
               </select>
             <!-- <el-dropdown>
                 <el-button type="primary">
@@ -103,7 +103,8 @@ export default {
   name: "car_table",
   data() {
     return {
-     downIcon: true,  //排序切换
+      orderType:0,
+      downIcon: true,  //排序切换
       showCity:false,
       xzqh:'',
       fxlx:'1',
@@ -135,9 +136,6 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    // this.map.setZoom(11);
-    this.map.repaint = true;
     that.getIndexData();
     that.realtimeData(that.stime)
   
@@ -147,6 +145,19 @@ export default {
     this.clearMap();
   },
   methods: {
+    /**
+     * 切换排序方式
+     */
+    orderChange(e,val){
+      switch(this.orderType){
+        case '0':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.inNum -a.inNum});break;
+        case '1':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.outNum -a.outNum});break;
+        case '2':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.proportion -a.proportion});break;
+        case '3':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.inventory -a.inventory});break;
+        case '4':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.flowChange -a.flowChange});break;
+        default:break;
+      }
+    },
     sort() {
      this.downIcon = !this.downIcon
     }, 
@@ -154,9 +165,9 @@ export default {
     showData(xzqh,city){
       let that = this;
       // 车辆类型分析
-      blur.$emit("paramxzqh",xzqh)
-      blur.$emit("paramcity",city)
-      blur.$emit("paramxzqh",xzqh)
+      blur.$emit("paramxzqh",xzqh);
+      blur.$emit("paramcity",city);
+      blur.$emit("paramxzqh",xzqh);
       // that.centerTo(row.jwd.split(' '));
       that.xzqh=xzqh;
       that.city=city;

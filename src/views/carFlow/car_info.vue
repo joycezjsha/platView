@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="data borstyle" >
-        <m-tab style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
+        <m-tab :isShowIcon='showIcon' style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
         <div class='car-info_tab'>
           <span><div>进入辆次</div><div><span class=''>{{provinceData.incount}}</span></div></span>
           <span><div>流出辆次</div><div><span class=''>{{provinceData.outcount}}</span></div></span>
@@ -308,7 +308,8 @@ export default {
         ]
       },
       accurChart:null,
-      statics:{count:'+2328',in:'+4546',out:'-2328'}
+      statics:{count:'+2328',in:'+4546',out:'-2328'},
+      showIcon:false
     };
   },
   components:{mTitle,mLineChart,mTab,blur},
@@ -317,8 +318,6 @@ export default {
     this.getdata();
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    // this.map.setZoom(6);
     this.getTrafficData();
     that.getprovinceData(that.stime)
     that.initSumCharts(that.timeName);

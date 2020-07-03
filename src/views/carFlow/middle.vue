@@ -48,7 +48,6 @@ export default {
     },
     mounted(){
       this.map = this.$store.state.map;
-      this.map.setCenter([108.967368, 34.302634]);
       let that=this;
       that.getData();
       that.getMapVehicleInData(that.stime)
@@ -63,9 +62,10 @@ export default {
         this.tableIndex=i;
         if(this.tableIndex!='1'){
           this.clearMarkers();
+          this.showArea=false;
         }else{
             this.clearMarkers();
-            this.getMapVehicleInData(this.stime)
+            this.getMapVehicleInData(this.stime);
         }
         let els=document.getElementsByClassName('.custom-popup-class');
         blur.$emit('realtime',this.tableIndex)
@@ -119,7 +119,6 @@ export default {
                           that.addCityMarker(e);
                         })
                         data.data.map(e=>{
-                            e.XZQH=e.XZQH;
                             e.Num=e.addIn;
                             return e;
                         })
