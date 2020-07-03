@@ -43,7 +43,7 @@
         <!-- <div style="margin-left:2vw;display:flex">
         </div> -->
       </div>
-      <div style="margin:1.5vh 0;" class="vehicle-statics_tab borstyle">
+      <div style="margin:11px 0;padding-top:0.8vh;" class="vehicle-statics_tab borstyle">
         <m-tab style='margin-bottom:0.5vh;' :isShowIcon="isShowIcon" label="今日入陕辆次:" :value="incount"></m-tab>
         <m-tab  :isShowIcon="isShowIcon" label="今日出陕辆次:" :value="outcount"></m-tab>
         <!-- <m-com-title label="进出陕车辆趋势" img_type="1" style="width:9vw;"></m-com-title> -->
@@ -65,7 +65,7 @@
             :header-row-style="getRowClass"
             :header-cell-style="getRowClass"
           >
-            <el-table-column fixed type="index" label="No." width="80"></el-table-column>
+            <el-table-column  type="index" label="No." width="80"></el-table-column>
             <el-table-column prop="city" label="城市" width="130"></el-table-column>
             <el-table-column prop="NUM" label="辆次" sortable></el-table-column>
           </el-table>
@@ -415,10 +415,18 @@ export default {
     that.initAccurCharts();
     // that.getMapBayonetRankingDatas();
     that.onShowLayer()
+    let timer=setInterval(() => {
+      that.getDomesticVehicleRankingDatas();
+      that.initMainStaticsChart();
+      that.getToadyKeyVehicleInAndOutDatas()
+    },1000*60);
   },
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
+    if(this.timer){
+      clearInterval(this.timer)
+    }
     // let that = this;
     this.map.setPitch(0); //设置地图的俯仰角
     // this.onHideLayer();
@@ -959,7 +967,9 @@ export default {
   //   margin: 1%;
   //   border: 1px solid $color-border-1;
   // }
-  // .vehicle-statics_content {
+  .vehicle-statics_content {
+    padding-top:0.5vh;
+  }
   //   width: 98%;
   //   height: 50%;
   //   margin: 1%;
@@ -1027,7 +1037,7 @@ export default {
 .Provincial {
   width: 474px;
   height: 180px;
-  margin-top: 7px;
+  margin-top: 1vh;
   padding-top:1vh;
   div {
     // display: flex;

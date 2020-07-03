@@ -14,7 +14,7 @@
             <div class="table">
               <el-table :data="indexDatas"
             style="width: 100%" height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column show-overflow-tooltip fixed type="index" label="No" width="60"></el-table-column>
+                  <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="inNum" label="进入辆次" sortable></el-table-column>
                   <el-table-column show-overflow-tooltip prop="outNum" label="流出辆次" sortable></el-table-column>
@@ -28,7 +28,7 @@
             <div  class="table">
               <el-table :data="indexDatas1"
             style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column show-overflow-tooltip fixed type="index" label="No" width="60"></el-table-column>
+                  <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="city,KKMC"  width="160" label="卡口名称">
                     <template slot-scope="scope">
                     [{{scope.row.city}}]{{scope.row.KKMC}}
@@ -85,7 +85,7 @@ export default {
     mounted(){
       this.map=this.$store.state.map;
       this.map.setCenter([108.967368, 34.302634]);
-      this.map.setZoom(11);
+      this.map.setZoom(6);
        let that = this;
        that.$store.commit("setRight", '26.5vw');
        that.getData()

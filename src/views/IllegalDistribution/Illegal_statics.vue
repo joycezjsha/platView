@@ -81,7 +81,7 @@
             </div>
           <div style="padding:0 1vw;margin-top:1vh;height:30vh;">
             <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-              <el-table-column fixed type="index" label="No." width="50"></el-table-column>
+              <el-table-column type="index" label="No." width="50"></el-table-column>
               <el-table-column prop="NAME" label="道路名称" width="180%"></el-table-column>
               <el-table-column prop="NUM" label="违法数量" sortable ></el-table-column>
             </el-table>

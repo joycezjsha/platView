@@ -1,3 +1,4 @@
+// import "../../config/index";
 
 //引入地图api文件
 document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v2.0/minemap.css\">");
@@ -19,7 +20,14 @@ var mapConfig = {
   DEFAULT_ZOOM: 4,
   DEFAULT_PITCH: 0,
   MAX_ZOOM: 16.9,
-  MIN_ZOOM: 3
+  MIN_ZOOM: 3,
+
+  // host: '0.0.0.0', // can be overwritten by process.env.HOST
+  // port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+  // autoOpenBrowser: false,
+  // errorOverlay: true,
+  // notifyOnErrors: true,
+  // poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 }
 
 var urlConf = {

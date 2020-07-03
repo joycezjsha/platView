@@ -5,8 +5,8 @@
 </template>
 
 <script>
-// import {IMG} from "./config";  ghg
-
+// import { IMG } from "./config";
+// import { interf } from "./config";
 export default {
     name:'induction',
     data(){
@@ -15,10 +15,15 @@ export default {
         }
     },
     mounted(){
-         // this.getDiagramData()
-        // let timer=setInterval(() => {
-        //    this.getDiagramData()
-        // },1000*60);
+        // this.getDiagramData()
+        let timer=setInterval(() => {
+            // this.getDiagramData()
+        },1000*60);
+    },
+    destroyed(){
+        if(this.timer){
+        clearInterval(this.timer)
+        }
     },
     methods:{
         getDiagramData(){

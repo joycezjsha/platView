@@ -45,8 +45,12 @@
         <div style="padding:0 5px;height:73vh">
           <!--  -->
           <el-table  @row-click="handItem" 
-          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column fixed type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="CITY" label="城市" width="70"></el-table-column>
+          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
+            <el-table-column prop="CITY" label="城市" width="70">
+              <!-- <template v-if="scope.row.city!=null" slot-scope="scope">
+                {{scope.row.city}}
+              </template> -->
+            </el-table-column>
             <el-table-column prop="COUNTNUM" label="全部违法"  width="120"  sortable></el-table-column>
             <el-table-column prop="CSNUM" label="超速"  sortable></el-table-column>
             <el-table-column prop="XNUM" label="限行"  sortable></el-table-column>
@@ -163,10 +167,19 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
-            that.indexDatas=data.data;
+            for(var i=0;i<data.data.length;i++){
+              // console.log(i,data.data[i])
+              if(data.data[i].CITY!=null){
+                that.indexDatas.push(data.data[i])
+              }
+              // if(data.data[i].CITY==null){
+              //   data.data.splice(i,1)
+              //   that.indexDatas=data.data;
+              // }
+            }
           }else{
             that.$message({ 
-              message: data.errmsg,
+              message:'违法分析请求服务失败',
               type: "error",
               duration: 1500
               });

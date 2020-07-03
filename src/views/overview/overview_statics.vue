@@ -15,13 +15,13 @@
    <div class='overview-statics--split'></div>
    <div class='overview-statics--tab' v-loading='sgLoading'>
      <div class='overview-statics--tab_title'>
-       <span>本月事故</span><span>{{datas.sg.sameMonthAccidentNum}}</span>起</div>
+       <span>本月事故</span><span>{{datas.sg.ACCIDENTNUM}}</span>起</div>
      <div class='overview-statics--tab_radio'>
-       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.injuryNum}}</span></div>
-       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.deathNum}}</span></div>
+       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.INJURYNUM}}</span></div>
+       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.DEATHNUM}}</span></div>
     </div>
      <div class='overview-statics--tab_main'><span class='img'>
-       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.importantAccidentNum}}</span>起</div>
+       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.MAJORACCIDENTNUM}}</span>起</div>
    </div>
    <div class='overview-statics--split'></div>
     <div class='overview-statics--tab'  >

@@ -1,6 +1,6 @@
 <template>
   <div class="vehicle_monitor-div ">
-    <div class='vehicle_monitor-div--top boxstyle '>
+    <div class='vehicle_monitor-div--top borstyle '>
       <div class='title'>
         <m-title label='车辆监测' style='width:6vw;'></m-title>
         <span style="margin-right:1.5vw;margin-top:1vh">
@@ -13,7 +13,7 @@
       <div class='center_table'>
          <el-table @row-click="showCity"
           :data="indexDatas" style="width: 100%" height="32.5vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+            <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="类型"></el-table-column>
             <el-table-column prop="NUM" label="数量"  sortable></el-table-column>
             <el-table-column prop="proportion" label="比例"  sortable></el-table-column>
@@ -21,7 +21,7 @@
           </el-table>
       </div>
     </div>
-    <div class='vehicle_monitor-div--bottom boxstyle'>
+    <div class='vehicle_monitor-div--bottom borstyle'>
       <m-title label='超速预警' style='width:8vw;'></m-title>
        <ul class="traffic-index_content_table">
           <li @click="showMapData(item)" class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
@@ -90,11 +90,18 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
-    that.getKeyVehicleDatas()
+    that.getKeyVehicleDatas();
+    let timer=setInterval(() => {
+      that.getIndexData();
+      that.getKeyVehicleDatas();
+    },1000*60);
   },
   destroyed() {
     this.map.setPitch(0);
     // this.clearMap();
+    if(this.timer){
+      clearInterval(this.timer)
+    }
   },
   methods: {
     /*
@@ -137,23 +144,18 @@ export default {
     getRowClass({ row, column, rowIndex, columnIndex }) {
                 return "background:transparent;";
    },
-    //获取巡航数据
+    /* 重点车辆监测超速预警 KeyVehicle/getSpeeding   GET_OVER_WARN_FLOW_API  */
     getIndexData() {
-      let that = this;
-    //重点车辆监测超速预警 KeyVehicle/getSpeeding   GET_OVER_WARN_FLOW_API
-    interf.GET_OVER_WARN_FLOW_API({
-      id:''
-    })
+    let that = this;
+    interf.GET_OVER_WARN_FLOW_API({})
     .then(response=>{
         if (response && response.status == 200){
           var data= response.data;
-          // console.log(data)
           if (data.errcode == 0) {
             that.trafficDatas=data.data;
-            // console.log(that.trafficDatas)
           }else{
             that.$message({
-              message: data.errmsg,
+              message: '重点车辆监测超速预警请求服务失败',
               type: "error",
               duration: 1500
             });
@@ -259,7 +261,7 @@ export default {
   }
 .vehicle_monitor-div--top{
   width: 474px;
-  height:450px;
+  height:459px;
   .title{
     display: flex;
     justify-content:space-between;

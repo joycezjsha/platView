@@ -96,6 +96,7 @@
 .el-table tr:nth-child(odd) td,.el-table__body tr.current-row>td{
   background:rgba(72,84,108,0.2);color:white;
 }
+
 .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td,.el-table__body tr.hover-row>td{
 background-color: #0367A6;
 color:white;
@@ -127,6 +128,10 @@ line-height:2vh;
   height:3vh;
   line-height:0.4;
 }
+/* .el-button{
+  height:4vh;
+  padding: 0.3vh 0;
+} */
 .el-button--primary {
   color: #FFF;
   background-color: #047DC2;
