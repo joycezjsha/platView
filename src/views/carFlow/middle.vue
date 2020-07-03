@@ -79,8 +79,6 @@ export default {
       let that=this;
       blur.$on("paramxzqh",xzqh=>{
         that.xzqh=xzqh;
-          that.getHotspotBayonetRanking(that.stime,that.xzqh)
-       
       })
       blur.$on('gettime',time=>{
         that.stime=time;

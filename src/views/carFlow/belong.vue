@@ -107,7 +107,8 @@ export default {
     this.map.setZoom(4);
     let that = this;
     that.getData();
-    that.getBelongData();      
+    that.getBelongData();    
+    console.log(that.tableIndex)  
   },
   destroyed(){
     // this.clearBelongMap()
@@ -131,6 +132,7 @@ export default {
       // blur.$on('realtime',data=>{
       //   that.tableIndex=data;
       // })
+      
       blur.$on("sendTime", data => {
         that.getBelongData();
       });
