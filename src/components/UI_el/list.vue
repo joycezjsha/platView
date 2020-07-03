@@ -42,9 +42,11 @@ export default {
   align-items: $align;
 }
 .list{
-  width:8vw;
+  width:13vw;
   height:auto;
   position:absolute;
+  max-height: 150px;
+  overflow: auto; 
   .list_item{
     width:100%;
     height:2vh;
@@ -56,17 +58,17 @@ export default {
      @include flex(column, center,center);
   }
   .color{
-    width: 20%;
+    width: 10%;
     height: 2vh;
     border-radius: 4px;
   }
   .label{
-    max-width:50%;
+    max-width:65%;
     padding:0 5px;
     @include flex(column, start,start);
   }
   .value{
-    width:30%;
+    width:15%;
   }
 }
 </style>

@@ -296,7 +296,7 @@ export default {
     ul{
       padding: 0 20px 0 0;
       // display: inline-block;
-      width:60px;
+      width:55px;
       height:100%;
       text-align:center;
       float:left;

@@ -39,7 +39,7 @@ import mTitle from "@/components/UI_el/title.vue";
 import mComTitle from "@/components/UI_el/title_com.vue";
 import barChart from "@/components/UI_el/bar_chart.vue";
 import mTab from '@/components/UI_el/tab.vue'
-import m_list from '@/components/UI_el/list_o.vue'
+import m_list from '@/components/UI_el/list.vue'
 export default {
   name: "TIndex",
   data() {
@@ -49,11 +49,11 @@ export default {
       isShowReturn:false,
       title:'全省统计',
       staticsData: {sum: 10,mainCount:0},
-      listItems:[{'label':'122',value:'12'},{'label':'互联网',value:'12345'},{'label':'视频巡查',value:'122'}],
+      listItems:[],
       accident_option: {
         color:['#02FDF4','#4D76F9','#01D647'],
           tooltip: {
-            show:false,
+            show:true,
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
@@ -161,6 +161,7 @@ export default {
     initAccidentStaticsChart(type,data){
       let that = this;
       this.accident_option.series[0].data=[];
+      that.listItems=[];
       let params={stime:1};
       if(type!=undefined && data){
         if(data.time!=''){
@@ -179,9 +180,11 @@ export default {
             if (data.errcode == 0) {
               let _data=[];
               if(data.data && data.data.length>0){
-                data.data.map(e=>{
+                let colors=['#00B5B7','#0572ED','#4F35D0']
+                data.data.map((e,i)=>{
                   _data.push({name:e.NAME,value:e.NUM});
-                  that.listItems.push({label:e.NAME,value:e.NUM});
+                  i=i%3;
+                  that.listItems.push({color:colors[i],label:e.NAME,value:e.NUM});
                   // this.accident_option.legend.data.push(e.NAME);             
                 })
               };
