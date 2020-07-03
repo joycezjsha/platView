@@ -147,7 +147,7 @@ export default {
   z-index: 10;
   right: 13px;
   width: 474px;
-  height: 900px;
+  height: 977px;
   top: 99PX;
   color: white;
 }

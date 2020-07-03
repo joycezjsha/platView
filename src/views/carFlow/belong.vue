@@ -51,7 +51,7 @@
             :header-row-style="getRowClass"
             :header-cell-style="getRowClass"
           >
-            <el-table-column fixed type="index" label="No" width="60"></el-table-column>
+            <el-table-column  type="index" label="No" width="60"></el-table-column>
             <el-table-column
               prop="YJDFZJG"
               show-overflow-tooltip
@@ -107,15 +107,11 @@ export default {
     this.map.setZoom(4);
     let that = this;
     that.getData();
-    that.getBelongData();
-    // that.getCityMapOD();belonglist
-           
+    that.getBelongData();      
   },
   destroyed(){
-    this.clearMap()
-    // this.belongList.map(item=>{  
-    //   item.remove();
-    // })
+    this.clearBelongMap()
+    
   },
   components: {
     mTitle,
@@ -124,10 +120,15 @@ export default {
   },
   methods: {
     /**
-     * 接收table传过来的数据
-     */
+    * 接收table传过来的数据
+    */
     getData() {
       let that = this;
+      blur.$on('realtime',data=>{
+        that.isZoom=data;
+        that.tableIndex=data;
+        
+      })
       // blur.$on('realtime',data=>{
       //   that.tableIndex=data;
       // })
@@ -135,28 +136,28 @@ export default {
         that.getBelongData();
       });
       /** 接收table传过来的数据 gettime  传入对应的时间 1  2  3  4  时间格式为 timer1 2020-06-10 timer2  2020-06-10
-       * determine：自定义时间  paramcity ：某个城市 paramxzqh 行政区划
-       */
-
+      * determine：自定义时间  paramcity ：某个城市 paramxzqh 行政区划
+      */
       blur.$on("paramxzqh", xzqh => {
         that.xzqh = xzqh;
-        // if(that.tableIndex==2){
+        alert(that.tableIndex,typeof(that.indexDatas))
+        if(that.tableIndex=='2'){
           that.getBelongData();
-        // }
+        }
        
       });
 
       blur.$on("gettime", time => {
         that.stime = time;
-        if(that.tableIndex==2){
+        // if(that.tableIndex=='2'){
           that.getBelongData();
-        }
+        // }
       });
       blur.$on("determine", times => {
         that.timeRange = times;
-        if(that.tableIndex==2){
+        // if(that.tableIndex=='2'){
           that.getBelongData();
-        }
+        // }
       });
       //
       blur.$on("paramcity", city => {
@@ -165,9 +166,12 @@ export default {
           that.showback = false;
         }
       });
-      blur.$on('realtime',data=>{
-        that.isZoom=data;
-        that.tableIndex=data;
+      
+    },
+    clearBelongMap(){
+      this.belongList.map(item=>{  
+        item.remove();
+        this.belongList=[];
       })
     },
     // 是否显示返回
@@ -178,18 +182,18 @@ export default {
       that.stime='1';
       that.provinceInorOut="1";
       that.xzqh='';
-      that.getBelongData("1", "1", "1");
+      that.getBelongData();
     },
     //  OD地图函数
     getCityMapOD(itemlist){
       // this.clearMap();
       var data = [] ;
       itemlist.forEach(item => {
-        data.push([
-        item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
-        item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
-        item.STRATNAME,item.ENDNAME,item.NUM])                
-      });
+        data.push([
+          item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
+          item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
+          item.STRATNAME,item.ENDNAME,item.NUM]) 
+          });
         var scatterData = [];
         var lineData = [];
         var min = Number.MAX_VALUE;
@@ -311,12 +315,9 @@ export default {
         echartslayer.chart.setOption(option);
         this.belongList.push(echartslayer)
         // this.map_cover.lineList.push(echartslayer)
-
-
-        
     },
 
-    // 右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
+    // 车辆归属地分析  右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
     getBelongData(){
       let that = this;
       let BelongData={};
@@ -363,68 +364,6 @@ export default {
           that.tableLoading = false;
         });
     },
-    // getBelongData(type,xzqh){
-    //   let that = this;
-    //   let BelongData={};
-    //   // 如果只传入时间参数，只有一个type=1  2  3 时, 并且默认进入省外 fxlx=1  provinceInorOut=1 没有xzqh,etime参数
-    //   if(type!='4' && xzqh===undefined ){
-    //     BelongData.stime=that.stime;
-    //     BelongData.fxlx=that.fxlx;
-    //     BelongData.provinceInorOut=that.provinceInorOut;
-    //     // 如果时间是自定义的，进入省外
-    //   }else if(type=='4' && xzqh===undefined ){
-    //     BelongData.stime=that.timeRange[0];
-    //     BelongData.fxlx=that.fxlx;
-    //     BelongData.provinceInorOut=that.provinceInorOut;
-    //     BelongData.etime=that.timeRange[1];
-    //     // 如果type=1  2  3 时,并且传入xzqh时
-    //   }else if(type!='4' && xzqh!=undefined){
-    //     BelongData.stime=that.stime;
-    //     BelongData.fxlx=that.fxlx;
-    //     BelongData.provinceInorOut=that.provinceInorOut;
-    //     BelongData.xzqh=that.xzqh;
-    //     // 如果type=4 时,并且传入xzqh时
-    //   }else if(type=='4' && xzqh!=undefined ){
-    //     BelongData.stime=that.timeRange[0];
-    //     BelongData.fxlx=that.fxlx;
-    //     BelongData.xzqh=that.xzqh;
-    //     BelongData.provinceInorOut=that.provinceInorOut;
-    //     BelongData.etime=that.timeRange[1];
-    //   }
-    //   // 请求数据
-    //     interf.GET_BELONG_API(BelongData)
-    //     .then(response => {
-    //       if (response && response.status == 200) {
-    //         var data = response.data;
-    //         console.log(data);
-    //         if (data.errcode == 0) {
-    //           that.belongData.provinceWithin = data.data.provinceWithin;
-    //           that.belongData.provinceExternal = data.data.provinceExternal;
-    //           that.belongData.provinceWithinProportion =
-    //           data.data.provinceWithinProportion;
-    //           that.belongData.provinceExternalProportion =
-    //           data.data.provinceExternalProportion;
-    //           that.indexDatas = data.data.dataList;
-    //           console.log(that.belongData);
-    //           if(that.indexDatas.length>0){
-    //             that.getCityMapOD(that.indexDatas) 
-    //           }
-    //         } else {
-    //           that.$message({
-    //             message: data.errmsg,
-    //             type: "error",
-    //             duration: 1500
-    //           });
-    //         }
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     })
-    //     .finally(() => {
-    //       that.tableLoading = false;
-    //     });
-    // },
     // 车辆归属地分析，根据进入 流出 和 省内，省外获取对应的 数据
     province(provinceInorOut) {
       let that = this;

@@ -35,7 +35,7 @@ export default {
     mounted(){
       this.map = this.$store.state.map;
       this.map.setCenter([108.967368, 34.302634]);
-      this.map.setZoom(11);
+      this.map.setZoom(6);
       let that=this;
       that.getData()
       that.getMapVehicleInData(that.stime)
@@ -92,9 +92,7 @@ export default {
           })
           .then(response=>{
             if (response && response.status == 200){
-              var data = response.data;
-               console.log(data)      
-               console.log('lllwwwwlll')          
+              var data = response.data;        
                 if (data.errcode == 0) {
                     // if(data.data.length>0){
                     //     data.data.forEach(e=>{

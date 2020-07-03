@@ -11,7 +11,7 @@
           style="width: 100%"
           highlight-current-row
           @current-change="handleCurrentChange"
-          height="55vh"
+          height="80%"
           :default-sort="{prop: 'week_radio', order: 'descending'}"
           :row-style="getRowClass"
           :header-row-style="getRowClass"
@@ -222,7 +222,7 @@ export default {
   z-index: 10;
   left: 1vw;
   width: 474px;
-  height: 1026px;
+  height: 977px;
   top: 11px;
   .city-index_container {
   width: 100%;

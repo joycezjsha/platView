@@ -1,11 +1,14 @@
+// import "../../config/index";
 
 //引入地图api文件
 document.writeln("<link rel='stylesheet' href=\"./static/lib/minemap/v2.0/minemap.css\">");
 document.writeln("<script src=\"./static/js/echarts-all-3.js\"></script>");
 document.writeln("<script src=\"./static/lib/minemap/v2.0/minemap.js\"></script>");
 document.writeln("<script src=\"./static/js/template.js\"></script>");
-// var ip='192.168.0.180:8091/';
-var ip='127.0.0.1:8091/';//'117.48.214.220:9602';//window.location.host//'117.157.231.168';//'localhost:8080'//'117.48.214.220';//
+
+// var host = require('../../config/index');
+
+var ip='127.0.0.1:8091/';
 var mapConfig = {
   BASE_URL: '//113.141.73.223:11180',//"//minedata.cn",
   DOMAIN_URL: '//113.141.73.223:11180',
@@ -17,11 +20,19 @@ var mapConfig = {
   DEFAULT_ZOOM: 4,
   DEFAULT_PITCH: 0,
   MAX_ZOOM: 16.9,
-  MIN_ZOOM: 3
+  MIN_ZOOM: 3,
+
+  // host: '0.0.0.0', // can be overwritten by process.env.HOST
+  // port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+  // autoOpenBrowser: false,
+  // errorOverlay: true,
+  // notifyOnErrors: true,
+  // poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 }
 
 var urlConf = {
   /*接口地址*/
   BASE_URL: '//'+ip,
-  IMG_PATH :'./static/images/'
+  IMG_PATH :'./static/images/',
+  JT_PATH:'92.1.48.106/xasimg'
 }

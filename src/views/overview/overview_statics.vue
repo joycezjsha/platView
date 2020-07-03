@@ -56,6 +56,8 @@ export default {
     this.map = this.$store.state.map;
     let that = this;
     that.getIndexData();
+    that.getJqData();
+    that.getSgData();
   },
   destroyed() {
     this.map.setPitch(0);
@@ -68,7 +70,7 @@ export default {
    /**
      * 获取今日警情统计数据
      **/
-    getSgData() {
+    getJqData() {
       let that = this;
       interf.GET_ACCI_STATICS_API({}).then(response=>{
         if (response && response.status == 200){

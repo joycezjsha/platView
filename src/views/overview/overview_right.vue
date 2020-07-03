@@ -17,7 +17,7 @@
           <div>
             <m-list-o :list='listItems'></m-list-o>
           </div>
-          <!-- <div style="width:1px;height:5vh;background:radial-gradient(#f3f0f0, #757ba340,transparent);"></div> -->
+          <div style="width:1px;height:5vh;background:radial-gradient(#f3f0f0,rgba(117,123,163,0.25098),transparent);"></div>
           <div class="avg">{{avg}}</div>
           <div id="overview-info_sort" v-loading='tableLoading'>
             

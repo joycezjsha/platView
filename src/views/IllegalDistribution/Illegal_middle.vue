@@ -51,7 +51,8 @@ export default {
     mounted(){
         this.map = this.$store.state.map;
         let that = this;
-        this.map.setCenter([108.967368, 34.302634]);
+        // this.map.setCenter([108.967368, 34.302634]);111.06744,39.02786
+        this.map.setCenter([111.06744,39.02786])
         this.map.setZoom(6);
         this.getIllegalHeatMapDatas(this.stime)
         this.gatData()
@@ -162,8 +163,8 @@ export default {
             that.map_cover.sourceList.push("histogram-source");
             that.map_cover.lineList.push("histogram-layer");
             }
-        that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
-        that.map.setPitch(60);
+        // that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
+        // that.map.setPitch(60);
        },
         /**
         * 违法热力图数据及展示 IllegalAnalysis/getIllegalHeatMap  GET_HEAT_MAP_API

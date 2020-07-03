@@ -111,6 +111,7 @@ export default {
         BIGCAR:'',
         SMALLCAR:''
       },
+      listItems:[{'label':'',value:''}],
       accurCreateChange:null,
       options: {
         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
@@ -122,7 +123,7 @@ export default {
                 orient: 'vertical',
                 right: 30,
                 top:80,
-                data: ['大车','小车'],
+                // data: ['大车','小车'],
                 textStyle:{color:'white'},
                 formatter: function(name){
             　　　return name.length>5?name.substr(0,5)+"...":name;
@@ -317,11 +318,11 @@ export default {
     this.map = this.$store.state.map;
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
+    this.map.setZoom(6);
     this.getTrafficData();
     // that.getIndexDatas(that.stime,that.fxlx) 
     that.getprovinceData(that.stime)
-    that.getMapVehicleInData(that.stime)
+    // that.getMapVehicleInData(that.stime)
     that.initSumCharts(that.timeName);
     that.getCarTypeDatas()
     // that.initAccurCharts();
@@ -366,126 +367,10 @@ export default {
   //    that.showTime=i;
   //    that.initSumCharts(that.showTime)
   //  },
-    //  地图上的显示 
-    addCityMarker(item){
-        let el = document.createElement('div');
-        el.id = 'marker';
-        // el.style["border"] = "solid 1px #333333";
-        // el.style["backgroundColor"] = "#333";
-        el.style["padding"] = "4px 6px";
-        el.style.color='white';
-        
-        let leftImgDiv=document.createElement('div');
-        leftImgDiv.style.float='left';
-        leftImgDiv.style.width='20px';
-        leftImgDiv.style.height='40px';
-        leftImgDiv.style.lineHeight='30px';
-        let img_i = document.createElement('i');
-        img_i.className='iconfont icon-shangsheng';
-        img_i.style.color='#FFAF05';
-        
-        if(item.addIn<0){
-            img_i.style.color='#00DFC7';
-            leftImgDiv.style.transform='rotate(180deg)';
-            leftImgDiv.style.lineHeight='50px';  
-        }
-        leftImgDiv.appendChild(img_i);
-        el.appendChild(leftImgDiv);
-
-        let rightDiv=document.createElement('div');
-        rightDiv.style.float='right';
-        rightDiv.style.width='40px';
-        rightDiv.style.height='30px';
-        let span1 = document.createElement('p');
-        span1.innerHTML = item.city;
-        span1.style.margin='0';
-        rightDiv.appendChild(span1);
-        let span2 = document.createElement('p');
-        span2.innerHTML = item.addIn;
-        span2.style.margin='0';
-        span2.style.color='#FFAF05';
-        if(item.addIn<0) span2.style.color='#00DEC7';
-        rightDiv.appendChild(span2);
-        el.appendChild(rightDiv);
-        //添加marker
-        let lnglat = [item.longitude,item.latitude];
-        let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
-        this.map_cover.markers.push(marker);
-        // this.markerlist.push(marker)
-      },
-      
-     //车辆流动页面地图 城市流动数据 Vehicle/getMapVehicleIn   GET_MAP_CITY_FLOW_API
-    getMapVehicleInData(stime,etime){
-      let that=this;
-        // 如果只有一个参数 stime
-      if(etime===undefined && stime!='4'){
-         interf.GET_MAP_CITY_FLOW_API({
-          id: "",
-          stime:stime
-          })
-          .then(response=>{
-            if (response && response.status == 200){
-              var data = response.data;
-              //  console.log(data)               
-                if (data.errcode == 0) {
-                    if(data.data.length>0){
-                        data.data.forEach(e=>{
-                        that.addCityMarker(e);
-                        })
-                    }
-                } else{
-                  that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                  });
-                }
-              }
-            })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-        } 
-        // 如果有2个参数 stime,etime
-         if(etime!=undefined){
-         interf.GET_MAP_CITY_FLOW_API({
-          id: "",
-          stime:stime,
-          etime:etime
-          })
-          .then(response=>{
-            if (response && response.status == 200){
-              var data = response.data;
-              //  console.log(data)             
-                if (data.errcode == 0) {
-                    if(data.data.length>0){
-                        data.data.forEach(e=>{
-                        that.addCityMarker(e);
-                        })
-                    }
-                } else{
-                  that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                  });
-                }
-              }
-            })
-            .catch(err=>{
-              console.log(err);
-            })
-            .finally(() => {
-              that.tableLoading = false;
-            });
-        }
-    },
     // 如果点击实时，则右边数据全部加载实时的数据
     realTime(){
       let that = this;
+      that.stime=='1';
       if(that.stime=='1'){
         that.getprovinceData('1')
         that.carflowData('1')
@@ -642,7 +527,7 @@ export default {
               that.echartsData.SMALLCAR=data.data.SMALLCAR;
               // 绘制饼状图
               this.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},{value:data.data.SMALLCAR, name:'小车'},]
-              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
+              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
               that.changechart.setOption(that.options);
               window.addEventListener("resize",()=>{
                 that.changechart.resize();

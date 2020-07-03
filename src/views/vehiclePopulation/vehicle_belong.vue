@@ -50,7 +50,7 @@
             :header-row-style="getRowClass"
             :header-cell-style="getRowClass"
           >
-            <el-table-column fixed type="index" label="No" width="60"></el-table-column>
+            <el-table-column  type="index" label="No" width="60"></el-table-column>
             <el-table-column
               prop="YJDFZJG"
               show-overflow-tooltip

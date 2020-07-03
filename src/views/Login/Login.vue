@@ -41,8 +41,8 @@
                       <img class="login-code" :src="captchaPath"  @click="getCaptcha" />
                     </template>
                   </el-input>
-                </el-form-item> -->
-                <el-button size="default" :loading="loginLoading" @click="submit" type="primary" class="button-login">登录</el-button>
+                </el-form-item>   -->
+                <el-button size="default" :loading="loginLoading"  @click="submit" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
           </div>
@@ -73,6 +73,7 @@ export default {
     return {
       // 快速选择用户
       dialogVisible: false,
+      // loadingInstance: "",
       users: [
         {
           name: "Admin",
@@ -492,4 +493,10 @@ $color-text-main: "#ccc";
     }
   }
 }
+</style>
+<style >
+.el-button{
+  height:4vh;
+  padding: 0.3vh 0;
+} 
 </style>

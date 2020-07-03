@@ -10,26 +10,9 @@ export default {
     return {
       map: "",
       areaColors: [
-        "#556B2F",
-        "#00FFFF",
-        "#0000EE",
-        "#8A2BE2",
-        "#c48f58",
-        "#6bac91",
-        "#5ad2a0",
-        "#f18a52",
-        "#656bd4",
-        "#7ca0cd",
-        "#88b7dc",
-        "#a08bd3",
-        "#be7fcd",
-        "#30a2c4",
-        "#c0ccd7",
-        "#dbddab",
-        "#9cd076",
-        "#69b38b",
-        "#437fb9",
-        "rgb(255, 143, 109)"
+        [3,39,76],
+        [41,39,39],
+        [64,36,35]
       ],
       mapAddItems: {
         polygons: [],
@@ -164,7 +147,7 @@ export default {
             "paint": {
                 "fill-color": e.color,
                 "fill-opacity": 0.8,
-                "fill-outline-color": this.areaColors[i]
+                "fill-outline-color": e.color
             },
             "minzoom": 4,
             "maxzoom": 17.5
@@ -204,6 +187,7 @@ export default {
      */
     sortArea(data){
       let _this=this;
+      let max='',min='';
       //返回数组合并、并排序的结果
       if(this.indexData.length<data.length){
         return data;
@@ -212,11 +196,59 @@ export default {
         for(var j=0;j<data.length;j++){
             if(data[j].city.indexOf(e.city)!=-1){
                 data[j].Num=e.Num;
+                max=max<e.Num?e.Num:max;
+                min=min>e.Num?e.Num:min;
                 break;
             }
         }
       })
-      return data.sort((a,b)=>{return a.NUM -b.Num});
+      data=data.sort((a,b)=>{return a.Num -b.Num});
+      data.map(e=>{
+        e.color=_this.multiply(max,min,e.Num);
+        return e;
+      });
+      return data;
+    },
+    /**
+     * 计算颜色叠加值
+     */
+    multiply(max,min,value) {
+      let result = [],position,item=(max-min)/2;
+      if(item>value){
+        position=0;
+      }else{
+        position=1;
+      };
+      switch(position){
+        case 0:{
+          for( let i = 0; i < this.areaColors[0].length; i++ ) {
+              let f=(value-min)/item;
+              result.push(Math.floor( this.areaColors[0][i]+f*( this.areaColors[1][i] -  this.areaColors[0][i])));
+          };
+          break;
+        }
+        case 1:{
+          for( let i = 0; i < this.areaColors[1].length; i++ ) {
+              let f=(value-item)/item;
+              result.push(Math.floor( this.areaColors[1][i]+f*( this.areaColors[2][i] -  this.areaColors[1][i])));
+          };
+          break;
+        }
+        default:break;
+      }
+      
+      return this.colorRGBtoHex('rgba('+result[0]+','+result[1]+','+result[2]+')');
+    },
+     /**
+     * rgb转16进制
+     */
+    colorRGBtoHex(color) {
+      var rgb = color.split(',');
+      var r = parseInt(rgb[0].split('(')[1]);
+      var g = parseInt(rgb[1]);
+      var b = parseInt(rgb[2].split(')')[0]);
+      var hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      return hex;
     },
     /**
      * 添加指数悬浮框

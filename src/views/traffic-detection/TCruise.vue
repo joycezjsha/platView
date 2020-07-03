@@ -126,7 +126,7 @@ export default {
         $("#" + preid).css("background-color", "transparent");
       }
       let cid = that.flyRoutes[i].id;
-      $("#" + cid).css("background-color", "#4176f3");
+      $("#" + cid).css("background-color", "#034172");
 
       if (
         $("#cruise_table").scrollTop() ||
@@ -418,10 +418,10 @@ export default {
   position: relative;
   color: #fff;
   font-size: 0.9vw;
-  padding: 0;
+  padding: 0 5%;
   text-align: left;
   overflow-y: auto;
-  height: 100%;
+  height: 90%;
   margin-top:10px;
   .cruise-item {
     width: 85%;
@@ -442,6 +442,9 @@ export default {
     >span:nth-child(1){
       padding-left:30px;
     }
+  }
+  .cruise-item:nth-child(odd){
+    background-color: #111633;
   }
 }
 .cruise-edit {
@@ -486,7 +489,7 @@ export default {
 .fangan .el-input .el-input__inner{
       height: 32px;
       width:124px;
-      border-radius: 0;
+      border-radius: 2px;
       background-color: transparent;
       border-color: #27438B;
       color: #fff;

@@ -17,7 +17,7 @@
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
           @row-click="handdle"
           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+            <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="city" label="城市" width="70"></el-table-column>      
             <el-table-column prop="NUM" label="设备数量" width="110" sortable></el-table-column>
             <el-table-column prop="ACTIVENUM" label="活跃个数" width="110" sortable></el-table-column>
@@ -36,7 +36,7 @@
             </el-select>
           <el-table @row-click="handleRoad"
            :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column fixed type="index" label="No." width="60"></el-table-column>
+            <el-table-column  type="index" label="No." width="60"></el-table-column>
             <el-table-column prop="NAME" label="道路名称" ></el-table-column>
             <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>

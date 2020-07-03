@@ -8,13 +8,13 @@
               <span> {{code}}</span>
           </div>
         </div>
-        <div class="hotroad borstyle" style="height:41.29vh;">
+        <div class="hotroad borstyle" style="height:41.29vh;margin-top:5px;padding-top:5px;">
           <m-title class="titletext"  label='热点道路排名' ></m-title>
           <div class="padding">
             <div class="table">
               <el-table :data="indexDatas"
             style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column fixed type="index" label="No" width="60"></el-table-column>
+                  <el-table-column  type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
                   <el-table-column  prop="innum" label="进入辆次" sortable></el-table-column>
                   <el-table-column  prop="outnum" label="流出辆次" sortable></el-table-column>
@@ -28,7 +28,7 @@
             <div  class="table">
               <el-table :data="indexDatas1"
             style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column  fixed type="index" label="No" width="60"></el-table-column>
+                  <el-table-column  type="index" label="No" width="60"></el-table-column>
                   <!-- <div v-if="showCity==null">
                        <el-table-column show-overflow-tooltip prop="KKMC"   label="卡口名称"></el-table-column>
                   </div>  :formatter="userTypeList"  -->
@@ -94,7 +94,7 @@ export default {
     mounted(){
       this.map=this.$store.state.map;
       this.map.setCenter([108.967368, 34.302634]);
-      this.map.setZoom(11);
+      this.map.setZoom(8);
        let that = this;
       //  that.$store.commit("setRight", '25.5vw');
        that.getData()

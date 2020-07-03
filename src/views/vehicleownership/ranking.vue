@@ -106,7 +106,7 @@ export default {
   top: 11px;
   left: 10px;
   width: 474px;
-  height: 900px;
+  height: 977px;
   .rank{
     width:120px;
     height:39px;

@@ -285,7 +285,7 @@ export default {
   width: 100%;
   height: 100%;
   .city-index_title{
-      position: relative;
+    position: relative;
     width: 96%;
     font-family: Microsoft YaHei;
     font-size: 1vw;
@@ -328,7 +328,7 @@ export default {
     }
   .car-flow_content {
     width: 98%;
-    height: 85%;
+    height: 73%;
     background-color: $color-bg-1;
     margin: 1%;
     .car-table-query{
@@ -361,8 +361,7 @@ export default {
       overflow-y: auto;
       color:white;
       padding: 1px 10px;
-      // height: 8%;
-      overflow: hidden;
+      height: 86%;
       .item{
         // border-bottom: 1px solid $color-white;
         box-sizing: border-box;
@@ -435,11 +434,11 @@ export default {
     }
   }
 }
-.sort{
+.carflow .sort{
   height:32px;
   width: 100%;
   position: relative;
-  margin-top: 3vh;
+  margin-top: 1.5vh;
   .text{
     position: absolute;
     top:0;
@@ -463,13 +462,4 @@ export default {
 .carflow li:nth-of-type(odd){ 
   background:rgba(72,84,108,0.2);
 }
-</style>
-<style>
-/* .el-table, .el-table__expanded-cell,.el-table th, .el-table tr {
-    background-color: transparent;color:white;
-} */
-/* .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td{
-  background-color: rgb(14, 182, 233);
-  color:white;
-} */
 </style>

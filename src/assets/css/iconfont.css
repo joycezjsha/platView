@@ -66,10 +66,12 @@
 
 .icon-jiankong1:before {
   content: "\e6c1";
+  font-size:20px;
 }
 
 .icon-kakou:before {
   content: "\e786";
+  font-size:20px;
 }
 
 .icon-shangsheng:before {
