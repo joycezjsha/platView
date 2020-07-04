@@ -12,7 +12,7 @@
       <m-tab :isShowIcon="isShowIcon" label='实时监控车辆活跃数：' :value=countnum></m-tab>
       <div class='center_table'>
          <el-table @row-click="showCity"
-          :data="indexDatas" style="width: 100%" height="32.5vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+          :data="indexDatas" style="width: 100%" height="32vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="类型"></el-table-column>
             <el-table-column prop="NUM" label="数量"  sortable></el-table-column>
@@ -27,7 +27,7 @@
           <li @click="showMapData(item)" class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <div style="margin-bottom:3px">
                <span class="car-name">{{item.HPZL}}</span>
-               <span class="">{{item.HPHM}}</span>
+               <span style="color:rgba(255,255,255,1);">{{item.HPHM}}</span>
                <span class="per-hour">时速/限速:{{item.SJ}}</span>
             </div>
             <p  style="margin-bottom:3px">
@@ -87,7 +87,6 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
@@ -244,24 +243,25 @@ export default {
 .vehicle_monitor-div ul,li{
   margin: 0;
   padding:0;
+ 
 }
- .vehicle_monitor-div {
-    position: absolute;
-    z-index: 10;
-    left: 12px;
-    width: 100%;
-    top: 1.5vh;
-    color:$color-white;
-    margin-bottom: 20px;
-    .center_table{
-      width: 100%;
-      padding:0 20px;
-      box-sizing: border-box;
-    }
-  }
+//  .vehicle_monitor-div {
+//     position: absolute;
+//     z-index: 10;
+//     left: 12px;
+//     width: 100%;
+//     top: 1.5vh;
+//     color:$color-white;
+//     margin-bottom: 20px;
+.center_table{
+  padding:0 1vw;
+  height: 32vh;
+}
+//   }
 .vehicle_monitor-div--top{
   width: 474px;
   height:459px;
+  overflow: hidden;
   .title{
     display: flex;
     justify-content:space-between;
@@ -271,6 +271,7 @@ export default {
     width:474px;
     height:459px;
     margin-top: 17px;
+    overflow: hidden;
 }
 .traffic-index_content_table{
   .index-item{

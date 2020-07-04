@@ -103,7 +103,7 @@ export default {
   },
   mounted() {
     this.map=this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
+    this.map.setCenter([109.278987,35.747334]);
     this.map.setZoom(4);
     let that = this;
     that.getData();

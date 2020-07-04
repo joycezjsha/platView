@@ -52,7 +52,7 @@ export default {
         this.map = this.$store.state.map;
         let that = this;
         // this.map.setCenter([108.967368, 34.302634]);111.06744,39.02786
-        this.map.setCenter([111.06744,39.02786])
+        this.map.setCenter([109.278987,35.747334]);
         this.map.setZoom(6);
         this.getIllegalHeatMapDatas(this.stime)
         this.gatData()

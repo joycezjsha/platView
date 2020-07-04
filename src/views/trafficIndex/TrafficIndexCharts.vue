@@ -127,6 +127,8 @@ export default {
   },
   mounted() {
     this.getCityRoadData();
+    this.map = this.$store.state.map;
+    this.map.setCenter([109.278987,35.747334]);
   },
   methods: {
     handleClick(tab) {

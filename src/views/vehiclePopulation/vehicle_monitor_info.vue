@@ -405,7 +405,6 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(6);
     let that = this;
     that.initMainStaticsChart();

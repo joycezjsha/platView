@@ -1,5 +1,5 @@
 <template>
-  <div class="device-statics">
+  <div class="device-statics" id="ETC">
     <div class="device-statics_container">
       <div class="device-statics_title">
          <m-title label='全省统计' style='width:100%;'></m-title>
@@ -142,7 +142,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-.device-statics {
+#ETC .device-statics {
   position: fixed;
   z-index: 10;
   right: 13px;
@@ -151,9 +151,9 @@ export default {
   top: 99PX;
   color: white;
 }
-.device-statics_container {
+#ETC .device-statics_container {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   .device-statics_title {
     position: relative;
     width: 96%;

@@ -83,7 +83,7 @@
             </p>
             <p style="padding-bottom:0px">
               <span></span>
-              <span  class="address-name">保有量：<span style="color:#00a6fb" class='value'>{{item.inventory}}万</span></span>
+              <span  class="address-name">保有量：<span style="color:#00a6fb" class='value'>{{item.inventory}}</span></span>
               <span>流动变化：<span style="color:#d38c08" :class="item.flowChange>0?'up_value':'down_value'">{{item.addIn}}辆</span></span>
             </p>
           </li>
@@ -135,7 +135,7 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
+    this.map.setCenter([109.278987,35.747334]);
     // this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();

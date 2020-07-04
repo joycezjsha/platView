@@ -16,7 +16,9 @@ export default {
     },
     mounted(){
         // this.getDiagramData()
+        this.map = this.$store.state.map;
         let that=this;
+        this.map.setCenter([109.278987,35.747334]);
         that.timer=setInterval(() => {
             // this.getDiagramData()
         },1000*60);

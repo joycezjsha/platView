@@ -33,6 +33,7 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     this.getAreaData();
+    this.map.setCenter([109.278987,35.747334]);
     setTimeout(this.addHeatMap,1000);
   },
   components: {

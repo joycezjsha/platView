@@ -10,7 +10,7 @@
           :row-style="getRowClass"
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
-    >
+          >
           <el-table-column fixed type="index" label="No" width="70"></el-table-column>
           <el-table-column prop="YJDFZJG" label="城市"  width="100"></el-table-column>
           <el-table-column prop="TODAYNUM" label="今日上传" ></el-table-column>
@@ -18,24 +18,22 @@
           <el-table-column prop="TODAYPROPORTION" label="今日上传占比"  sortable></el-table-column>
       </el-table>
     </div>
-    <div v-else>
+    <div style='width:90%;margin:0 auto;height:80%;overflow-x:scroll;' v-else>
       <el-table
+          :fit='true'
           :data="indexDatas"
           highlight-current-row
-          height="100%"
+          max-height="100%"
+          style="width: 100%;"
           :default-sort="{prop: 'YESTERDAYNUM', order: 'descending'}"
           :row-style="getRowClass"
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
         >
-          <el-table-column fixed type="index" label="序号" width="70"></el-table-column>
-          <el-table-column prop="city" label="城市" width="100"></el-table-column>
-          <el-table-column prop="反恐怖" label="反恐怖" sortable></el-table-column>
-          <el-table-column prop="公安部" label="公安部" sortable></el-table-column>
-          <el-table-column prop="行动技术" label="行动技术" sortable></el-table-column>
-          <el-table-column prop="刑侦" label="刑侦" sortable></el-table-column>
-          <el-table-column prop="TODAYPROPORTION" label="总计" sortable></el-table-column>
-        </el-table>
+          <el-table-column type="index" label="序号" width="70"></el-table-column>
+          <el-table-column prop="city" label="城市"  width="100"></el-table-column>
+          <el-table-column :prop="item.name" :label="item.name" v-for="(item,i) of tableData.RECORDS" :key="i"></el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -50,7 +48,7 @@ export default {
   props: {
     order_value: {
       type: Number,
-      default: 0
+      default: 0,
     },
     // indexDatascar,
   },
@@ -84,6 +82,194 @@ export default {
           },
         { city: "渭南", index: "1.1", TODAYNUM: "+0.3%", YESTERDAYNUM: "-0.1%",TODAYPROPORTION:"8.4" }
       ],
+      tableData:{
+RECORDS:[
+{
+"jzdm":"00",
+"name":"公安局"
+},
+{
+"jzdm":"01",
+"name":"国内安全保卫"
+},
+{
+"jzdm":"02",
+"name":"经济犯罪侦查"
+},
+{
+"jzdm":"03",
+"name":"治安管理"
+},
+{
+"jzdm":"04",
+"name":"边防管理"
+},
+{
+"jzdm":"05",
+"name":"刑事侦查"
+},
+{
+"jzdm":"06",
+"name":"出入境管理"
+},
+{
+"jzdm":"07",
+"name":"消防"
+},
+{
+"jzdm":"08",
+"name":"警卫"
+},
+{
+"jzdm":"09",
+"name":"中办警卫"
+},
+{
+"jzdm":"10",
+"name":"铁道(行业)"
+},
+{
+"jzdm":"11",
+"name":"公共信息网络安全监察"
+},
+{
+"jzdm":"12",
+"name":"行动技术"
+},
+{
+"jzdm":"13",
+"name":"监所管理"
+},
+{
+"jzdm":"14",
+"name":"交通(行业)"
+},
+{
+"jzdm":"15",
+"name":"民航(行业)"
+},
+{
+"jzdm":"16",
+"name":"林业(行业)"
+},
+{
+"jzdm":"18",
+"name":"法制"
+},
+{
+"jzdm":"19",
+"name":"外事"
+},
+{
+"jzdm":"20",
+"name":"装备财务"
+},
+{
+"jzdm":"21",
+"name":"禁毒"
+},
+{
+"jzdm":"22",
+"name":"科技"
+},
+{
+"jzdm":"23",
+"name":"信息通信"
+},
+{
+"jzdm":"24",
+"name":"海关(行业)"
+},
+{
+"jzdm":"26",
+"name":"反邪教"
+},
+{
+"jzdm":"27",
+"name":"反恐怖"
+},
+{
+"jzdm":"31",
+"name":"办公厅(室)"
+},
+{
+"jzdm":"32",
+"name":"纪委"
+},
+{
+"jzdm":"33",
+"name":"监察"
+},
+{
+"jzdm":"34",
+"name":"督察"
+},
+{
+"jzdm":"35",
+"name":"政工"
+},
+{
+"jzdm":"36",
+"name":"人事训练"
+},
+{
+"jzdm":"38",
+"name":"机关党委"
+},
+{
+"jzdm":"39",
+"name":"离退休干部中心"
+},
+{
+"jzdm":"40",
+"name":"机关服务中心"
+},
+{
+"jzdm":"41",
+"name":"审计"
+},
+{
+"jzdm":"89",
+"name":"出版社"
+},
+{
+"jzdm":"90",
+"name":"院校"
+},
+{
+"jzdm":"91",
+"name":"研究所"
+},
+{
+"jzdm":"92",
+"name":"医院"
+},
+{
+"jzdm":"93",
+"name":"训练基地"
+},
+{
+"jzdm":"94",
+"name":"边检"
+},
+{
+"jzdm":"95",
+"name":"巡警"
+},
+{
+"jzdm":"96",
+"name":"派出所"
+},
+{
+"jzdm":"97",
+"name":"金盾办"
+},
+{
+"jzdm":"98",
+"name":"科技委"
+}
+]
+}
     
     };
   },
@@ -133,7 +319,7 @@ export default {
 .city_index_chart {
   width: 100%;
   height: 85%;
-  
+  overflow-x:scroll;
   .title{
     width:60%;
     color:white;
@@ -159,4 +345,5 @@ export default {
   }
   
 }
+
 </style>

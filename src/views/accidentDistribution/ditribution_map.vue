@@ -28,6 +28,7 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
+    this.map.setCenter([109.278987,35.747334]);
     setTimeout(()=>{this.getAreaData();this.getMainAcciData()},1000);
   },
   components: {
