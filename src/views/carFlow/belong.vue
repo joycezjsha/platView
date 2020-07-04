@@ -3,14 +3,14 @@
     <!-- 中间的OD地图 -->
     <!-- <div class="carmapOD" id="map"></div> -->
     <div class="belong">
-      <div class="top">
+      <div class="top borstyle">
         <div class="title" v-if="showback==true">全部车辆监控</div>
         <div class="back" v-else @click="goback()">
           &lt;&lt; 返回全省
           <span>{{city}}</span>
         </div>
       </div>
-      <div class="carFlow-main boxstyle">
+      <div class="carFlow-main borstyle">
         <div>
           <m-title class="analysis" label="车辆归属地分析"></m-title>
         </div>
@@ -108,7 +108,6 @@ export default {
     let that = this;
     that.getData();
     that.getBelongData();    
-    console.log(that.tableIndex)  
   },
   destroyed(){
     // this.clearBelongMap()
@@ -189,11 +188,14 @@ export default {
       // this.clearMap();
       var data = [] ;
       itemlist.forEach(item => {
-        data.push([
+        if(item.STARTJWD && item.ENDJWD){
+          data.push([
           item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
           item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
-          item.STRATNAME,item.ENDNAME,item.NUM]) 
-          });
+          item.STRATNAME,item.ENDNAME,item.NUM
+          ]) 
+        }
+      });
         var scatterData = [];
         var lineData = [];
         var min = Number.MAX_VALUE;
@@ -335,7 +337,6 @@ export default {
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data);
             if (data.errcode == 0) {
               that.belongData.provinceWithin = data.data.provinceWithin;
               that.belongData.provinceExternal = data.data.provinceExternal;
@@ -344,7 +345,6 @@ export default {
               that.belongData.provinceExternalProportion =
               data.data.provinceExternalProportion;
               that.indexDatas = data.data.dataList;
-              console.log(that.belongData);
               if(that.indexDatas.length>0){
                 that.getCityMapOD(that.indexDatas) 
               }
@@ -493,6 +493,7 @@ export default {
   }
  .carFlow-main {
     height: 951px;
+    border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
     .analysis {
       width: 8.5vw;
       height: 3vh;

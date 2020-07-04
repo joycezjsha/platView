@@ -15,7 +15,7 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import mTitle from "@/components/UI_el/title_com.vue";
+import mTitle from "@/components/UI_el/map_title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
 import blur from '../../blur.js';
 export default {
@@ -52,7 +52,7 @@ export default {
         this.map = this.$store.state.map;
         let that = this;
         // this.map.setCenter([108.967368, 34.302634]);111.06744,39.02786
-        this.map.setCenter([111.06744,39.02786])
+        this.map.setCenter([109.278987,35.747334]);
         this.map.setZoom(6);
         this.getIllegalHeatMapDatas(this.stime)
         this.gatData()
@@ -87,14 +87,20 @@ export default {
             if(that.tableIndex=='2'){
                 that.type='1';
                 blur.$emit('gettype',that.type)
+                
                 that.getIllegalHeatMapDatas(that.stime)
                 //  that.getIllegalAnalysisDatas(that.time)
+            }else{
+                that.onHideLayer()
             }
             if(that.tableIndex=='3'){
                 that.type='2';
                 blur.$emit('gettype',that.type)
+                
                 that.getIllegalHeatMapDatas(that.stime)
                 //  that.getIllegalAnalysisDatas(that.time)
+            }else{
+                that.onHideLayer()
             }
             
             blur.$emit('getIndex',that.tableIndex)
@@ -163,8 +169,11 @@ export default {
             that.map_cover.sourceList.push("histogram-source");
             that.map_cover.lineList.push("histogram-layer");
             }
-        // that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
-        // that.map.setPitch(60);
+            if(item.features.length>0){
+                that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
+                that.map.setPitch(60);
+            }
+        
        },
         /**
         * 违法热力图数据及展示 IllegalAnalysis/getIllegalHeatMap  GET_HEAT_MAP_API
@@ -189,7 +198,6 @@ export default {
             .then(response=>{
                 if(response && response.status==200){
                 var data = response.data;
-                console.log(data)
                 if(data.errcode == 0){
                   setTimeout(() => {
                     that.getMapDatas(data.data)   
@@ -348,7 +356,7 @@ export default {
 
 .Illegal_middle{
     position: fixed;
-    top:95.6vh;
+    top:93.5vh;
     left:34.53vw;
     width: 38.85vw;
     display: flex;

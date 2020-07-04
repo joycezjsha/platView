@@ -1,5 +1,5 @@
 <template>
-  <div class="device-statics">
+  <div class="device-statics-overview">
     <div class="device-statics_container">
       <div class="device-statics_title">
          <m-title :label='title' img_type=1></m-title>
@@ -7,9 +7,11 @@
       </div>
       <div class="device-statics_content boxstyle">
         <m-title-com label='设备类型分析' style='width:8vw;height:4vh;line-height:4vh;margin-bottom:10px;'></m-title-com>
-        <m-tab :value="num" label='设备总数' icon='icon-shebei1'></m-tab>
+        <m-tab :value="num" label='设备总数' icon_style="font-size:15px" icon='icon-shebei1'></m-tab>
         <div>
-          <div class='device-statics_sort_list'><m-list :list='staticsSort'></m-list></div>
+          <div class='device-statics_sort_list'>
+            <m-list :list='staticsSort'></m-list>
+          </div>
           <div id="device-statics_sort">
           </div>
         </div>
@@ -578,7 +580,7 @@ export default {
   justify-content: $justify;
   align-items: $align;
 }
-.device-statics {
+.device-statics-overview {
   position: fixed;
   z-index: 10;
   right: 10px;

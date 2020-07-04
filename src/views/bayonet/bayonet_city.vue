@@ -68,7 +68,7 @@ export default {
       },
       showXZQH:false,
       indexData: [
-        {"city":"","NUM":"","ACTIVE":"","ACTIVENUM":"",'XZQH':''}  
+        // {"city":"","NUM":"","ACTIVE":"","ACTIVENUM":"",'XZQH':''}  
         ],
       roadDatas:[
         {"NAME":"","NUM":"","ACTIVE":""}
@@ -303,30 +303,38 @@ export default {
     /**
      *  城市统计 数据  GET_CITY_STA_API
      */
-     getcitystatDatas(){
-       let that = this;
-       interf.GET_CITY_STA_API({})
-       .then(response=>{
-         if (response && response.status == 200){
-            var data = response.data;
-             if (data.errcode == 0) {
-                that.indexData=data.data;
-             } else{
-               that.$message({
-                 message: data.errmsg,
-                 type: "error",
-                 duration: 1500
-               });
-             }
-         }
-       })
-       .catch(err=>{
-          console.log(err);
-       })
-       .finally(() => {
-         that.tableLoading = false;
-       });
-     },
+    getcitystatDatas(){
+      let that = this;
+      interf.GET_CITY_STA_API({})
+      .then(response=>{
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+              if(data.data.length>0){
+                for(var i=0;i<data.data.length;i++){
+                  if(data.data[i].city!=null){
+                    that.indexData.push(data.data[i])
+                  }
+                }
+              }else{
+                that.indexData=[];
+              }
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+                });
+              }
+            }
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        });
+      },
      /**
      * 切换显示table类型
      * @param 0->城市统计，1->道路统计

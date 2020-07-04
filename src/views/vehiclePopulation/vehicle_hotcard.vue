@@ -93,7 +93,6 @@ export default {
     },
     mounted(){
       this.map=this.$store.state.map;
-      this.map.setCenter([108.967368, 34.302634]);
       this.map.setZoom(8);
        let that = this;
       //  that.$store.commit("setRight", '25.5vw');

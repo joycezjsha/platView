@@ -12,7 +12,8 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import mTitle from "@/components/UI_el/title_com.vue";
+import mTitle from "@/components/UI_el/map_title_com.vue";
+// import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
 import blur from '../../blur.js';
 export default {
@@ -33,7 +34,7 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        this.map.setCenter([108.967368, 34.302634]);
+        this.map.setCenter([109.278987,35.747334]);
         this.map.setZoom(6);
         this.getRoadStatisticsDatas()
         this.getData()
@@ -128,15 +129,17 @@ export default {
         if (xzqh != undefined) {
             param.xzqh = xzqh;
         }
-        interf.GET_EL_HEAT_API(param).then(response => {
+        interf.GET_EL_HEAT_API(param)
+        .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data)
             if (data.errcode == 0) {
-              data.data.features.map(e => {
-                e.geometry.coordinates = e.geometry.coordinates[0].split(",");
-                return e;
-              });
+                if(data.data.features.length>0){
+                     data.data.features.map(e => {
+                        e.geometry.coordinates = e.geometry.coordinates[0].split(",");
+                        return e;
+                    });
+                }
               if (_this.map.getSource("heatmapSource") != undefined) {
                 _this.map.getSource("heatmapSource").setData(data.data);
                 _this.map.setLayoutProperty(
@@ -282,9 +285,10 @@ export default {
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data);
             if (data.errcode == 0) {
-                that.getActiveElMap(data.data)
+                if(data.data.length>0){
+                    that.getActiveElMap(data.data)
+                }
             } else {
               that.$message({
                 message: '活跃电警点位请求服务失败',
@@ -328,7 +332,6 @@ export default {
                     
                     }
                     
-                    // console.log(jsonData.features)
                 })
                 that.map.addSource("data-point", {
                     type: "geojson",
@@ -426,7 +429,7 @@ export default {
 
 .electricPolice-middle{
     position: fixed;
-    top:95.6vh;
+    top:93.5vh;
     left:756px;
     width: 38.85vw;
     display: flex;

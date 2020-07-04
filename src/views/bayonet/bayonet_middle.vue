@@ -13,7 +13,7 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import mTitle from "@/components/UI_el/title_com.vue";
+import mTitle from "@/components/UI_el/map_title_com.vue";
 import mTab from "@/components/UI_el/tab.vue";
 import blur from "../../blur.js";
 export default {
@@ -43,7 +43,7 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
+    this.map.setCenter([109.278987,35.747334]);
     this.map.setZoom(6);
     this.getBayonetHeatMap();
     this.getDatas();
@@ -379,7 +379,7 @@ export default {
 <style scoped  lang='scss'>
 .bayonet-middle {
   position: fixed;
-  top: 95.6vh;
+  top:93.5vh;
   left: 756px;
   width: 38.85vw;
   display: flex;

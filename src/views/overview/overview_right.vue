@@ -224,7 +224,7 @@ export default {
     that.initSumCharts();
     that.initAccurCharts();
     this.interval=setInterval(()=>{
-      _this.initAccidentStaticsChart();
+      that.initAccidentStaticsChart();
     },1000*60)
   },
   destroyed() {
@@ -317,7 +317,6 @@ export default {
       interf.GET_CAR_FLOW_API({}).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data)
             if (data.errcode == 0) {
               let _data=data.data;
               _this.carStatics.count=_data.count?_data.count:'';

@@ -153,7 +153,7 @@ export default {
   mounted() {
     let _this=this,i=0;
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
+    this.map.setCenter([109.278987,35.747334]);
     this.map.setZoom(6);
     this.getIndexData();
     this.getTrafficMonitorData();
@@ -528,6 +528,7 @@ export default {
   .el-dialog__body{
     width:100%;
     height:100%;
+    overflow-x: scroll;
   }
 }
 </style>

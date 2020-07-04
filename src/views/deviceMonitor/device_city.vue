@@ -8,7 +8,6 @@
       <div class="device-city_content">
         <m-tiptxt text='设备包括：电子警察、视频设备、ETC龙门架...' icon='icon-shebei1' icon_style='color:#A6AFCD;' :isShowIcon='ishowicon'></m-tiptxt>
         <m-tiptxt text='活跃设备：是指电警近一个月有抓拍违法数据；卡口、ETC龙门架 、区间测速设备近一天有回传数据；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;' :isShowIcon='ishowicon'></m-tiptxt>
-       
         <div class='device-city_content_table' v-if="tableIndex==0">
           <el-table :data="indexcityDatas" @row-click="handle">
             <el-table-column fixed type="index" label="No" width="50"></el-table-column>

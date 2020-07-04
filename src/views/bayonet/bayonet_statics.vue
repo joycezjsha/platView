@@ -7,7 +7,7 @@
     <div class="device-statics_container">
       <div class="device-statics_title">
         <!-- <m-title label='全省统计' img_type='1' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title> -->
-        <div class="top boxstyle" >
+        <div class="top borstyle" >
         <div class="title" v-if="showback==true">全省统计</div>
         <div class="back "  v-else @click="goback()">
           &lt;&lt; 返回全省
