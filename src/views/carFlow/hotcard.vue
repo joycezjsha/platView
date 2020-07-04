@@ -154,7 +154,6 @@ export default {
       getcardMapData(item){
         let itemlist=[];
         itemlist.push(item.KKJD,item.KKWD)
-        // console.log(itemlist)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
         let el1 = document.createElement('div'); //
@@ -272,14 +271,12 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-            that.indexDatas1=data.data;
-             console.log(data)           
+            that.indexDatas1=data.data;  
             if (data.errcode == 0) {
               if(that.indexDatas1.length>0){
                 //  调用卡口地图方法
                 that.indexDatas1.forEach(element => {
                   that.getcardMapData(element)
-                  // console.log(element)
                 });
               }
             }else{
@@ -302,7 +299,6 @@ export default {
           .then(response=>{
             if (response && response.status == 200){
               var data = response.data;
-               console.log(data)
                 if (data.errcode == 0) {
                   that.indexDatas=data.data;
                 } else{
@@ -415,9 +411,9 @@ export default {
     }
     .hotroad{
       height: 41.29vh;
-      background-color: $color-bg-1;
-      border:1px solid;
-      border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+      // background-color: $color-bg-1;
+      // border:1px solid;
+      // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
       .padding{
         padding:0 1.5vw;
         .table{

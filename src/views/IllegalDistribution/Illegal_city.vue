@@ -167,15 +167,14 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
-            for(var i=0;i<data.data.length;i++){
-              // console.log(i,data.data[i])
-              if(data.data[i].CITY!=null){
-                that.indexDatas.push(data.data[i])
+            if(data.data.length>0){
+              for(var i=0;i<data.data.length;i++){
+                if(data.data[i].CITY!=null){
+                  that.indexDatas.push(data.data[i])
+                }
               }
-              // if(data.data[i].CITY==null){
-              //   data.data.splice(i,1)
-              //   that.indexDatas=data.data;
-              // }
+            }else{
+              that.indexDatas=[];
             }
           }else{
             that.$message({ 

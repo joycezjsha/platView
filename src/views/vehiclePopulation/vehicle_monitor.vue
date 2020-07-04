@@ -72,6 +72,7 @@ export default {
         goout:'',
         radio:'25%'
       },
+      timer:null,
       indexDatas: [
         {"index":"","proportion":"+0.3%","NUM":"-0.1%","NAME":"","CODE":""}
         ],
@@ -91,7 +92,7 @@ export default {
     this.map.repaint = true;
     that.getIndexData();
     that.getKeyVehicleDatas();
-    let timer=setInterval(() => {
+    that.timer=setInterval(() => {
       that.getIndexData();
       that.getKeyVehicleDatas();
     },1000*60);
@@ -108,7 +109,6 @@ export default {
     * 点击左侧的超速预警列表，显示对应的数据
     */
    showMapData(item){
-    //  console.log(item)
    },
     // 传递city参数
     showCity(row){

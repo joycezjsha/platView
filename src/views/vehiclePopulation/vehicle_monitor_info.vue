@@ -96,6 +96,7 @@ export default {
       cscount: "",
       count: "",
       avg: "",
+      timer:null,
       indexDataMapBayonet: "", //  存放车辆实时监测地图的数据
       showback: true, //是否显示返回按钮
       incount: "", //今日入陕辆次
@@ -415,7 +416,7 @@ export default {
     that.initAccurCharts();
     // that.getMapBayonetRankingDatas();
     that.onShowLayer()
-    let timer=setInterval(() => {
+    that.timer=setInterval(() => {
       that.getDomesticVehicleRankingDatas();
       that.initMainStaticsChart();
       that.getToadyKeyVehicleInAndOutDatas()
@@ -459,7 +460,6 @@ export default {
         }
       });
       blur.$on('realtime',data=>{
-        // console.log(data)
         if(data==1){
           this.onShowLayer()
         }else{
@@ -769,7 +769,6 @@ export default {
             var data = response.data;
             if (data.errcode == 0) {
               that.indexDataList = data.data;
-              //  console.log(that.indexDataList)
             } else {
               that.$message({
                 message: data.errmsg,
@@ -805,6 +804,7 @@ export default {
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+            console.log(data)
             if (data.errcode == 0) {
               let car_data = that.outboundEchartsData;
               data.data.forEach(e => {
@@ -1037,7 +1037,7 @@ export default {
 .Provincial {
   width: 474px;
   height: 180px;
-  margin-top: 1vh;
+  // margin-top: 1vh;
   padding-top:1vh;
   div {
     // display: flex;

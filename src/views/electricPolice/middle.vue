@@ -12,7 +12,8 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import mTitle from "@/components/UI_el/title_com.vue";
+import mTitle from "@/components/UI_el/map_title_com.vue";
+// import mTitle from "@/components/UI_el/title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
 import blur from '../../blur.js';
 export default {
@@ -131,7 +132,6 @@ export default {
         interf.GET_EL_HEAT_API(param).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data)
             if (data.errcode == 0) {
               data.data.features.map(e => {
                 e.geometry.coordinates = e.geometry.coordinates[0].split(",");
@@ -282,7 +282,6 @@ export default {
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data);
             if (data.errcode == 0) {
                 that.getActiveElMap(data.data)
             } else {
@@ -328,7 +327,6 @@ export default {
                     
                     }
                     
-                    // console.log(jsonData.features)
                 })
                 that.map.addSource("data-point", {
                     type: "geojson",
@@ -426,7 +424,7 @@ export default {
 
 .electricPolice-middle{
     position: fixed;
-    top:95.6vh;
+    top:93.5vh;
     left:756px;
     width: 38.85vw;
     display: flex;

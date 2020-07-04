@@ -2,7 +2,7 @@
   <div class="electricPolice-statics">
     <div class="electricPolice-statics_container">
       <div class="electricPolice-statics_title">
-        <div class="top boxstyle" >
+        <div class="top borstyle" >
           <div class="title" v-if="showback==true">全省统计</div>
           <div class="back "  v-else @click="goback()">
             &lt;&lt; 返回全省

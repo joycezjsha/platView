@@ -2,17 +2,17 @@
   <div class="car-info-div">
     <div class="car-info_container">
       <!-- top部分  boxstyle  #082354-->
-      <div class="car-info_title borstyle">
-        <div class="top" style="">
-          <span style="display:flex;height:4vh;line-height:2.2vh;"  >
+      <div class="car-info_title">
+        <div class="top ">
+          <span class="borstyle" style="display:flex;height:4vh;line-height:2.2vh;"  >
             <span class="back"  @click="goback" v-if="showback">&lt;&lt; 返回全省</span>
-            <div class="title" style="text-align:center;margin-left:8vw;line-height:3.5vh" v-if="showback==false" >全部车辆监控</div>
+            <div class="title" style="text-align:center;margin-left:8vw;line-height:3.5vh;padding:0.5vh 0" v-if="showback==false" >全部车辆监控</div>
             <span style="padding:5px 0" v-if="showback">{{city}}</span>           
           </span>
         </div>
       </div>
       <div class="data borstyle" >
-        <m-tab style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
+        <m-tab :isShowIcon="isShowIcon" style="margin:5px"  label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
         <div class='car-info_tab'>
           <span><div>进入辆次</div><div><span class=''>{{provinceData.incount}}</span></div></span>
           <span><div>流出辆次</div><div><span class=''>{{provinceData.outcount}}</span></div></span>
@@ -58,7 +58,10 @@
             <div>大车:{{echartsData.BIGCAR}}辆次</div>
             <div>小车:{{echartsData.SMALLCAR}}辆次</div>
           </div> -->
-          <div style="width:70%;height:70%;padding-left:3vw" id='accurCreateChange'></div>
+          <div class="device-statics_sort_list">
+            <m-list :list='staticsSort'></m-list>
+          </div>
+          <div style="width:65%;height:70%;" id='accurCreateChange'></div>
         </div>
     </div>
   </div>
@@ -67,7 +70,8 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import echarts from 'echarts'
+import echarts from 'echarts';
+import m_list from '@/components/UI_el/list.vue'
 import mTitle from "@/components/UI_el/title_com.vue";
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
 import mTab from '@/components/UI_el/tab.vue'
@@ -84,6 +88,8 @@ export default {
       stime:'1',  //1 最近的时间 2 今天 3昨天 
       etime:"",  
       timeRange:'',
+      isShowIcon:false,
+      staticsSort:[],
       timeName:'1', //流动趋势 时间
       fxlxName:'1', //车辆类型分析流入和进出
       isActive: 1,   //1进入  2流出
@@ -114,6 +120,46 @@ export default {
       listItems:[{'label':'',value:''}],
       accurCreateChange:null,
       options: {
+         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
+          tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b}: {c} ({d}%)'
+          },
+          legend: {
+              orient: 'vertical',
+              right: 10,
+              top:10,
+              data: [],
+              textStyle:{color:'white'}
+          },
+          series: [
+                {
+                    name: '车辆类型分析',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    center: ['50%', '50%'],  
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '15',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                      
+                    ]
+                }
+            ]
+      },
+      options1: {
         color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
           tooltip: {
             trigger: 'item',
@@ -311,7 +357,7 @@ export default {
       statics:{count:'+2328',in:'+4546',out:'-2328'}
     };
   },
-  components:{mTitle,mLineChart,mTab,blur},
+  components:{mTitle,mLineChart,mTab,blur,mList:m_list,},
   mounted() {
     // this.initaccurCreateChange();
     this.getdata();
@@ -356,7 +402,6 @@ export default {
    handleClick(i){
       let that = this;
       that.timeName=i.name;
-      // console.log(that.timeName)
       that.initSumCharts(that.timeName)
    },
   //  changeTime(i){
@@ -429,7 +474,6 @@ export default {
      
       // 接受 如果不是日历选择的时间 车辆流动页面全省车辆统计 GET_VEH_PRO_API
       // blur.$on('getcitycardata',data=>{
-      //   // console.log(data)
       //   let citycardatas=data;
       // })
     },
@@ -476,7 +520,6 @@ export default {
       .then(response=>{
         if (response && response.status == 200){
           var data = response.data;
-          // console.log(data)
           if (data.errcode == 0) {
             that.provinceData.addIn=data.data.addIn.toString();
             that.provinceData.incount=data.data.incount.toString();
@@ -516,34 +559,38 @@ export default {
       }
       // 发送请求，获取
     interf.GET_VEH_TYPE_API(getCarTypeData)
-      .then(response=>{
-        if (response && response.status == 200){
-            var data = response.data;
-            if (data.errcode == 0) {
-              that.echartsData.BIGCAR=data.data.BIGCAR;
-              that.echartsData.SMALLCAR=data.data.SMALLCAR;
-              // 绘制饼状图
-              this.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},{value:data.data.SMALLCAR, name:'小车'},]
-              that.changechart = echarts.init(document.getElementById('accurCreateChange'));
-              that.changechart.setOption(that.options);
-              window.addEventListener("resize",()=>{
-                that.changechart.resize();
-              })
-           } else{
-              that.$message({
-               message: data.errmsg,
-               type: "error",
-               duration: 1500
-             });
-            } 
-          }
-      })
-      .catch(err=>{
-          console.log(err);
-        })
-        .finally(() => {
-          that.tableLoading = false;
-        });
+    .then(response=>{
+      if (response && response.status == 200){
+        var data = response.data;
+        if (data.errcode == 0) {
+          that.echartsData.BIGCAR=data.data.BIGCAR;
+          that.echartsData.SMALLCAR=data.data.SMALLCAR;
+          that.staticsSort=[
+            {color:'#0067e2',label:'大车',value:data.data.BIGCAR},
+            {color:'#00a8d2',label:'小车',value:data.data.SMALLCAR}];
+          // 绘制饼状图
+          this.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
+          {value:data.data.SMALLCAR, name:'小车'},]
+          that.changechart = echarts.init(document.getElementById('accurCreateChange'));
+          that.changechart.setOption(that.options);
+          window.addEventListener("resize",()=>{
+            that.changechart.resize();
+            }) 
+          } else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+            } 
+          }
+        })
+        .catch(err=>{
+          console.log(err);
+          })
+          .finally(() => {
+            that.tableLoading = false;
+          });
     },
     //获取巡航数据
     getTrafficData() {
@@ -563,7 +610,6 @@ export default {
       .then(response=>{
        if (response && response.status == 200){
            var data = response.data;
-           console.log(data)
            if (data.errcode == 0) {
             let car_data= that.flowchartsData;
              data.data.forEach(e=>{
@@ -573,7 +619,6 @@ export default {
                that.flowchartsData.y1data.push(e.innum)
                that.flowchartsData.y2data.push(e.outnum)
                that.flowchartsData.xdata.push(e.date)
-               console.log(that.flowchartsData)
                that.flowchartsData=car_data;
              })
             } else{
@@ -662,6 +707,9 @@ position: fixed;
     font-family: Microsoft YaHei;
     font-size: 1vw;
     color: $color-white;
+    border:1px solid;
+    border-image:linear-gradient(0deg, rgba(2,8,47,1), rgba(32,103,187,1)) 1 1;
+    box-shadow:0px 0px 0px 0px rgba(7,12,43,1);
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -672,7 +720,9 @@ position: fixed;
     font-weight: bolder;
   }
   .car-info_tab{
-    // width: 96%;
+    font-family:Source Han Sans CN;
+    font-weight:400;
+    font-style:italic;
     padding: 2px 2% 0.6rem 2%;
     @include flex(row,center,center);
     >span{
@@ -751,20 +801,19 @@ position: fixed;
 .echarts{
   width:474px;
   height:368px;
-  border:1px solid;
-  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
   margin-bottom:1vh;
 }
 .data{
   margin:1vh 0;
-  border:1px solid;
-  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+  padding-top:1vh;
+  padding-right: 3px;
 }
-.top{
-  background:linear-gradient(0deg,#00082f,#012a60);
+.car-info-div .top{
+  // background:linear-gradient(0deg,#00082f,#012a60);
   width:478px;height:34px;
-  border:1px solid;
-  border-image:linear-gradient(0deg, rgba(2,8,47,1), rgba(32,103,187,1)) 1 1;
+  // padding:0.5vh 0;
+  // border:1px solid;
+  // border-image:linear-gradient(0deg, rgba(2,8,47,1), rgba(32,103,187,1)) 1 1;
   box-shadow:0px 0px 0px 0px rgba(7,12,43,1);
   font-size:18px;
   font-family:Source Han Sans CN;
@@ -787,4 +836,11 @@ position: fixed;
     cursor:pointer;
     }
 }
+.car-info-div .device-statics_sort_list{
+      width:35%;
+      height: 5vh;
+      margin-top:10.5vh;
+      float:right;
+      color: #fff;
+    }
 </style>

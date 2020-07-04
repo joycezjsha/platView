@@ -192,11 +192,14 @@ export default {
       this.clearMap();
       var data = [] ;
       itemlist.forEach(item => {
+        if(item.STARTJWD && item.ENDJWD){
           data.push([
-            item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
-            item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
-            item.STRATNAME,item.ENDNAME,item.NUM])                
-          });
+            item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
+            item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
+            item.STRATNAME,item.ENDNAME,item.NUM
+          ]) 
+        }     
+      });
         var scatterData = [];
         var lineData = [];
         var min = Number.MAX_VALUE;

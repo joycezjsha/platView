@@ -15,7 +15,7 @@
 <script>
 import { IMG } from "./config";
 import { interf } from "./config";
-import mTitle from "@/components/UI_el/title_com.vue";
+import mTitle from "@/components/UI_el/map_title_com.vue";
 import mTab from '@/components/UI_el/tab.vue';
 import blur from '../../blur.js';
 export default {
@@ -259,7 +259,7 @@ export default {
 <style scoped lang='scss'>
 .vehicle-middle{
     position: fixed;
-    top:95.6vh;
+    top:93.5vh;
     left:34.53vw;
     width: 38.85vw;
     display: flex;

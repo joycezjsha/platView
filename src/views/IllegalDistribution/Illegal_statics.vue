@@ -10,12 +10,7 @@
       <!-- 点击中间的三个按钮，切换对应的template accident-statics_title   -->
       <div class="right-top-speed" v-show="isShow=='1'">
         <div class="borstyle " style="padding:0.5vh 0.5vw;">
-          <!-- <m-tab style="margin:5px"  class='iconfont icon-weifaguanli' label='全部违法数量总计' :value="staticsData.sum"></m-tab> -->
-          <div style="width:90%;height:4vh;background:rgba(52,67,78,0.3);border:1px solid rgba(139,142,164,1);padding:0.5vh 1vw;">
-            <i style="margin-left:1vw;margin-right:0.4vw" class='iconfont icon-weifaguanli'></i>
-            <span style="margin-right:10vw">全部违法数量总计</span>
-            <span>{{staticsData.sum}}</span>
-          </div>
+          <m-tab style="margin:5px"  icon='icon-weifaguanli' icon_style="font-size:15px" label='全部违法数量总计' :value="staticsData.sum"></m-tab>
           <div style="padding:0.3vh 5vw;display:flex;height:9vh">
             <div  class="left">
               <div>超速行驶</div>
@@ -26,34 +21,19 @@
               <div  style="padding-bottom:0.5vh">{{staticsData.lastNumberLimit}}</div>
             </div>
           </div>
-          <!-- <div>
-            <span class="--tab-title">
-              <i class="el-icon-bell"></i>全部违法数量总计
-            </span>
-            <span class="statics--tab--value">
-              <span class="statics_value sum">{{staticsData.sum}}</span>
-            </span>
-          </div>
-          <div>
-            <span>超速行驶：{{staticsData.over}}</span>
-            <el-divider direction="vertical"></el-divider>
-            <span>尾号限行：{{staticsData.lastNumberLimit}}</span>
-          </div> -->
         </div>
         <div class="accident-statics_content Top5 borstyle">
           <m-title label='违法类别Top5' style='width:7vw;margin-left:1vw'></m-title>
+          <!-- <div class="accident-statics_sort-list">
+            <m-list-o :list='listItems'></m-list-o>
+          </div> -->
           <div id="accident-statics_sort"></div>
         </div>
       </div>
       <!--第二个按钮，切换对应的div style="paddin:1vh 1vw" style="paddin:1vh 1vw" -->
         <div v-show="isShow=='2'">
           <div class="speed borstyle">
-            <!-- <m-tab label='超速违法数量总计' :value=speed.NUM></m-tab> -->
-            <div style="width:90%;height:4vh;background:rgba(52,67,78,0.3);border:1px solid rgba(139,142,164,1);padding:0.5vh 1vw;margin:0.5vh 0.3vw;">
-            <i style="margin-left:1vw;margin-right:0.4vw" class='iconfont icon-chaosu'></i>
-            <span style="margin-right:10vw">全部违法数量总计</span>
-            <span>{{staticsData.sum}}</span>
-          </div>
+            <m-tab label='超速违法数量总计' icon='icon-chaosu' icon_style="font-size:15px" :value=speed.NUM></m-tab>
           </div>
           <div class="speedecharts borstyle" >
             <m-title  label='超速违法分类' style='width:8vw'></m-title>
@@ -65,12 +45,7 @@
       <!-- 第三个按钮，切换对应的div -->
          <div v-show="isShow=='3'">
             <div class="speed borstyle" >
-              <div style="width:90%;height:4vh;background:rgba(52,67,78,0.3);border:1px solid rgba(139,142,164,1);padding:0.5vh 1vw;margin:0.5vh 0.3vw;">
-            <i style="margin-left:1vw;margin-right:0.4vw" class='iconfont icon-xianhangmian'></i>
-            <span style="margin-right:10vw">全部违法数量总计</span>
-            <span>{{staticsData.sum}}</span>
-          </div>
-              <!-- <m-tab  label='违法限行数量总计' :value=illegal.NUM></m-tab> -->
+              <m-tab  label='违法限行数量总计' icon_style="font-size:15px" icon='icon-xianhangmian'  :value=illegal.NUM></m-tab>
             </div>
             <div class="speedecharts borstyle">
               <!-- <div> -->
@@ -90,7 +65,7 @@
            <div style="position:absolute;left:14vw;top:1vh">
               <select v-model="selected" @change="isSelected($event)"
               style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px;border-radius:4px; line-height:14px" id="sortdata" >
-                <option :value="item.DLLX" v-for="item in roadClassification" :key="item.DLLX">{{item.NAME}}</option>
+                <option :value="item.DLLX" v-for="item in roadClassification" :key="item.id">{{item.NAME}}</option>
               </select>
               <!-- <span>{{selected}}</span> -->
             </div>
@@ -114,6 +89,7 @@ import mTab from '@/components/UI_el/tab.vue'
 import blur from '../../blur.js';
 import mTitle from '@/components/UI_el/title_com.vue';
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
+import m_list from '@/components/UI_el/list.vue'
 export default {
   name: "TIndex",
   data() {
@@ -128,6 +104,7 @@ export default {
         time1:'',
         time2:''
       },
+      listItems:[],
       dllx:'', //道路类型
       countnum1:'',
       roadClassification:[
@@ -341,12 +318,12 @@ export default {
       }
     }
   },
-  components: { mTitle,mLineChart,mTab },
+  components: { mTitle,mLineChart,mTab,mListO:m_list },
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
     this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
+    this.map.setZoom(8);
     // this.getIndexData();
     this.getData()
     this.getAllProvinceIllegalStatisticsDatas(that.stime);
@@ -546,7 +523,19 @@ export default {
             };
              that.speeding_option.yAxis.data=[];
              that.speeding_option.series[0].data=[];
-            data.data.forEach(e=>{
+             data.data.forEach(e=>{
+               if(e.WFXW=='1'){
+                e.WFXW="   "+' 其他'
+              }
+              if(e.WFXW=='17211'){
+                e.WFXW='超速50%以上'
+              }
+              if(e.WFXW=='16361'){
+                e.WFXW='超速20-50%'
+              }
+              if(e.WFXW=='13521'){
+                e.WFXW="   "+' 超速10%'
+              }
               that.speeding_option.yAxis.data.push(e.WFXW)
               that.speeding_option.series[0].data.push(e.NUM)
             })
@@ -768,7 +757,7 @@ export default {
       let that = this;
     },
     /**
-     * 违法类别 -- IllegalAnalysis/getIllegalCategory GET_ILL_CATE_GORY_API
+     * 违法类别 TOP5-- IllegalAnalysis/getIllegalCategory GET_ILL_CATE_GORY_API
      * echarts stime  etime   xzqh
      */
     initAccidentStaticsChart(type,xzqh){
@@ -793,17 +782,35 @@ export default {
             if(!that.accident_chart){
               that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
             };
-            data.data.forEach(e=>{
-              that.accident_option.legend.data.push(e.CATEGORY);
-            })
-            that.accident_option.series[0].data=[
-              {name:data.data[0].CATEGORY,value:data.data[0].NUM},
-              {name:data.data[1].CATEGORY,value:data.data[1].NUM},
-              {name:data.data[2].CATEGORY,value:data.data[2].NUM},
-              {name:data.data[3].CATEGORY,value:data.data[3].NUM},
-              {name:data.data[4].CATEGORY,value:data.data[4].NUM},
-              {name:data.data[5].CATEGORY,value:data.data[5].NUM},
-              ]
+            if(data.data && data.data.length>0){
+                let colors=['#ff792a','#00f5f8','#fd0000','#fdbd44','#008ff6']
+                data.data.map((e,i)=>{
+                  if(e.CATEGORY && e.NUM){
+                    that.accident_option.series[0].data.push({name:e.CATEGORY,value:e.NUM});
+                    // that.listItems.push({color:colors[i],label:e.CATEGORY,value:e.NUM});
+                    this.accident_option.legend.data.push(e.CATEGORY);         
+                  }
+                     
+                })
+              };
+            // data.data.forEach(e=>{
+            //   if(e.CATEGORY && e.NUM ){
+            //     that.accident_option.legend.data.push(e.CATEGORY);
+            //     that.accident_option.series[0].data.push({
+            //       name:e.CATEGORY,value:e.NUM
+            //     })
+            //     //  let colors=['#ff792a','#00f5f8','#fd0000','#fdbd44','#008ff6'],
+            //     //   // that.listItems.push({label:e.CATEGORY,value:e.NUM})
+            //   }
+            // })
+            // that.accident_option.series[0].data=[
+            //   {name:data.data[0].CATEGORY,value:data.data[0].NUM},
+            //   {name:data.data[1].CATEGORY,value:data.data[1].NUM},
+            //   {name:data.data[2].CATEGORY,value:data.data[2].NUM},
+            //   {name:data.data[3].CATEGORY,value:data.data[3].NUM},
+            //   {name:data.data[4].CATEGORY,value:data.data[4].NUM},
+            //   {name:data.data[5].CATEGORY,value:data.data[5].NUM},
+            //   ]
             that.accident_chart.setOption(that.accident_option);
             window.addEventListener("resize",()=>{
                 that.accident_chart.resize();
@@ -916,6 +923,12 @@ export default {
     #accident-statics_sort {
       width:100%;
       height:80%;
+    }
+    .accident-statics_sort-list{
+      width:30%;
+      height:80%;
+      float: right;
+      margin-top:3vh;
     }
     // #sumCountChange{
     //   width:100%;

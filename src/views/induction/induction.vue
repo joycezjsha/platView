@@ -11,12 +11,13 @@ export default {
     name:'induction',
     data(){
         return{
-
+            timer:null,
         }
     },
     mounted(){
         // this.getDiagramData()
-        let timer=setInterval(() => {
+        let that=this;
+        that.timer=setInterval(() => {
             // this.getDiagramData()
         },1000*60);
     },

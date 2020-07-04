@@ -149,20 +149,20 @@ export default {
               sorting: 0,
               path:'/main/bayonet'
             },
-            {
-              id: '4-4',
-              parent_id: 4,
-              menu_name: "ETC龙门架",
-              sorting: 0,
-              path:'/main/etc'
-            },
-            {
-              id: '4-5',
-              parent_id: 4,
-              menu_name: "区间测速",
-              sorting: 0,
-              path:'/main/measurement'
-            }
+            // {
+            //   id: '4-4',
+            //   parent_id: 4,
+            //   menu_name: "ETC龙门架",
+            //   sorting: 0,
+            //   path:'/main/etc'
+            // },
+            // {
+            //   id: '4-5',
+            //   parent_id: 4,
+            //   menu_name: "区间测速",
+            //   sorting: 0,
+            //   path:'/main/measurement'
+            // }
           ]
         },
         {
