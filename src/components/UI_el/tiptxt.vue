@@ -25,7 +25,7 @@ export default {
     },
     icon_style:{
       type: String,
-      default: 'color:#A6AFCD;font-size:30px;height:30px;'
+      default: 'color:#A6AFCD;'
     },
     text: {
       type: String,

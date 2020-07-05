@@ -27,7 +27,7 @@ export default {
     },
     icon_style:{
       type: String,
-      default: 'color:#A6AFCD;font-size:30px;height:30px;'
+      default: 'color:#A6AFCD;'
     },
     label: {
       type: String,
@@ -76,7 +76,7 @@ export default {
   .img{
     width:20%;
     i{
-      font-size: 20px;
+      font-size: 18px;
       color:#8B8EA4;
     }
   }
@@ -109,7 +109,7 @@ export default {
   .img{
     width:20%;
     i{
-      font-size: 20px;
+      font-size: 18px;
       color:#8B8EA4;
     }
   }

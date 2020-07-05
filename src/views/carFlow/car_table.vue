@@ -45,12 +45,12 @@
         <div class="sort">
           <div class="text">排序方式 ：</div>
           <div style="width:120px;margin-left:3px;display:flex" class="dropdown">
-              <select style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" >
-                  <option>进入辆次</option>
-                  <option>流出辆次</option>
-                  <option>进出比</option>
-                  <option>保有量</option>
-                  <option>流动变化</option>
+              <select v-model="orderType" style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" @change='orderChange'>
+                  <option value="0">进入辆次</option>
+                  <option value="1">流出辆次</option>
+                  <option value="2">进出比</option>
+                  <option value="3">保有量</option>
+                  <option value="4">流动变化</option>
               </select>
             <!-- <el-dropdown>
                 <el-button type="primary">
@@ -74,10 +74,10 @@
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
-            <p style="padding-top:3px">
+            <p style="padding-top:4px">
               <span>{{index+1}}</span>
               <span  class="address-name">{{item.city}}</span>
-              <span style="margin-left:25px">进：{{item.inNum}}</span>
+              <span style="margin-left:20px">进：{{item.inNum}}</span>
               <span>出：{{item.outNum}}</span>
               <span>进出比：{{item.proportion.toFixed(2)}}%</span>
             </p>
@@ -103,7 +103,8 @@ export default {
   name: "car_table",
   data() {
     return {
-     downIcon: true,  //排序切换
+      orderType:0,
+      downIcon: true,  //排序切换
       showCity:false,
       xzqh:'',
       fxlx:'1',
@@ -147,6 +148,19 @@ export default {
     this.clearMap();
   },
   methods: {
+    /**
+     * 切换排序方式
+     */
+    orderChange(e,val){
+      switch(this.orderType){
+        case '0':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.inNum -a.inNum});break;
+        case '1':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.outNum -a.outNum});break;
+        case '2':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.proportion -a.proportion});break;
+        case '3':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.inventory -a.inventory});break;
+        case '4':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.flowChange -a.flowChange});break;
+        default:break;
+      }
+    },
     sort() {
      this.downIcon = !this.downIcon
     }, 
@@ -154,10 +168,8 @@ export default {
     showData(xzqh,city){
       let that = this;
       // 车辆类型分析
-      blur.$emit("paramxzqh",xzqh)
-      blur.$emit("paramcity",city)
-      blur.$emit("paramxzqh",xzqh)
-      // that.centerTo(row.jwd.split(' '));
+      blur.$emit("paramxzqh",xzqh);
+      blur.$emit("paramcity",city);
       that.xzqh=xzqh;
       that.city=city;
     },
@@ -281,7 +293,7 @@ export default {
   height:977px;
   top: 9vh;
 }
-.city-index_container {
+.city-index-div .city-index_container {
   width: 100%;
   height: 100%;
   .city-index_title{
@@ -360,14 +372,14 @@ export default {
     &_table {
       overflow-y: auto;
       color:white;
-      padding: 1px 10px;
+      padding: 1px 7px;
       height: 86%;
       .item{
         // border-bottom: 1px solid $color-white;
         box-sizing: border-box;
         line-height: 1em;
         margin: 0 2%;
-        // padding:1px 0 2px 0;
+        // padding:2px 0;
         cursor: pointer;
         height:6.8vh;
         >p:nth-child(1){
@@ -393,6 +405,7 @@ export default {
           >span:nth-child(5){
             width:35%;
             color: $color-info;
+            padding-right:3px;
             @include flex(row,flex-end,center);
           }
         }

@@ -63,9 +63,10 @@ export default {
         this.tableIndex=i;
         if(this.tableIndex!='1'){
           this.clearMarkers();
+          this.showArea=false;
         }else{
             this.clearMarkers();
-            this.getMapVehicleInData(this.stime)
+            this.getMapVehicleInData(this.stime);
         }
         let els=document.getElementsByClassName('.custom-popup-class');
         blur.$emit('realtime',this.tableIndex)
@@ -117,7 +118,6 @@ export default {
                           that.addCityMarker(e);
                         })
                         data.data.map(e=>{
-                            e.XZQH=e.XZQH;
                             e.Num=e.addIn;
                             return e;
                         })

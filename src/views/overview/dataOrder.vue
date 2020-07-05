@@ -18,9 +18,10 @@
           <el-table-column prop="TODAYPROPORTION" label="今日上传占比"  sortable></el-table-column>
       </el-table>
     </div>
-    <div style='width:90%;margin:0 auto;height:80%;overflow-x:scroll;' v-else>
+    <div style='width:90%;margin:0 auto;height:80%;overflow-x:scroll;'   v-else>
       <el-table
           :fit='true'
+          ref='editTable'
           :data="indexDatas"
           highlight-current-row
           max-height="100%"
@@ -84,7 +85,7 @@ export default {
       ],
       tableData:{
 RECORDS:[
-{
+  {
 "jzdm":"00",
 "name":"公安局"
 },
@@ -280,6 +281,9 @@ RECORDS:[
     this.$nextTick(() => {
       this.getIndexData()
     })
+    this.$nextTick(() => {
+    this.$refs.editTable.bodyWrapper.scrollTop = this.$refs.editTable.bodyWrapper.scrollHeight;
+  })
   },
   methods: {
      getIndexData() {

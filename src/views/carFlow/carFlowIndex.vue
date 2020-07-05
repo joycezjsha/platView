@@ -68,21 +68,19 @@ export default {
            belonglist=[];
          }
        }
-      //  if(that.$refs.carinfo){
-      //     let marklist=that.$refs.carinfo.map_cover.markers;
-      //     if(showcarinfo!==1){
-      //      marklist.map(item=>{
-      //        item.remove();
-      //      })
-      //      marklist=[];
-      //    }
-      //  }
+       if(that.$refs.carinfo){
+          let marklist=that.$refs.carinfo.map_cover.markers;
+          if(showcarinfo!==1){
+           marklist.map(item=>{
+             item.remove();
+           })
+           marklist=[];
+         }
+       }
       // console.log(showcarinfo)
     })
      
     this.map = this.$store.state.map;
-    // this.map.setCenter([108.967368, 34.302634]);  carinfolist
-    // this.map.setZoom(6);
     this.map.repaint = true;
     $(window).resize(function() {
     });

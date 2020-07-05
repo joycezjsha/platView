@@ -100,7 +100,7 @@ const httpConnect=function(type, url, params, callback,error) {
   params.token='token_for_show';
   return $.ajax({
     type: type ? type : 'GET',
-    url: urlConf.BASE_URL+url,
+    url: url,//urlConf.BASE_URL+
     data: params,
     // contentType:type=="POST" || type=="post"?"application/x-www-form-urlencoded;charset=UTF-8":"application/json;charset=UTF-8",
     //返回数据格式为json
