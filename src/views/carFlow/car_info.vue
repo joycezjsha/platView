@@ -564,13 +564,14 @@ export default {
       if (response && response.status == 200){
         var data = response.data;
         if (data.errcode == 0) {
-          that.echartsData.BIGCAR=data.data.BIGCAR;
-          that.echartsData.SMALLCAR=data.data.SMALLCAR;
+          // that.echartsData.BIGCAR=data.data.BIGCAR;
+          // that.echartsData.SMALLCAR=data.data.SMALLCAR;
           that.staticsSort=[
             {color:'#0067e2',label:'大车',value:data.data.BIGCAR},
             {color:'#00a8d2',label:'小车',value:data.data.SMALLCAR}];
           // 绘制饼状图
-          this.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
+          that.options.series[0].data=[];
+          that.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
           {value:data.data.SMALLCAR, name:'小车'},]
           that.changechart = echarts.init(document.getElementById('accurCreateChange'));
           that.changechart.setOption(that.options);

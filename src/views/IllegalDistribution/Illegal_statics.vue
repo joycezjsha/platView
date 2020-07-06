@@ -9,8 +9,8 @@
       </div>
       <!-- 点击中间的三个按钮，切换对应的template accident-statics_title   -->
       <div class="right-top-speed" v-show="isShow=='1'">
-        <div class="borstyle " style="padding:0.5vh 0.5vw;">
-          <m-tab style="margin:5px"  icon='icon-weifaguanli' icon_style="font-size:15px" label='全部违法数量总计' :value="staticsData.sum"></m-tab>
+        <div class="borstyle " style="padding:0.5vh 0.5vw;margin-bottom:1vh;">
+          <m-tab  icon='icon-weifaguanli' icon_style="font-size:15px" label='全部违法数量总计' :value="staticsData.sum"></m-tab>
           <div style="padding:0.3vh 5vw;display:flex;height:9vh">
             <div  class="left">
               <div>超速行驶</div>
@@ -495,7 +495,8 @@ export default {
       });
    },
     /*
-    * 超速违法分类  IllegalAnalysis/getIllegalAnalysis  GET_IllE_GAL_ANALY_SORT_API
+    违法类别 -- IllegalAnalysis/getIllegalCategory   GET_ILL_CATE_GORY_API
+    * 违法分类 IllegalAnalysis/getIllegalCategory 
     *  返回时 报错
     */
     getIllegalAnalyDatas(type){
@@ -512,34 +513,32 @@ export default {
         param.stime=that.timeRange.time1;
         param.etime=that.timeRange.time2;
       }
-      interf.GET_IllE_GAL_ANALY_SORT_API(param)
+      interf.GET_ILL_CATE_GORY_API(param)
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
              if(!that.speeding_chart){
-              that.speeding_chart = echarts.init(document.getElementById('speeding-offences'));
-            };
-             that.speeding_option.yAxis.data=[];
-             that.speeding_option.series[0].data=[];
+                that.speeding_chart = echarts.init(document.getElementById('speeding-offences'));
+              };
+              that.speeding_option.yAxis.data=[];  
+              that.speeding_option.series[0]=[]; 
              data.data.forEach(e=>{
-               if(e.WFXW=='1'){
-                e.WFXW="   "+' 其他'
-              }
-              if(e.WFXW=='17211'){
-                e.WFXW='超速50%以上'
-              }
-              if(e.WFXW=='16361'){
-                e.WFXW='超速20-50%'
-              }
-              if(e.WFXW=='13521'){
-                e.WFXW="   "+' 超速10%'
-              }
+              if(e.WFXW=='1'){
+                e.WFXW="   "+' 其他'
+              }
+              if(e.WFXW=='17211'){
+                e.WFXW='超速50%以上'
+              }
+              if(e.WFXW=='16361'){
+                e.WFXW='超速20-50%'
+              }
+              if(e.WFXW=='13521'){
+                e.WFXW="   "+' 超速10%'
+              }
               that.speeding_option.yAxis.data.push(e.WFXW)
               that.speeding_option.series[0].data.push(e.NUM)
             })
-            // that.speeding_chart.clear();
-            
             that.speeding_chart.setOption(that.speeding_option,true);
             window.addEventListener("resize",()=>{
               that.speeding_chart.resize();
@@ -582,6 +581,7 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
+
             that.illegal.NUM=data.data.NUM;
           }else{
             that.$message({ 
@@ -916,10 +916,10 @@ export default {
   .accident-statics_content {
     width:474px;
     height:299px;
-    background-color: $color-bg-1;
+    // background-color: $color-bg-1;
     margin-bottom: 10px;
-    border:1px solid;
-    border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+    // border:1px solid;
+    // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
     #accident-statics_sort {
       width:100%;
       height:80%;
@@ -987,16 +987,18 @@ export default {
   height:422px;
   position: relative;
   // background:rgba(2,6,31,0);
-  border:1px solid;
-  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+  // border:1px solid;
+  // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }
 .accident-statics .speed{  
-  width:474px;
+  width:100%;
   height:69px;
   padding:5px;
+  padding:0.5vh 0.5vw;
+  box-sizing: border-box;
   // background:rgba(2,6,31,0);
-  border:1px solid;
-  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+  // border:1px solid;
+  // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
 }
 .accident-statics .speedecharts{
   width:474px;
@@ -1004,9 +1006,9 @@ export default {
   margin-top: 29px;
   margin-bottom: 29px;
   // background:rgba(2,6,31,0);
-  border:1px solid;
+  // border:1px solid;
   // padding:1vh 1vw;
-  border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
+  // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
   // div>#speeding-offences{
   //   width: 100%;
   //   height: 25vh;

@@ -6,21 +6,22 @@
 
 <script>
 // import { IMG } from "./config";
-// import { interf } from "./config";
+import {interf} from "./config";
 export default {
     name:'induction',
     data(){
         return{
+            img:'',
             timer:null,
         }
     },
     mounted(){
-        // this.getDiagramData()
+        this.getDiagramData()
         this.map = this.$store.state.map;
         let that=this;
         this.map.setCenter([109.278987,35.747334]);
         that.timer=setInterval(() => {
-            // this.getDiagramData()
+            this.getDiagramData()
         },1000*60);
     },
     destroyed(){
@@ -34,6 +35,7 @@ export default {
             interf.GET_DIAGRAM_API({}).then(response=>{
                 if (response && response.status == 200){
                 var data= response.data;
+                console.log(data)
                 if (data.errcode == 0) {
                  that.img=res.data.data.diagramUrl;
                 }else{

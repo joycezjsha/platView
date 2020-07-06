@@ -55,7 +55,10 @@ export default {
         this.map.setCenter([109.278987,35.747334]);
         this.map.setZoom(11);
         // this.getIllegalHeatMapDatas(this.stime)
-        this.gatData()
+        if(that.tableIndex!='1'){
+            this.gatData()
+        }
+        // this.gatData()
     },
     methods:{
         /**
@@ -154,7 +157,7 @@ export default {
                     "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
                 },
                 'paint': {
-                    "histogram-colors": ['#ad0532', '#8e7146', '#00ece8', '#a24228', '#81bf98'],
+                    "histogram-colors": ['#ad0532', '#8e7146', '#00ece8', '#a24228', '#ad0532'],
                     /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
                     'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
                     'histogram-height': {

@@ -1,12 +1,13 @@
 
-import http from '../../common/httpUtil'
+import http from '../../common/httpUtil';
+import '../../../static/js/config';
 import service from '../../common/httpUtil'
 export const interf={
   //induce/getDiagram 
 //induce/getDiagram 
    GET_DIAGRAM_API:data=> {
      return http.service({
-       url:JT_PATH,
+       url:urlConf.JT_PATH,
        method:'get',
        params:data
      })
@@ -24,4 +25,5 @@ export const interf={
 //   }
 }
 export const IMG={
+
 }

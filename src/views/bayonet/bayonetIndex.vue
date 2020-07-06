@@ -36,7 +36,6 @@ export default {
     })
     blur.$on('realtime',i=>{
       _this.isActive=i;
-      console.log( _this.isActive)
     })
   },
   destroyed() {

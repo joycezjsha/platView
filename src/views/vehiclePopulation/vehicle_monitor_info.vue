@@ -803,7 +803,6 @@ export default {
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
-            console.log(data)
             if (data.errcode == 0) {
               let car_data = that.outboundEchartsData;
               data.data.forEach(e => {

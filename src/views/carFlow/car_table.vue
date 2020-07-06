@@ -221,16 +221,15 @@ export default {
     // 日期选择获取的数据
     determine(){
        let that = this;
-       blur.$emit("determine",that.timeRange)
+       blur.$emit("determine",that.timeRange) //发送时间格式20200505
        that.realtimeData(that.activeName)
-        // console.log(that.timeRange[0],that.timeRange[1])
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
         let timeData={
           time1,
           time2
         }
-        blur.$emit("sendTime",timeData)
+        blur.$emit("sendTime",timeData) //发送时间格式  2020-06-10 23:59:59
     },
     getIndexData(){
      let that = this;

@@ -90,7 +90,6 @@ export default {
       that.$store.commit("setRight", '26.5vw');
       that.getData()
       that.getHotCarDatas(that.stime)
-     
     },
     destroyed(){
       this.clearMap()
@@ -250,7 +249,6 @@ export default {
         let that=this;
         var hotroadData={};  //存放热点道路参数
         var hotcardData={};  //存放热点卡口参数
-
         // if(type!='4'){
           hotroadData.stime=type;
           hotcardData.stime=type;

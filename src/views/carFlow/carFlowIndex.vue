@@ -77,7 +77,6 @@ export default {
            marklist=[];
          }
        }
-      // console.log(showcarinfo)
     })
      
     this.map = this.$store.state.map;
