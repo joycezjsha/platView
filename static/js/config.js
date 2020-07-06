@@ -34,5 +34,5 @@ var urlConf = {
   /*接口地址*/
   BASE_URL: '//'+ip,
   IMG_PATH :'./static/images/',
-  JT_PATH:'92.1.48.106/xasimg'
+  JT_PATH:'//'+'92.1.48.106/xasimg'
 }
