@@ -31,7 +31,6 @@
     },
     mounted(){
       this.$store.commit("setRight", '25.88vw');
-      this.map.setCenter([109.278987,35.747334]);
     },
     components:{top,lTable,tableInfo:table_info,statics,mapView}
   }

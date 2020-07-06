@@ -15,24 +15,9 @@
       </div>
       <div class="electricPolice-statics_content">
         <div>
-          <div class="number reg" style="margin-bottom:10px">
-            <i style="" class='iconfont icon-shebei1'></i>
-            <span class="num">设备总数</span>
-            <span class="x x1" style="">{{numcount}}</span>
-          </div>
-          <div class="number reg" style="margin-bottom:10px">
-            <i style="" class='iconfont icon-dianjing'></i>
-            <span class="num">近30天活跃电警</span>
-            <span class="x x1" style="">{{thirtyActive}}</span>
-          </div>
-          <div class="number reg" style="margin-bottom:10px">
-            <i style="" class='iconfont icon-weifaguanli'></i>
-            <span class="num">近30天抓拍违法数量</span>
-            <span class="x x1" style="">{{thirtyAlarm}}</span>
-          </div>
-          <!-- <m-tab label='设备总数' value='2328'></m-tab>
-          <m-tab label='近30天活跃电警' value='2328'></m-tab>
-            <m-tab label='近30天抓拍违法数量' value='5316'></m-tab> -->
+          <m-tab style="margin-bottom:1.2vh" label='设备总数' icon="icon-shebei1" :value='numcount'></m-tab>
+          <m-tab style="margin-bottom:1.2vh" label='近30天活跃电警'  icon="icon-dianjing" :value='thirtyActive'></m-tab>
+          <m-tab style="margin-bottom:1.2vh" label='近30天抓拍违法数量' icon="icon-weifaguanli" :value='thirtyAlarm'></m-tab>
         </div>
         <div class="table_right boxstyle">
            <div class="electricPolice-statics_title">

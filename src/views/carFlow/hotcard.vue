@@ -8,12 +8,12 @@
               <span> {{city}}</span>
           </div>
         </div>
-        <div class="hotroad borstyle" style="height:41.29vh;">
+        <div class="hotroad borstyle" >
           <m-title class="titletext"  label='热点道路排名' ></m-title>
           <div class="padding">
             <div class="table">
               <el-table :data="indexDatas"
-            style="width: 100%" height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+             height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                   <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="inNum" label="进入辆次" sortable></el-table-column>
@@ -416,6 +416,7 @@ export default {
       // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
       .padding{
         padding:0 1.5vw;
+        height: 41vh;
         .table{
           height: 41vh;
         }

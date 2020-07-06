@@ -16,7 +16,7 @@ var mapConfig = {
   spriteUrl:'//113.141.73.223:11180/minemapapi/v1.3/sprite/sprite',
   SOLUTION: 4659,
   ACCESS_TOKEN: 'f1f7ca8c14164c28aead74dd72e86fde',
-  DEFAULT_CENTER: [108.943368, 34.255634],
+  DEFAULT_CENTER: [109.278987,35.747334],
   DEFAULT_ZOOM: 4,
   DEFAULT_PITCH: 0,
   MAX_ZOOM: 16.9,

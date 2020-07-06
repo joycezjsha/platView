@@ -12,11 +12,7 @@
         </div>
       </div>
       <div class="data borstyle" >
-<<<<<<< HEAD
         <m-tab :isShowIcon="isShowIcon" style="margin:5px"  label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
-=======
-        <m-tab :isShowIcon='showIcon' style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
->>>>>>> 544906d2a166881d167c1499fa04b58426ce7ea6
         <div class='car-info_tab'>
           <span><div>进入辆次</div><div><span class=''>{{provinceData.incount}}</span></div></span>
           <span><div>流出辆次</div><div><span class=''>{{provinceData.outcount}}</span></div></span>

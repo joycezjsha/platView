@@ -45,7 +45,7 @@
         <div style="padding:0 5px;height:73vh">
           <!--  -->
           <el-table  @row-click="handItem" 
-          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
+          :data="indexDatas" style="width:100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="70">
               <!-- <template v-if="scope.row.city!=null" slot-scope="scope">
                 {{scope.row.city}}

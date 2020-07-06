@@ -691,6 +691,7 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
+            that.roadClassification=[];
             that.roadClassification=data.data;
           }else{
             that.$message({ 
