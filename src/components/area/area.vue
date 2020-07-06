@@ -37,6 +37,7 @@ export default {
         return []
       }
     }
+
   },
   watch:{
     isShowArea:{
@@ -54,6 +55,7 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     if(this.isShowArea) this.initArea();
+    this.map.on('click',this.clickArea);
   },
   methods: {
     hideArea(){
@@ -415,10 +417,26 @@ export default {
         curTpiColor = tpiColor[4];
       }
       return curTpiColor;
+    },
+    /**
+     * 点击地图，绑定事件
+     */
+    clickArea(e){
+      for(let i=0;i<this.mapAddItems.lineList.length;i++){
+        renderLayerIds = this.mapAddItems.lineList[i];
+        features = this.map.queryRenderedFeatures(e.point, {
+          layers: renderLayerIds
+        });
+        if (features && features.length < 1) {
+          debugger;
+        }
+      }
+      
     }
   },
   destroyed: function() {
     this.clearMap();
+    this.map.off('click',this.clickArea);
   },
   beforeDestroy(){
     this.clearMap();

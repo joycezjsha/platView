@@ -449,7 +449,7 @@ export default {
       // margin:3% 0 0 0;
       display: block;
       padding: 0 5px;
-      width: 100%;
+      width: 95%;
       height: 80%;
       overflow-y: scroll;
       li{

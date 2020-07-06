@@ -67,6 +67,7 @@ export default {
      */
     getCityCarFlowData() {
       let that = this;
+      that.areaList=[];
       interf.GET_MAP_CITY_FLOW_API({})
       .then(response=>{
         if (response && response.status == 200){

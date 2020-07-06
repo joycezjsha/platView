@@ -34,15 +34,15 @@ export default {
             interf.GET_DIAGRAM_API({}).then(response=>{
                 if (response && response.status == 200){
                 var data= response.data;
-                if (data.errcode == 0) {
-                 that.img=res.data.data.diagramUrl;
-                }else{
-                    that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                    });
-                }
+                // if (data.errcode == 0) {
+                 that.img=JT_PATH+data+'/cn/1920x1080/0029_501_001.png';
+                // }else{
+                //     that.$message({
+                //     message: data.errmsg,
+                //     type: "error",
+                //     duration: 1500
+                //     });
+                // }
                 }
             })
             .catch(err=>{

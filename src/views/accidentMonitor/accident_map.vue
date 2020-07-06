@@ -228,6 +228,12 @@ export default {
       this.map_cover.markers.push(marker);
       this.map_cover.popups.push(popup);
     },
+    /**
+     * 
+     */
+    clickAreaEvent(){
+
+    },
 /*##清除地图加载点、线、面、弹框*/
     clearMap(){
       //清除source
