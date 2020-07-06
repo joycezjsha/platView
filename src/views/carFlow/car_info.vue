@@ -469,9 +469,9 @@ export default {
       })
       blur.$on('sendTime',data=>{
       })
-      blur.$on('realtime',i=>{
-        this.i=i  //表示中间三个组件
-      })
+      // blur.$on('realtime',i=>{
+      //   this.i=i  //表示中间三个组件
+      // })
      
       // 接受 如果不是日历选择的时间 车辆流动页面全省车辆统计 GET_VEH_PRO_API
       // blur.$on('getcitycardata',data=>{

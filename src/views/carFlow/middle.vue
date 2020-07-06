@@ -68,7 +68,7 @@ export default {
             this.getMapVehicleInData(this.stime);
         }
         let els=document.getElementsByClassName('.custom-popup-class');
-        blur.$emit('realtime',this.tableIndex)
+        blur.$emit('realtime',this.tableIndex);
     },
     /**
     * 接收传过来的数据

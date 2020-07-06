@@ -29,7 +29,7 @@ export const interf={
       params:data
     })
   },
-  // 	超速违法分类 IllegalAnalysis/getSpeedingViolationSort    IllegalAnalysis/getIllegalAnalysis
+  // 	超速违法分类 IllegalAnalysis/getSpeedingViolationSort   
   GET_IllE_GAL_ANALY_SORT_API:data=> {
     return http.service({
       url:`IllegalAnalysis/getSpeedingViolationSort`,

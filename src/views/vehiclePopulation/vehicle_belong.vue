@@ -23,9 +23,18 @@
             <span :class="{active: isActive == 1}" @click="change(1,1)">今日入陕</span>
             <span :class="{active: isActive == 2}" @click="change(2,2)">今日出陕</span>  -->
           </div>
-         
+          <div class="inoutbox" style="">
+            <div class="left-inout">
+              <div style="padding-left:2.9vw"  @click="changeIn(1)" >进入</div>
+              <div :class="param.fxlx==1? 'showline':'line'"></div> 
+            </div>
+            <div  class="right-inout">
+              <div  style="padding-left:2.9vw" @click="changeIn(2)">流出</div>
+              <div :class="param.fxlx==2? 'showline':'line'"></div>
+            </div>
+          </div>  
         </div>
-        <div class="inout">         
+        <div class="inout"> 
             <span class="text" :class="param.provinceInorOut=='1'? 'selecttext':'noselecttext'" style="padding-left:1.5vw">
                 省外: {{provinceExternal}}
                 <span style="margin-left:1vw">({{provinceExternalProportion}})</span>
@@ -83,7 +92,7 @@ export default {
         stime:'4', //实时活跃 传4  今日入陕 出陕传2
         code:'', //车辆类型
         provinceInorOut: "1", //省内外  1省外  2 省内
-        fxlx: "", //方向类型 1进 2出
+        fxlx: "1", //方向类型 1进 2出
       },
       showback: true, //是否显示返回按钮
       timeRange: "", //自定义时间
@@ -181,8 +190,14 @@ export default {
       that.showback = true;
       that.param.stime='4';
       that.param.provinceInorOut='1';
+      that.param.fxlx='1';
       that.getVehicleOwnershipDatas();
 
+    },
+     changeIn(fxlx) {
+      let that = this;
+      that.param.fxlx = fxlx;
+      that.getVehicleOwnershipDatas();
     },
 //  OD地图函数
     getVehicleOwnershipMapOD(itemlist){
@@ -318,7 +333,6 @@ export default {
         echartslayer.chart.setOption(option);
         this.map_cover.popups.push(echartslayer)
     },
-//
     /*
     *归属地分析-车辆归属地OD地图也是用的这个接口 KeyVehicle/getVehicleOwnership GET_OWN_SHIP_API
     *右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
@@ -474,14 +488,6 @@ export default {
   }
   .vehicle-main {
     height: 951px;
-    // background-color: $color-bg-1;
-    // border: 1px solid;
-    // border-image: linear-gradient(
-    //     182deg,
-    //     rgba(10, 148, 255, 1),
-    //     rgba(255, 255, 255, 0)
-    //   )
-    //   1 1;
     .analysis {
       width: 8.5vw;
       height: 3vh;
@@ -491,7 +497,7 @@ export default {
       width: 100%;
       height: 30px;
       position: absolute;
-      top:14.5vh;
+      top:19vh;
       .text{
         flex: 1;
       }
@@ -560,10 +566,40 @@ export default {
     cursor:pointer;
     }
 }
+.vehicle-main  .inoutbox{
+  width:100%;
+  height:3vh;
+  position: absolute;
+  top:9vh;
+  left: 0;
+  display: flex;
+  color: rgba(0, 198, 255, 1);
+ .left-inout{
+   flex:1;
+   margin-left:1.8vw;
+   
+ }
+ .right-inout{
+    flex:1;
+ }
+}
 .vehicle-Belong .vehicle-table{
     width: 90%;
     position: absolute;
-    top:23vh;
+    top:28vh;
     left: 0;
+}
+.vehicle-Belong  .showline {
+  width: 160px;
+  height: 3px;
+  background: #00c6ff;
+  margin-left: -1.4583vw;
+  margin:1vh 0;
+}
+.vehicle-Belong  .line {
+  width: 160px;
+  height: 3px;
+  margin-left: -1.4583vw;
+  margin:1vh 0;
 }
 </style>

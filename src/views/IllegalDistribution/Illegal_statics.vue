@@ -495,9 +495,7 @@ export default {
       });
    },
     /*
-    违法类别 -- IllegalAnalysis/getIllegalCategory   GET_ILL_CATE_GORY_API
-    * 违法分类 IllegalAnalysis/getIllegalCategory 
-    *  返回时 报错
+    * 超速违法分类 IllegalAnalysis/getSpeedingViolationSort   GET_IllE_GAL_ANALY_SORT_API
     */
     getIllegalAnalyDatas(type){
       let that = this;
@@ -513,36 +511,39 @@ export default {
         param.stime=that.timeRange.time1;
         param.etime=that.timeRange.time2;
       }
-      interf.GET_ILL_CATE_GORY_API(param)
+      interf.GET_IllE_GAL_ANALY_SORT_API(param)
      .then(response=>{
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
-             if(!that.speeding_chart){
-                that.speeding_chart = echarts.init(document.getElementById('speeding-offences'));
-              };
+            if(data.data.length>0){
+              that.speeding_chart= echarts.init(document.getElementById('speeding-offences'));
               that.speeding_option.yAxis.data=[];  
-              that.speeding_option.series[0]=[]; 
-             data.data.forEach(e=>{
-              if(e.WFXW=='1'){
-                e.WFXW="   "+' 其他'
+              that.speeding_option.series[0].data=[]; 
+              for(var i=0;i<data.data.length;i++){
+                if(data.data[i].WFXW=='1'){
+                  data.data[i].WFXW="   "+' 其他'
+                }else if(data.data[i].WFXW=='17211'){
+                  data.data[i].WFXW='超速50%以上'
+                }else if(data.data[i].WFXW=='16361'){
+                  data.data[i].WFXW=" 超速20-50%"
+                }else  if(data.data[i].WFXW=='13521'){
+                  data.data[i].WFXW="超速10%"
+                }
+                that.speeding_option.yAxis.data.push(data.data[i].WFXW)
+                that.speeding_option.series[0].data.push(data.data[i].NUM)
+                console.log(that.speeding_option.yAxis.data,that.speeding_option.series[0].data)
               }
-              if(e.WFXW=='17211'){
-                e.WFXW='超速50%以上'
-              }
-              if(e.WFXW=='16361'){
-                e.WFXW='超速20-50%'
-              }
-              if(e.WFXW=='13521'){
-                e.WFXW="   "+' 超速10%'
-              }
-              that.speeding_option.yAxis.data.push(e.WFXW)
-              that.speeding_option.series[0].data.push(e.NUM)
-            })
-            that.speeding_chart.setOption(that.speeding_option,true);
-            window.addEventListener("resize",()=>{
-              that.speeding_chart.resize();
+              console.log(that.speeding_option)
+              that.speeding_chart.setOption(that.speeding_option);
+              window.addEventListener("resize",()=>{
+                that.speeding_chart.resize();
               })
+            }
+            // that.speeding_chart.setOption(that.speeding_option);
+            // window.addEventListener("resize",()=>{
+            //   that.speeding_chart.resize();
+            // })
           }else{
             that.$message({ 
               message: data.errmsg,
