@@ -525,10 +525,5 @@ export default {
   .el-dialog__header{
     padding:63px 0 0 87px;
   }
-  .el-dialog__body{
-    width:100%;
-    height:100%;
-    overflow-x: scroll;
-  }
 }
 </style>
