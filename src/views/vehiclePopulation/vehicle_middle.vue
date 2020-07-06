@@ -37,6 +37,8 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
+        this.map.setCenter([109.278987,35.747334]);
+        this.map.setZoom(11);
         this.getMapBayonetRankingDatas()
         
     },
@@ -198,7 +200,6 @@ export default {
           .then(response=>{
             if (response && response.status == 200){
               var data= response.data;
-              console.log(data)
               if (data.errcode == 0) {
                 that.getBayonetMapRank(data.data)
               }else{

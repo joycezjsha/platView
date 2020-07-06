@@ -74,10 +74,10 @@
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
-            <p style="padding-top:3px">
+            <p style="padding-top:4px">
               <span>{{index+1}}</span>
               <span  class="address-name">{{item.city}}</span>
-              <span style="margin-left:25px">进：{{item.inNum}}</span>
+              <span style="margin-left:20px">进：{{item.inNum}}</span>
               <span>出：{{item.outNum}}</span>
               <span>进出比：{{item.proportion.toFixed(2)}}%</span>
             </p>
@@ -136,6 +136,9 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
+    this.map.setCenter([109.278987,35.747334]);
+    // this.map.setZoom(11);
+    this.map.repaint = true;
     that.getIndexData();
     that.realtimeData(that.stime)
   
@@ -167,8 +170,6 @@ export default {
       // 车辆类型分析
       blur.$emit("paramxzqh",xzqh);
       blur.$emit("paramcity",city);
-      blur.$emit("paramxzqh",xzqh);
-      // that.centerTo(row.jwd.split(' '));
       that.xzqh=xzqh;
       that.city=city;
     },
@@ -220,16 +221,15 @@ export default {
     // 日期选择获取的数据
     determine(){
        let that = this;
-       blur.$emit("determine",that.timeRange)
+       blur.$emit("determine",that.timeRange) //发送时间格式20200505
        that.realtimeData(that.activeName)
-        // console.log(that.timeRange[0],that.timeRange[1])
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
         let timeData={
           time1,
           time2
         }
-        blur.$emit("sendTime",timeData)
+        blur.$emit("sendTime",timeData) //发送时间格式  2020-06-10 23:59:59
     },
     getIndexData(){
      let that = this;
@@ -292,7 +292,7 @@ export default {
   height:977px;
   top: 9vh;
 }
-.city-index_container {
+.city-index-div .city-index_container {
   width: 100%;
   height: 100%;
   .city-index_title{
@@ -371,14 +371,14 @@ export default {
     &_table {
       overflow-y: auto;
       color:white;
-      padding: 1px 10px;
+      padding: 1px 7px;
       height: 86%;
       .item{
         // border-bottom: 1px solid $color-white;
         box-sizing: border-box;
         line-height: 1em;
         margin: 0 2%;
-        // padding:1px 0 2px 0;
+        // padding:2px 0;
         cursor: pointer;
         height:6.8vh;
         >p:nth-child(1){
@@ -404,6 +404,7 @@ export default {
           >span:nth-child(5){
             width:35%;
             color: $color-info;
+            padding-right:3px;
             @include flex(row,flex-end,center);
           }
         }

@@ -68,16 +68,15 @@ export default {
            belonglist=[];
          }
        }
-      //  if(that.$refs.carinfo){
-      //     let marklist=that.$refs.carinfo.map_cover.markers;
-      //     if(showcarinfo!==1){
-      //      marklist.map(item=>{
-      //        item.remove();
-      //      })
-      //      marklist=[];
-      //    }
-      //  }
-      // console.log(showcarinfo)
+       if(that.$refs.carinfo){
+          let marklist=that.$refs.carinfo.map_cover.markers;
+          if(showcarinfo!==1){
+           marklist.map(item=>{
+             item.remove();
+           })
+           marklist=[];
+         }
+       }
     })
      
     this.map = this.$store.state.map;

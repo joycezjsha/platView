@@ -113,10 +113,8 @@ export default {
     */
     handdle(row){
       let that=this;
-      // console.log(row.XZQH)
       that.XZQH=row.XZQH;
       that.city=row.city;
-      // console.log(row,row.XZQH)
       blur.$emit("getXZQH",that.XZQH)
       blur.$emit("getcity",that.city)
       that.centerTo(row.jwd.split(' '));
@@ -160,7 +158,6 @@ export default {
       interf.GET_BAY_ROAD_MAP_DEV_API({dldm:id}).then(response=>{
        if (response && response.status == 200){
          var data = response.data;
-         console.log(data)
          if (data.errcode == 0) {
              _this.addRoadLine(data.data);
           }else{
@@ -346,7 +343,6 @@ export default {
     getIndexData() {
       let that = this;
     //  interf.getCityIndexData({index:1},(data) => {
-    //     console.log(data);
     //       },(e)=>{
 
     //       })

@@ -51,11 +51,14 @@ export default {
     mounted(){
         this.map = this.$store.state.map;
         let that = this;
-        // this.map.setCenter([108.967368, 34.302634]);111.06744,39.02786
+        // this.map.setCenter([108.967368, 34.302634]);
         this.map.setCenter([109.278987,35.747334]);
-        this.map.setZoom(6);
-        this.getIllegalHeatMapDatas(this.stime)
-        this.gatData()
+        this.map.setZoom(11);
+        // this.getIllegalHeatMapDatas(this.stime)
+        if(that.tableIndex!='1'){
+            this.gatData()
+        }
+        // this.gatData()
     },
     methods:{
         /**
@@ -87,7 +90,6 @@ export default {
             if(that.tableIndex=='2'){
                 that.type='1';
                 blur.$emit('gettype',that.type)
-                
                 that.getIllegalHeatMapDatas(that.stime)
                 //  that.getIllegalAnalysisDatas(that.time)
             }else{
@@ -155,7 +157,7 @@ export default {
                     "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
                 },
                 'paint': {
-                    "histogram-colors": ['#72c3fc', '#ffd8a8', '#faa2c1', '#c5f6fa', '#C7F5FF'],
+                    "histogram-colors": ['#ad0532', '#8e7146', '#00ece8', '#a24228', '#ad0532'],
                     /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
                     'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
                     'histogram-height': {
@@ -169,10 +171,8 @@ export default {
             that.map_cover.sourceList.push("histogram-source");
             that.map_cover.lineList.push("histogram-layer");
             }
-            if(item.features.length>0){
-                that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
-                that.map.setPitch(60);
-            }
+            that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
+            that.map.setPitch(60);
         
        },
         /**
@@ -199,9 +199,11 @@ export default {
                 if(response && response.status==200){
                 var data = response.data;
                 if(data.errcode == 0){
-                  setTimeout(() => {
-                    that.getMapDatas(data.data)   
-                  }, 200);
+                    if(data.data.features.length>0){
+                        setTimeout(() => {
+                            that.getMapDatas(data.data)   
+                        }, 200);
+                    }
                 }else{
                     that.$message({ 
                     message: data.errmsg,

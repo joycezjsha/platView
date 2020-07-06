@@ -103,6 +103,7 @@ export default {
   },
   mounted() {
     this.map=this.$store.state.map;
+    this.map.setZoom(4);
     let that = this;
     that.getData();
     
@@ -139,11 +140,9 @@ export default {
      }
     //  if(i.name=='1'){
     //    that.param.stime=='2';
-    //    console.log(that.param.stime)
     //    that.getVehicleOwnershipDatas();
     //  }else{
     //    that.param.stime==i.name;
-    //    console.log(that.param.stime)
     //  }
 
    },

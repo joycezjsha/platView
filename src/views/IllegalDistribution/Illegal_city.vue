@@ -42,10 +42,10 @@
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs> -->
-        <div style="padding:0 5px;height:73vh">
+        <div style="padding:0 5px;height:73vh;width:100%;">
           <!--  -->
           <el-table  @row-click="handItem" 
-          :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
+          :data="indexDatas" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="70">
               <!-- <template v-if="scope.row.city!=null" slot-scope="scope">
                 {{scope.row.city}}
@@ -97,7 +97,6 @@ export default {
     this.map.setZoom(11);
     this.map.repaint = true;
     this.getIndexData();
-    console.log(this.stime)
     this.getIllegalAnalysisDatas(this.stime)
     
   },
@@ -195,7 +194,6 @@ export default {
     getIndexData() {
       let that = this;
     //  interf.getCityIndexData({index:1},(data) => {
-    //     console.log(data);
     //       },(e)=>{
 
     //       })
@@ -491,7 +489,9 @@ export default {
   .illegal-city_content {
     width: 98%;
     height: 87%;
-    margin: 1%;
+    box-sizing: border-box;
+    padding:0 0.3vw;
+    // margin: 1%;
     &_table {
       overflow-y: auto;
     }

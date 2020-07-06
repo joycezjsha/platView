@@ -48,10 +48,10 @@ export default {
     },
     mounted(){
       this.map = this.$store.state.map;
+      this.map.setCenter([109.278987,35.747334]);
       let that=this;
       that.getData();
       that.getMapVehicleInData(that.stime)
-    //   that.getHotspotBayonetRanking(that.stime)
     },
     destroyed(){
       this.clearMarkers();
@@ -77,6 +77,22 @@ export default {
     */                
     getData(){
       let that=this;
+      // if(that.tableIndex=='1'){
+      //   blur.$on("paramxzqh",xzqh=>{
+      //     that.xzqh=xzqh;
+      //   })
+      //   blur.$on('gettime',time=>{
+      //     that.stime=time;
+      //     if(that.stime!='4'){
+      //       that.getMapVehicleInData(that.stime) 
+      //     }
+      //   }) 
+      //   blur.$on('determine',times=>{
+      //     that.timeRange=times;
+      //     that.clearMarkers();
+      //     that.getMapVehicleInData(that.timeRange[0],that.timeRange[1])
+      //   })  
+      // }
       blur.$on("paramxzqh",xzqh=>{
         that.xzqh=xzqh;
       })
@@ -153,7 +169,7 @@ export default {
         
         let leftImgDiv=document.createElement('div');
         leftImgDiv.style.float='left';
-        leftImgDiv.style.width='20px';
+        leftImgDiv.style.width='15px';
         leftImgDiv.style.height='40px';
         leftImgDiv.style.lineHeight='30px';
         let img_i = document.createElement('i');
@@ -192,41 +208,40 @@ export default {
     /*
     * 地图热点卡口
     */
-
-     //清除marker
+    //清除marker
     clearMarkers(){
-        if(this.map_cover.markers.length>0){
-            this.map_cover.markers.forEach(e=>{
-                e.remove();
-            })
-        }
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+          })
+      }
     },
     /*##清除地图加载点、线、面、弹框*/
     clearMap(){
-        //清除source
-        if(this.map_cover.sourceList.length>0){
-            this.map_cover.sourceList.forEach(e=>{
-                if(this.map.getSource(e)!=undefined){
-                this.map.removeSource(e);
-                }
-            })
+      //清除source
+      if(this.map_cover.sourceList.length>0){
+        this.map_cover.sourceList.forEach(e=>{
+          if(this.map.getSource(e)!=undefined){
+            this.map.removeSource(e);
+            }
+          })
         }
-        //清除layer
-        if(this.map_cover.lineList.length>0){
-            this.map_cover.lineList.forEach(e=>{
-                if(this.map.getLayer(e)!=undefined){
-                this.map.removeLayer(e);
-                }
-            })
-        }
-        //清除popup
-        if(this.map_cover.popups.length>0){
-            this.map_cover.popups.forEach(e=>{
-                e.remove();
-            })
-        }
+      //清除layer
+      if(this.map_cover.lineList.length>0){
+        this.map_cover.lineList.forEach(e=>{
+          if(this.map.getLayer(e)!=undefined){
+            this.map.removeLayer(e);
+            }
+        })
+      }
+      //清除popup
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
     },
-    }
+  }
 }
 </script>
 

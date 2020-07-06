@@ -20,7 +20,6 @@
     </div>
     <div style="width:90%;margin:0 auto;height:80%;" v-else>
       <el-table
-        
         :data="indexDatas"
         highlight-current-row
         max-height="100%"

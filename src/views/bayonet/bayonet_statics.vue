@@ -17,24 +17,9 @@
       </div>
       <div class="bayonet_statics_content">
         <div style="padding-left:5px">
-          <div class="number reg" style="margin-bottom:10px">
-            <i style="" class='iconfont icon-shebei1'></i>
-            <span class="num">设备总数</span>
-            <span class="x x1" style="">{{devcount}}</span>
-          </div>
-          <div class="number reg" style="margin-bottom:10px">
-            <i style="" class='iconfont icon-kakou'></i>
-            <span class="num">活跃卡口数</span>
-            <span class="x x1" style="">{{activedev}}</span>
-          </div>
-          <div class="number reg" style="margin-bottom:10px">
-            <i style="" class='iconfont icon-shujuhuichuan'></i>
-            <span  class="num">今日回传过车数据</span>
-            <span class="x x1" style="">{{todaynum}}</span>
-          </div>
-          <!-- <m-tab style="margin-bottom:2vh" label='设备总数' :value='devcount'></m-tab>
-          <m-tab  style="margin-bottom:2vh" label='活跃卡口数' :value='activedev'></m-tab>
-          <m-tab label='今日回传过车数据' :value='todaynum'></m-tab> -->
+           <m-tab style="margin-bottom:1.2vh" icon='icon-shebei1' label='设备总数' :value='devcount'></m-tab>
+           <m-tab style="margin-bottom:1.2vh" icon='icon-kakou' label='活跃卡口数' :value='activedev'></m-tab>
+           <m-tab style="margin-bottom:1.2vh" icon='icon-shujuhuichuan' label='今日回传过车数据' :value='todaynum'></m-tab>
         </div>
         <div class="bottom boxstyle">
            <div class="device-statics_title">

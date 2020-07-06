@@ -88,7 +88,6 @@ export default {
     getIndexData() {
       let that = this;
     //  interf.getCityIndexData({index:1},(data) => {
-    //     console.log(data);
     //       },(e)=>{
 
     //       })

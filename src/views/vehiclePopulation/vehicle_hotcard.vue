@@ -138,7 +138,6 @@ export default {
       getHotspotBayMapData(item){
         let itemlist=[];
         itemlist.push(item.JWD.split(" ")[0],item.JWD.split(" ")[1],);
-        // console.log(itemlist)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
         let el1 = document.createElement('div'); //
@@ -247,7 +246,6 @@ export default {
             var data = response.data;
                 if(data.errcode == 0){
                     that.indexDatas1=data.data;
-                    // console.log(that.indexDatas1)
                     that.indexDatas1.forEach(e=>{
                         // if(e.city!=null){
                         //     that.showCity=false;
@@ -264,7 +262,6 @@ export default {
                         //  调用卡口地图方法
                         that.indexDatas1.forEach(element => {
                         that.getHotspotBayMapData(element)
-                        // console.log(element)
                         });
                     }
                 }
@@ -294,7 +291,6 @@ export default {
         .then(response=>{
             if (response && response.status == 200){
             var data = response.data;
-            // console.log(data)
                 if(data.errcode == 0){
                     that.indexDatas=data.data;
                 }

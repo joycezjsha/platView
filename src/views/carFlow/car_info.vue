@@ -12,11 +12,7 @@
         </div>
       </div>
       <div class="data borstyle" >
-<<<<<<< HEAD
-        <m-tab :isShowIcon='showIcon' style="margin:5px" label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
-=======
         <m-tab :isShowIcon="isShowIcon" style="margin:5px"  label='总计进入车辆次数' :value='provinceData.addIn'></m-tab>
->>>>>>> cab03fb1fc2d548005b87426e5ba17534b2a8eb9
         <div class='car-info_tab'>
           <span><div>进入辆次</div><div><span class=''>{{provinceData.incount}}</span></div></span>
           <span><div>流出辆次</div><div><span class=''>{{provinceData.outcount}}</span></div></span>
@@ -368,6 +364,8 @@ export default {
     this.getdata();
     this.map = this.$store.state.map;
     let that = this;
+    this.map.setCenter([109.278987,35.747334]);
+    // this.map.setZoom(6);
     this.getTrafficData();
     that.getprovinceData(that.stime)
     that.initSumCharts(that.timeName);
@@ -566,13 +564,14 @@ export default {
       if (response && response.status == 200){
         var data = response.data;
         if (data.errcode == 0) {
-          that.echartsData.BIGCAR=data.data.BIGCAR;
-          that.echartsData.SMALLCAR=data.data.SMALLCAR;
+          // that.echartsData.BIGCAR=data.data.BIGCAR;
+          // that.echartsData.SMALLCAR=data.data.SMALLCAR;
           that.staticsSort=[
             {color:'#0067e2',label:'大车',value:data.data.BIGCAR},
             {color:'#00a8d2',label:'小车',value:data.data.SMALLCAR}];
           // 绘制饼状图
-          this.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
+          that.options.series[0].data=[];
+          that.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
           {value:data.data.SMALLCAR, name:'小车'},]
           that.changechart = echarts.init(document.getElementById('accurCreateChange'));
           that.changechart.setOption(that.options);

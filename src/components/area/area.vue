@@ -428,7 +428,7 @@ export default {
           layers: renderLayerIds
         });
         if (features && features.length < 1) {
-          debugger;
+          // debugger;
         }
       }
       
