@@ -112,17 +112,10 @@ export default {
   components:{mTab:m_tab,mList:m_list,mTitle},
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
-    // this.getIndexData();
-    // this.initdeviceStaticsChart();
     this.getData();
-    // setTimeout(()=>{
     let that = this;
-    // that.initAccurCharts();
     that.getDevCountDatas();
     that.getThirtyAlarm();
-    // },1000);
   },
   destroyed() {
     this.flyRoutes = [];

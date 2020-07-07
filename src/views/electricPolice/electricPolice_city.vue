@@ -88,8 +88,8 @@ export default {
   components:{mTiptxt:m_tiptxt,mTitle},
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
+    this.map.setZoom(6);
     this.map.repaint = true;
     let that = this;
     that.getIndexData();
