@@ -38,7 +38,7 @@
           <div class="speedecharts borstyle" >
             <m-title  label='超速违法分类' style='width:8vw'></m-title>
             <div>
-              <div style="width:360px;height:180px;" id="speeding-offences"></div>
+              <div style="width:330px;height:180px;" id="speeding-offences"></div>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
                 <m-title label='限行日期分布' style='width:9vw'></m-title>
               <!-- </div> -->
               <!-- <div style="padding-left:1vw"> -->
-                <div style="width:360px;height:180px;" id="current-date"></div>
+                <div style="width:330px;height:180px;" id="current-date"></div>
               <!-- </div> -->
             </div>
          </div>
@@ -70,7 +70,11 @@
               <!-- <span>{{selected}}</span> -->
             </div>
           <div style="padding:0 1vw;margin-top:1vh;height:30vh;">
-            <el-table :data="indexDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            <el-table 
+            :data="indexDatas" 
+             v-loading='tableLoading'
+            style="width: 100%" height="100%" 
+            :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
               <el-table-column type="index" label="No." width="50"></el-table-column>
               <el-table-column prop="NAME" label="道路名称" width="180%"></el-table-column>
               <el-table-column prop="NUM" label="违法数量" sortable ></el-table-column>
@@ -98,6 +102,7 @@ export default {
       stime:'1',
       city:'',
       xzqh:'',
+      tableLoading:false,
       isShowIcon:false,
       icon:'iconfont icon-weifaguanli',
       timeRange:{ //自定义时间
@@ -180,9 +185,7 @@ export default {
         // { name: "机动车与非机动车", value: "122", radio: "32%" },
         // { name: "行人", value: "2", radio: "32%" }
       ],
-      indexDatas: [
-        {"NAME":"","index":"","NUM":""}
-      ],
+      indexDatas: [],
       current_chart:null,
       current_option:{
         grid: {
@@ -472,6 +475,7 @@ export default {
             that.current_option.series[0].data=[];
             data.data.forEach(e=>{
               that.current_option.yAxis.data.push(e.WEEK)
+              // that.current_option.yAxis.data.push('星期日','星期一','星期二','星期三','星期四','星期五','星期六',)
               that.current_option.series[0].data.push(e.NUM)
             })
             that.current_chart.setOption(that.current_option);
@@ -522,7 +526,7 @@ export default {
               that.speeding_option.series[0].data=[]; 
               for(var i=0;i<data.data.length;i++){
                 if(data.data[i].WFXW=='1'){
-                  data.data[i].WFXW="   "+' 其他'
+                  data.data[i].WFXW='其他'
                 }else if(data.data[i].WFXW=='17211'){
                   data.data[i].WFXW='超速50%以上'
                 }else if(data.data[i].WFXW=='16361'){
@@ -531,10 +535,9 @@ export default {
                   data.data[i].WFXW="超速10%"
                 }
                 that.speeding_option.yAxis.data.push(data.data[i].WFXW)
+                // that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上')
                 that.speeding_option.series[0].data.push(data.data[i].NUM)
-                console.log(that.speeding_option.yAxis.data,that.speeding_option.series[0].data)
               }
-              console.log(that.speeding_option)
               that.speeding_chart.setOption(that.speeding_option);
               window.addEventListener("resize",()=>{
                 that.speeding_chart.resize();
@@ -645,6 +648,7 @@ export default {
     */
    getIllegalAnalysisDatas(time){
      let that = this;
+     that.tableLoading = true;
       let param={};
       param.type=that.type;
       if(that.dllx!=''){
@@ -662,6 +666,7 @@ export default {
       }
       interf.GET_ILL_ANALYSIS_API(param)
      .then(response=>{
+       that.tableLoading = false;
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
@@ -672,6 +677,7 @@ export default {
               type: "error",
               duration: 1500
               });
+            that.tableLoading = false;
           }
         }
       })

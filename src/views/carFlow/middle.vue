@@ -48,9 +48,9 @@ export default {
     },
     mounted(){
       this.map = this.$store.state.map;
-      let that=this;
+      this.map.setCenter(mapConfig.DEFAULT_CENTER);
       that.getData();
-      that.getMapVehicleInData(that.stime)
+      that.getMapVehicleInData(this.stime)
     },
     destroyed(){
       this.clearMarkers();

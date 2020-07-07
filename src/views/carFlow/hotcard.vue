@@ -73,7 +73,6 @@ export default {
           indexDatas1: [
             {"KKMC":"","index":"","NUM":"","city":""}
             ],
-
         }
     },
     components:{
@@ -83,7 +82,7 @@ export default {
     },
     mounted(){
       this.map=this.$store.state.map;
-      this.map.setCenter([108.967368, 34.302634]);
+      this.map.setCenter(mapConfig.DEFAULT_CENTER);
       this.map.setZoom(6);
       let that = this;
       that.$store.commit("setRight", '26.5vw');

@@ -43,9 +43,10 @@ export default {
   },
   mounted() {
     this.map = this.$store.state.map;
-    this.map.setCenter([109.278987,35.747334]);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
     this.map.setZoom(6);
     this.getBayonetHeatMap();
+    this.getBayonetActiveDatas();
     this.getDatas();
   },
   destroyed() {
@@ -76,34 +77,52 @@ export default {
     change(i) {
       let that = this;
       that.tableIndex = i;
+      //如果 that.tableIndex == '1'  显示热力图，隐藏聚合图
       if (that.tableIndex == '1') {
         that.onHideLayer(that.tableIndex);
-        that.getBayonetHeatMap();
-        // that.getBayonetHeatDatas();
-      } else {
+        that.onShowLayer(that.tableIndex);
+        // that.getBayonetHeatMap();
+      } else {  //否则  显示聚合图，隐藏热力图
         that.onHideLayer(that.tableIndex);
-        that.getBayonetActiveDatas();
-        that.onShowLayer();
+        // that.getBayonetActiveDatas();
+        that.onShowLayer(that.tableIndex);
       }
       // blur.$emit('initCityOrRoadStatics',null,null,false);
     },
     /*
-     * 显示地图聚合图
+     * 显示地图聚合图  或  热力图
      */
-    onShowLayer() {
+    onShowLayer(num) {
       let that = this;
-      if (that.map) {
-        if (this.map_cover.lineList.length > 0) {
-          this.map_cover.lineList.forEach(e => {
-            if (this.map.getLayer(e) != undefined) {
-              that.map.setLayoutProperty(e, "visibility", "visible");
-            }
-          });
+      // 显示聚合图
+      if(num==2){
+        if (that.map) {
+          if (this.map_cover.lineList.length > 0) {
+            this.map_cover.lineList.forEach(e => {
+              if (this.map.getLayer(e) != undefined) {
+                 that.map.setLayoutProperty(e, "visibility", "visible");
+                }
+            });
+          }
         }
       }
+      
+      // 显示热力图
+      if(num==1){
+        if (that.map) {
+          if (this.map_cover.lineList2.length > 0) {
+            this.map_cover.lineList2.forEach(e => {
+              if (this.map.getLayer(e) != undefined) {
+                that.map.setLayoutProperty(e, "visibility", "visible");
+              }
+            });
+          }
+        }
+      }
+      
     },
     /*
-     * 隐藏地图聚合图
+     * 隐藏地图聚合图   热力图
      */
     onHideLayer(num) {
       let that = this;
@@ -228,46 +247,36 @@ export default {
         that.map_cover.lineList.push("cluster-count");
       }
     },
-    /*
-     * 卡口热力分布地图显示  Bayonet/getBayonetHeat   GET_BAY_HEAT_API
+    /**
+     * 热力图
      */
-    getBayonetHeatMap(xzqh) {
-      let _this = this;
-      this.map = this.$store.state.map;
-      let param = {};
-      if (xzqh != undefined) {
-        param.xzqh = xzqh;
-      }
-      interf.GET_BAY_HEAT_API(param).then(response => {
-          if (response && response.status == 200) {
-            var data = response.data;
-            if (data.errcode == 0) {
-              data.data.features.map(e => {
-                e.geometry.coordinates = e.geometry.coordinates[0].split(",");
-                return e;
-              });
-              if (this.map.getSource("heatmapSource") != undefined) {
-                this.map.getSource("heatmapSource").setData(data.data);
-                this.map.setLayoutProperty(
-                  "heatmapLayer",
-                  "visibility",
-                  "visible"
-                );
-              } else {
-                this.map.addSource("heatmapSource", {
-                  type: "geojson",
-                  data: data.data //"./static/json/heat.json"/*可以是具体的服务*/
-                });
-                this.map.addLayer({
-                  id: "heatmapLayer",
-                  type: "heatmap",
-                  source: "heatmapSource",
-                  layout: {
-                    visibility: "visible"
-                  },
-                  paint: {
-                    // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                    "heatmap-radius": 30,
+    getMapData(item){
+      item.features.map(e => {
+        e.geometry.coordinates = e.geometry.coordinates[0].split(",");
+        return e;
+      });
+      if (this.map.getSource("heatmapSource") != undefined) {
+        this.map.getSource("heatmapSource").setData(item);
+          this.map.setLayoutProperty(
+            "heatmapLayer",
+            "visibility",
+            "visible"
+            );
+        } else {
+          this.map.addSource("heatmapSource", {
+            type: "geojson",
+            data:item //"./static/json/heat.json"/*可以是具体的服务*/
+          });
+          this.map.addLayer({
+            id: "heatmapLayer",
+            type: "heatmap",
+            source: "heatmapSource",
+            layout: {
+              visibility: "visible"
+            },
+            paint: {
+              // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
+              "heatmap-radius": 30,
                     //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
                     "heatmap-weight": {
                       property: "mag",
@@ -303,6 +312,86 @@ export default {
                 this.map_cover.sourceList.push("heatmapSource");
                 this.map_cover.lineList2.push("heatmapLayer");
               }
+    },
+    /*
+     * 卡口热力分布地图显示  Bayonet/getBayonetHeat   GET_BAY_HEAT_API
+     */
+    getBayonetHeatMap(xzqh) {
+      let _this = this;
+      this.map = this.$store.state.map;
+      let param = {};
+      if (xzqh != undefined) {
+        param.xzqh = xzqh;
+      }
+      interf.GET_BAY_HEAT_API(param).then(response => {
+          if (response && response.status == 200) {
+            var data = response.data;
+            if (data.errcode == 0) {
+              if(data.data.features.length>0){
+                that.getMapData(data.data)
+              }
+              
+              // data.data.features.map(e => {
+              //   e.geometry.coordinates = e.geometry.coordinates[0].split(",");
+              //   return e;
+              // });
+              // if (this.map.getSource("heatmapSource") != undefined) {
+              //   this.map.getSource("heatmapSource").setData(data.data);
+              //   this.map.setLayoutProperty(
+              //     "heatmapLayer",
+              //     "visibility",
+              //     "visible"
+              //   );
+              // } else {
+              //   this.map.addSource("heatmapSource", {
+              //     type: "geojson",
+              //     data: data.data //"./static/json/heat.json"/*可以是具体的服务*/
+              //   });
+              //   this.map.addLayer({
+              //     id: "heatmapLayer",
+              //     type: "heatmap",
+              //     source: "heatmapSource",
+              //     layout: {
+              //       visibility: "visible"
+              //     },
+              //     paint: {
+              //       // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
+              //       "heatmap-radius": 30,
+              //       //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
+              //       "heatmap-weight": {
+              //         property: "mag",
+              //         stops: [
+              //           [0, 0],
+              //           [10, 1]
+              //         ]
+              //       },
+              //       // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
+              //       "heatmap-intensity": 1,
+              //       // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
+              //       "heatmap-color": [
+              //         "interpolate",
+              //         ["linear"],
+              //         ["heatmap-density"],
+              //         0,
+              //         "rgba(0, 0, 255, 0)",
+              //         0.1,
+              //         "royalblue",
+              //         0.3,
+              //         "cyan",
+              //         0.5,
+              //         "lime",
+              //         0.7,
+              //         "yellow",
+              //         1,
+              //         "red"
+              //       ],
+              //       // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
+              //       "heatmap-opacity": 1
+              //     }
+              //   });
+              //   this.map_cover.sourceList.push("heatmapSource");
+              //   this.map_cover.lineList2.push("heatmapLayer");
+              // }
             }
           }
         })

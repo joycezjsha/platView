@@ -8,14 +8,15 @@
       <div class="electricPolice_city_content">
         <i class="iconfont icon-dianjing" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:20px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃电警是指近一个月有抓拍违法数据的设备'></m-tiptxt>
-        <div v-if="!tableIndex" style="padding:0 5px">
+        <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:100%">
           <el-table :data="indexData" 
+          v-loading='tableLoading'
              @row-click="handdleCity"
-             style="width: 100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column  type="index" label="No." width="50"></el-table-column>
-            <el-table-column prop="city" label="城市" width="70"></el-table-column>
-            <el-table-column prop="COUNT" label="设备数量" width="110" sortable></el-table-column>
-            <el-table-column prop="ACTIVENUM" label="活跃个数"  width="110" sortable></el-table-column>
+             style="width: 100%"  height="100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            <el-table-column  type="index" label="No" width="40"></el-table-column>
+            <el-table-column prop="city" label="城市" width="55"></el-table-column>
+            <el-table-column prop="COUNT" label="设备数量" sortable></el-table-column>
+            <el-table-column prop="ACTIVENUM" label="活跃个数"  sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
             <el-table-column prop="XZQH" v-if='showXZQH'  ></el-table-column>
           </el-table>
@@ -30,6 +31,7 @@
               </el-option>
             </el-select>
           <el-table @row-click="handelRoad"
+           v-loading='tableLoading'
           :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="道路名称"></el-table-column>
@@ -55,6 +57,7 @@ export default {
       map: {},
       XZQH:'',
       city:'',
+      tableLoading:false,
       showXZQH:false,
       map_cover:{
         sourceList:[],
@@ -62,12 +65,8 @@ export default {
         markers:[],
         popups:[]
       },
-      indexData: [
-        {"city":"","index":"","ACTIVENUM":"","COUNT":"","ACTIVE":"","XZQH":""}
-        ],
-      roadDatas:[
-        {"NAME":"","NUM":"","ACTIVE":""}
-        ],
+      indexData: [],
+      roadDatas:[],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -89,7 +88,11 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     this.map.setCenter(mapConfig.DEFAULT_CENTER);
+<<<<<<< HEAD
     this.map.setZoom(6);
+=======
+    this.map.setZoom(11);
+>>>>>>> c138fb9104ecd56515e12600f7cca1a7165998be
     this.map.repaint = true;
     let that = this;
     that.getIndexData();
@@ -117,8 +120,11 @@ export default {
     */
    getRoadStatisticsDatas(){
      let that = this;
+     that.roadDatas=[];
+      that.tableLoading = true;
        interf.GET_ROAD_STATIS_API({})
         .then(response=>{
+           that.tableLoading = false;
           if (response && response.status == 200){
             var data = response.data;
             if (data.errcode == 0) {
@@ -129,6 +135,7 @@ export default {
                 type: "error",
                 duration: 1500
                 });
+                 that.tableLoading = false;
               }
             }
           })
@@ -146,8 +153,11 @@ export default {
     */
     getCityStatisticsDatas(){
       let that = this;
+      that.indexData=[];
+      that.tableLoading = true;
       interf.GET_CITY_STATIS_API({})
       .then(response=>{
+        that.tableLoading = false;
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
@@ -158,6 +168,7 @@ export default {
               type: "error",
               duration: 1500
               });
+              that.tableLoading = false;
             }
           }
         })
