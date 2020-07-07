@@ -86,9 +86,8 @@ export default {
       this.map.setCenter([108.967368, 34.302634]);
       this.map.setZoom(6);
       let that = this;
-      that.$store.commit("setRight", '26.5vw');
-      that.getData()
-      that.getHotCarDatas(that.stime)
+      // that.getData()
+      // that.getHotCarDatas(that.stime)
     },
     destroyed(){
       this.clearMap()
@@ -102,7 +101,7 @@ export default {
         that.showback=true;
         that.stime='1';
         that.xzqh='';
-        that.getHotCarDatas(that.stime)
+        // that.getHotCarDatas(that.stime)
       },
       /**
        * 接收table传过来的数据 
@@ -114,18 +113,6 @@ export default {
         *paramcity 对应城市
         *determine 定义时间  realtime--中间按钮对应的组件
         */
-        //  接收对应的行政区划
-        blur.$on("paramxzqh",xzqh=>{
-          that.xzqh=xzqh;
-          // if(that.tableIndex=='3'){
-            that.getHotCarDatas(that.xzqh); 
-          // }
-        })
-        // 接收自定义的时间 that.timeRange[0]->stime   that.timeRange[1]->etime
-        blur.$on('determine',times=>{
-          that.timeRange=times;
-          that.getHotCarDatas(that.stime);
-        })  
         // 接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
          blur.$on('gettime',time=>{
           that.stime=time;
@@ -133,6 +120,17 @@ export default {
             that.getHotCarDatas(that.stime)
           }    
         }) 
+        //  接收对应的行政区划
+        blur.$on("paramxzqh",xzqh=>{
+          that.xzqh=xzqh;
+          that.getHotCarDatas(that.xzqh); 
+        })
+        // 接收自定义的时间 that.timeRange[0]->stime   that.timeRange[1]->etime
+        blur.$on('determine',times=>{
+          that.timeRange=times;
+          that.getHotCarDatas(that.stime);
+        })  
+        
         // 接收对应的城市名称
         blur.$on("paramcity",city=>{
           that.city=city;
@@ -415,5 +413,11 @@ export default {
       }
       
     }
+}
+
+</style>
+<style>
+#card-modal .el-table--scrollable-x .el-table__body-wrapper{
+  overflow-x: hidden !important;
 }
 </style>

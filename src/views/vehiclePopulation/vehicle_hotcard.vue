@@ -14,10 +14,10 @@
             <div class="table">
               <el-table :data="indexDatas"
             style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column  type="index" label="No" width="60"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
-                  <el-table-column  prop="innum" label="进入辆次" sortable></el-table-column>
-                  <el-table-column  prop="outnum" label="流出辆次" sortable></el-table-column>
+                  <el-table-column  type="index" label="No" width="38"></el-table-column>
+                  <el-table-column show-overflow-tooltip prop="road" width="130"  label="道路"></el-table-column>
+                  <el-table-column  prop="innum" label="进入辆次"  width="80" sortable></el-table-column>
+                  <el-table-column  prop="outnum" label="流出辆次"  width="80" sortable></el-table-column>
               </el-table>
             </div> 
           </div>
@@ -27,21 +27,22 @@
           <div  class="padding"> 
             <div  class="table">
               <el-table :data="indexDatas1"
-            style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                  <el-table-column  type="index" label="No" width="60"></el-table-column>
-                  <!-- <div v-if="showCity==null">
-                       <el-table-column show-overflow-tooltip prop="KKMC"   label="卡口名称"></el-table-column>
-                  </div>  :formatter="userTypeList"  -->
-                  <div>
-                      <el-table-column 
-                      show-overflow-tooltip prop='city,KKMC'  width="200" label="卡口名称">
-                        <template slot-scope="scope"> 
-                            <span v-if="scope.row.city!=null">{{`[`+scope.row.city+`]`}}</span>
-                            <span>{{scope.row.KKMC}}</span>
+              style="width: 100%" height="90%" 
+              @row-click="handleItem"
+              :default-sort = "{prop: 'NUM', order: 'descending'}" 
+              :row-style="getRowClass" :header-row-style="getRowClass" 
+              :header-cell-style="getRowClass">
+                  <el-table-column  type="index" label="No" width="40"></el-table-column>
+                  <!-- <div> -->
+                  <el-table-column 
+                      show-overflow-tooltip prop='city,KKMC'  width="210" label="卡口名称">
+                    <template slot-scope="scope"> 
+                        <span v-if="scope.row.city!=null">{{`[`+scope.row.city+`]`}}</span>
+                        <span>{{scope.row.KKMC}}</span>
                         <!-- [{{scope.row.city}}]{{scope.row.KKMC}} -->
-                        </template>
-                      </el-table-column>
-                  </div>
+                    </template>
+                  </el-table-column>
+                  <!-- </div> -->
                   <el-table-column  prop="NUM" label="过车辆" sortable></el-table-column>     
               </el-table>
             </div>
@@ -95,6 +96,7 @@ export default {
       this.map=this.$store.state.map;
       this.map.setZoom(8);
        let that = this;
+       this.map.setCenter(mapConfig.DEFAULT_CENTER);
       //  that.$store.commit("setRight", '25.5vw');
        that.getData()
        that.getHotspotRoadRankinDatas();
@@ -132,9 +134,15 @@ export default {
          
       })
     },
-      /**
-       * 热点卡口地图
-       */     
+    /**
+    * 
+    */
+   handleItem(){
+
+   },
+    /**
+    * 热点卡口地图
+    */     
       getHotspotBayMapData(item){
         let itemlist=[];
         itemlist.push(item.JWD.split(" ")[0],item.JWD.split(" ")[1],);
@@ -246,24 +254,12 @@ export default {
             var data = response.data;
                 if(data.errcode == 0){
                     that.indexDatas1=data.data;
-                    that.indexDatas1.forEach(e=>{
-                        // if(e.city!=null){
-                        //     that.showCity=false;
-                        // }
-                    })
-                        if(that.indexDatas1.length>0){
-
-                        // 清除上一次的popups
-                        // if(this.map_cover.popups.length>0){
-                        //   this.map_cover.popups.forEach(e=>{
-                        //     e.remove();
-                        //   })
-                        // }
-                        //  调用卡口地图方法
-                        that.indexDatas1.forEach(element => {
-                        that.getHotspotBayMapData(element)
-                        });
-                    }
+                    // if(that.indexDatas1.length>0){
+                    //   //  调用卡口地图方法
+                    //   that.indexDatas1.forEach(element => {
+                    //     that.getHotspotBayMapData(element)
+                    //   });
+                    // }
                 }
             }
         })
@@ -400,7 +396,7 @@ export default {
       // border:1px solid;
       // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
       .padding{
-        padding:0 1.5vw;
+        padding:0 0.5vw;
         .table{
           height: 41vh;
         }

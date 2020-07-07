@@ -52,6 +52,7 @@
         <div class="vehicle-table" style="padding:0 27px;height:100%">
           <el-table
             :data="indexDatas"
+             v-loading='tableLoading'
             style="width: 100%"
             height="100%"
             :default-sort="{prop: 'week_radio', order: 'descending'}"
@@ -85,6 +86,7 @@ export default {
   data() {
     return {
       city: "",
+      tableLoading:false,
       fxlxName:'4', //	归属地分析  实时活跃 传4  今日入陕 出陕传2
       tableIndex:'',
       // isActive:'4', //实时活跃 4  今日入陕1  出陕2
@@ -115,7 +117,7 @@ export default {
     this.map.setZoom(4);
     let that = this;
     that.getData();
-    
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
     that.getVehicleOwnershipDatas();        
   },
   destroyed(){
@@ -339,6 +341,8 @@ export default {
     */
     getVehicleOwnershipDatas(){
       let that = this;
+      that.tableLoading = true;
+      that.indexDatas=[];
       let getBelongData={};
       //  如果是默认显示
       // 请求数据 实时活跃&省外   实时活跃 stime=4  provinceInorOut=1  1省外 
@@ -352,6 +356,7 @@ export default {
         getBelongData.code=that.param.code;
       }
         interf.GET_OWN_SHIP_API(getBelongData).then(response => {
+          that.tableLoading = false;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -371,6 +376,7 @@ export default {
                 type: "error",
                 duration: 1500
               });
+              that.tableLoading = false;
             }
           }
         })

@@ -161,10 +161,16 @@ export default {
         default:break;
       }
     },
+   /**
+    *  切换正序和倒序
+    */  
     sort() {
-     this.downIcon = !this.downIcon
+     this.downIcon = !this.downIcon;
+     this.flowDatas.reverse();
     }, 
-    // showData() 列表中的每一项
+    /**
+    *   showData() 列表中的每一项
+    */
     showData(xzqh,city){
       let that = this;
       // 车辆类型分析
@@ -173,7 +179,9 @@ export default {
       that.xzqh=xzqh;
       that.city=city;
     },
-    //  全省流动情况  默认显示实时的数据   
+    /*
+    *  全省流动情况  默认显示实时的数据   
+    */  
     realtimeData(type){
       let that = this;
       let param={};
@@ -218,7 +226,9 @@ export default {
         that.tableLoading = false;
       });
     },
-    // 日期选择获取的数据
+    /*
+    * 日期选择获取的数据
+    */ 
     determine(){
        let that = this;
        blur.$emit("determine",that.timeRange) //发送时间格式20200505

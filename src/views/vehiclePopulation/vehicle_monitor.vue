@@ -12,6 +12,7 @@
       <m-tab :isShowIcon="isShowIcon" label='实时监控车辆活跃数：' :value=countnum></m-tab>
       <div class='center_table'>
          <el-table @row-click="showCity"
+         v-loading='tableLoading'
           :data="indexDatas" style="width: 100%" height="32vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="类型"></el-table-column>
@@ -30,10 +31,14 @@
                <span style="color:rgba(255,255,255,1);">{{item.HPHM}}</span>
                <span class="per-hour">时速/限速:{{item.SJ}}</span>
             </div>
-            <p  style="margin-bottom:3px">
+            <div class="address-name">
+              <span>{{item.WFDZ}}</span>
+              <span>{{item.WFSJ}}</span>
+            </div>
+            <!-- <p  style="margin-bottom:3px">
             <span class="address-name">{{item.WFDZ}}</span>
             </p>         
-            <div class="address-name time">{{item.WFSJ}}</div>          
+            <div class="address-name time">{{item.WFSJ}}</div>           -->
           </li>
         </ul>
     </div>
@@ -58,6 +63,7 @@ export default {
       map: {},
       isShowCity:false,
       isShowIcon:false,
+      tableLoading:false,
       map_cover:{
         sourceList:[],
         markers:[],
@@ -116,8 +122,10 @@ export default {
     //重点车辆监测  KeyVehicle/getKeyVehicle   GET_KEY_VEHICLE_API 
     getKeyVehicleDatas(){
      let that = this;
+     that.tableLoading = true;
     interf.GET_KEY_VEHICLE_API({})
     .then(response=>{
+      that.tableLoading = false;
         if (response && response.status == 200){
           var data= response.data;
           if (data.errcode == 0) {
@@ -129,6 +137,7 @@ export default {
               type: "error",
               duration: 1500
             });
+            that.tableLoading = false;
           }
         }
       })
@@ -243,7 +252,6 @@ export default {
 .vehicle_monitor-div ul,li{
   margin: 0;
   padding:0;
- 
 }
 //  .vehicle_monitor-div {
 //     position: absolute;
@@ -272,14 +280,19 @@ export default {
     height:459px;
     margin-top: 17px;
     overflow: hidden;
+    padding:0 0.4vw;
+    box-sizing: border-box;
 }
 .traffic-index_content_table{
+  overflow-y: auto;
+  height: 86%;
+  padding:1vh 0.5vw;
   .index-item{
     width:418px;
-    // height: 54px;
-    padding:0 20px;
+    padding:10px 0;
     margin-top: 13px;
-    margin-left: 8px;
+    margin-left: 1vw;
+    
   }
 }
 .vehicle_monitor-div li:nth-of-type(odd){ 
@@ -300,10 +313,10 @@ export default {
   font-weight:400;
   color:rgba(255,255,255,1);
   margin-right: 45px;
-  padding:1.5px;
 }
 .vehicle_monitor-div .per-hour{
-  margin-left: 35px;
+  float: right;
+  margin-right:0.8vw;
   font-size:14px;
   font-family:Source Han Sans CN;
   color:rgba(166,176,205,1);

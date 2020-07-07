@@ -37,7 +37,7 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        this.map.setCenter([109.278987,35.747334]);
+        this.map.setCenter(mapConfig.DEFAULT_CENTER);
         this.map.setZoom(11);
         this.getMapBayonetRankingDatas()
         

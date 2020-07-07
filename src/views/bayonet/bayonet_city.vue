@@ -17,10 +17,10 @@
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
           @row-click="handdle"
           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-            <el-table-column  type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="city" label="城市" width="70"></el-table-column>      
-            <el-table-column prop="NUM" label="设备数量" width="110" sortable></el-table-column>
-            <el-table-column prop="ACTIVENUM" label="活跃个数" width="110" sortable></el-table-column>
+            <el-table-column  type="index" label="No"  width="40"></el-table-column>
+            <el-table-column prop="city" label="城市"  width="60" ></el-table-column>      
+            <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
+            <el-table-column prop="ACTIVENUM" label="活跃个数" sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
             <el-table-column prop="XZQH" v-if="showXZQH" width="0"></el-table-column>
           </el-table>

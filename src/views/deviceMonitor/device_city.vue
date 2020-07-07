@@ -10,7 +10,7 @@
         <m-tiptxt text='活跃设备：是指电警近一个月有抓拍违法数据；卡口、ETC龙门架 、区间测速设备近一天有回传数据；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
         <div class='device-city_content_table' v-if="tableIndex==0">
           <el-table :data="indexcityDatas" @row-click="handle">
-            <el-table-column fixed type="index" label="No" width="50"></el-table-column>
+            <el-table-column type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="city"   label="城市"></el-table-column>
             <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>

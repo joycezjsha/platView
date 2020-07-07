@@ -63,7 +63,8 @@
          <!-- style="width: 100%"  max-height="250" -->
          <el-table :data="centerstatics.tableDatas" style="width:90%;margin:0 auto;"
            height="90%" :default-sort = "{prop: 'week_radio', order: 'descending'}"
-           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" v-loading='tableLoading'>
+           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" 
+           v-loading='tableLoading'>
            <el-table-column type="index" label="No" width="50"></el-table-column>
            <el-table-column prop="city" label="城市" width="70"></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>

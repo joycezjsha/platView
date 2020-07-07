@@ -2,13 +2,13 @@
   <div class="car-flow">
     <car-table></car-table>
     <middle></middle>
-    <div class="right">
+    <car-info />
+    <!-- <div class="right">
       <car-info v-if="isShow==1" ref="carinfo">
-        <!-- <FlowMap></FlowMap> -->
       </car-info>
       <belong v-if="isShow==2" ref="belonginfo"></belong>
       <hotcard  v-if="isShow==3" ref="hotcardinfo"></hotcard>
-    </div>  
+    </div>   -->
   </div>
 </template>
 
@@ -18,8 +18,8 @@ import table from "./car_table";
 import blur from '../../blur.js'
 import middle from "./middle";
 import car_info from "./car_info";
-import belong from "./belong";
-import hotcard from "./hotcard";
+// import belong from "./belong";
+// import hotcard from "./hotcard";
 // import FlowMap from "./carFlow_map";
 export default {
   name: "carFlow",
@@ -40,8 +40,8 @@ export default {
     carTable:table,
     carInfo:car_info,
     middle,
-    belong,
-    hotcard,
+    // belong,
+    // hotcard,
     // FlowMap
   },
   mounted() {
@@ -59,24 +59,24 @@ export default {
       //      poplist=[];
       //    }
       //  }
-       if(that.$refs.belonginfo){
-          let belonglist=that.$refs.belonginfo.belongList;
-          if(showcarinfo!==2){
-           belonglist.map(item=>{
-             item.remove();
-           })
-           belonglist=[];
-         }
-       }
-       if(that.$refs.carinfo){
-          let marklist=that.$refs.carinfo.map_cover.markers;
-          if(showcarinfo!==1){
-           marklist.map(item=>{
-             item.remove();
-           })
-           marklist=[];
-         }
-       }
+      //  if(that.$refs.belonginfo){
+      //     let belonglist=that.$refs.belonginfo.belongList;
+      //     if(showcarinfo!==2){
+      //      belonglist.map(item=>{
+      //        item.remove();
+      //      })
+      //      belonglist=[];
+      //    }
+      //  }
+      //  if(that.$refs.carinfo){
+      //     let marklist=that.$refs.carinfo.map_cover.markers;
+      //     if(showcarinfo!==1){
+      //      marklist.map(item=>{
+      //        item.remove();
+      //      })
+      //      marklist=[];
+      //    }
+      //  }
     })
      
     this.map = this.$store.state.map;

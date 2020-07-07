@@ -79,7 +79,6 @@ export default {
       city: "",
       stime: "1",
       xzqh: "",
-      isZoom:'',
       tableIndex:'',
       provinceInorOut: "1", //省份 1  城市2
       fxlx: "1", //进入1  流出2
@@ -106,12 +105,10 @@ export default {
     this.map.setCenter(mapConfig.DEFAULT_CENTER);
     this.map.setZoom(6);
     let that = this;
-    blur.$on('realtime',data=>{
-        debugger;
-      that.isZoom=data;
-      that.tableIndex=data;
-      console.log(that.tableIndex)
-    });
+    // blur.$on('realtime',data=>{
+    //   that.tableIndex=data;
+    //   console.log(that.tableIndex)
+    // });
     that.getData();
     that.getBelongData();    
   },
@@ -412,7 +409,7 @@ export default {
 
 <style scoped lang='scss'>
 @import "@/assets/css/color.scss";
-.carmapOD {
+.carFlowBelong .carmapOD {
   width: 746px;
   height: 589px;
   position: fixed;
@@ -530,10 +527,10 @@ export default {
     }
   }
 }
-.isSelected{
+.carFlowBelong .isSelected{
   color:rgba(255,255,255,1);
 }
-.noSelect{
+.carFlowBelong .noSelect{
   color:rgba(166,175,205,1);
 }
 .carFlowBelong .change {
@@ -557,7 +554,7 @@ export default {
   }
   
 }
-.provinces {
+.carFlowBelong .provinces {
   width: 213px;
   height: 32px;
   // background: rgba(0, 198, 255, 1);
@@ -566,7 +563,7 @@ export default {
   flex: 1;
   margin-right: 2px;
 }
-.city {
+.carFlowBelong .city {
   width: 207px;
   height: 32px;
   // background: rgba(38, 94, 69, 1);

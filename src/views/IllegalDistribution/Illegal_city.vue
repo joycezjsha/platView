@@ -42,10 +42,10 @@
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs> -->
-        <div style="padding:0 5px;height:73vh;width:100%;">
-          <!--  -->
+        <div style="padding:0 5px;height:73vh;width:100%;overflow-x: hidden;">
           <el-table  @row-click="handItem" 
-          :data="indexDatas" height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
+           v-loading='tableLoading'
+          :data="indexDatas"  height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass"><el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="70">
               <!-- <template v-if="scope.row.city!=null" slot-scope="scope">
                 {{scope.row.city}}
@@ -76,6 +76,7 @@ export default {
       xzqh:'',
       showXZQH:false,
       activeName1:"1",
+      tableLoading:false,
       indexDatas: [],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
@@ -152,6 +153,8 @@ export default {
     */
    getIllegalAnalysisDatas(stime,etime){
      let that = this;
+     that.tableLoading = true;
+     that.indexDatas=[];
      let param={};
      if(etime===undefined){
       param.stime=stime;
@@ -162,6 +165,7 @@ export default {
      }
      interf.GET_ILL_ANALY_API(param)
      .then(response=>{
+       that.tableLoading = false;
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
@@ -180,6 +184,7 @@ export default {
               type: "error",
               duration: 1500
               });
+              that.tableLoading = false;
           }
         }
       })

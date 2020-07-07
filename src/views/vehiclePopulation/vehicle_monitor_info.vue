@@ -35,7 +35,7 @@
           <div class="right">
             <div >
               <span style="color:#116cf3;margin-right:3px">|</span>
-              平均行驶速度/限速
+              平均超速幅度
             </div>
             <div class="vehicle-statics_sort" id="vehicle-statics_circle"></div>
           </div>
@@ -58,6 +58,7 @@
         <div class="center_table" style="padding:0 20px">
           <el-table
             :data="indexDataList"
+            v-loading='tableLoading'
             style="width: 100%"
             height="32.5vh"
             :default-sort="{prop: 'NUM', order: 'descending'}"
@@ -97,11 +98,12 @@ export default {
       count: "",
       avg: "",
       timer:null,
+      tableLoading:false,
       indexDataMapBayonet: "", //  存放车辆实时监测地图的数据
       showback: true, //是否显示返回按钮
       incount: "", //今日入陕辆次
       outcount: "", //进入出陕辆次
-      indexDataList: [{ NUM: "", XZQH: "", city: "" }],
+      indexDataList: [],
       outboundEchartsData: {
         legend: ["进入车辆次", "流出车辆次"],
         y1data: [],
@@ -756,6 +758,7 @@ export default {
      */
     getDomesticVehicleRankingDatas(code) {
       let that = this;
+      that.tableLoading = true;
       let DomesticVehicleData = {};
       if (code != undefined) {
         // 如果传入参数code  车辆类型
@@ -764,6 +767,7 @@ export default {
       interf
         .GET_DOM_VEH_RANKING_API(DomesticVehicleData)
         .then(response => {
+          that.tableLoading = false;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -774,6 +778,7 @@ export default {
                 type: "error",
                 duration: 1500
               });
+              that.tableLoading = false;
             }
           }
         })
@@ -812,8 +817,9 @@ export default {
                 that.outboundEchartsData.y1data.push(e.innum);
                 that.outboundEchartsData.y2data.push(e.outnum);
                 that.outboundEchartsData.xdata.push(e.date);
-                that.outboundEchartsData = car_data;
               });
+                that.outboundEchartsData = car_data;
+                console.log(that.outboundEchartsData)
             } else {
               that.$message({
                 message: data.errmsg,
