@@ -103,9 +103,15 @@ export default {
   },
   mounted() {
     this.map=this.$store.state.map;
-    this.map.setCenter([109.278987,35.747334]);
-    this.map.setZoom(4);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
+    this.map.setZoom(6);
     let that = this;
+    blur.$on('realtime',data=>{
+        debugger;
+      that.isZoom=data;
+      that.tableIndex=data;
+      console.log(that.tableIndex)
+    });
     that.getData();
     that.getBelongData();    
   },
@@ -124,39 +130,27 @@ export default {
     */
     getData() {
       let that = this;
-      blur.$on('realtime',data=>{
-        that.isZoom=data;
-        that.tableIndex=data;
-      })
-      // blur.$on('realtime',data=>{
-      //   that.tableIndex=data;
-      // })
       
       blur.$on("sendTime", data => {
-        that.getBelongData();
+        // that.getBelongData();
       });
       /** 接收table传过来的数据 gettime  传入对应的时间 1  2  3  4  时间格式为 timer1 2020-06-10 timer2  2020-06-10
       * determine：自定义时间  paramcity ：某个城市 paramxzqh 行政区划
       */
       blur.$on("paramxzqh", xzqh => {
         that.xzqh = xzqh;
-        // if(that.tableIndex=='2'){
-          that.getBelongData();
-        // }
-       
+        that.getBelongData();
       });
 
       blur.$on("gettime", time => {
         that.stime = time;
-        // if(that.tableIndex=='2'){
-          that.getBelongData();
-        // }
+          if(that.stime!='4'){
+            that.getBelongData();
+          }
       });
       blur.$on("determine", times => {
         that.timeRange = times;
-        // if(that.tableIndex=='2'){
-          that.getBelongData();
-        // }
+        that.getBelongData();
       });
       //
       blur.$on("paramcity", city => {
@@ -345,7 +339,8 @@ export default {
               that.belongData.provinceExternalProportion =
               data.data.provinceExternalProportion;
               that.indexDatas = data.data.dataList;
-              if(that.indexDatas.length>0){
+              console.log(that.tableIndex)
+              if(that.indexDatas.length>0 && that.tableIndex==2){
                 that.getCityMapOD(that.indexDatas) 
               }
             } else {
@@ -368,23 +363,13 @@ export default {
     province(provinceInorOut) {
       let that = this;
       that.provinceInorOut = provinceInorOut;
-      // 如果没有xzqh 
-      if(that.xzqh==''){
-        that.getBelongData(that.stime)
-      }else{
-        that.getBelongData(that.stime,that.xzqh)
-      }
+      that.getBelongData()
     },
     // 车辆流动页面  归属地分析  Vehicle/getVehicleOwnership  // 进入 流出数据
     changeIn(fxlx) {
       let that = this;
       that.fxlx = fxlx;
-      // 如果没有xzqh 
-      if(that.xzqh==''){
-        that.getBelongData(that.stime)
-      }else{
-        that.getBelongData(that.stime,that.xzqh)
-      }
+      that.getBelongData()
     },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
