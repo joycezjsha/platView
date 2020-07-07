@@ -11,7 +11,7 @@
         <li><div>警情</div><div><img :src='jqImg' /></div></li>
       </ul>
     </div>
-    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea' :method='clickAreaEvent'></t-area>
     <!-- <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area> -->
   </div>
 </template>
@@ -227,6 +227,13 @@ export default {
       let marker = new minemap.Marker(el, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
       this.map_cover.markers.push(marker);
       this.map_cover.popups.push(popup);
+    },
+    /**
+     * 地图点击事件，回调绑定事件
+     */
+    clickAreaEvent(data){
+      debugger;
+      blur.$emit('initAccidentStatics',0,data);
     },
 /*##清除地图加载点、线、面、弹框*/
     clearMap(){

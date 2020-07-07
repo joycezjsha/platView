@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div class='induction'>
       <img :src="img" alt="">
   </div>
 </template>
@@ -34,17 +34,16 @@ export default {
             let that=this;
             interf.GET_DIAGRAM_API({}).then(response=>{
                 if (response && response.status == 200){
-                var data= response.data;
-                console.log(data)
-                if (data.errcode == 0) {
-                 that.img=res.data.data.diagramUrl;
-                }else{
-                    that.$message({
-                    message: data.errmsg,
-                    type: "error",
-                    duration: 1500
-                    });
-                }
+                let data= response.data;
+                // if (data.errcode == 0) {
+                 that.img=urlConf.JT_PATH+response.data+'/cn/1920x1080/0029_501_001.png';
+                // }else{
+                //     that.$message({
+                //     message: data.errmsg,
+                //     type: "error",
+                //     duration: 1500
+                //     });
+                // }
                 }
             })
             .catch(err=>{
@@ -77,6 +76,14 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped lang='scss'>
+.induction{
+    width:100%;
+    height:859px;
+    background-color: #0a124a;
+    img{
+        width:100%;
+        height:100%;
+    }
+}
 </style>

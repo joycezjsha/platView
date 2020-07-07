@@ -8,7 +8,8 @@ document.writeln("<script src=\"./static/js/template.js\"></script>");
 //测试地址
 var ip='127.0.0.1:8091/';
 //正式地址
-//var ip=window.location.host;
+// var ip=window.location.host;
+//地图配置
 var mapConfig = {
   BASE_URL: '//113.141.73.223:11180',//"//minedata.cn",
   DOMAIN_URL: '//113.141.73.223:11180',
@@ -34,5 +35,5 @@ var urlConf = {
   /*接口地址*/
   BASE_URL: '//'+ip,
   IMG_PATH :'./static/images/',
-  JT_PATH:'//'+'92.1.48.106/xasimg'
+  JT_PATH:'//'+'92.1.48.106/xasimg/'
 }

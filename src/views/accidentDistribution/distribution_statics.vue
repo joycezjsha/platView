@@ -288,7 +288,7 @@ export default {
                 data.data.forEach(e=>{
                   _data.xdata.push(e.rq);
                   _data.y1data.push(e.num);
-                  _data.y2data.push(e.ratio*100);
+                  _data.y2data.push(e.ratio.split('%')[0]);
                 })
                 that.chart_data=_data;
               }

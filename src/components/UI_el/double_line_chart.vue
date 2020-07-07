@@ -151,6 +151,10 @@ export default {
     c_id:{
       type: String,
       default:'chart_id'
+    },
+    showDoubleX:{
+      type: Boolean,
+      default:true
     }
   },
   watch:{
@@ -180,17 +184,22 @@ export default {
      * 生成警情分别类统计echarts
      */
     initAccidentStaticsChart() {
+      debugger;
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
-      this.option.legend.data = this.chart_data.legend;
-      this.option.xAxis[0].data = this.chart_data.xdata;
-      this.option.yAxis[0].name=this.chart_data.legend[0];
-      this.option.yAxis[1].name=this.chart_data.legend[1];
-      this.option.series[0].name=this.chart_data.legend[0];
-      this.option.series[1].name=this.chart_data.legend[1];
-      this.option.series[0].data =this.chart_data.y1data;
-      this.option.series[1].data =this.chart_data.y2data;
+      if(!this.showDoubleX){
+        this.option.yAxis={type: 'value'};
+      }else{
+        this.option.yAxis[0].name=this.chart_data.legend[0];
+        this.option.yAxis[1].name=this.chart_data.legend[1];
+      };
+      // this.option.legend.data = this.chart_data.legend;
+      // this.option.xAxis[0].data = this.chart_data.xdata;
+      // this.option.series[0].name=this.chart_data.legend[0];
+      // this.option.series[1].name=this.chart_data.legend[1];
+      // this.option.series[0].data =this.chart_data.y1data;
+      // this.option.series[1].data =this.chart_data.y2data;
       this.chart.setOption(this.option);
     }
   }

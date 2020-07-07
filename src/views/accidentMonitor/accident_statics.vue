@@ -347,6 +347,15 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    .return{
+      font-size: 16px;
+      position: absolute;
+      left: 5%;
+      cursor: pointer;
+    }
+    .return:hover{
+      color:$color-primary;
+    }
   }
   .accident-statics--tab {
     width: 100%;
