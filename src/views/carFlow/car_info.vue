@@ -364,7 +364,7 @@ export default {
     this.getdata();
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([109.278987,35.747334]);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
     // this.map.setZoom(6);
     this.getTrafficData();
     that.getprovinceData(that.stime)

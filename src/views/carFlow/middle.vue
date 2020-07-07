@@ -48,7 +48,6 @@ export default {
     },
     mounted(){
       this.map = this.$store.state.map;
-      this.map.setCenter([109.278987,35.747334]);
       let that=this;
       that.getData();
       that.getMapVehicleInData(that.stime)
