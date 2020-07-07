@@ -593,7 +593,7 @@ export default {
           that.map_cover.belongList=[];
         }
         if(that.isShowdiv=='1'){
-          this.map.setZoom(8);
+          this.map.setZoom(6);
         }
       });
       //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义

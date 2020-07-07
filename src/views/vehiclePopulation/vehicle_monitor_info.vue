@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="Provincial borstyle">
-        <m-com-title label="今日省内重点监测车辆运行势态" img_type="1" style="width:17vw;"></m-com-title>
+        <m-com-title label="今日省内重点监测车辆运行势态" img_type="1" style="width:15vw;margin-top:0.5vh;"></m-com-title>
         <div class="tab">
           <!-- 左边 -->
           <div class="left">

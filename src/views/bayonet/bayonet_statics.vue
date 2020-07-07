@@ -30,7 +30,11 @@
           </div>
           <div class="device-statics_data">
             <div style="padding:0 8px">
-              <el-table :data="tableDatas" style="width: 100%" height="680px" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+              <el-table 
+              :data="tableDatas" 
+              v-loading='tableLoading'
+              style="width: 100%" height="62.4vh" 
+              :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                 <el-table-column  type="index" label="No" width="50"></el-table-column>
                 <el-table-column  show-overflow-tooltip  prop="city,ROADNAME"  width="190" label="设备名称">
                   <template slot-scope="scope">
@@ -68,6 +72,7 @@ export default {
       todaynum:'',
       XZQH:'',
       city:'',
+      tableLoading:false,
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
@@ -110,11 +115,7 @@ export default {
           ]
       },
       device_chart:null,
-      tableDatas:[
-        {'ROADNAME':'','TODAYNUM':'','TIMENUM':'','city':''},
-        // {'name':'十字路口002电警','value':'1222'},
-        // {'name':'十字路口002电警','value':'1222'}
-      ]
+      tableDatas:[]
     }
   },
   components:{mTab:m_tab,mList:m_list,mTitle},
@@ -168,50 +169,50 @@ export default {
     */
    getbayrankDatas(xzqh){
       let that = this;
+     that.tableLoading = true;
     //  如果没有参数
      if(xzqh===undefined){
-      interf.GET_BAY_RANK_API({
-          id: ""
-       })
-       .then(response=>{
-         if (response && response.status == 200){
-            var data = response.data;
-             if (data.errcode == 0) {
-               that.tableDatas=data.data;
-             } else{
-               that.$message({
-                 message: data.errmsg,
-                 type: "error",
-                 duration: 1500
-               });
-             }
-         }
-       })
-       .catch(err=>{
-          console.log(err);
-       })
-       .finally(() => {
-         that.tableLoading = false;
-       });
+      interf.GET_BAY_RANK_API({})
+       .then(response=>{
+         that.tableLoading = false;
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+            that.tableDatas=data.data;
+          } else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
+            that.tableLoading = false;
+          }
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      .finally(() => {
+        that.tableLoading = false;
+      });
      }else{
        interf.GET_BAY_RANK_API({
-          id: "",
           xzqh:xzqh
-       })
-       .then(response=>{
-         if (response && response.status == 200){
-            var data = response.data;
-             if (data.errcode == 0) {
-                that.tableDatas=data.data;
-             } else{
-               that.$message({
-                 message: data.errmsg,
-                 type: "error",
-                 duration: 1500
-               });
-             }
-         }
-       })
+       })
+      .then(response=>{
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+            that.tableDatas=data.data;
+            } else{
+              that.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
        .catch(err=>{
           console.log(err);
        })
@@ -225,44 +226,40 @@ export default {
     */
    getdevcountData(xzqh){
       let that = this;
+     
     //  如果没有参数
     if(xzqh===undefined){
-      interf.GET_DEV_COUNT_API({
-          id: ""
-       })
-       .then(response=>{
-         if (response && response.status == 200){
-            var data = response.data;
-             if (data.errcode == 0) {
-                // that.indexData=data.data;
-                that.todaynum=data.data.todaynum.toString();
-                that.devcount=data.data.devcount.toString();
-                that.activedev=data.data.activedev.toString();
-             } else{
-               that.$message({
-                 message: data.errmsg,
-                 type: "error",
-                 duration: 1500
-               });
-             }
-         }
-       })
-       .catch(err=>{
-          console.log(err);
-       })
-       .finally(() => {
-         that.tableLoading = false;
-       });
+      interf.GET_DEV_COUNT_API({})
+      .then(response=>{
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+            that.todaynum=data.data.todaynum.toString();
+            that.devcount=data.data.devcount.toString();
+            that.activedev=data.data.activedev.toString();
+          } else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+              });
+            }
+          }
+        })
+      .catch(err=>{
+        console.log(err);
+      })
+        .finally(() => {
+          that.tableLoading = false;
+        });
     }else{
       interf.GET_DEV_COUNT_API({
-          id: "",
-          xzqh:xzqh
-       })
-       .then(response=>{
-         if (response && response.status == 200){
-            var data = response.data;
-             if (data.errcode == 0) {
-                // that.indexData=data.data;
+        xzqh:xzqh
+      })
+      .then(response=>{
+        if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
                 that.todaynum=data.data.todaynum;
                 that.devcount=data.data.devcount;
                 that.activedev=data.data.activedev;

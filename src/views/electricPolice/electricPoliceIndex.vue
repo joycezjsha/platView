@@ -17,14 +17,12 @@ export default {
   name: "TafficIndex",
   data() {
     return {
-      // isShowCity:false
     };
   },
   components:{
     index,
     TIndex:t_index,
-    middle,
-    // TIndexCity:t_index_city
+    middle
   },
   mounted() {
     let _this=this;

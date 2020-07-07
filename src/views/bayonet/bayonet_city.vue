@@ -13,7 +13,10 @@
         <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:17px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
         <div v-if="!tableIndex" style="padding:0 5px">
-          <el-table :data="indexData" style="width: 100%" height="800px" 
+          <el-table 
+          :data="indexData" 
+          style="width: 100%" height="73.4vh"
+           v-loading='tableLoading'
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
           @row-click="handdle"
           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -34,7 +37,9 @@
                 :value="item.value">
               </el-option>
             </el-select>
-          <el-table @row-click="handleRoad"
+          <el-table 
+          @row-click="handleRoad"
+          v-loading='tableLoading'
            :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No." width="60"></el-table-column>
             <el-table-column prop="NAME" label="道路名称" ></el-table-column>
@@ -60,6 +65,7 @@ export default {
       map: {},
       XZQH:'',
       city:'',
+      tableLoading:false,
       map_cover:{
         sourceList:[],
         lineList:[],
@@ -67,13 +73,8 @@ export default {
         popups:[]
       },
       showXZQH:false,
-      indexData: [
-        // {"city":"","NUM":"","ACTIVE":"","ACTIVENUM":"",'XZQH':''}  
-        ],
-      roadDatas:[
-        {"NAME":"","NUM":"","ACTIVE":""}
-       
-        ],
+      indexData: [],
+      roadDatas:[],
       selectItem:{"city":"西安",order:8},
       areaColors:["#556B2F","#00FFFF","#0000EE","#8A2BE2","#c48f58","#9fcac4","#5ad2a0","#f18a52","#656bd4","#7ca0cd","#88b7dc","#a08bd3","#be7fcd","#30a2c4","#c0ccd7","#dbddab","#9cd076","#69b38b","#437fb9","rgb(255, 143, 109)"],
       timeRange:'',
@@ -275,8 +276,11 @@ export default {
     */
     getRoadStatisticsDatas(){
       let that = this;
+       that.roadDatas=[];
+      that.tableLoading = true;
       interf.GET_ROAD_STATIS_API({})
       .then(response=>{
+        that.tableLoading = false;
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
@@ -287,6 +291,7 @@ export default {
               type: "error",
               duration: 1500
             });
+             that.tableLoading = false;
           }
         }
       })
@@ -302,8 +307,11 @@ export default {
      */
     getcitystatDatas(){
       let that = this;
+      that.indexData=[];
+      that.tableLoading = true;
       interf.GET_CITY_STA_API({})
       .then(response=>{
+        that.tableLoading = false;
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
@@ -322,6 +330,7 @@ export default {
                 type: "error",
                 duration: 1500
                 });
+                that.tableLoading = false;
               }
             }
         })
