@@ -36,10 +36,8 @@ export default {
         this.map = this.$store.state.map;
         this.map.setCenter([109.278987,35.747334]);
         this.map.setZoom(6);
-        this.getRoadStatisticsDatas()
-        this.getData()
-        // this.getAreaData();
-        // setTimeout(this.addHeatMap,3000);
+        this.getRoadStatisticsDatas();
+        this.getData();
     },
     destroyed() {
         this.map.setPitch(0);

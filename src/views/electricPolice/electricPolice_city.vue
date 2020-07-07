@@ -88,16 +88,11 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     this.map.setCenter(mapConfig.DEFAULT_CENTER);
-<<<<<<< HEAD
     this.map.setZoom(6);
-=======
-    this.map.setZoom(11);
->>>>>>> c138fb9104ecd56515e12600f7cca1a7165998be
     this.map.repaint = true;
-    let that = this;
-    that.getIndexData();
-    that.getCityStatisticsDatas();
-    that.getRoadStatisticsDatas()
+    this.getIndexData();
+    this.getCityStatisticsDatas();
+    this.getRoadStatisticsDatas()
   },
   destroyed() {
     this.map.setPitch(0);

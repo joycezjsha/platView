@@ -156,7 +156,7 @@
             <m-title class="titletext"  label='热点卡口排名' ></m-title>
             <div  class="padding"> 
               <div  class="table">
-                <el-table :data="indexDatas1"
+                <el-table :data="tableDatas"
               style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                     <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
                     <el-table-column show-overflow-tooltip prop="city,KKMC"  width="160" label="卡口名称">
@@ -208,9 +208,9 @@ export default {
       map: {},
       i:1,
       indexDatas: [],
+      tableDatas:[],
       map_cover:{
         markers:[],
-        markers1:[],
         belongList:[],
         popups:[]
       },
@@ -497,24 +497,6 @@ export default {
     this.map.stop();
     let that = this;
     that.map.setPitch(0); //设置地图的俯仰角
-    // if(this.map_cover.markers.length>0){
-    //   this.map_cover.markers.forEach(e=>{
-    //     e.remove();
-    //   })
-    // }
-
-    /*for (let i = 0; i < that.buildingmore.length; i++) {
-        if(that.map.getLayer(that.buildingmore[i])) that.map.setLayoutProperty(that.buildingmore[i], 'visibility', 'none');
-      }*/
-    //显示地图右下角飞行图标
-    // eventBridge.$emit('map_hideFlyIcon');
-    // eventBridge.$emit('map_hideBuildingmore');
-    // eventBridge.$emit('hideLayerBtn');
-    // $("#traffiCtrlFly").css(
-    //   "background",
-    //   "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAWCAMAAADto6y6AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABC1BMVEWjtO////+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO////+KC4gAAAAAV3RSTlMAAJ8/nr07Xrk4H7U03/6yMKD7rS1g+Mn9qSohk6Un4WX8oSSikEr0nWM16fmZIzfblRzjGRbK8adNpMYGC5sHnASSjz4DJc7lx3UiAcBtCWKutB3uWVzSmX8cAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EKDAoBO7QtmC0AAADoSURBVCjPY2BiZkABjFDAwBLOyoZVgj08PJyDE4sEVzgIcPNgSDDwgmX4+AXQJQSBwkIgKWERVAlRoKCYOEiXhKQUsoQ0SIxXhg8sJSuHkGCQBwmxKgiB7VJUUoZLqIBFVNXUwXS4kIY0VEITIiCqpQ1hhOvocoEl9CBcMX1lg3CYlKERyIXGEJ6xiakZVMLcwhIkYQXlWtvYcgMpbTs1e7BRDAowExwYHJ2cXVxhrmJwg0m46yF7EAg8QCHi6eXN4IMmIavo62fE4B8QKIkmIWcKIn1Yw4PQJKAgOASHBEMoLgmGMIQEABPwPWhIBaSaAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEwLTEyVDEwOjAxOjU5KzA4OjAwEMBd+QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMC0xMlQxMDowMTo1OSswODowMGGd5UUAAAAASUVORK5CYII=') no-repeat 50% center"
-    // );
-    // commonVariable.CURRENT_MAP.repaint = false;
   },
   methods: {
     /*
@@ -525,11 +507,6 @@ export default {
       that.timeName=i.name;
       that.initSumCharts(that.timeName)
    },
-  //  changeTime(i){
-  //    let that = this;
-  //    that.showTime=i;
-  //    that.initSumCharts(that.showTime)
-  //  },
     // 如果点击实时，则右边数据全部加载实时的数据
     realTime(){
       let that = this;
@@ -555,8 +532,9 @@ export default {
       that.getHotCarDatas(that.stime)
       that.getBelongData();
     },
-    // 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
-    
+    /**
+     * 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
+     * */ 
     getdata(){
       let that = this;
       /**
@@ -566,6 +544,13 @@ export default {
        */   
       blur.$on('realtime',data=>{
         that.isShowdiv=data;
+        if(that.map_cover.belongList.length>0){
+          that.map_cover.belongList.forEach(e=>{
+            e.remove();
+          })
+        }     
+        that.map_cover.belongList=[];
+        if( that.isShowdiv==data)
         if(that.isShowdiv=='3'){
           this.map.setZoom(8);
           that.getHotCarDatas(that.stime)
@@ -584,14 +569,7 @@ export default {
         if(that.isShowdiv=='2'){
           this.map.setZoom(4);
           that.getBelongData();   
-        }else{
-          if(that.map_cover.belongList.length>0){
-            that.map_cover.belongList.forEach(e=>{
-              e.remove();
-            })
-          }     
-          that.map_cover.belongList=[];
-        }
+        };
         if(that.isShowdiv=='1'){
           this.map.setZoom(8);
         }
@@ -621,12 +599,15 @@ export default {
           that.getHotCarDatas(that.stime);
         }
         if(that.isShowdiv=='2'){
+          
           that.getBelongData();
         }
          
       })  
-      blur.$on("paramxzqh",xzqh=>{
+      blur.$on("paramxzqh",(xzqh,city)=>{
         that.xzqh=xzqh;
+        that.city=city;
+        that.showback=true; 
         that.getprovinceData(that.stime,that.xzqh);
         that.getCarTypeDatas();
         if(that.isShowdiv=='3'){
@@ -635,23 +616,9 @@ export default {
         if(that.isShowdiv=='2'){
           that.getBelongData();
         }
-         
-       
-      })
-      blur.$on("paramcity",city=>{
-        that.city=city;
-        that.showback=true; 
       })
       blur.$on('sendTime',data=>{
       })
-      // blur.$on('realtime',i=>{
-      //   this.i=i  //表示中间三个组件
-      // })
-     
-      // 接受 如果不是日历选择的时间 车辆流动页面全省车辆统计 GET_VEH_PRO_API
-      // blur.$on('getcitycardata',data=>{
-      //   let citycardatas=data;
-      // })
     },
     // 如果选择左侧的城市，显示对应城市的车辆类型分析
     //  点击进入和流出 触发 change事
@@ -661,15 +628,6 @@ export default {
        that.fxlx = i.name;
        blur.$emit("getfxlf",that.fxlx);
        that.getCarTypeDatas()
-    },
-    change(i){  
-      let that = this;
-      // that.getIndexDatas(that.stime,i) 
-      // that.isActive = i.toString();
-      // that.fxlx = i.toString();
-      // blur.$emit("getfxlf",that.fxlx)
-      // that.getCarTypeDatas()
-      // that.getIndexDatas(that.stime,that.isActive) 
     },
     // 车辆流动页面全省车辆统计 xzqh===undefined && etime===undefined
     getprovinceData(type,xzqh){
@@ -832,7 +790,7 @@ export default {
      //  OD地图函数
     getCityMapOD(itemlist){
       // this.clearMap();
-      var data = [] ;
+      let data = [] ;
       itemlist.forEach(item => {
         if(item.STARTJWD && item.ENDJWD){
           data.push([
@@ -870,7 +828,7 @@ export default {
                 coords: [item.slice(0, 2), item.slice(2, 4)]
             });
       }
-      var series = [{
+      let series = [{
             name: 'bgLine',
             type: 'lines',
             coordinateSystem: 'GLMap',
@@ -967,6 +925,7 @@ export default {
     // 车辆归属地分析  右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
     getBelongData(){
       let that = this;
+      that.clearMap();
       let BelongData={};
       BelongData.stime=that.stime;
       BelongData.fxlx=that.fxlx;
@@ -1017,16 +976,12 @@ export default {
         itemlist.push(item.KKJD,item.KKWD)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
-        let el1 = document.createElement('div'); //
-        // el.style.border='1px solid rgba(42, 76, 162, 1)';
-        // el.style.borderRadius='2px';
+        let el1 = document.createElement('div'); 
         el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
-        // el.style["padding"] = "10px 10px";
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
-        el1.id = 'marker'; //
-        // el1.style["border"] = "solid 1px #D01828"; // if(item.addIn<0) span2.style.color='#00DEC7';
+        el1.id = 'marker'; 
         el1.style.width='17px';
         el1.style.height='17px';
         el1.style.borderRadius='50%';
@@ -1095,11 +1050,8 @@ export default {
         .setDOMContent(el)
         .addTo(this.map);
         this.map_cover.popups.push(popup);
-        // this.poPupList.push(popup)
-
-        let lnglat1 = [item.KKJD,item.KKWD];
-        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).addTo(this.map);
-        this.map_cover.markers1.push(marker);
+        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat).addTo(this.map);
+        this.map_cover.markers.push(marker);
         
       },
       /**
@@ -1109,6 +1061,7 @@ export default {
       */
       getHotCarDatas(type){
         let that=this;
+        that.clearMap();
         var hotroadData={};  //存放热点道路参数
         var hotcardData={};  //存放热点卡口参数
         // if(type!='4'){
@@ -1131,11 +1084,11 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
-            that.indexDatas1=data.data;  
+            that.tableDatas=data.data;  
             if (data.errcode == 0) {
-              if(that.indexDatas1.length>0){
+              if(that.tableDatas.length>0){
                 //  调用卡口地图方法
-                that.indexDatas1.forEach(element => {
+                that.tableDatas.forEach(element => {
                   that.getcardMapData(element)
                 });
               }
@@ -1183,45 +1136,26 @@ export default {
     },
    /*##清除地图加载点、线、面、弹框*/
   clearMap(){
-    //清除source
-    // if(this.map_cover.sourceList.length>0){
-    //   this.map_cover.sourceList.forEach(e=>{
-    //     if(this.map.getSource(e)!=undefined){
-    //       this.map.removeSource(e);
-    //     }
-    //   })
-    // }
-    // //清除layer
-    // if(this.map_cover.lineList.length>0){
-    //   this.map_cover.lineList.forEach(e=>{
-    //     if(this.map.getLayer(e)!=undefined){
-    //       this.map.removeLayer(e);
-    //     }
-    //   })
-    // }
-    // //清除popup
-    // if(this.map_cover.popups.length>0){
-    //   this.map_cover.popups.forEach(e=>{
-    //     e.remove();
-    //   })
-    // }
-    //清除marker
+    let that=this;
+    if(this.map_cover.popups.length>0){
+      this.map_cover.popups.forEach(e=>{
+        e.remove();
+      })
+    };
+    this.map_cover.popups=[];
     if(this.map_cover.markers.length>0){
       this.map_cover.markers.forEach(e=>{
         e.remove();
       })
-    }
-  },
-
-    /**
-     * 生成重大事故发生趋势echarts
-     */
-    // initAccurCharts(){
-    //   if(!this.accurChart){
-    //     this.accurChart = echarts.init(document.getElementById('accurCreateChange'));
-    //   };
-    //   this.accurChart.setOption(this.accurChangeOption);
-    // }
+    };
+    this.map_cover.markers=[];
+    if(that.map_cover.belongList.length>0){
+      that.map_cover.belongList.forEach(e=>{
+        e.remove();
+      })
+    };
+    that.map_cover.belongList=[];
+  }
   }
 }
 </script>

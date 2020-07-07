@@ -172,8 +172,7 @@ export default {
     showData(xzqh,city){
       let that = this;
       // 车辆类型分析
-      blur.$emit("paramxzqh",xzqh);
-      blur.$emit("paramcity",city);
+      blur.$emit("paramxzqh",xzqh,city);
       that.xzqh=xzqh;
       that.city=city;
     },
