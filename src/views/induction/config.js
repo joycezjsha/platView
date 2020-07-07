@@ -7,7 +7,7 @@ export const interf={
 //induce/getDiagram 
    GET_DIAGRAM_API:data=> {
      return http.service({
-       url:urlConf.JT_PATH,
+       url:urlConf.JT_PATH+'timestamp.txt',
        method:'get',
        params:data
      })

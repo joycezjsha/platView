@@ -234,6 +234,7 @@ export default {
   getTrafficMonitorData(){
     let that=this;
     that.tableLoading = true;
+    that.centerstatics.tableDatas=[];
     interf.GET_TRA_API({
       stime:new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
       etime:new Date()

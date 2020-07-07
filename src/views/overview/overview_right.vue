@@ -3,7 +3,7 @@
     <div class="overview-info_container">
       <div class="boxstyle">
         <div>
-          <m-title label='省内车辆运行态势' img_type=1 style='width:10vw;'></m-title>
+          <m-title label='今日省内车辆运行态势' img_type=1 style='width:11vw;'></m-title>
         </div>
         <div class="tab">
           <span style="margin-right:1.5vw;">
@@ -11,7 +11,7 @@
             速度检测次数</span>
           <span style="margin-left:0.5vw;">
             <i class="split"></i>
-            平均行驶速度/限速</span>
+            平均超速幅度</span>
         </div>
         <div class="overview-info_sort">
           <div>

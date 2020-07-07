@@ -36,6 +36,9 @@ export default {
       default: () => {
         return []
       }
+    },
+    method:{
+      type:Function
     }
 
   },
@@ -53,9 +56,10 @@ export default {
   },
   computed: {},
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
     if(this.isShowArea) this.initArea();
-    this.map.on('click',this.clickArea);
+    if(this.method) this.map.on('click',this.clickArea);
   },
   methods: {
     hideArea(){
@@ -115,11 +119,11 @@ export default {
       data.forEach((e, i) => {
         if(e.color=='#aN') return;
         let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
-        lonlats = lonlats.map(e => {
-          if (e.split(" ")[0] != "") {
-            return [e.split(" ")[0], e.split(" ")[1]];
+        lonlats = lonlats.map(s => {
+          if (s.split(" ")[0] != "") {
+            return [s.split(" ")[0], s.split(" ")[1]];
           } else {
-            return [e.split(" ")[1], e.split(" ")[2]];
+            return [s.split(" ")[1], s.split(" ")[2]];
           }
         });
         let jsonData = {
@@ -135,13 +139,17 @@ export default {
               }
             }]
         };
-         _this.map.addSource('area_polygonSource_'+i, {
+        if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
+          _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
+        }else{
+          _this.map.addSource('area_polygonSource_'+i, {
             'type': 'geojson',
             'data': jsonData
-        });
+          });
+        };
+        
         //面的显示
-        _this.map.addLayer({
-            "id": "area_polygon_"+i,
+        _this.map.addLayer({"id": "area_polygon_"+i,
             "type": "fill",
             "source": "area_polygonSource_"+i,
             "layout": {
@@ -179,10 +187,8 @@ export default {
         });
         _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
         };
-        
         _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
         _this.mapAddItems.polygons.push("area_polygon_"+i);
-        
       });
     },
     /**
@@ -422,13 +428,15 @@ export default {
      * 点击地图，绑定事件
      */
     clickArea(e){
-      for(let i=0;i<this.mapAddItems.lineList.length;i++){
-        renderLayerIds = this.mapAddItems.lineList[i];
-        features = this.map.queryRenderedFeatures(e.point, {
+      for(let i=0;i<this.mapAddItems.polygons.length;i++){
+        let renderLayerIds = [this.mapAddItems.polygons[i]];
+        let features = this.map.queryRenderedFeatures(e.point, {
           layers: renderLayerIds
         });
-        if (features && features.length < 1) {
+        if (features && features.length > 0) {
           // debugger;
+          this.method(features);
+          break;
         }
       }
       
