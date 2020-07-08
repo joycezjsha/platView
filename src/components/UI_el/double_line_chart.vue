@@ -7,9 +7,9 @@ export default {
   data() {
     return {
       option: {
-          color:['#8ec6add6','#d68262bf'],
+          color:['#05eef0','#ffdf05'],
           grid:{
-            top:'35%',
+            top:'22%',
             left:'15%',
             right:'15%',
             bottom:'15%'
@@ -18,7 +18,7 @@ export default {
             trigger: 'axis'
         },
           legend: {
-            top:'6%',
+            top:'3%',
             data: [],
             right:'5%',
             textStyle:{color:'white'}
@@ -80,9 +80,9 @@ export default {
                   data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
                   areaStyle: {
                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                          { offset: 0, color: "#030b29" },
-                          { offset: 0.5, color: "#002651" },
-                          { offset: 1, color: "#f0f0f0" }
+                          { offset: 0, color: "rgba(0,0,0,0)" },
+                          // { offset: 0.5, color: "#002651" },
+                          { offset: 1, color: "#0092b2" }
                         ])
                   }
               },
@@ -90,13 +90,13 @@ export default {
                   name: '',
                   type: 'line',
                   smooth:true,
-                  yAxisIndex: 1,
+                  
                   data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
                   areaStyle: {
                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: "#030b29" },
-                        { offset: 0.5, color: "#2a4869" },
-                        { offset: 1, color: "#00527b" }
+                        { offset: 0, color: "rgba(0,0,0,0)" },
+                        // { offset: 0.5, color: "#2a4869" },
+                        { offset: 1, color: "#030b29" }
                       ])
                   }
               }
@@ -188,17 +188,29 @@ export default {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
       if(!this.showDoubleX){
-        this.option.yAxis={type: 'value'};
+        this.option.yAxis={type: 'value',min: 0,
+                  splitLine:{show:false},
+                  axisLine:{lineStyle:{color:'white'}},
+                  axisLabel: {
+                      formatter: '{value}',
+                      color:'white',
+                       fontSize :10  
+                  },
+                  nameTextStyle:{
+                    color:'white'
+                  }};
       }else{
         this.option.yAxis[0].name=this.chart_data.legend[0];
         this.option.yAxis[1].name=this.chart_data.legend[1];
+        this.option.series[1].yAxisIndex=0;
       };
-      // this.option.legend.data = this.chart_data.legend;
-      // this.option.xAxis[0].data = this.chart_data.xdata;
-      // this.option.series[0].name=this.chart_data.legend[0];
-      // this.option.series[1].name=this.chart_data.legend[1];
-      // this.option.series[0].data =this.chart_data.y1data;
-      // this.option.series[1].data =this.chart_data.y2data;
+      this.option.legend.data = this.chart_data.legend;
+      this.option.xAxis[0].data = this.chart_data.xdata;
+      this.option.series[0].name=this.chart_data.legend[0];
+      this.option.series[1].name=this.chart_data.legend[1];
+      this.option.series[0].data =this.chart_data.y1data;
+      this.option.series[1].data =this.chart_data.y2data;
+      console.log(this.option);
       this.chart.setOption(this.option);
     }
   }

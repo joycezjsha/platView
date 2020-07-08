@@ -67,6 +67,7 @@ export default {
     getAreaData(data){
       let that=this;
       let params={stime:1};
+      that.areaIndexs=[];
       if(data){
         params.stime=data.time[0];
         params.etime=data.time[1];
@@ -76,9 +77,10 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             that.addCityAccident(data.data);
-            let max,min;
-              data.data.map(e=>{
+            let max,min,datas=[];
+              data.data.forEach(e=>{
                 e.Num=e.NUM;
+                datas.push(e);
                 if(!max){
                   max=e.Num;
                 }else{
@@ -89,10 +91,8 @@ export default {
                 }else{
                   min=min>e.Num?e.Num:min;
                 };
-                return e;
               });
-              that.areaIndexs=data.data;
-              console.log(that.areaIndexs);
+              that.areaIndexs=datas;
               that.areaList.push(max,(max-min)/2+min,min);
               that.showArea=true;
           }else{
@@ -121,7 +121,7 @@ export default {
       })
     },
     /**
-     * 地图显示各市重大事故数量
+     * 地图显示各市警情数量
      */
     addCityPopup(e){
       let lnglat=e.jwd.split(' ');
@@ -159,7 +159,7 @@ export default {
       // this.map_cover.popups.push(popup);
     },
     /**
-     * 获取重大事故数据
+     * 获取施工数据
      */
     getConstructionData(){
       let that=this;

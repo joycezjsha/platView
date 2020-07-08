@@ -334,7 +334,13 @@ export default {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
-              that.indexDatascar = data.data;
+              let _data=[];
+              data.data.map(e=>{
+                if(e.YJDFZJG && e.YJDFZJG!=''){
+                  _data.push(e);
+                }
+              })
+              that.indexDatascar = _data;
             }
           }
         });

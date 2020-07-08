@@ -46,23 +46,23 @@
        <m-title label='交通动态监测' img_type=1  class='title'></m-title>
        <div class='center_txt'>实时统计上一个小时（{{center_time}}）的流动情况</div>
        <div class='center_statics'>
-         <div class='center_statics--count'>陕西省<br/>
+         <div class='center_statics--count'>陕西省&nbsp;
          <span class="center_statics_">{{centerstatics.addIn}}</span></div>
          <div class='center_statics--inout'>
              <span style="color:#FFB005" >进入:
               <span class="row_value_">{{centerstatics.incount}}</span>
-            </span>
-            <span style="color:#00DFC7" >流出:
+            </span>&nbsp;
+            <span style="color:#00DFC7" >流出:&nbsp;
               <span   class="row_value_">{{centerstatics.outcount}}</span>
             </span>
          </div>
-         <div class='center_statics--radio'>进出比<br/>
+         <div class='center_statics--radio'>进出比&nbsp;
          <span class="">{{centerstatics.inoutProportion | number}}%</span></div>
        </div>
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->
-         <el-table :data="centerstatics.tableDatas" style="width:90%;margin:0 auto;"
-           height="90%" :default-sort = "{prop: 'week_radio', order: 'descending'}"
+         <el-table :data="centerstatics.tableDatas" style="width:95%;margin:0 auto;"
+           height="98%" :default-sort = "{prop: 'week_radio', order: 'descending'}"
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" 
            v-loading='tableLoading'>
            <el-table-column type="index" label="No" width="50"></el-table-column>
@@ -83,7 +83,7 @@
           <li style="display:flex;padding:0.5vh 0.5vw;margin:0 0.5vw" class="index-item" v-for="(item,i) in trafficDatas" :key="i" :id="item.id">
             <div style="flex:1">{{i+1}}</div>
             <div style="flex:4.5">
-              <div>{{item.stratname}}</div>
+              <div>{{item.roadname}}</div>
               <div style="color:#a6afcd">均速：
                 <span style="color:#0ca6ff">{{item.sd | number}}km/h</span>
               </div>
@@ -288,7 +288,13 @@ export default {
       if (response && response.status == 200){
         var data= response.data;
         if (data.errcode == 0) {
-          that.trafficDatas=data.data;
+          let _data=[];
+          data.data.forEach(e=>{
+            if(e.roadname && e.roadname!=''){
+              _data.push(e);
+            }
+          })
+          that.trafficDatas=_data;
         }else{
           that.$message({
             message: data.errmsg,
@@ -417,23 +423,23 @@ export default {
     }
     .center_statics{
       width:100%;
-      height:7vh;
+      height:4vh;
       font-style: italic;
       @include flex(row, center,center);
       &--count{
-        width:30%;
-        @include flex(column, center,center);
+        width:20%;
+        @include flex(row, center,center);
       }
       &--inout{
-        width:30%;
-        @include flex(column, center,center);
+        width:50%;
+        @include flex(row, center,center);
         .row_value_{
           font-size:0.7vw;
         }
       }
       &--radio{
-        width:30%;
-        @include flex(column, center,center);
+        width:20%;
+        @include flex(row, center,center);
       }
     }
     .center_table{
