@@ -12,7 +12,7 @@
           <m-title class="titletext"  label='热点道路排名' ></m-title>
           <div class="padding">
             <div class="table">
-              <el-table :data="indexDatas"
+              <el-table :data="indexRoadDatas"
             style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                   <el-table-column  type="index" label="No" width="38"></el-table-column>
                   <el-table-column show-overflow-tooltip prop="road" width="130"  label="道路"></el-table-column>
@@ -26,7 +26,7 @@
           <m-title class="titletext"  label='热点卡口排名' ></m-title>
           <div  class="padding"> 
             <div  class="table">
-              <el-table :data="indexDatas1"
+              <el-table :data="indexHardDatas"
               style="width: 100%" height="90%" 
               @row-click="handleItem"
               :default-sort = "{prop: 'NUM', order: 'descending'}" 
@@ -78,12 +78,8 @@ export default {
             popups:[],
             markers:[]
           },
-          indexDatas: [
-            {"road":"","index":"","innum":"","outnum":""}
-            ],
-            indexDatas1: [
-            {"KKMC":"","index":"","NUM":"","city":""}
-            ],
+          indexDatas: [],
+          indexDatas1: [],
           
         }
     },
@@ -98,9 +94,9 @@ export default {
        let that = this;
        this.map.setCenter(mapConfig.DEFAULT_CENTER);
       //  that.$store.commit("setRight", '25.5vw');
-       that.getData()
-       that.getHotspotRoadRankinDatas();
-       that.getHotspotBayonetRankingDatas();
+      //  that.getData()
+      //  that.getHotspotRoadRankinDatas();
+      //  that.getHotspotBayonetRankingDatas();
     },
     destroyed(){
       this.clearMap();
@@ -112,7 +108,9 @@ export default {
       goback(){
         let that=this;
         that.showback=true;
+        that.code='';
         that.getHotspotRoadRankinDatas();
+        that.clearMap()
         that.getHotspotBayonetRankingDatas();
 
       },
@@ -121,17 +119,20 @@ export default {
        */
      getData() {
       let that = this;
-      blur.$on('realtime',data=>{
+      blur.$on('realtimehard',data=>{
         that.tableIndex=data;
+        console.log(that.tableIndex)
       })  
-      blur.$on('getCity',data=>{
+      blur.$on('getCityhard',data=>{
           that.code=data;
+          console.log(that.code)
           that.showback = false;
-          if(that.tableIndex==3){
-            that.getHotspotRoadRankinDatas(that.code)
-            that.getHotspotBayonetRankingDatas(that.code)
+          console.log(that.tableIndex)
+          if(that.tableIndex=='3'){
+            that.getHotspotRoadRankinDatas()
+            that.clearMap()
+            that.getHotspotBayonetRankingDatas()
           }
-         
       })
     },
     /**
@@ -148,16 +149,12 @@ export default {
         itemlist.push(item.JWD.split(" ")[0],item.JWD.split(" ")[1],);
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
-        let el1 = document.createElement('div'); //
-        // el.style.border='1px solid rgba(42, 76, 162, 1)';
-        // el.style.borderRadius='2px';
+        let el1 = document.createElement('div'); 
         el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
-        // el.style["padding"] = "10px 10px";
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
         el1.id = 'marker'; //
-        // el1.style["border"] = "solid 1px #D01828"; // if(item.addIn<0) span2.style.color='#00DEC7';
         el1.style.width='17px';
         el1.style.height='17px';
         el1.style.borderRadius='50%';
@@ -238,14 +235,14 @@ export default {
       /*
       *热点卡口数据 KeyVehicle/getHotspotBayonetRanking  GET_HOT_BAY_RANK_API
       */
-     getHotspotBayonetRankingDatas(code){
+     getHotspotBayonetRankingDatas(){
         let that=this;
         let HotspotBayonetData={};
          // 如果默认显示，没有任何参数
-        if(code===undefined){
-            HotspotBayonetData={};
+        if(that.code!=''){
+          HotspotBayonetData.code=that.code;
         }else{
-            HotspotBayonetData.code=code;
+          HotspotBayonetData={}
         }
         // 发送请求
         interf.GET_HOT_BAY_RANK_API(HotspotBayonetData)
@@ -253,13 +250,14 @@ export default {
             if (response && response.status == 200){
             var data = response.data;
                 if(data.errcode == 0){
-                    that.indexDatas1=data.data;
-                    // if(that.indexDatas1.length>0){
-                    //   //  调用卡口地图方法
-                    //   that.indexDatas1.forEach(element => {
-                    //     that.getHotspotBayMapData(element)
-                    //   });
-                    // }
+                    that.indexHardDatas=data.data;
+                    if(that.indexHardDatas.length>0){
+                      //  调用卡口地图方法
+                      that.indexHardDatas.forEach(element => {
+                        that.getHotspotBayMapData(element)
+                        
+                      });
+                    }
                 }
             }
         })
@@ -273,14 +271,12 @@ export default {
       /**
        * 热点道路  KeyVehicle/getHotspotRoadRankin  GET_HOT_ROAD_RANK_API
       */
-     getHotspotRoadRankinDatas(code){
+     getHotspotRoadRankinDatas(){
         let that=this;
         let HotspotRoandData={};
         // 如果默认显示，没有任何参数
-        if(code===undefined){
-            HotspotRoandData={};
-        }else{
-            HotspotRoandData.code=code;
+        if(that.code!=''){
+          HotspotRoandData.code=that.code;
         }
         // 发送请求
         interf.GET_HOT_ROAD_RANK_API(HotspotRoandData)
@@ -288,7 +284,7 @@ export default {
             if (response && response.status == 200){
             var data = response.data;
                 if(data.errcode == 0){
-                    that.indexDatas=data.data;
+                    that.indexRoadDatas=data.data;
                 }
             }
         })
@@ -341,7 +337,7 @@ export default {
 <style  scoped lang='scss'>
 @import "@/assets/css/color.scss";
 @import "../../assets/css/base.css";
-.hotcard{
+#vehicle_hotcard-modal .hotcard{
     position: fixed;
     top: 9.388vh;
     right:13px;

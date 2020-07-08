@@ -118,6 +118,8 @@ export default {
     // 传递city参数
     showCity(row){
       blur.$emit('getCity',row.CODE);
+      blur.$emit('getCitycar',row.CODE);
+      blur.$emit('getCityhard',row.CODE);
     },
     //重点车辆监测  KeyVehicle/getKeyVehicle   GET_KEY_VEHICLE_API 
     getKeyVehicleDatas(){

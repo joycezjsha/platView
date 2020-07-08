@@ -49,16 +49,16 @@ export default {
     mounted(){
       this.map = this.$store.state.map;
       this.map.setCenter(mapConfig.DEFAULT_CENTER);
-      let that=this;
-      that.getData();
-      that.getMapVehicleInData(that.stime)
+      this.map.setZoom(8);
+      this.getData();
+      this.getMapVehicleInData(this.stime)
     },
     destroyed(){
       this.clearMarkers();
     },
     methods:{
     // 车辆实时监测
-    realtime(i){    
+    realtime(i){
         this.tableIndex=i;
         if(this.tableIndex!='1'){
           this.clearMarkers();
@@ -77,32 +77,14 @@ export default {
     */                
     getData(){
       let that=this;
-      // if(that.tableIndex=='1'){
-      //   blur.$on("paramxzqh",xzqh=>{
-      //     that.xzqh=xzqh;
-      //   })
-      //   blur.$on('gettime',time=>{
-      //     that.stime=time;
-      //     if(that.stime!='4'){
-      //       that.getMapVehicleInData(that.stime) 
-      //     }
-      //   }) 
-      //   blur.$on('determine',times=>{
-      //     that.timeRange=times;
-      //     that.clearMarkers();
-      //     that.getMapVehicleInData(that.timeRange[0],that.timeRange[1])
-      //   })  
-      // }
-      blur.$on("paramxzqh",xzqh=>{
-        that.xzqh=xzqh;
-      })
-      blur.$on('gettime',time=>{
+      blur.$on('gettimecar',time=>{
         that.stime=time;
         if(that.stime!='4'){
-           that.getMapVehicleInData(that.stime) 
+          that.clearMarkers()
+          that.getMapVehicleInData(that.stime) 
         }
       }) 
-      blur.$on('determine',times=>{
+      blur.$on('determinecar',times=>{
         that.timeRange=times;
          that.clearMarkers();
         that.getMapVehicleInData(that.timeRange[0],that.timeRange[1])

@@ -116,9 +116,9 @@ export default {
     this.map=this.$store.state.map;
     this.map.setZoom(4);
     let that = this;
-    that.getData();
+    // that.getData();
     this.map.setCenter(mapConfig.DEFAULT_CENTER);
-    that.getVehicleOwnershipDatas();        
+    // that.getVehicleOwnershipDatas();        
   },
   destroyed(){
    this.clearMap()
@@ -149,32 +149,13 @@ export default {
        this.param.stime=i.name;
         this.getVehicleOwnershipDatas();
      }
-    //  if(i.name=='1'){
-    //    that.param.stime=='2';
-    //    that.getVehicleOwnershipDatas();
-    //  }else{
-    //    that.param.stime==i.name;
-    //  }
-
    },
-  //  change(i,j){
-  //      this.isActive=i;
-  //      this.param.fxlx=j;
-  //      if(this.isActive==1 || this.isActive==2){
-  //          this.param.stime='2';
-  //          this.getVehicleOwnershipDatas();
-  //      }
-  //      if(this.isActive==4 ){
-  //         this.param.stime='4';
-  //         this.getVehicleOwnershipDatas();
-  //      }
-  //  },
     /**
      * 接收table传过来的数据  getCity:城市
      */
     getData() {
       let that = this;
-      blur.$on('realtime',data=>{
+      blur.$on('realtimebelong',data=>{
         that.tableIndex=data;
       })  
       blur.$on('getCity',data=>{
@@ -428,7 +409,7 @@ export default {
 
 <style scoped lang='scss'>
 @import "@/assets/css/color.scss";
-.carmapOD {
+.vehicle-Belong .carmapOD {
   width: 746px;
   height: 589px;
   position: fixed;
@@ -516,7 +497,7 @@ export default {
     }
   }
 }
-.vehicle-change {
+.vehicle-Belong .vehicle-change {
   position: absolute;
   top:3vh;
   left: 0;
@@ -532,17 +513,17 @@ export default {
     margin-right: 2px;
   }
 }
-.bg{
+.vehicle-Belong .bg{
     // border:1px solid #ffffff;
     background: #00C6FF;
   }
-.bg1{
+.vehicle-Belong .bg1{
     background: #265E45;
   }
-.changebg{
+.vehicle-Belong .changebg{
      background:#0473B2;
   }
-.changebg1{
+.vehicle-Belong .changebg1{
     background: #0DD77D;
   }
 .vehicle-Belong .city {
@@ -552,7 +533,7 @@ export default {
   cursor: pointer;
   flex: 1;
 }
-.vehicle-main .button {
+.vehicle-Belong .button {
     margin-top: 5px;
     position: absolute;
     top:3vh;
@@ -572,7 +553,7 @@ export default {
     cursor:pointer;
     }
 }
-.vehicle-main  .inoutbox{
+.vehicle-Belong  .inoutbox{
   width:100%;
   height:3vh;
   position: absolute;

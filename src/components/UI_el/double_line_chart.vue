@@ -184,7 +184,6 @@ export default {
      * 生成警情分别类统计echarts
      */
     initAccidentStaticsChart() {
-      debugger;
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }

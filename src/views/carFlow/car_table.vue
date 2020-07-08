@@ -136,8 +136,6 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([109.278987,35.747334]);
-    // this.map.setZoom(11);
     this.map.repaint = true;
     that.getIndexData();
     that.realtimeData(that.stime)
@@ -174,8 +172,7 @@ export default {
     showData(xzqh,city){
       let that = this;
       // 车辆类型分析
-      blur.$emit("paramxzqh",xzqh);
-      blur.$emit("paramcity",city);
+      blur.$emit("paramxzqh",xzqh,city);
       that.xzqh=xzqh;
       that.city=city;
     },
@@ -232,6 +229,7 @@ export default {
     determine(){
        let that = this;
        blur.$emit("determine",that.timeRange) //发送时间格式20200505
+       blur.$emit("determinecar",that.timeRange)
        that.realtimeData(that.activeName)
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
@@ -278,6 +276,7 @@ export default {
      that.activeName=item.name;  //对应的时间1  2  3  4
 
      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
+     blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
        that.realtimeData(that.activeName)
      }

@@ -90,10 +90,9 @@ export default {
     this.map.setCenter(mapConfig.DEFAULT_CENTER);
     this.map.setZoom(11);
     this.map.repaint = true;
-    let that = this;
-    that.getIndexData();
-    that.getCityStatisticsDatas();
-    that.getRoadStatisticsDatas()
+    this.getIndexData();
+    this.getCityStatisticsDatas();
+    this.getRoadStatisticsDatas()
   },
   destroyed() {
     this.map.setPitch(0);
