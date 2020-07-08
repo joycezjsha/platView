@@ -103,8 +103,8 @@
             if(that.map.getLayer(that.trafficArr[i])) {
               that.map.setLayoutProperty(that.trafficArr[i], 'visibility', val);
                  that.map.setLayoutProperty(that.trafficArr[i], 'line-cap', 'butt');
-                 that.map.setLayoutProperty(that.trafficArr[i], 'line-round-limit', '2');
-                that.map.setLayoutProperty(that.trafficArr[i], 'line-miter-limit', '3');
+                //  that.map.setLayoutProperty(that.trafficArr[i], 'line-round-limit', '2');
+                // that.map.setLayoutProperty(that.trafficArr[i], 'line-miter-limit', '3');
                 // that.map.setLayoutProperty(that.trafficArr[i], 'strokeStyle', '');
             }
           }

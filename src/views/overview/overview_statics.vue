@@ -4,13 +4,13 @@
      <div class='overview-statics--tab_title'>
        <span>今日警情</span><span>{{datas.jq.todayNum}}</span>起
       </div>
-     <div class='overview-statics--tab_radio'>
+      <div class='overview-statics--tab_radio'>
        <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yesterNum}}</span></div>
        <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.monthAvg}}</span></div>
-    </div>
-     <div class='overview-statics--tab_main'>
+      </div>
+      <div class='overview-statics--tab_main'>
        <span class='img'><i class='iconfont icon-jingqing'></i></span>
-       <span class='label'>重大警情:</span><span class='value'>{{datas.jq.importantNum}}</span>起</div>
+       <span class='label'>重大警情:</span><span class='value' @mouseover="showJqInfo=!showJqInfo" @mouseout="showJqInfo=!showJqInfo">{{datas.jq.importantNum}}</span>起</div>
    </div>
    <div class='overview-statics--split'></div>
    <div class='overview-statics--tab' v-loading='sgLoading'>
@@ -20,29 +20,41 @@
        <div><span class='label'>伤:</span><span class='value'>{{datas.sg.INJURYNUM}}</span></div>
        <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.DEATHNUM}}</span></div>
     </div>
-     <div class='overview-statics--tab_main'><span class='img'>
-       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.MAJORACCIDENTNUM}}</span>起</div>
+    <div class='overview-statics--tab_main'><span class='img'>
+       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.MAJORACCIDENTNUM}}</span>起
+    </div>
    </div>
    <div class='overview-statics--split'></div>
     <div class='overview-statics--tab'  >
-     <div class='overview-statics--tab_title'><span>活跃电警</span><span>{{datas.dj.activeDev}}</span>个</div>
+     <div class='overview-statics--tab_title'><span>活跃设备</span><span>{{datas.dj.activeDev}}</span>个</div>
      <div class='overview-statics--tab_radio'>
        <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.devcount}}</span></div>
        <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.activityRate}}</span></div>
      </div>
      <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.dj.keyactivityRate}}</span></div>
    </div>
+   <transition name="el-zoom-in-top">
+        <div class='jqInfo' v-show='showJqInfo'>
+          <el-table :data="jqInfoDatas" width='300px'
+              height="200px" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+              <el-table-column prop="CITY" label="城市" width="70"></el-table-column>
+                <el-table-column prop="NUM" label="数量"></el-table-column>
+                <el-table-column prop="RADIO" label="比例"></el-table-column>
+            </el-table>
+        </div>
+      </transition>
   </div>
 </template>
 
 <script>
 import { IMG } from "./config";
-import { interf } from "./config";
+import { interf } from "./config";` `
 export default {
   name: "overview_statics",
   data() {
     return {
       map: {},
+      jqInfoDatas:[],
       datas:{
         jq:{"importantList":[{"xzqh":0,"city":"","num":0,"ratio":""}],"monthAvg":0,"importantNum":0,"todayNum":0,"yesterNum":0},
         sg:{"injuryNum":0,"deathNum":0,"importantAccidentNum":0,"sameMonthAccidentNum":0},
@@ -52,7 +64,8 @@ export default {
       accident_img:IMG.accidentIMG,
       interval:null,
       jqLoading:false,
-      sgLoading:false
+      sgLoading:false,
+      showJqInfo:false
     };
   },
   mounted() {
@@ -91,6 +104,7 @@ export default {
           let data= response.data;
           if (data.errcode == 0){
            that.datas.jq=data.data;
+           that.jqInfoDatas=data.data.importantList;
           }
         }
         }).catch(err => {
@@ -237,6 +251,7 @@ export default {
       span.value{
         width:30%;
         color:$color-red;
+        cursor: pointer;
       }
     }
     &_main_{
@@ -249,6 +264,7 @@ export default {
       }
     }
   }
+  
   &--tab:last-child{border:none;} 
   &--split{
     @include flex(column, center,center);
@@ -256,5 +272,14 @@ export default {
     height:119px;
     background: radial-gradient(#f3f0f0, #757ba340,transparent);
   }
+  .jqInfo{
+      position: absolute;
+      width:33%;
+      top:100%;
+      left:0px;
+      background: #30426287;
+      border: 1px solid #116cf3;
+    }
+  
 }
 </style>

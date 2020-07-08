@@ -224,12 +224,12 @@ export default {
       mainDiv.appendChild($(p4)[0]);
 
       let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [-13, -30]});
-      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+      popup.setLngLat(lnglat).setDOMContent(mainDiv);
 
       let el = document.createElement('div');
       el.style.backgroundColor=e.TXCLZS>0?'#D01828':'#44b208';
-      el.style.width = "25px";
-      el.style.height = "25px";
+      el.style.width = "17px";
+      el.style.height = "17px";
       el.style.borderRadius='50%';
       el.style["border-radius"] = "50%";
       let marker = new minemap.Marker(el, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);

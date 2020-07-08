@@ -117,7 +117,6 @@ export default {
     addArea(data) { 
       let _this = this;
       data.forEach((e, i) => {
-        if(e.color=='#aN') return;
         let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
         lonlats = lonlats.map(s => {
           if (s.split(" ")[0] != "") {
@@ -135,7 +134,8 @@ export default {
                 coordinates: [lonlats]
               },
               "properties": {
-                  "title": e.city
+                  "title": e.city,
+                  "code":e.AdminCode
               }
             }]
         };
@@ -198,9 +198,9 @@ export default {
       let _this=this;
       let max,min;
       //返回数组合并、并排序的结果
-      if(this.indexData.length<data.length){
-        return [];
-      }
+      // if(this.indexData.length<data.length){
+      //   return [];
+      // }
        this.indexData.forEach(e=>{
         if(!max){
           max=e.Num;
@@ -214,16 +214,22 @@ export default {
         }
       })
       this.indexData.forEach(e=>{
+        let f=false;
         for(var j=0;j<data.length;j++){
             if(data[j].adcode.indexOf(e.XZQH)!=-1){
                 data[j].Num=e.Num;
+                f=true;
                 break;
             }
+        }
+        if(!f){
+          data[j].Num='--';
         }
       })
       data=data.sort((a,b)=>{return a.Num -b.Num});
       data.map(e=>{
-        e.color=_this.multiply(max,min,e.Num);
+        if(e.Num && e.Num!='--') {e.color=_this.multiply(max,min,e.Num);}
+        else{e.color='rgba(6,143,230,0)'};
         return e;
       });
       console.log(data);
@@ -434,12 +440,13 @@ export default {
           layers: renderLayerIds
         });
         if (features && features.length > 0) {
-          // debugger;
-          this.method(features);
+          let data={};
+          data.name=features[0].city;
+          data.value=features[0].code;
+          this.method(data);
           break;
         }
       }
-      
     }
   },
   destroyed: function() {

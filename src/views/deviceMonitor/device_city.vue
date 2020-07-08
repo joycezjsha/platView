@@ -6,8 +6,8 @@
         <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:4vh;line-height:4vh;'></m-title></div>
       </div>
       <div class="device-city_content">
-        <m-tiptxt text='设备包括：电子警察、视频设备、ETC龙门架...' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
-        <m-tiptxt text='活跃设备：是指电警近一个月有抓拍违法数据；卡口、ETC龙门架 、区间测速设备近一天有回传数据；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
+        <m-tiptxt text='设备包括：电子警察、视频设备、卡口设备...' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
+        <m-tiptxt text='活跃设备：是指近一个月有抓拍违法数据的电子警察、视频设备、卡口设备；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
         <div class='device-city_content_table' v-if="tableIndex==0">
           <el-table :data="indexcityDatas" @row-click="handle">
             <el-table-column type="index" label="No" width="50"></el-table-column>
@@ -32,7 +32,6 @@
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
           </el-table>
         </div>
-
       </div>
     </div>
   </div>

@@ -6,12 +6,14 @@
           <m-title label='今日省内车辆运行态势' img_type=1 style='width:11vw;'></m-title>
         </div>
         <div class="tab">
-          <span style="margin-right:1.5vw;">
-            <i class="split"></i>
-            速度检测次数</span>
-          <span style="margin-left:0.5vw;">
-            <i class="split"></i>
-            平均超速幅度</span>
+          <div>
+            <div class="split"></div>
+            <div class='label'>速度检测次数</div>
+          </div>
+          <div>
+            <div class="split"></div>
+            <div class='label'>平均超速幅度</div>
+          </div>
         </div>
         <div class="overview-info_sort">
           <div>
@@ -258,8 +260,8 @@ export default {
                 that.accident_option.series[0].data=[{name:'超速次数',value:that.listItems[0].value},{name:'总检测数',value:that.listItems[1].value}]
                 that.accident_chart.setOption(that.accident_option);
                 window.addEventListener("resize",()=>{
-                that.accident_chart.resize();
-              })
+                  that.accident_chart.resize();
+                })
             } else {
               that.$message({
                 message: data.errmsg,
@@ -289,6 +291,12 @@ export default {
             if (data.errcode == 0) {
               let _data=_this.chart_data;
               _data.xdata=data.data.timelist;
+              data.data.inlist.map(s=>{
+                return (s/10000).toFixed(2);
+              });
+              data.data.outlist.map(s=>{
+                return (s/10000).toFixed(2);
+              })
               _data.y1data=data.data.inlist;
               _data.y2data=data.data.outlist;
               
@@ -386,20 +394,26 @@ export default {
   }
   >div:nth-child(1){
     .tab{
-      margin-top:1vh;margin-left:-3vw;
-      @include flex(row, center,center);
-      >span{
-        @include flex(column, center,center);
+      width:80%;
+      margin:0 auto;
+      height:3vh;
+      // @include flex(row, center,center);
+      >div{
+        width: 43%;
+        float:left;
+        // @include flex(column, center,center);
         .split{
-          width:2px;height:2vh;line-height:2vh;background:#116cf3;
-          position: absolute;
-          margin-left: -3vw;
+          width: 0.10417vw;
+          height: 2vh;
+          background: #116cf3;
+          margin-top: 2vh;
+          float: left;
         }
-        
-      }
-      >span:nth-child(2){
-        .split{
-          margin-left: -4vw;
+        .label{
+          width: 80%;
+          float: left;
+          line-height: 6vh;
+          margin-left: 10px;
         }
       }
       
