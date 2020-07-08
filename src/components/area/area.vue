@@ -5,7 +5,7 @@
 <script>
 import conf from "./config";
 export default {
-  name: "area",
+  name: "areaComponent",
   data() {
     return {
       map: "",
@@ -25,7 +25,7 @@ export default {
   props:{
     isShowArea: {
       type: Boolean,
-      default: true
+      default: false
     },
     isShowTxt:{
        type: Boolean,
@@ -58,7 +58,7 @@ export default {
   mounted() {
     let _this=this;
     this.map = this.$store.state.map;
-    if(this.isShowArea) this.initArea();
+    // if(this.isShowArea) this.initArea();
     if(this.method) this.map.on('click',this.clickArea);
   },
   methods: {
@@ -452,9 +452,12 @@ export default {
   destroyed: function() {
     this.clearMap();
     this.map.off('click',this.clickArea);
+    this.map.on('click',function(){
+      return;
+    });
   },
   beforeDestroy(){
-    this.clearMap();
+    // this.clearMap();
   }
 };
 </script>

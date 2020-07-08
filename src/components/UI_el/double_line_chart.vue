@@ -44,7 +44,7 @@ export default {
               {
                   type: 'value',
                   name: '',
-                  min: 0,
+                  // min: 0,
                   splitLine:{show:false},
                   axisLine:{lineStyle:{color:'white'}},
                   axisLabel: {
@@ -59,7 +59,7 @@ export default {
               {
                   type: 'value',
                   name: '',
-                  min: 0,
+                  // min: 0,
                   axisLine:{lineStyle:{color:'white'}},
                   splitLine:{show:false},
                   axisLabel: {
@@ -187,6 +187,12 @@ export default {
       if (!this.chart) {
         this.chart = echarts.init(document.getElementById(this.c_id));
       }
+      this.option.legend.data = this.chart_data.legend;
+      this.option.xAxis[0].data = this.chart_data.xdata;
+      this.option.series[0].name=this.chart_data.legend[0];
+      this.option.series[1].name=this.chart_data.legend[1];
+      this.option.series[0].data =this.chart_data.y1data;
+      this.option.series[1].data =this.chart_data.y2data;
       if(!this.showDoubleX){
         this.option.yAxis={type: 'value',min: 0,
                   splitLine:{show:false},
@@ -202,15 +208,9 @@ export default {
       }else{
         this.option.yAxis[0].name=this.chart_data.legend[0];
         this.option.yAxis[1].name=this.chart_data.legend[1];
-        this.option.series[1].yAxisIndex=0;
+        this.option.series[1].yAxisIndex=1;
       };
-      this.option.legend.data = this.chart_data.legend;
-      this.option.xAxis[0].data = this.chart_data.xdata;
-      this.option.series[0].name=this.chart_data.legend[0];
-      this.option.series[1].name=this.chart_data.legend[1];
-      this.option.series[0].data =this.chart_data.y1data;
-      this.option.series[1].data =this.chart_data.y2data;
-      console.log(this.option);
+      
       this.chart.setOption(this.option);
     }
   }

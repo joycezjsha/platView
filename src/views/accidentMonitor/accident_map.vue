@@ -78,9 +78,8 @@ export default {
           if (data.errcode == 0) {
             that.addCityAccident(data.data);
             let max,min,datas=[];
-              data.data.forEach(e=>{
+              data.data.map(e=>{
                 e.Num=e.NUM;
-                datas.push(e);
                 if(!max){
                   max=e.Num;
                 }else{
@@ -91,8 +90,9 @@ export default {
                 }else{
                   min=min>e.Num?e.Num:min;
                 };
+                return e;
               });
-              that.areaIndexs=datas;
+              that.areaIndexs=data.data;
               that.areaList.push(max,(max-min)/2+min,min);
               that.showArea=true;
           }else{
