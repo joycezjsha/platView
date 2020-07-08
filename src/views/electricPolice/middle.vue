@@ -48,6 +48,8 @@ export default {
         change(i){   
             let that=this;
             that.tableIndex=i;
+            blur.$emit('clearMapRoad');
+            that.clearMap();
             if(that.tableIndex=='1'){
                 that.onHideLayer('1')
                 that.getRoadStatisticsDatas(); 
@@ -64,11 +66,12 @@ export default {
         getData(){
             let that=this;
             blur.$on("sendXZQH",data=>{
+                that.clearMap();
                 that.xzqh=data;
                 if(that.tableIndex==1){
-                    that.getRoadStatisticsDatas(that.xzqh)
+                    that.getRoadStatisticsDatas()
                 }else{
-                    that.getActiveElDatas(that.xzqh)
+                    that.getActiveElDatas()
                 }
                 
             })
@@ -119,12 +122,12 @@ export default {
         /*
         *  电警热力分布  Electronic/getElHeat  GET_EL_HEAT_API  传入参数xzqh
         */
-       getRoadStatisticsDatas(xzqh){
+       getRoadStatisticsDatas(){
         let _this = this;
         _this.map = _this.$store.state.map;
         let param = {};
-        if (xzqh != undefined) {
-            param.xzqh = xzqh;
+        if (_this.xzqh != '') {
+            param.xzqh = _this.xzqh;
         }
         interf.GET_EL_HEAT_API(param)
         .then(response => {
@@ -149,7 +152,7 @@ export default {
                   type: "geojson",
                   data: data.data //"./static/json/heat.json"/*可以是具体的服务*/
                 });
-                this.map.addLayer({
+                _this.map.addLayer({
                   id: "heatmapLayer",
                   type: "heatmap",
                   source: "heatmapSource",
@@ -158,7 +161,7 @@ export default {
                   },
                   paint: {
                     // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                    "heatmap-radius":30,
+                    "heatmap-radius":15,
                     //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
                     "heatmap-weight": {
                       property: "mag",

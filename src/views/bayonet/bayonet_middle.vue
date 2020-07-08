@@ -60,6 +60,7 @@ export default {
       let that = this;
       blur.$on("getXZQH", data => {
         that.xzqh=data;
+        that.clearMap();
         // that.getBayonetHeatMap(data);
         if (that.tableIndex == '1') {
           that.getBayonetHeatMap(that.xzqh);
@@ -75,7 +76,9 @@ export default {
     // 切换卡口热力分布--1  与   活跃卡口点位--2
     change(i) {
       let that = this;
+      that.clearMap();
       that.tableIndex = i;
+      blur.$emit('clearMapRoad');
       if (that.tableIndex == '1') {
         that.onHideLayer('2');  //隐藏聚合图
         that.getBayonetHeatMap();    //显示热力图
@@ -268,7 +271,7 @@ export default {
                   },
                   paint: {
                     // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                    "heatmap-radius": 30,
+                    "heatmap-radius": 15,
                     //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
                     "heatmap-weight": {
                       property: "mag",
@@ -374,9 +377,24 @@ export default {
         });
       }
       this.map_cover.lineList2=[];
+      //清除marker
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+        this.map_cover.markers=[];
+      }
+       //清除popup框
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+        this.map_cover.popups=[];
+      }
     }
+    
   }
-};
+}
 </script>
 
 <style scoped  lang='scss'>

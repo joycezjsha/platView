@@ -92,7 +92,8 @@ export default {
     this.map.repaint = true;
     this.getIndexData();
     this.getCityStatisticsDatas();
-    this.getRoadStatisticsDatas()
+    this.getRoadStatisticsDatas();
+    blur.$on('clearMapRoad',()=>{this.clearMap();});
   },
   destroyed() {
     this.map.setPitch(0);

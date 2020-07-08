@@ -103,6 +103,7 @@ export default {
     that.getIndexData();
     that.getcitystatDatas();
     that.getRoadStatisticsDatas();
+    blur.$on('clearMapRoad',()=>{this.clearMap();});
   },
   destroyed() {
     this.map.setPitch(0);
