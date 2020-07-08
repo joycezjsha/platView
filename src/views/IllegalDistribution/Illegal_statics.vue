@@ -355,6 +355,7 @@ export default {
       that.selected='';
       that.showback=true;
       that.dllx='';
+      blur.$emit("goback",that.stime,that.xzqh)
       that.getAllProvinceIllegalStatisticsDatas(that.stime);
       that.initAccidentStaticsChart(that.stime);
       that.getSpeedingViolationDatas(that.stime)
@@ -440,7 +441,6 @@ export default {
      * 切换道路类型
      */
     isSelected(event){
-      // console.log(event.target.value)  //12 序号
       let that = this; 
       that.dllx=event.target.value;
       that.getIllegalAnalysisDatas(that.time)
@@ -786,6 +786,7 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
+             that.accident_option.series[0].data=[];
             if(!that.accident_chart){
               that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
             };

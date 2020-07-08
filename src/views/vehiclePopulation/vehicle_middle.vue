@@ -39,7 +39,7 @@ export default {
         this.map = this.$store.state.map;
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
         this.map.setZoom(8);
-        this.getMapBayonetRankingDatas()
+        setTimeout(()=>{this.getMapBayonetRankingDatas();},300);
     },
     destroyed(){
       this.clearMap()

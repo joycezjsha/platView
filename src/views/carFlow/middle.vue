@@ -79,16 +79,18 @@ export default {
       let that=this;
       blur.$on('gettimecar',time=>{
         that.stime=time;
-        if(that.stime!='4'){
+        if(that.stime!='4' && that.tableIndex==1){
           that.clearMarkers()
           that.getMapVehicleInData(that.stime) 
         }
       }) 
       blur.$on('determinecar',times=>{
-        that.timeRange=times;
-         that.clearMarkers();
-        that.getMapVehicleInData(that.timeRange[0],that.timeRange[1])
-      })  
+        if(that.tableIndex==1){
+          that.timeRange=times;
+          that.clearMarkers();
+          that.getMapVehicleInData(that.timeRange[0],that.timeRange[1]);
+          }
+       })
     },
 
     /**

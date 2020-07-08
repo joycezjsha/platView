@@ -24,7 +24,7 @@ export default {
             xzqh:'',
             map_cover:{
                 sourceList:[],
-                lineList:[],
+                lineList1:[],
                 lineList2:[]
             },
         }
@@ -49,14 +49,13 @@ export default {
             let that=this;
             that.tableIndex=i;
             if(that.tableIndex=='1'){
-                that.onHideLayer(that.tableIndex)
+                that.onHideLayer('1')
                 that.getRoadStatisticsDatas(); 
             }else{
-                that.onHideLayer(that.tableIndex)
+                that.onHideLayer('2')
                 that.map.setZoom(6);
-                that.getActiveElDatas()
                 that.onShowLayer()
-               
+                that.getActiveElDatas()
             }
         },
         /*
@@ -84,8 +83,8 @@ export default {
         onShowLayer() {
             let that=this;
             if (that.map) {
-                if(this.map_cover.lineList.length>0){
-                this.map_cover.lineList.forEach(e=>{
+                if(this.map_cover.lineList1.length>0){
+                this.map_cover.lineList1.forEach(e=>{
                     if(this.map.getLayer(e)!=undefined){
                         that.map.setLayoutProperty(e, 'visibility', 'visible');
                     }
@@ -99,8 +98,8 @@ export default {
         onHideLayer(num) {
             let that=this;
             if(num==1){
-                if(this.map_cover.lineList.length>0){
-                    this.map_cover.lineList.forEach(e=>{
+                if(this.map_cover.lineList1.length>0){
+                    this.map_cover.lineList1.forEach(e=>{
                         if(this.map.getLayer(e)!=undefined){
                             that.map.setLayoutProperty(e, 'visibility', 'none');
                         }
@@ -351,7 +350,7 @@ export default {
                         "icon-image": "bank-15"
                     }
                 })
-                that.map_cover.lineList.push("unclustered-points"); 
+                that.map_cover.lineList1.push("unclustered-points"); 
                 
                 //添加聚合图层
                 var layers = [
@@ -371,7 +370,7 @@ export default {
                             [">=", "point_count", layer[0]] :
                             ["all", [">=", "point_count", layer[0]], ["<", "point_count", layers[i - 1][0]]]
                     })
-                    that.map_cover.lineList.push(clusterId)
+                    that.map_cover.lineList1.push(clusterId)
 
                 });
                 //添加数量图层
@@ -389,7 +388,7 @@ export default {
                     "filter": ["has", "point_count"]
                 }); 
                 
-                that.map_cover.lineList.push("cluster-count"); 
+                that.map_cover.lineList1.push("cluster-count"); 
             }
         },
        /*##清除地图加载点、线、面、弹框*/
@@ -403,8 +402,8 @@ export default {
             })
             }
             //清除layer
-            if(this.map_cover.lineList.length>0){
-                this.map_cover.lineList.forEach(e=>{
+            if(this.map_cover.lineList1.length>0){
+                this.map_cover.lineList1.forEach(e=>{
                     if(this.map.getLayer(e)!=undefined){
                     this.map.removeLayer(e);
                     }

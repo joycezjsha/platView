@@ -6,7 +6,7 @@
       <div class="car-info_title">
         <div class="top ">
           <span class="borstyle" style="display:flex;height:4vh;line-height:2.2vh;"  >
-            <span class="back"  @click="goback" v-if="showback">&lt;&lt; 返回全省</span>
+            <span class="back"  @click="goback(1)" v-if="showback">&lt;&lt; 返回全省</span>
             <div class="title" style="text-align:center;margin-left:8vw;line-height:3.5vh;padding:0.5vh 0" v-if="showback==false" >全部车辆监控</div>
             <span style="padding:5px 0" v-if="showback">{{city}}</span>           
           </span>
@@ -70,7 +70,7 @@
       <div class="belong">
         <div class="top borstyle">
           <div class="title" v-if="showback==false">全部车辆监控</div>
-          <div class="back" v-else @click="goback()">
+          <div class="back" v-else @click="goback(2)">
             &lt;&lt; 返回全省
             <span>{{city}}</span>
           </div>
@@ -102,8 +102,8 @@
             </div>
             <!-- 切换省内外 -->
             <div class="change">
-              <div @click="province(1)" class="provinces" :class="provinceInorOut=='1'? 'bg': 'changebg'"></div>
-              <div @click="province(2)" class="city"  :class="provinceInorOut=='1'? 'bg1': 'changebg1'"></div>
+              <div @click="province(1)" class="provinces"  :style="{width:belongData.provinceExternalProportion}" :class="provinceInorOut=='1'? 'bg': 'changebg'"></div>
+              <div @click="province(2)" class="city"  :style="{width:belongData.provinceWithinProportion}" :class="provinceInorOut=='1'? 'bg1': 'changebg1'"></div>
             </div>
           </div>
           <div class="belong-table" style="padding:0 2vw;height:100%;marfin-top:3vh">
@@ -134,7 +134,7 @@
       <div class="hotcard">
           <div class="top borstyle">
             <div class="title" v-if="showback==false" >全部车辆监控</div>
-              <div class="back" v-else @click="goback()" >&lt;&lt; 返回全省
+              <div class="back" v-else @click="goback(3)" >&lt;&lt; 返回全省
                 <span> {{city}}</span>
             </div>
           </div>
@@ -495,6 +495,7 @@ export default {
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
+    this.clearMap()
     let that = this;
     that.map.setPitch(0); //设置地图的俯仰角
   },
@@ -517,7 +518,7 @@ export default {
       }
     },
     // 点击返回全省，调用默认显示全省的数据
-    goback(){
+    goback(num){
       let that = this;
       that.showback=false;
       that.stime='1';
@@ -526,11 +527,18 @@ export default {
       that.timeName='1';
       that.xzqh='';
       that.provinceInorOut="1";
-      that.getprovinceData(that.stime)
-      that.initSumCharts(that.timeName)
-      that.getCarTypeDatas() ;
-      that.getHotCarDatas(that.stime)
-      that.getBelongData();
+      if(num=='1'){
+        that.getprovinceData(that.stime);
+        that.initSumCharts(that.timeName);
+        that.getCarTypeDatas() ;
+      }
+      if(num=='2'){
+        that.map.setZoom(4);
+        that.getBelongData();
+      }
+      if(num=='3'){
+        that.getHotCarDatas(that.stime)
+      }
     },
     /**
      * 接收传来的数据 将变量的值发送给data，如果值为true，则显示对应的数据
@@ -544,30 +552,20 @@ export default {
        */   
       blur.$on('realtime',data=>{
         that.isShowdiv=data;
-        if(that.map_cover.belongList.length>0){
-          that.map_cover.belongList.forEach(e=>{
-            e.remove();
-          })
-        }     
-        that.map_cover.belongList=[];
-        if( that.isShowdiv==data)
+        that.clearMap();
+        // if(that.map_cover.belongList.length>0){
+        //   that.map_cover.belongList.forEach(e=>{
+        //     e.remove();
+        //   })
+        // }     
+        // that.map_cover.belongList=[];
+        // if( that.isShowdiv==data)
         if(that.isShowdiv=='3'){
-          this.map.setZoom(8);
+          this.map.setZoom(6);
           that.getHotCarDatas(that.stime)
-        }else{
-          if(that.map_cover.popups.length>0){
-            that.map_cover.popups.forEach(e=>{
-              e.remove();
-              })
-          }
-          if(this.map_cover.markers1.length>0){
-            this.map_cover.markers1.forEach(e=>{
-              e.remove();
-            })
-          }
-        }
+        };
         if(that.isShowdiv=='2'){
-          this.map.setZoom(4);
+          that.map.setZoom(4);
           that.getBelongData();   
         };
         if(that.isShowdiv=='1'){
@@ -577,17 +575,14 @@ export default {
       //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
       blur.$on("gettime",time=>{
         that.stime=time;
-        if(time!='4'){
-          that.getprovinceData(that.stime) 
-          that.getCarTypeDatas() ;
-          if(that.isShowdiv=='3'){
-            that.getHotCarDatas(that.stime)
-          }
-          if(that.isShowdiv=='2'){
-            that.getBelongData();
-          }
-         
-         
+        that.getprovinceData(that.stime) 
+        that.getCarTypeDatas() ;
+        if(that.isShowdiv=='3'){
+          that.getHotCarDatas(that.stime)
+        }
+        if(that.isShowdiv=='2'){
+            that.map.setZoom(4);
+          that.getBelongData();
         }  
       }) 
       //接收自定义的  timeRange:自定义的时间
@@ -599,7 +594,7 @@ export default {
           that.getHotCarDatas(that.stime);
         }
         if(that.isShowdiv=='2'){
-          
+           that.map.setZoom(4);
           that.getBelongData();
         }
          
@@ -614,6 +609,7 @@ export default {
           that.getHotCarDatas(that.stime);
         }
         if(that.isShowdiv=='2'){
+           that.map.setZoom(4);
           that.getBelongData();
         }
       })
@@ -746,12 +742,12 @@ export default {
        if (response && response.status == 200){
            var data = response.data;
            if (data.errcode == 0) {
+              that.flowchartsData.y1data=[];
+              that.flowchartsData.y2data=[];
+              that.flowchartsData.xdata=[];
             let car_data= that.flowchartsData;
             if(data.data.length>0){
               data.data.forEach(e=>{
-                that.flowchartsData.y1data=[];
-                that.flowchartsData.y2data=[];
-                that.flowchartsData.xdata.push=[];
                that.flowchartsData.y1data.push(e.innum)
                that.flowchartsData.y2data.push(e.outnum)
                that.flowchartsData.xdata.push(e.date)
@@ -779,12 +775,14 @@ export default {
     province(provinceInorOut) {
       let that = this;
       that.provinceInorOut = provinceInorOut;
+       that.map.setZoom(4);
       that.getBelongData()
     },
     // 车辆流动页面  归属地分析  Vehicle/getVehicleOwnership  // 进入 流出数据
     changeIn(fxlx) {
       let that = this;
       that.fxlx = fxlx;
+       that.map.setZoom(4);
       that.getBelongData()
     },
      //  OD地图函数
@@ -800,10 +798,11 @@ export default {
           ]) 
         }
       });
+       var colors = ['#00F8FF','#00FF00','#FFF800','#FF0000'];
         var scatterData = [];
         var lineData = [];
-        var min = Number.MAX_VALUE;
-        var max = Number.MIN_VALUE;
+        var min =0;
+        var max =1000;
       for (var i = 0; i < data.length; i++) {
             var item = data[i];
             var name = item[4];
@@ -828,6 +827,11 @@ export default {
                 coords: [item.slice(0, 2), item.slice(2, 4)]
             });
       }
+      let getColor=(param)=>{
+              let factor = (param.data.count - min) / (max - min);
+              let index = Math.round(colors.length * factor);
+              return colors[index];
+            }
       let series = [{
             name: 'bgLine',
             type: 'lines',
@@ -835,7 +839,7 @@ export default {
             zlevel: 1,
             lineStyle: {
                 normal: {
-                    color: '#03825d',
+                    color:getColor,
                     width: 2,
                     opacity: 0.5,
                     curveness: 0.2
@@ -859,7 +863,7 @@ export default {
             itemStyle: {
                 normal: {
                     show: true,
-                    color: '#03825d'
+                    color: getColor
                 }
             },
             data: scatterData
@@ -876,7 +880,7 @@ export default {
             },
             lineStyle: {
                 normal: {
-                    color: '#04b06e',
+                    color:getColor,
                     width: 0,
                     curveness: 0.2
                 }
@@ -896,7 +900,7 @@ export default {
             },
             lineStyle: {
                 normal: {
-                    color: '#04b06e',
+                    color:getColor,
                     width: 0,
                     curveness: 0.2
                 }
@@ -925,6 +929,7 @@ export default {
     // 车辆归属地分析  右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
     getBelongData(){
       let that = this;
+      that.map.setZoom(4);
       that.clearMap();
       let BelongData={};
       BelongData.stime=that.stime;
@@ -985,8 +990,21 @@ export default {
         el1.style.width='17px';
         el1.style.height='17px';
         el1.style.borderRadius='50%';
-        if(item.NUM>0) el1.style.backgroundColor='#D01828';
-        if(item.NUM<0) el1.style.backgroundColor='#00b429';
+        el1.style.border='1px solid #fff';
+        if(item.NUM>=0 && item.NUM<50) {el1.style.backgroundColor='#00b429';}
+        else if(item.NUM>50 && item.NUM<1000) {
+          el1.style.backgroundColor='#e9b806';
+          el1.style.width='12px';
+          el1.style.height='12px';
+        }else if(item.NUM>1000 && item.NUM<10000) {
+          el1.style.backgroundColor='#ff9e58';
+          el1.style.width='14px';
+          el1.style.height='14px';
+        }else if(item.NUM>10000) {
+          el1.style.backgroundColor='#fd0000';
+          el1.style.width='17px';
+          el1.style.height='17px';
+        }
         let d1 = document.createElement('div');
         if(item.city){
           let citySpan= document.createElement('span');
@@ -1045,12 +1063,11 @@ export default {
         d5.appendChild(span7)
         d5.appendChild(span8)
         el.appendChild(d5);
-        let popup= new minemap.Popup({closeOnClick: false, closeButton: false, offset: [0, 0]})
+        let popup= new minemap.Popup({closeOnClick: true, closeButton: false, offset: [0, 0]})
         .setLngLat(lnglat)
-        .setDOMContent(el)
-        .addTo(this.map);
+        .setDOMContent(el);
         this.map_cover.popups.push(popup);
-        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
         
       },
@@ -1061,6 +1078,8 @@ export default {
       */
       getHotCarDatas(type){
         let that=this;
+        that.map.setZoom(8);
+        that.map.setCenter([108.967368, 34.302634]);
         that.clearMap();
         var hotroadData={};  //存放热点道路参数
         var hotcardData={};  //存放热点卡口参数
@@ -1443,6 +1462,8 @@ position: fixed;
   top: 60px;
   left: 0;
   display: flex;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0 30px;
   .bg{
     // border:1px solid #ffffff;
@@ -1460,21 +1481,21 @@ position: fixed;
   
 }
 .carFlowBelong .provinces {
-  width: 213px;
+  // width: 213px;
   height: 32px;
   // background: rgba(0, 198, 255, 1);
   margin-top: 4vh;
   cursor: pointer;
-  flex: 1;
+  // flex: 1;
   margin-right: 2px;
 }
 .carFlowBelong .city {
-  width: 207px;
+  // width: 207px;
   height: 32px;
   // background: rgba(38, 94, 69, 1);
   margin-top: 4vh;
   cursor: pointer;
-  flex: 1;
+  // flex: 1;
 }
 #card-modal .hotcard{
     position: fixed;

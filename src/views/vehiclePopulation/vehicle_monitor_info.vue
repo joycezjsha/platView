@@ -96,7 +96,7 @@
                 <el-tab-pane label="今日出陕" name="2"></el-tab-pane>
               </el-tabs>
             </div>
-            <div class="inoutbox" style="">
+            <!-- <div class="inoutbox" style="">
               <div class="left-inout">
                 <div style="padding-left:2.9vw"  @click="changeIn(1)" >进入</div>
                 <div :class="param.fxlx==1? 'showline':'line'"></div> 
@@ -105,7 +105,7 @@
                 <div  style="padding-left:2.9vw" @click="changeIn(2)">流出</div>
                 <div :class="param.fxlx==2? 'showline':'line'"></div>
               </div>
-            </div>  
+            </div>   -->
           </div>
           <div class="inout"> 
               <span class="text" :class="param.provinceInorOut=='1'? 'selecttext':'noselecttext'" style="padding-left:1.5vw">
@@ -118,8 +118,8 @@
               </span>
             <!-- 切换省内外   -->
             <div class="vehicle-change">
-              <div @click="province(1)"  class="provinces" :class="param.provinceInorOut=='1'? 'bg':'changebg'" ></div>
-              <div @click="province(2)"  class="city" :class="param.provinceInorOut=='1'? 'bg1':'changebg1'" ></div>
+              <div @click="province(1)" :style="{width:provinceExternalProportion}" class="provinces" :class="param.provinceInorOut=='1'? 'bg':'changebg'" ></div>
+              <div @click="province(2)" :style="{width:provinceWithinProportion}" class="city" :class="param.provinceInorOut=='1'? 'bg1':'changebg1'" ></div>
             </div>
           </div>
           <div class="vehicle-table" style="padding:0 27px;height:100%">
@@ -176,7 +176,6 @@
               <div  class="table">
                 <el-table :data="indexHardDatas"
                 style="width: 100%" height="90%" 
-                @row-click="handleItem"
                 :default-sort = "{prop: 'NUM', order: 'descending'}" 
                 :row-style="getRowClass" :header-row-style="getRowClass" 
                 :header-cell-style="getRowClass">
@@ -217,8 +216,8 @@ export default {
   data() {
     return {
       map: {},
-      // outwidth:3,
-      // inwidth:7,
+      // outwidth:'3vw',
+      // inwidth:'7vw',
       indexRoadDatas: [],
       indexHardDatas: [],
       isShowIcon:false, //控制tab组件图标的显示
@@ -240,7 +239,7 @@ export default {
         stime:'4', //实时活跃 传4  今日入陕 出陕传2
         code:'', //车辆类型
         provinceInorOut: "1", //省内外  1省外  2 省内
-        fxlx: "1", //方向类型 1进 2出
+        fxlx: "", //方向类型 1进 2出
       },
       tableIndex:'',
       tableLoading:false,
@@ -545,18 +544,6 @@ export default {
       ]
     };
   },
-  computed: {
-    outwidth:()=>{  
-      //省外宽度
-      return (this.provinceExternalProportion*100*19.54);
-      console.log(provinceExternalProportion)
-      // provinceExternalProportion
-    },
-    inwidth:()=>{
-      //省内宽度
-      return (this.provinceWithinProportion*100*19.54);
-      }
-  },
   components: {
     mItem: m_item,
     mListO: m_list,
@@ -599,12 +586,11 @@ export default {
     getData() {
       blur.$on('realtime',data=>{
         this.isShowdiv=data;
+        this.clearMap();
         if(this.isShowdiv=='2'){
           this.map.setZoom(4);
           this.getVehicleOwnershipDatas();   
-        }else{
-          this.clearPopus()
-        }
+        };
         if(this.isShowdiv=='1'){
           this.initMainStaticsChart();
           this.getDomesticVehicleRankingDatas();
@@ -612,35 +598,28 @@ export default {
           this.initAccurCharts();
         }
         if(this.isShowdiv=='3'){
+          this.map.setZoom(8);
           this.getHotspotRoadRankinDatas();
           this.getHotspotBayonetRankingDatas();
-        }
-        // if(data==1){
-        //   this.onShowLayer()
-        // }else{
-        //   this.onHideLayer()
-        // }
+        };
       })  
       blur.$on("getCity", data => {
         this.CODE = data;
         this.param.code=data;
+        this.clearMap();
         if(this.isShowdiv=='1'){
           this.getDomesticVehicleRankingDatas();
           this.getToadyKeyVehicleInAndOutDatas();
           this.initAccurCharts();
           this.getMapBayonetRankingDatas();
-        }else{
-          this.clearlineList();
-        }
+        };
         if(this.isShowdiv=='2'){
           this.getVehicleOwnershipDatas();
         }
         if(this.isShowdiv=='3'){
           this.getHotspotRoadRankinDatas();
           this.getHotspotBayonetRankingDatas();
-        }else{
-          this.clearMap();
-        }
+        };
        
         if (this.CODE !== "") {
           this.showback = false;
@@ -715,17 +694,23 @@ export default {
   handleClick(i){
      if(i.name=='1'){
        this.param.stime='2';
-        this.getVehicleOwnershipDatas();
+       this.param.fxlx='1';
+       this.getVehicleOwnershipDatas();
+     }else if(i.name=='2'){
+       this.param.stime='2';
+       this.param.fxlx='2';
+       this.getVehicleOwnershipDatas();
      }else{
+       this.param.fxlx='';
        this.param.stime=i.name;
-        this.getVehicleOwnershipDatas();
+       this.getVehicleOwnershipDatas();
      }
   },
-  changeIn(fxlx) {
-    let that = this;
-    that.param.fxlx = fxlx;
-    that.getVehicleOwnershipDatas();
-  },
+  // changeIn(fxlx) {
+  //   let that = this;
+  //   that.param.fxlx = fxlx;
+  //   that.getVehicleOwnershipDatas();
+  // },
   /*
     *归属地分析-车辆归属地OD地图也是用的这个接口 KeyVehicle/getVehicleOwnership GET_OWN_SHIP_API
     *右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
@@ -759,7 +744,7 @@ export default {
               data.data.provinceExternalProportion;
               that.indexDatas = data.data.dataList;
               if(that.indexDatas.length>0){
-                that.clearlineList()
+                that.clearMap()
                 that.getVehicleOwnershipMapOD(that.indexDatas) 
               }
             } else {
@@ -783,7 +768,7 @@ export default {
      * OD地图函数
      */  
     getVehicleOwnershipMapOD(itemlist){
-      this.clearPopus()
+      this.clearMap()
       var data = [] ;
       itemlist.forEach(item => {
         if(item.STARTJWD && item.ENDJWD){
@@ -794,10 +779,13 @@ export default {
           ]) 
         }     
       });
+       var colors = ['#00F8FF','#00FF00','#FFF800','#FF0000'];
+
         var scatterData = [];
         var lineData = [];
-        var min = Number.MAX_VALUE;
-        var max = Number.MIN_VALUE;
+        var min = 0;
+        var max = 1000;
+        console.log(min,max);
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
             var name = item[4];
@@ -822,6 +810,11 @@ export default {
                 coords: [item.slice(0, 2), item.slice(2, 4)]
             });
             }
+            let getColor=(param)=>{
+              let factor = (param.data.count - min) / (max - min);
+              let index = Math.round(colors.length * factor);
+              return colors[index];
+            }
             var series = [{
                     name: 'bgLine',
                     type: 'lines',
@@ -829,7 +822,7 @@ export default {
                     zlevel: 1,
                     lineStyle: {
                         normal: {
-                            color: '#03825d',
+                            color:getColor,
                             width: 2,
                             opacity: 0.5,
                             curveness: 0.2
@@ -853,7 +846,7 @@ export default {
                 itemStyle: {
                     normal: {
                         show: true,
-                        color: '#03825d'
+                        color:getColor
                     }
                 },
                 data: scatterData
@@ -870,7 +863,7 @@ export default {
                 },
                 lineStyle: {
                     normal: {
-                        color: '#04b06e',
+                        color:getColor,
                         width: 0,
                         curveness: 0.2
                     }
@@ -890,7 +883,7 @@ export default {
                 },
                 lineStyle: {
                     normal: {
-                        color: '#04b06e',
+                        color:getColor,
                         width: 0,
                         curveness: 0.2
                     }
@@ -1215,11 +1208,11 @@ export default {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
-              let car_data = that.outboundEchartsData;
-              data.data.forEach(e => {
-                that.outboundEchartsData.y1data=[];
+               that.outboundEchartsData.y1data=[];
                 that.outboundEchartsData.y2data=[];
                 that.outboundEchartsData.xdata=[];
+              let car_data = that.outboundEchartsData;
+              data.data.forEach(e => {
                 that.outboundEchartsData.y1data.push(e.innum);
                 that.outboundEchartsData.y2data.push(e.outnum);
                 that.outboundEchartsData.xdata.push(e.date);
@@ -1294,11 +1287,24 @@ export default {
         el.style.height='130px';
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
         el1.id = 'marker'; //
-        el1.style.width='17px';
-        el1.style.height='17px';
+        el1.style.width='10px';
+        el1.style.height='10px';
         el1.style.borderRadius='50%';
-        if(item.NUM>0) el1.style.backgroundColor='#D01828';
-        if(item.NUM<0) el1.style.backgroundColor='#00b429';
+        el1.style.border='1px solid #fff';
+        if(item.NUM>=0 && item.NUM<50) {el1.style.backgroundColor='#00b429';}
+        else if(item.NUM>50 && item.NUM<500) {
+          el1.style.backgroundColor='#e9b806';
+          el1.style.width='12px';
+          el1.style.height='12px';
+        }else if(item.NUM>500 && item.NUM<1000) {
+          el1.style.backgroundColor='#ff9e58';
+          el1.style.width='14px';
+          el1.style.height='14px';
+        }else if(item.NUM>1000) {
+          el1.style.backgroundColor='#fd0000';
+          el1.style.width='17px';
+          el1.style.height='17px';
+        }
 
         let d1 = document.createElement('div');
        if(item.city){
@@ -1360,14 +1366,13 @@ export default {
         d5.appendChild(span7)
         d5.appendChild(span8)
         el.appendChild(d5);
-        let popup= new minemap.Popup({closeOnClick: false, closeButton: false, offset: [0, 0]})
+        let popup= new minemap.Popup({closeOnClick: true, closeButton: false, offset: [0, 0]})
         .setLngLat(lnglat)
-        .setDOMContent(el)
-        .addTo(this.map);
+        .setDOMContent(el);
         this.map_cover.popups.push(popup)
         // (".minemap-popup-tip").style.background='red';
         let lnglat1 = [itemlist[0],itemlist[1]];
-        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
       },
     /**
@@ -1402,7 +1407,8 @@ export default {
       return "background:transparent;";
     },
     /**
-     * 生成超速占比饼图echarts 今日重点监测车辆运行态势 Overview/getVehicleOperation   GET_OPERA_API
+     * 生成超速占比饼图echarts 今日重点监测车辆运行态势
+     * 今日重点监测车辆运行态势 Overview/getVehicleOperation    GET_OPERA_API 
      */
     initMainStaticsChart() {
       let that = this;
@@ -1414,21 +1420,19 @@ export default {
               that.cscount = data.data.cscount;
               that.count = data.data.count;
               that.avg = data.data.avg;
-              if (!this.sort_chart) {
-                this.sort_chart = echarts.init(
-                  document.getElementById("vehicle-statics_circle")
-                );
-              }
-              this.statics_sort_option.series[0].data = [
+              // if (!that.sort_chart) {
+                that.sort_chart = echarts.init(document.getElementById("vehicle-statics_circle"));
+              // }
+              that.statics_sort_option.series[0].data = [
                 { name: "超速次数", value: that.cscount },
                 { name: "总检测数", value: that.count }
               ];
-              this.statics_sort_option.series[0].label.normal.formatter = function(
+              that.statics_sort_option.series[0].label.normal.formatter = function(
                 c
               ) {
                 return that.avg;
               };
-              this.sort_chart.setOption(this.statics_sort_option);
+              that.sort_chart.setOption(that.statics_sort_option);
             } else {
               that.$message({
                 message: data.errmsg,
@@ -1445,29 +1449,7 @@ export default {
           that.tableLoading = false;
         });
     },
-    /**
-   * 
-   */
-  clearPopus(){
-    if(this.map_cover.popups.length>0){
-      this.map_cover.popups.forEach(e=>{
-        e.remove();
-      })
-    }
-    this.map_cover.popups=[]
-  },
-  clearlineList(){
-    //清除layer
-    if(this.map_cover.lineList.length>0){
-      this.map_cover.lineList.forEach(e=>{
-        if(this.map.getLayer(e)!=undefined){
-          this.map.removeLayer(e);
-        }
-      })
-    }
-    this.map_cover.lineList=[]
-  },
-     /*##清除地图加载点、线、面、弹框*/
+/*##清除地图加载点、线、面、弹框*/
   clearMap(){
     //清除source
     if(this.map_cover.sourceList.length>0){
@@ -1499,8 +1481,8 @@ export default {
       })
     }
     this.map_cover.markers=[];
-  },
-  },
+  }
+  }
   
 };
 </script>
@@ -1710,7 +1692,7 @@ export default {
       width: 100%;
       height: 30px;
       position: absolute;
-      top:15vh;
+      top:11vh;
       .text{
         flex: 1;
       }
@@ -1727,20 +1709,21 @@ export default {
   position: absolute;
   top:3vh;
   left: 0;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   padding: 0 30px;
   cursor: pointer;
   margin-top: 1vh;
   height: 32px;
   .provinces {
-    width: 213px;
-    flex: 1;
+    // width: 213px;
+    // flex: 1;
     margin-right: 2px;
   }
   .city {
-    width: 207px;
-    
-    flex: 1;
+    // width: 207px;
+    // flex: 1;
   }
 }
 .vehicle-Belong .bg{
@@ -1796,7 +1779,7 @@ export default {
 .vehicle-Belong .vehicle-table{
     width: 90%;
     position: absolute;
-    top:24vh;
+    top:21vh;
     left: 0;
 }
 .vehicle-Belong  .showline {
