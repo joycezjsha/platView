@@ -40,8 +40,8 @@
           <div><span>本月注册</span><span>{{carStatics.this_month}}</span></div>
           <div><span>上月注册</span><span>{{carStatics.front_month}}</span></div>
         </div>
-        <div style="height:25.32vh">
-          <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" ></bar-chart>
+        <div style="height:25.32vh;width:100%;">
+          <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" style="height:20vh;width:100%;"></bar-chart>
         </div>
         
       </div>
@@ -291,15 +291,17 @@ export default {
             if (data.errcode == 0) {
               let _data=_this.chart_data;
               _data.xdata=data.data.timelist;
-              data.data.inlist.map(s=>{
-                return (s/10000).toFixed(2);
+              data.data.inlist=data.data.inlist.map(s=>{
+                s=(s/10000).toFixed(2);
+                return s;
               });
-              data.data.outlist.map(s=>{
-                return (s/10000).toFixed(2);
+              data.data.outlist=data.data.outlist.map(s=>{
+                s=(s/10000).toFixed(2);
+                return s;
               })
               _data.y1data=data.data.inlist;
               _data.y2data=data.data.outlist;
-              
+              _data.unit=['万','万'];
               _this.chart_data=_data;
             } else {
               _this.$message({

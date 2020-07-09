@@ -240,6 +240,7 @@ export default {
      */
     multiply(max,min,value) {
       let result = [],position,item=(max-min)/2;
+      if(min>0) item=min+item;
       if(item>value){
         position=0;
       }else{
@@ -247,17 +248,29 @@ export default {
       };
       switch(position){
         case 0:{
-          for( let i = 0; i < this.areaColors[0].length; i++ ) {
-              let f=(value-min)/item;
-              result.push(Math.floor( this.areaColors[0][i]+f*( this.areaColors[1][i] -  this.areaColors[0][i])));
-          };
+          if(value==min){
+            result=this.areaColors[0];
+          }else{
+             let f=(value-min)/item;
+             for( let i = 0; i < this.areaColors[0].length; i++ ) {
+              let b=Math.floor(this.areaColors[0][i]+f*(this.areaColors[1][i] - this.areaColors[0][i]));
+              result.push(b);
+            };
+          }
           break;
         }
         case 1:{
-          for( let i = 0; i < this.areaColors[1].length; i++ ) {
-              let f=(value-item)/item;
-              result.push(Math.floor( this.areaColors[1][i]+f*( this.areaColors[2][i] -  this.areaColors[1][i])));
-          };
+          if(value==max){
+            result=this.areaColors[2];
+          }else if(value==item){
+            result=this.areaColors[1];
+          }else{
+            let f=(value-item)/item;
+            for( let i = 0; i < this.areaColors[1].length; i++ ) {
+              let b=Math.floor(this.areaColors[1][i]+f*(this.areaColors[2][i] -  this.areaColors[1][i]));
+              result.push(b);
+            };
+          }
           break;
         }
         default:break;

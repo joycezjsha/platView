@@ -35,7 +35,7 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        this.map.setCenter([109.278987,35.747334]);
+        this.map.setCenter(mapConfig.DEFAULT_CENTER);
         this.map.setZoom(6);
         this.getRoadStatisticsDatas();
         this.getData();
@@ -50,7 +50,7 @@ export default {
             let that=this;
             that.tableIndex=i;
             blur.$emit('clearMapRoad');
-            that.clearMap();
+            // that.clearMap();
             if(that.tableIndex=='1'){
                 //  隐藏聚合图 显示热力图
                 that.onHideLayer(2)
@@ -60,7 +60,7 @@ export default {
                 // 隐藏热力图  显示聚合图
                 that.onHideLayer('1')
                 that.map.setZoom(6);
-                // that.getActiveElDatas() //聚合图
+                
                 that.onShowLayer(2)
                 
                 
@@ -71,19 +71,16 @@ export default {
          */
         getData(){
             let that=this;
-            blur.$on("sendXZQH",data=>{
+            blur.$on("sendxzqu",(data,city)=>{
                 that.clearMap();
                 that.xzqh=data;
+                that.city=city;
                 if(that.tableIndex=='1'){
-                    that.getRoadStatisticsDatas()
+                    that.getRoadStatisticsDatas();
                 }else{
-                    that.getActiveElDatas()
+                    that.getActiveElDatas();
                 }
                 
-            })
-            
-            blur.$on("sendcity",data=>{
-                that.city=data;
             })
         },
          /*
@@ -100,7 +97,9 @@ export default {
                                 that.map.setLayoutProperty(e, 'visibility', 'visible');
                             }
                         })
-                    } 
+                    } else{
+                        that.getRoadStatisticsDatas();
+                    }
                 }
             }
             if(num=='2'){
@@ -112,7 +111,9 @@ export default {
                                 that.map.setLayoutProperty(e, 'visibility', 'visible');
                             }
                         })
-                    } 
+                    } else{
+                       that.getActiveElDatas(); //聚合图
+                    }
                 }
             }
             
@@ -121,6 +122,7 @@ export default {
         * 隐藏地图 
         */
         onHideLayer(num) {
+            debugger;
             let that=this;
             if(num=='1'){
                 // 热力图
@@ -311,7 +313,7 @@ export default {
             var data = response.data;
             if (data.errcode == 0) {
                 if(data.data.length>0){
-                    that.getActiveElMap(data.data)
+                    that.getActiveElMap(data.data);
                 }
             } else {
               that.$message({

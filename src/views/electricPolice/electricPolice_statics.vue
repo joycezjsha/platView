@@ -3,7 +3,7 @@
     <div class="electricPolice-statics_container">
       <div class="electricPolice-statics_title">
         <div class="top borstyle" >
-          <div class="title" v-if="showback==true">全省统计</div>
+          <div class="title" v-if="showback">全省统计</div>
           <div class="back "  v-else @click="goback()">
             &lt;&lt; 返回全省
             <span>{{city}}</span>
@@ -130,24 +130,24 @@ export default {
     goback() {
       let that = this;
       that.showback = true;
+      that.xzqh='';
       that.getDevCountDatas();
       that.getThirtyAlarm();
+      blur.$emit("sendxzqu",'','');
     },
     /**
      * 接受传过来的数据
     */ 
     getData(){
-      blur.$on("sendXZQH",data=>{
+      blur.$on("sendXZQH",(data,city)=>{
         this.XZQH=data;
+        this.city=city;
         this.getDevCountDatas(this.XZQH);
         this.getThirtyAlarm(this.XZQH);
         if(this.XZQH!=''){
           this.showback=false;
         }
-      })
-      blur.$on("sendcity",data=>{
-        this.city=data;
-      })
+      });
     },
     /**
      * 近30天违法抓拍排名 Electronic/getThirtyAlarm   GET_THIRTY_ALARM_API

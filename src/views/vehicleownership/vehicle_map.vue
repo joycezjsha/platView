@@ -170,7 +170,7 @@ export default {
     addCityPopup(e){
       let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
-      mainDiv.style.width='6vw';
+      mainDiv.style.width='8vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
       mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';

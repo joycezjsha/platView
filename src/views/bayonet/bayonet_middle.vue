@@ -79,10 +79,9 @@ export default {
       blur.$emit('clearMapRoad');
       if (that.tableIndex == '1') {
         that.onHideLayer('2');  //隐藏聚合图
-        that.getBayonetHeatMap();    //显示热力图
+        that.onShowLayer();    //隐藏热力图
       } else {
         that.onHideLayer('1'); 
-        that.getBayonetActiveDatas(); //显示聚合图 
         that.onShowLayer();    //隐藏热力图
       }
       // blur.$emit('initCityOrRoadStatics',null,null,false);
@@ -92,19 +91,38 @@ export default {
      */
     onShowLayer() {
       let that = this;
+      
       if (that.map) {
-        if (this.map_cover.lineList2.length > 0) {
-          this.map_cover.lineList2.forEach(e => {
-            if (this.map.getLayer(e) != undefined) {
-              that.map.setLayoutProperty(e, "visibility", "visible");
-            }
-          });
+        switch(this.tableIndex){
+        case 1:case '1':{
+          if (this.map_cover.lineList1.length > 0) {
+            this.map_cover.lineList1.forEach(e => {
+              if (this.map.getLayer(e) != undefined) {
+                that.map.setLayoutProperty(e, "visibility", "visible");
+              }
+            });
+          }else{
+            that.getBayonetHeatMap();    //显示热力图
+          }
         }
+        case 2:case '2':{
+          if (this.map_cover.lineList2.length > 0) {
+            this.map_cover.lineList2.forEach(e => {
+              if (this.map.getLayer(e) != undefined) {
+                that.map.setLayoutProperty(e, "visibility", "visible");
+              }
+            });
+          }else{
+            that.getBayonetActiveDatas(); //显示聚合图 
+          }
+        }
+      }
+        
       }
     },
     /*
-     * num == 1  隐藏地图聚合图
-     * num == 2  隐藏热力图
+     * num == 2  隐藏地图聚合图
+     * num == 1  隐藏热力图
      */
     onHideLayer(num) {
       let that = this;

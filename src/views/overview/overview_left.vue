@@ -69,7 +69,7 @@
            <el-table-column prop="city" label="城市" width="70"></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
-            <el-table-column prop="proportion" label="进出比" sortable>
+            <el-table-column prop="proportion" label="进出比">
              <template slot-scope="scope">
               <span>{{scope.row.proportion | number}}</span>
             </template>

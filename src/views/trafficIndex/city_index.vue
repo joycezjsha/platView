@@ -29,7 +29,7 @@
     <el-dialog :title="city+'拥堵指数分析'" :visible.sync="drawer" append-to-body class='traffic-echarts'>
       <traffic-index-charts :adcode='adcode'></traffic-index-charts>
     </el-dialog>
-    <t-area v-if='showArea' :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea'></t-area>
   </div>
 </template>
 
@@ -156,7 +156,7 @@ export default {
             data.data.forEach(e=>{
               that.addCityMarker(e);
             });
-            data.data.map(e=>{
+            data.data=data.data.map(e=>{
               e.XZQH=e.id;
               e.Num=e.ydzs;
               return e;

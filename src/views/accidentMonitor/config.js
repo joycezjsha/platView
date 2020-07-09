@@ -3,6 +3,7 @@
  */
 import http from '../../common/httpUtil'
 import sgImg from './image/sg.png'
+import sgUncheckImg from './image/sg_.png'
 import jqImg from './image/jq.png'
 export const interf={
   /*获取巡航数据*/
@@ -83,5 +84,6 @@ export const interf={
 export const IMG={
   /*路况巡航*/
   SG_IMG: sgImg,
+  SG_UNCHECK_IMG:sgUncheckImg,
   jqImg:jqImg
 }

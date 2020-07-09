@@ -147,13 +147,13 @@ export default {
       let that = this;
       that.showback = true;
       that.xzqh='';
-      blur.$emit('getxzqh',that.xzqh)
-      that.getbayrankDatas()
-      that.getdevcountData()
+      blur.$emit('getXZQH',that.xzqh);
+      that.getbayrankDatas();
+      that.getdevcountData();
     },
     // 接受传过来的数据
     getData(){
-      blur.$on("getXZQH",data=>{
+      blur.$on("getxzqh",data=>{
         this.XZQH=data;
         if(this.XZQH!=''){
           this.showback=false;

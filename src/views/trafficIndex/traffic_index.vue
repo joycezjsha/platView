@@ -229,7 +229,7 @@ export default {
         }
       }
       .index-item:nth-child(odd){
-        background-color: #13193c;
+        background-color: rgba(72,84,108,0.2);
       }
     }
     
