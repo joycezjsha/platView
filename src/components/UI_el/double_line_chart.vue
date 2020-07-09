@@ -79,11 +79,12 @@ export default {
                   type: 'line',
                   data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
                   areaStyle: {
-                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                          { offset: 1, color: "#f3c847" },
-                          { offset: 0.5, color: "#f3c847" },
-                          { offset: 0, color: "rgba(0,0,0,0)" },
-                        ])
+                   color: new echarts.graphic.LinearGradient(0, 0,0, 1, [
+                        { offset: 0, color: "rgba(243,200,71,1)" },
+                        { offset: 0.5, color: "rgba(243,200,71,0.38)" },
+                        { offset: 0.8, color: "rgba(243,200,71,0.38)" },
+                        { offset: 1, color: "rgba(243,200,71,0.38)" }
+                      ])
                   }
               },
               {
@@ -93,10 +94,11 @@ export default {
                   
                   data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
                   areaStyle: {
-                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 1, color: "#0092b2" },
-                        { offset: 0.5, color: "#0092b2" },
-                        { offset: 0, color: "rgba(0,0,0,0)" }
+                   color: new echarts.graphic.LinearGradient(0, 0.5, 0.8, 1, [
+                        { offset: 0, color: "#0092b2" },
+                        { offset: 0.5, color: "rgba(0,9,43,1)" },
+                        { offset: 0.8, color: "rgba(0,9,43,1)" },
+                        { offset: 1, color: "rgba(0,9,43,0.38)" }
                       ])
                   }
               }

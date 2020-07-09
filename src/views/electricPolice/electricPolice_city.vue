@@ -107,8 +107,8 @@ export default {
       let that=this;
       that.XZQH=row.XZQH;
       that.city=row.city;
-      blur.$emit("sendXZQH",that.XZQH)
-      blur.$emit("sendcity",that.city)
+      blur.$emit("sendXZQH",that.XZQH,that.city);
+      blur.$emit("sendxzqu",that.XZQH,that.city);
       that.centerTo(row.jwd.split(' '));
     },
     /*

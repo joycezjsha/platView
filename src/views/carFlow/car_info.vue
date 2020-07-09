@@ -992,23 +992,23 @@ export default {
         el.style.height='130px';
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
         el1.id = 'marker'; 
-        el1.style.width='17px';
-        el1.style.height='17px';
+        el1.style.width='14px';
+        el1.style.height='14px';
         el1.style.borderRadius='50%';
         el1.style.border='1px solid #fff';
         if(item.NUM>=0 && item.NUM<50) {el1.style.backgroundColor='#00b429';}
         else if(item.NUM>50 && item.NUM<1000) {
           el1.style.backgroundColor='#e9b806';
-          el1.style.width='12px';
-          el1.style.height='12px';
+          el1.style.width='8px';
+          el1.style.height='8px';
         }else if(item.NUM>1000 && item.NUM<10000) {
           el1.style.backgroundColor='#ff9e58';
-          el1.style.width='14px';
-          el1.style.height='14px';
+          el1.style.width='10px';
+          el1.style.height='10px';
         }else if(item.NUM>10000) {
           el1.style.backgroundColor='#fd0000';
-          el1.style.width='17px';
-          el1.style.height='17px';
+          el1.style.width='14px';
+          el1.style.height='14px';
         }
         let d1 = document.createElement('div');
         if(item.city){
