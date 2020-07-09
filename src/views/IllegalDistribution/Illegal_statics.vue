@@ -62,11 +62,19 @@
           <div class="">
             <m-title label='高发道路排名' style='width:9vw;'></m-title>
           </div>
-           <div style="position:absolute;left:14vw;top:1vh">
-              <select v-model="selected" @change="isSelected($event)"
+           <div style="position:absolute;left:12vw;top:1vh;width:10vw;">
+              <!-- <select v-model="selected" @change="isSelected($event)"
               style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px;border-radius:4px; line-height:14px" id="sortdata" >
                 <option :value="item.DLLX" v-for="item in roadClassification" :key="item.id">{{item.NAME}}</option>
-              </select>
+              </select> -->
+              <el-select v-model="selected"  @change="isSelected($event)">
+               <el-option
+                v-for="item in roadClassification"
+                :key="item.DLLX"
+                :label="item.NAME"
+                :value="item.DLLX">
+               </el-option>
+             </el-select>
               <!-- <span>{{selected}}</span> -->
             </div>
           <div style="padding:0 1vw;margin-top:1vh;height:30vh;">
@@ -112,12 +120,7 @@ export default {
       listItems:[],
       dllx:'', //道路类型
       countnum1:'',
-      roadClassification:[
-        // {
-        //   DLLX:'', //道路类型
-        //   NAME:'' //道路类型名称
-        // }
-      ],  //道路分类
+      roadClassification:[],  //道路分类
       // roadClassification:{  
       //   DLLX:'', //道路类型
       //   NAME:'' //道路类型名称
@@ -355,6 +358,7 @@ export default {
       that.selected='';
       that.showback=true;
       that.dllx='';
+      blur.$emit("goback",that.stime,that.xzqh)
       that.getAllProvinceIllegalStatisticsDatas(that.stime);
       that.initAccidentStaticsChart(that.stime);
       that.getSpeedingViolationDatas(that.stime)
@@ -440,10 +444,10 @@ export default {
      * 切换道路类型
      */
     isSelected(event){
-      // console.log(event.target.value)  //12 序号
       let that = this; 
-      that.dllx=event.target.value;
-      that.getIllegalAnalysisDatas(that.time)
+      that.dllx=event;
+      // that.dllx=event.target.value;
+      that.getIllegalAnalysisDatas(that.stime)
 
     },
     /**
@@ -473,9 +477,8 @@ export default {
             };
             that.current_option.yAxis.data=[];
             that.current_option.series[0].data=[];
-            data.data.forEach(e=>{
+            data.data.reverse().forEach(e=>{
               that.current_option.yAxis.data.push(e.WEEK)
-              // that.current_option.yAxis.data.push('星期日','星期一','星期二','星期三','星期四','星期五','星期六',)
               that.current_option.series[0].data.push(e.NUM)
             })
             that.current_chart.setOption(that.current_option);
@@ -524,20 +527,20 @@ export default {
               that.speeding_chart= echarts.init(document.getElementById('speeding-offences'));
               that.speeding_option.yAxis.data=[];  
               that.speeding_option.series[0].data=[]; 
-              for(var i=0;i<data.data.length;i++){
-                if(data.data[i].WFXW=='1'){
-                  data.data[i].WFXW='其他'
-                }else if(data.data[i].WFXW=='17211'){
-                  data.data[i].WFXW='超速50%以上'
-                }else if(data.data[i].WFXW=='16361'){
-                  data.data[i].WFXW=" 超速20-50%"
-                }else  if(data.data[i].WFXW=='13521'){
-                  data.data[i].WFXW="超速10%"
-                }
-                that.speeding_option.yAxis.data.push(data.data[i].WFXW)
-                // that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上')
-                that.speeding_option.series[0].data.push(data.data[i].NUM)
-              }
+              // for(var i=0;i<data.data.length;i++){
+                // if(data.data[i].WFXW=='1'){
+                //   data.data[i].WFXW='其他'
+                // }else if(data.data[i].WFXW=='17211'){
+                //   data.data[i].WFXW='超速50%以上'
+                // }else if(data.data[i].WFXW=='16361'){
+                //   data.data[i].WFXW=" 超速20-50%"
+                // }else  if(data.data[i].WFXW=='13521'){
+                //   data.data[i].WFXW="超速10%"
+                // }
+                // that.speeding_option.yAxis.data.push(data.data[i].WFXW)
+                that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上')
+                that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
+              // }
               that.speeding_chart.setOption(that.speeding_option);
               window.addEventListener("resize",()=>{
                 that.speeding_chart.resize();
@@ -786,6 +789,7 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
+             that.accident_option.series[0].data=[];
             if(!that.accident_chart){
               that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
             };

@@ -38,19 +38,21 @@ export default {
     mounted(){
         this.map = this.$store.state.map;
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
-        this.map.setZoom(11);
-        this.getMapBayonetRankingDatas()
-        
+        this.map.setZoom(8);
+        setTimeout(()=>{this.getMapBayonetRankingDatas();},300);
     },
     destroyed(){
       this.clearMap()
     },
     methods:{
+      // 进入页面，默认实现聚合图，如果选择车辆类型，调用函数
+      // 在调用之前清除之前的数据
+
       /* 
       * 接收传来的参数  getCity--车辆类型
       */
      getData(){
-        blur.$on('getCity',data=>{
+        blur.$on('getCitycar',data=>{
           this.code=data;
           // this.getMapBayonetRankingDatas(this.code)
         });
@@ -59,9 +61,9 @@ export default {
         realtime(i){    
             this.tableIndex=i;
             // let els=document.getElementsByClassName('.custom-popup-class');
-            blur.$emit('realtime',this.tableIndex)  
+            blur.$emit('realtime',this.tableIndex) 
             if(this.code!=""){
-              // this.getMapBayonetRankingDatas(this.code)
+              this.getMapBayonetRankingDatas()
             }
             if(this.code==""){
               // this.getMapBayonetRankingDatas()
@@ -110,6 +112,7 @@ export default {
       that.map = that.$store.state.map;
       if(that.map.getLayer('unclustered-points')!=undefined){
         that.map.setLayoutProperty('unclustered-points', 'visibility', 'visible');
+        that.map.getSource("data-point").setData(item);
       }else{
         let jsonData={
           "type": "FeatureCollection", 
@@ -188,19 +191,20 @@ export default {
      /**
       * 车辆实时监测  地图显示  KeyVehicle/getMapBayonetRanking  GET_MAP_BAY_RANK_API
       */
-      getMapBayonetRankingDatas(code){
+      getMapBayonetRankingDatas(){
         let that=this;
+        that.clearMap()
         let MapBayonetData={};
         //  如果默认显示
         // 如果传入车辆类型code参数
-        if(code!=undefined){
-          MapBayonetData.code=code;
+        if(that.code!=''){
+          MapBayonetData.code=that.code;
         }
           interf.GET_MAP_BAY_RANK_API(MapBayonetData)
           .then(response=>{
             if (response && response.status == 200){
               var data= response.data;
-              if (data.errcode == 0) {
+              if (data.errcode == 0 && that.tableIndex=='1') {
                 that.getBayonetMapRank(data.data)
               }else{
                 that.$message({
@@ -256,6 +260,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import "@/assets/css/color.scss";
+@import "../../assets/css/base.css";
 .vehicle-middle{
     position: fixed;
     top:93.5vh;
@@ -288,4 +294,5 @@ export default {
         }
     }
 }
+
 </style>

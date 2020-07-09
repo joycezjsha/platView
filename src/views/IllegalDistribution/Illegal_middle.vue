@@ -24,7 +24,7 @@ export default {
         return{
             stime:'1',
             xzqh:'',
-            type:'1', // 超速 (1) 限行(2)
+            type:'', // 超速 (1) 限行(2)
             tableIndex:1,
             timeRange:{ //自定义时间
                 time1:'',
@@ -50,15 +50,11 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        let that = this;
         // this.map.setCenter([108.967368, 34.302634]);
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
         this.map.setZoom(11);
-        // this.getIllegalHeatMapDatas(this.stime)
-        if(that.tableIndex!='1'){
-            this.gatData()
-        }
-        // this.gatData()
+        this.getIllegalHeatMapDatas(this.stime)
+        this.gatData()
     },
     methods:{
         /**
@@ -83,24 +79,32 @@ export default {
                 that.xzqh=data;
                 that.getIllegalHeatMapDatas(that.stime)
             })
+            blur.$on("goback",data=>{
+                that.stime='1';
+                that.xzqh='';
+                that.getIllegalHeatMapDatas(that.stime)
+                // console.log(data)
+                // that.stime,that.xzqh
+            })
         },
         realtime(i){   
             let that = this;
             that.tableIndex=i;
+            if(that.tableIndex=='1'){
+                that.type='';
+                that.getIllegalHeatMapDatas(that.stime)
+            }
             if(that.tableIndex=='2'){
                 that.type='1';
                 blur.$emit('gettype',that.type)
                 that.getIllegalHeatMapDatas(that.stime)
-                //  that.getIllegalAnalysisDatas(that.time)
             }else{
                 that.onHideLayer()
             }
             if(that.tableIndex=='3'){
                 that.type='2';
                 blur.$emit('gettype',that.type)
-                
                 that.getIllegalHeatMapDatas(that.stime)
-                //  that.getIllegalAnalysisDatas(that.time)
             }else{
                 that.onHideLayer()
             }
@@ -179,10 +183,11 @@ export default {
         * 违法热力图数据及展示 IllegalAnalysis/getIllegalHeatMap  GET_HEAT_MAP_API
         */
        getIllegalHeatMapDatas(time){
-           
            let that = this;
             let param={};
-            param.type=that.type;
+            if(that.type!=''){
+             param.type=that.type;
+            }
             if(that.xzqh!=''){
              param.xzqh=that.xzqh;
             }
@@ -220,111 +225,6 @@ export default {
                 that.tableLoading = false; 
             });
        },
-        /**
-         * 添加自定义数据源，id为自定义数据源的唯一标识
-         */
-        // addSource(map, id, data) {
-        //     if (map.getSource(id)) {
-        //         map.removeSource(id)
-        //     }
-        //     map.addSource(id, {
-        //         "type": "geojson",
-        //         "data": data
-        //     });
-        // },
-        /**
-         * 地图飞行函数
-         */
-        // flyToPosition(map,obj){
-        //     let {center,zoom,bearing,pitch} = obj;
-        //     map.flyTo({
-        //         center: center,
-        //         zoom: zoom,
-        //         bearing: bearing ? bearing : 0 ,
-        //         pitch : pitch ? pitch : 0,
-        //         speed: 0.4,
-        //         duration: 2 * 1000,
-        //         animate:true
-        //     });
-        // },
-        /**
-         * 生成渐变线，目前采用分段线实现，stops 颜色数组
-         */
-        // ColorLineLayer(id,Source,map){
-        //     if (map.getLayer(id)) {
-        //         map.removeLayer(id)
-        //     }
-        //     map.addLayer({
-        //     "id": id,
-        //     'type': 'histogram',
-        //     'source': Source,
-        //     'layout': {
-        //         'histogram-max-height-render': true, /* 是否开启柱状图极大高度控制 */
-        //         "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
-        //     },
-        //     'paint': {
-        //         "histogram-colors": ['#72c3fc', '#ffd8a8', '#faa2c1', '#c5f6fa', '#C7F5FF'],
-        //         /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
-        //         'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
-        //         'histogram-height': {
-        //             'type': 'identity',
-        //             'property': 'levels'
-        //         }, /*高度*/
-        //         'histogram-base': 0,/*基础高度*/
-        //         'histogram-opacity': 0.8
-        //     }
-        //     });
-        // },
-
-          // let dataa={
-        //     "type": "FeatureCollection",
-        //     "features": [
-        //         {
-        //         "geometry": {
-        //             "coordinates": 
-        //             [
-        //                 [107.60108, 37.59434],
-        //                 [107.60108, 37.59474],
-        //                 [107.60148, 37.59474],
-        //                 [107.60148, 37.59434],
-        //                 [107.60108, 37.59434],
-        //             ],
-        //             "type": "Polygon"
-        //         },
-        //         "properties": {
-        //             "levels": 4
-        //         },
-        //         "type": "Feature"
-        //         },
-        //         {
-        //         "geometry": {
-        //             "coordinates": [
-        //             [108.84242, 34.52689],
-        //                 [108.84242, 34.52729],
-        //                 [108.84282, 34.52729],
-        //                 [108.84282, 34.52689],
-        //                 [108.84242, 34.52689]
-        //             ],
-        //             "type": "Polygon"
-        //         },
-        //         "properties": {
-        //             "levels": 20
-        //         },
-        //         "type": "Feature"
-        //         },
-        //     ]
-        // }
-        // that.map = that.$store.state.map;   
-        // that.addSource(that.map,'histogram-source',item)
-        // that.ColorLineLayer('histogram','histogram-source',that.map)
-        //地图切换到自适应图层位置
-        // minemaputil.fitBounds(that.map, item, { padding: 200 });
-        // that.flyToPosition(this.map,
-        //     {
-        //     center:[108.967368, 34.302634],
-        //     zoom:13
-        // })
-
     //清除地图加载点、线、面、弹框
     clearMap() {
       //清除source

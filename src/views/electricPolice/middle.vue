@@ -22,9 +22,10 @@ export default {
         return{
             tableIndex:1,
             xzqh:'',
+            isShow:false,
             map_cover:{
                 sourceList:[],
-                lineList:[],
+                lineList1:[],
                 lineList2:[]
             },
         }
@@ -48,15 +49,21 @@ export default {
         change(i){   
             let that=this;
             that.tableIndex=i;
+            blur.$emit('clearMapRoad');
+            that.clearMap();
             if(that.tableIndex=='1'){
-                that.onHideLayer(that.tableIndex)
-                that.getRoadStatisticsDatas(); 
+                //  隐藏聚合图 显示热力图
+                that.onHideLayer(2)
+                that.onShowLayer('1')
+                // that.getRoadStatisticsDatas(); 
             }else{
-                that.onHideLayer(that.tableIndex)
+                // 隐藏热力图  显示聚合图
+                that.onHideLayer('1')
                 that.map.setZoom(6);
-                that.getActiveElDatas()
-                that.onShowLayer()
-               
+                // that.getActiveElDatas() //聚合图
+                that.onShowLayer(2)
+                
+                
             }
         },
         /*
@@ -65,11 +72,12 @@ export default {
         getData(){
             let that=this;
             blur.$on("sendXZQH",data=>{
+                that.clearMap();
                 that.xzqh=data;
-                if(that.tableIndex==1){
-                    that.getRoadStatisticsDatas(that.xzqh)
+                if(that.tableIndex=='1'){
+                    that.getRoadStatisticsDatas()
                 }else{
-                    that.getActiveElDatas(that.xzqh)
+                    that.getActiveElDatas()
                 }
                 
             })
@@ -79,35 +87,53 @@ export default {
             })
         },
          /*
-        * 显示地图聚合图
+        * 显示地图 
         */
-        onShowLayer() {
+        onShowLayer(num) {
             let that=this;
-            if (that.map) {
-                if(this.map_cover.lineList.length>0){
-                this.map_cover.lineList.forEach(e=>{
-                    if(this.map.getLayer(e)!=undefined){
-                        that.map.setLayoutProperty(e, 'visibility', 'visible');
-                    }
-                })
-            } 
+            if(num=='1'){
+                // 热力图 
+                if (that.map) {
+                    if(this.map_cover.lineList1.length>0){
+                        this.map_cover.lineList1.forEach(e=>{
+                            if(this.map.getLayer(e)!=undefined){
+                                that.map.setLayoutProperty(e, 'visibility', 'visible');
+                            }
+                        })
+                    } 
+                }
             }
+            if(num=='2'){
+                 // 聚合图
+                if (that.map) {
+                    if(this.map_cover.lineList2.length>0){
+                        this.map_cover.lineList2.forEach(e=>{
+                            if(this.map.getLayer(e)!=undefined){
+                                that.map.setLayoutProperty(e, 'visibility', 'visible');
+                            }
+                        })
+                    } 
+                }
+            }
+            
         },
         /*
-        * 隐藏地图聚合图
+        * 隐藏地图 
         */
         onHideLayer(num) {
             let that=this;
-            if(num==1){
-                if(this.map_cover.lineList.length>0){
-                    this.map_cover.lineList.forEach(e=>{
+            if(num=='1'){
+                // 热力图
+                if(this.map_cover.lineList1.length>0){
+                    this.map_cover.lineList1.forEach(e=>{
                         if(this.map.getLayer(e)!=undefined){
                             that.map.setLayoutProperty(e, 'visibility', 'none');
                         }
                     })
                 }   
             }
-            if(num==2){
+            if(num=='2'){
+                // 聚合图
                 if(this.map_cover.lineList2.length>0){
                     this.map_cover.lineList2.forEach(e=>{
                         if(this.map.getLayer(e)!=undefined){
@@ -120,12 +146,12 @@ export default {
         /*
         *  电警热力分布  Electronic/getElHeat  GET_EL_HEAT_API  传入参数xzqh
         */
-       getRoadStatisticsDatas(xzqh){
+       getRoadStatisticsDatas(){
         let _this = this;
         _this.map = _this.$store.state.map;
         let param = {};
-        if (xzqh != undefined) {
-            param.xzqh = xzqh;
+        if (_this.xzqh != '') {
+            param.xzqh = _this.xzqh;
         }
         interf.GET_EL_HEAT_API(param)
         .then(response => {
@@ -150,7 +176,7 @@ export default {
                   type: "geojson",
                   data: data.data //"./static/json/heat.json"/*可以是具体的服务*/
                 });
-                this.map.addLayer({
+                _this.map.addLayer({
                   id: "heatmapLayer",
                   type: "heatmap",
                   source: "heatmapSource",
@@ -159,7 +185,7 @@ export default {
                   },
                   paint: {
                     // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                    "heatmap-radius": 30,
+                    "heatmap-radius":15,
                     //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
                     "heatmap-weight": {
                       property: "mag",
@@ -193,7 +219,7 @@ export default {
                   }
                 });
                 _this.map_cover.sourceList.push("heatmapSource");
-                _this.map_cover.lineList2.push("heatmapLayer");
+                _this.map_cover.lineList1.push("heatmapLayer");
               }
             }
           }
@@ -351,7 +377,7 @@ export default {
                         "icon-image": "bank-15"
                     }
                 })
-                that.map_cover.lineList.push("unclustered-points"); 
+                that.map_cover.lineList2.push("unclustered-points"); 
                 
                 //添加聚合图层
                 var layers = [
@@ -371,7 +397,7 @@ export default {
                             [">=", "point_count", layer[0]] :
                             ["all", [">=", "point_count", layer[0]], ["<", "point_count", layers[i - 1][0]]]
                     })
-                    that.map_cover.lineList.push(clusterId)
+                    that.map_cover.lineList2.push(clusterId)
 
                 });
                 //添加数量图层
@@ -389,7 +415,7 @@ export default {
                     "filter": ["has", "point_count"]
                 }); 
                 
-                that.map_cover.lineList.push("cluster-count"); 
+                that.map_cover.lineList2.push("cluster-count"); 
             }
         },
        /*##清除地图加载点、线、面、弹框*/
@@ -403,8 +429,8 @@ export default {
             })
             }
             //清除layer
-            if(this.map_cover.lineList.length>0){
-                this.map_cover.lineList.forEach(e=>{
+            if(this.map_cover.lineList1.length>0){
+                this.map_cover.lineList1.forEach(e=>{
                     if(this.map.getLayer(e)!=undefined){
                     this.map.removeLayer(e);
                     }

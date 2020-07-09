@@ -49,6 +49,7 @@ export default {
     mounted(){
       this.map = this.$store.state.map;
       this.map.setCenter(mapConfig.DEFAULT_CENTER);
+      this.map.setZoom(8);
       this.getData();
       this.getMapVehicleInData(this.stime)
     },
@@ -76,20 +77,20 @@ export default {
     */                
     getData(){
       let that=this;
-      blur.$on("paramxzqh",xzqh=>{
-        that.xzqh=xzqh;
-      })
-      blur.$on('gettime',time=>{
+      blur.$on('gettimecar',time=>{
         that.stime=time;
-        if(that.stime!='4'){
-           that.getMapVehicleInData(that.stime) 
+        if(that.stime!='4' && that.tableIndex==1){
+          that.clearMarkers()
+          that.getMapVehicleInData(that.stime) 
         }
       }) 
-      blur.$on('determine',times=>{
-        that.timeRange=times;
-         that.clearMarkers();
-        that.getMapVehicleInData(that.timeRange[0],that.timeRange[1])
-      })  
+      blur.$on('determinecar',times=>{
+        if(that.tableIndex==1){
+          that.timeRange=times;
+          that.clearMarkers();
+          that.getMapVehicleInData(that.timeRange[0],that.timeRange[1]);
+          }
+       })
     },
 
     /**

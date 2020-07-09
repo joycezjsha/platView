@@ -88,11 +88,12 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     this.map.setCenter(mapConfig.DEFAULT_CENTER);
-    this.map.setZoom(6);
+    this.map.setZoom(11);
     this.map.repaint = true;
     this.getIndexData();
     this.getCityStatisticsDatas();
-    this.getRoadStatisticsDatas()
+    this.getRoadStatisticsDatas();
+    blur.$on('clearMapRoad',()=>{this.clearMap();});
   },
   destroyed() {
     this.map.setPitch(0);
@@ -156,7 +157,12 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-            that.indexData=data.data;
+            for(var i=0;i<data.data.length;i++){
+              if(data.data[1].city){
+                that.indexData.push(data.data[i])
+              }
+            }
+            // that.indexData=data.data;
           }else{
             that.$message({
               message: '城市统计请求服务失败',
