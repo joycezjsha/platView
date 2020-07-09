@@ -79,7 +79,7 @@ export default {
 <style scoped lang='scss'>
 .induction{
     width:100%;
-    height:859px;
+    height:1003px;
     background-color: #0a124a;
     img{
         width:100%;
