@@ -275,8 +275,9 @@ export default {
     handleClick(item){ 
      let that = this;
      that.activeName=item.name;  //对应的时间1  2  3  4
+     blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
+     blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
-      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
       that.realtimeData(that.activeName)
      }
   }

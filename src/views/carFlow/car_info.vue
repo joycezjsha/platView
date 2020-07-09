@@ -489,7 +489,7 @@ export default {
     this.getTrafficData();
     that.getprovinceData(that.stime)
     that.initSumCharts(that.timeName);
-    that.getCarTypeDatas()
+    that.getCarTypeDatas(that.stime)
     // that.getHotCarDatas(that.stime)
   },
   destroyed() {
@@ -531,7 +531,7 @@ export default {
       if(num=='1'){
         that.getprovinceData(that.stime);
         that.initSumCharts(that.timeName);
-        that.getCarTypeDatas() ;
+        that.getCarTypeDatas(that.stime) ;
       }
       if(num=='2'){
         that.map.setZoom(4);
@@ -568,24 +568,37 @@ export default {
       });
       //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
       blur.$on("gettime",time=>{
-        console.log(time)
         that.stime=time;
         that.clearMap()
-        that.getprovinceData(that.stime) 
-        that.getCarTypeDatas() ;
-        if(that.isShowdiv=='3'){
-          that.getHotCarDatas(that.stime)
+        if(that.stime!=4){
+          that.getprovinceData(that.stime) 
+          that.getCarTypeDatas(that.stime);
+           if(that.isShowdiv=='3'){
+            that.getHotCarDatas(that.stime)
+          }
+          if(that.isShowdiv=='2'){
+            that.map.setZoom(4);
+            that.getBelongData(that.stime);
+          }  
         }
-        if(that.isShowdiv=='2'){
-          that.map.setZoom(4);
-          that.getBelongData(that.stime);
-        }  
+        
+        // if(that.isShowdiv=='3'){
+        //   that.getHotCarDatas(that.stime)
+        // }
+        // if(that.isShowdiv=='2'){
+        //   that.map.setZoom(4);
+        //   that.getBelongData(that.stime);
+        // }  
       }) 
       //接收自定义的  timeRange:自定义的时间
       blur.$on('determine',times=>{
         that.timeRange=times;
-        that.getprovinceData(that.stime) 
-        that.getCarTypeDatas();
+        if(that.isShowdiv=='1'){
+          that.getprovinceData(that.stime) 
+          that.getCarTypeDatas(that.stime);
+        }
+        // 
+        // 
         if(that.isShowdiv=='3'){
           that.clearMap()
           that.getHotCarDatas(that.stime);
@@ -598,11 +611,12 @@ export default {
          
       })  
       blur.$on("paramxzqh",(xzqh,city)=>{
+        console.log(xzqh,city)
         that.xzqh=xzqh;
         that.city=city;
         that.showback=true; 
-        that.getprovinceData(that.stime,that.xzqh);
-        that.getCarTypeDatas();
+        that.getprovinceData(that.stime);
+        that.getCarTypeDatas(that.stime);
         if(that.isShowdiv=='3'){
           that.clearMap()
           that.getHotCarDatas(that.stime);
@@ -622,26 +636,21 @@ export default {
       that.isActive = i.name;
        that.fxlx = i.name;
        blur.$emit("getfxlf",that.fxlx);
-       that.getCarTypeDatas()
+       that.getCarTypeDatas(that.stime)
     },
     // 车辆流动页面全省车辆统计 xzqh===undefined && etime===undefined
-    getprovinceData(type,xzqh){
+    getprovinceData(type){
       let that = this;
       let provinceData={};
+      if(that.xzqh!=''){
+        provinceData.xzqh=that.xzqh;
+      }
       // 如果只有一个 type=1  2  3 时 并且没有xzqh 参数
-      if(type!='4' && xzqh===undefined){
-        provinceData.stime=type;
+      if(type!='4'){
+        provinceData.stime=that.stime;
         // 如果type=4 时  并且没有xzqh 参数
-      }else if(type=='4' && xzqh===undefined){
+      }else{ //that.timeRange
         provinceData.stime=that.timeRange[0];
-        provinceData.etime=that.timeRange[1];
-      }else if(type!='4' && xzqh!=undefined){
-        provinceData.stime=type;
-        provinceData.xzqh=xzqh;
-        // 如果type=4 时 并且有xzqh 参数
-      }else if(type=='4' && xzqh!=undefined){
-        provinceData.stime=that.timeRange[0];
-        provinceData.xzqh=xzqh;
         provinceData.etime=that.timeRange[1];
       }
         // 请求 全省车辆统计 数据
@@ -673,7 +682,7 @@ export default {
      * 车辆流动页面车辆类型分析  默认显示实时的数据 Vehicle/getCarType
      * 如果客户没有点击进入或者流出，默认显示全省进入的数据  两个参数的 GET_VEH_TYPE_API
      */
-    getCarTypeDatas(){
+    getCarTypeDatas(stime){
       let that=this; 
       let getCarTypeData={};
       getCarTypeData.stime=that.stime;
@@ -682,10 +691,12 @@ export default {
       if(that.xzqh!=''){
         getCarTypeData.xzqh=that.xzqh;
       }
-      if(that.stime=='4'){
+      if(stime=='4'){
         getCarTypeData.stime=that.timeRange[0];
         getCarTypeData.etime=that.timeRange[1];
-      }
+      }else{
+        getCarTypeData.stime=stime;
+      }
       // 发送请求，获取
     interf.GET_VEH_TYPE_API(getCarTypeData)
     .then(response=>{

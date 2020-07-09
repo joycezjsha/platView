@@ -437,6 +437,7 @@ export default {
           that.getIllegalAnalysisDatas(that.stime)
           that.getTrafficRestrictionDates(that.stime)
         }
+      
         
       })
     },
