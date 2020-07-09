@@ -9,6 +9,7 @@
     <div class='accident-map--icon'>
       <ul>
         <li><div>警情</div><div><img :src='jqImg' /></div></li>
+        <li><div>事故</div><div @click='showOrhideConstru'><img :src='sgImg' /></div></li>
       </ul>
     </div>
     <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea' :method='clickAreaEvent'></t-area>
@@ -32,12 +33,17 @@ export default {
         sourceList:[],
         lineList:[],
         markers:[],
-        popups:[]
+        popups:[],
+        cons_markers:[],
+        cons_popups:[]
       },
       showArea:false,
       areaIndexs:[],
       jqImg:IMG.jqImg,
-      areaList:[]
+      sgImg:IMG.SG_UNCHECK_IMG,
+      areaList:[],
+      ConstructionData:[],
+      showConstruction:false
     };
   },
   mounted() {
@@ -78,7 +84,7 @@ export default {
           if (data.errcode == 0) {
             that.addCityAccident(data.data);
             let max,min,datas=[];
-              data.data.map(e=>{
+              data.data=data.data.map(e=>{
                 e.Num=e.NUM;
                 if(!max){
                   max=e.Num;
@@ -167,7 +173,10 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-              that.addConstruction(data.data);
+             that.ConstructionData=data.data;
+             if(that.showConstruction){
+               that.addConstruction();
+             }
           }else{
             that.$message({
             message: response.errmsg,
@@ -187,11 +196,39 @@ export default {
       .finally(() => {
       });
     },
-    addConstruction(data){
+    /**
+     * 显示或隐藏施工图层
+     */
+    showOrhideConstru(){
+      this.showConstruction=!this.showConstruction;
+      if(this.showConstruction){
+        this.addConstruction();
+        this.sgImg=IMG.SG_IMG;
+      }else{
+        this.sgImg=IMG.SG_UNCHECK_IMG;
+         //清除marker
+        if(this.map_cover.cons_markers.length>0){
+          this.map_cover.cons_markers.forEach(e=>{
+            e.remove();
+          })
+        }
+        this.map_cover.cons_markers=[];
+        //清除popup框
+        if(this.map_cover.cons_popups.length>0){
+          this.map_cover.cons_popups.forEach(e=>{
+            e.remove();
+          })
+        }
+        this.map_cover.cons_popups=[];
+      }
+    },
+    addConstruction(){
       let _this=this;
-      data.map(e=>{
-        _this.addMainAccidentPopup(e);
-      })
+      if(_this.ConstructionData && _this.ConstructionData.length>0){
+        _this.ConstructionData.map(e=>{
+          _this.addMainAccidentPopup(e);
+        })
+      };
     },
     /**
      * 地图显示施工图层
@@ -225,8 +262,8 @@ export default {
       el.style.width = "32px";
       el.style.height = "32px";
       let marker = new minemap.Marker(el, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
-      this.map_cover.markers.push(marker);
-      this.map_cover.popups.push(popup);
+      this.map_cover.cons_markers.push(marker);
+      this.map_cover.cons_popups.push(popup);
     },
     /**
      * 地图点击事件，回调绑定事件
@@ -289,7 +326,7 @@ export default {
   z-index: 10;
   left: 500px;
   width: 108px;
-  height: 240px;
+  height: 280px;
   bottom: 13px;
   padding:20px 15px;
   background-color:#010416;
@@ -352,7 +389,15 @@ export default {
           }
         }
       }
+      li:nth-child(2){
+        div:nth-child(2){
+          img{
+            cursor:pointer;
+          }
+        }
+      }
     }
+    
   }
 }
 

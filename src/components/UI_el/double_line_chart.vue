@@ -7,9 +7,9 @@ export default {
   data() {
     return {
       option: {
-          color:['#05eef0','#ffdf05'],
+          color:['#ffdf05','#05eef0'],
           grid:{
-            top:'22%',
+            top:'25%',
             left:'15%',
             right:'15%',
             bottom:'15%'
@@ -80,9 +80,9 @@ export default {
                   data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
                   areaStyle: {
                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                          { offset: 1, color: "#f3c847" },
+                          { offset: 0.5, color: "#f3c847" },
                           { offset: 0, color: "rgba(0,0,0,0)" },
-                          // { offset: 0.5, color: "#002651" },
-                          { offset: 1, color: "#0092b2" }
                         ])
                   }
               },
@@ -94,9 +94,9 @@ export default {
                   data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
                   areaStyle: {
                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: "rgba(0,0,0,0)" },
-                        // { offset: 0.5, color: "#2a4869" },
-                        { offset: 1, color: "#030b29" }
+                        { offset: 1, color: "#0092b2" },
+                        { offset: 0.5, color: "#0092b2" },
+                        { offset: 0, color: "rgba(0,0,0,0)" }
                       ])
                   }
               }
@@ -136,7 +136,8 @@ export default {
               "2016-10-11",
               "2016-10-12"],
           y1data: ['204','201','198','189','192','182','177', '177','184'],
-          y2data:[34,33,33,37,39,30,27,18,18]
+          y2data:[34,33,33,37,39,30,27,18,18],
+          unit:['','']
             };
       }
     },
@@ -206,11 +207,13 @@ export default {
                     color:'white'
                   }};
       }else{
-        this.option.yAxis[0].name=this.chart_data.legend[0];
-        this.option.yAxis[1].name=this.chart_data.legend[1];
+        if(!this.chart_data.unit){
+          this.chart_data.unit=['',''];
+        }
+        this.option.yAxis[0].name=this.chart_data.legend[0]+'（单位：'+this.chart_data.unit[0]+')';
+        this.option.yAxis[1].name=this.chart_data.legend[1]+'（单位：'+this.chart_data.unit[0]+')';
         this.option.series[1].yAxisIndex=1;
       };
-      
       this.chart.setOption(this.option);
     }
   }

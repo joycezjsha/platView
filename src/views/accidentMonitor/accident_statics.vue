@@ -98,7 +98,6 @@ export default {
   components:{barChart,mTitle,mComTitle,mTab,mListO:m_list},
   mounted() {
     this.map = this.$store.state.map;
-    let that = this;
     this.getAllStatics();
     this.initAccidentStaticsChart();
     this.initAcciAccurCharts();
@@ -310,6 +309,10 @@ export default {
     returnAll(){
       this.isShowReturn=false;
       this.title='全省统计';
+      this.getAllStatics();
+      this.initAccidentStaticsChart();
+      this.initAcciAccurCharts();
+      this.initAccurCharts();
     },
   }
 };

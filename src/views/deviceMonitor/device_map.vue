@@ -91,7 +91,7 @@ export default {
                   },
                   "paint": {
                       // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                      "heatmap-radius": 30,
+                      "heatmap-radius": 15,
                       //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
                       "heatmap-weight": {
                           "property": "mag",
