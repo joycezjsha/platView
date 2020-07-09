@@ -30,10 +30,13 @@
                <span class="car-name">{{item.HPZL}}</span>
                <span style="color:rgba(255,255,255,1);">{{item.HPHM}}</span>
                <span class="per-hour">时速/限速:{{item.SJ}}</span>
+               <span style="float: right;color:rgba(255,255,255,1);">{{item.WFSJ.split(" ")[0]}}</span>
             </div>
             <div class="address-name">
-              <span>{{item.WFDZ}}</span>
-              <span>{{item.WFSJ}}</span>
+              <div class="road">{{item.WFDZ}}</div>
+              
+              <div class="timers">{{item.WFSJ.split(" ")[1]}}</div>
+              <!-- <span>{{item.WFSJ}}</span> -->
             </div>
             <!-- <p  style="margin-bottom:3px">
             <span class="address-name">{{item.WFDZ}}</span>
@@ -82,10 +85,7 @@ export default {
       indexDatas: [
         {"index":"","proportion":"+0.3%","NUM":"-0.1%","NAME":"","CODE":""}
         ],
-      trafficDatas: [
-      //   {"road":"西安","index":"2.1","averageSpeed":"33.2","length":"1.5","startRoad":"西兰高速公路","endRoad":"空工立交"},
-      // {"road":"西安","index":"2.1","averageSpeed":"24","length":"2.2","startRoad":"西兰高速公路","endRoad":"空工立交"}
-      ],
+      trafficDatas: [],
       selectItem:{"road":"西安",order:8}
     };
   },
@@ -163,6 +163,12 @@ export default {
           var data= response.data;
           if (data.errcode == 0) {
             that.trafficDatas=data.data;
+            console.log(data.data)
+            for(item of that.trafficDatas){
+              let timer=item.WFSJ;
+              console.log(timer.split(" ")[0])
+              // console.log(item.WFSJ.split(" ")[0])
+            }
           }else{
             that.$message({
               message: '重点车辆监测超速预警请求服务失败',
@@ -314,11 +320,10 @@ export default {
   font-family:Source Han Sans CN;
   font-weight:400;
   color:rgba(255,255,255,1);
-  margin-right: 45px;
+  margin-right: 15px;
 }
 .vehicle_monitor-div .per-hour{
-  float: right;
-  margin-right:0.8vw;
+  margin:0 0.4vw;
   font-size:14px;
   font-family:Source Han Sans CN;
   color:rgba(166,176,205,1);
@@ -328,6 +333,13 @@ export default {
   font-size:14px;
   font-family:Source Han Sans CN;
   color:rgba(166,176,205,1);
+  display: flex;
+  .road{
+    flex: 8;
+  }
+  .timers{
+    flex:2
+  }
 }
 
 

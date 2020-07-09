@@ -59,16 +59,14 @@ export default {
     getDatas() {
       let that = this;
       blur.$on("getXZQH", data => {
-        that.xzqh=data;
         that.clearMap();
-        // that.getBayonetHeatMap(data);
+        that.xzqh=data;
         if (that.tableIndex == '1') {
           that.getBayonetHeatMap(that.xzqh);
         } else {
           that.getBayonetActiveDatas(that.xzqh);
         }
       });
-      //    blur.$on("getcity",data=>{})
       //    blur.$on('initCityOrRoadStatics',data=>{
 
       //    });
@@ -82,7 +80,6 @@ export default {
       if (that.tableIndex == '1') {
         that.onHideLayer('2');  //隐藏聚合图
         that.getBayonetHeatMap();    //显示热力图
-        // that.getBayonetHeatDatas();
       } else {
         that.onHideLayer('1'); 
         that.getBayonetActiveDatas(); //显示聚合图 

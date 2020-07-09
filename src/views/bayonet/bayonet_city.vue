@@ -29,7 +29,8 @@
           </el-table>
         </div>
         <div v-else>
-            <span class='road_label'>道路类型筛选:</span><el-select v-model="road_type" placeholder="请选择道路类型">
+            <span class='road_label'>道路类型筛选:</span>
+            <el-select v-model="road_type" placeholder="请选择道路类型">
                <el-option
                 v-for="item in typeOption"
                 :key="item.value"
@@ -87,7 +88,10 @@ export default {
       activeName:'全部',
       tableIndex:0,
       typeOption:[
-        {label:'全部道路',value:'0'},{label:'国/省道',value:'1'},{label:'高速',value:'2'},{label:'主干道',value:'3'}
+        {label:'全部道路',value:'0'},
+        {label:'国/省道',value:'1'},
+        {label:'高速',value:'2'},
+        {label:'主干道',value:'3'}
       ],
       road_type:'0'
 

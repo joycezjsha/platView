@@ -41,8 +41,8 @@
                    [{{scope.row.city}}]{{scope.row.ROADNAME}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="TIMENUM" label="流量"  width="80" sortable></el-table-column>
-                <el-table-column prop="TODAYNUM" label="过车量"  width="110" sortable></el-table-column>
+                <el-table-column prop="TIMENUM" label="流量"  width="60" sortable></el-table-column>
+                <el-table-column prop="TODAYNUM" label="过车量"  width="90" sortable></el-table-column>
               </el-table>
             </div>          
           </div>
@@ -146,7 +146,8 @@ export default {
     goback() {
       let that = this;
       that.showback = true;
-      // that.getBelongData("1", "1", "2");
+      that.xzqh='';
+      blur.$emit('getxzqh',that.xzqh)
       that.getbayrankDatas()
       that.getdevcountData()
     },

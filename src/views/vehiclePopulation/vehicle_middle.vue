@@ -193,6 +193,7 @@ export default {
       */
       getMapBayonetRankingDatas(){
         let that=this;
+        that.clearMap()
         let MapBayonetData={};
         //  如果默认显示
         // 如果传入车辆类型code参数

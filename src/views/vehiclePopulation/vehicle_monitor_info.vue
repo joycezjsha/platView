@@ -692,6 +692,7 @@ export default {
   * 切换实时活跃 传4  今日入陕1  出陕2
   */
   handleClick(i){
+    this.clearMap()
      if(i.name=='1'){
        this.param.stime='2';
        this.param.fxlx='1';
@@ -703,6 +704,7 @@ export default {
      }else{
        this.param.fxlx='';
        this.param.stime=i.name;
+      
        this.getVehicleOwnershipDatas();
      }
   },
@@ -785,7 +787,6 @@ export default {
         var lineData = [];
         var min = 0;
         var max = 1000;
-        console.log(min,max);
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
             var name = item[4];

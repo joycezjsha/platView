@@ -145,9 +145,9 @@
                 <el-table :data="indexDatas"
               height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                     <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="road"   label="道路"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="inNum" label="进入辆次" sortable></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="outNum" label="流出辆次" sortable></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="road"  width="160"  label="道路"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="inNum"  width="90" label="进入辆次" sortable></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="outNum"  width="90" label="流出辆次" sortable></el-table-column>
                 </el-table>
               </div> 
             </div>
@@ -495,8 +495,8 @@ export default {
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
-    this.clearMap()
     let that = this;
+    that.clearMap()
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
@@ -527,6 +527,7 @@ export default {
       that.timeName='1';
       that.xzqh='';
       that.provinceInorOut="1";
+      that.clearMap()
       if(num=='1'){
         that.getprovinceData(that.stime);
         that.initSumCharts(that.timeName);
@@ -534,7 +535,7 @@ export default {
       }
       if(num=='2'){
         that.map.setZoom(4);
-        that.getBelongData();
+        that.getBelongData(that.stime);
       }
       if(num=='3'){
         that.getHotCarDatas(that.stime)
@@ -553,20 +554,13 @@ export default {
       blur.$on('realtime',data=>{
         that.isShowdiv=data;
         that.clearMap();
-        // if(that.map_cover.belongList.length>0){
-        //   that.map_cover.belongList.forEach(e=>{
-        //     e.remove();
-        //   })
-        // }     
-        // that.map_cover.belongList=[];
-        // if( that.isShowdiv==data)
         if(that.isShowdiv=='3'){
           this.map.setZoom(6);
           that.getHotCarDatas(that.stime)
         };
         if(that.isShowdiv=='2'){
           that.map.setZoom(4);
-          that.getBelongData();   
+          that.getBelongData(that.stime);   
         };
         if(that.isShowdiv=='1'){
           this.map.setZoom(6);
@@ -574,15 +568,17 @@ export default {
       });
       //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
       blur.$on("gettime",time=>{
+        console.log(time)
         that.stime=time;
+        that.clearMap()
         that.getprovinceData(that.stime) 
         that.getCarTypeDatas() ;
         if(that.isShowdiv=='3'){
           that.getHotCarDatas(that.stime)
         }
         if(that.isShowdiv=='2'){
-            that.map.setZoom(4);
-          that.getBelongData();
+          that.map.setZoom(4);
+          that.getBelongData(that.stime);
         }  
       }) 
       //接收自定义的  timeRange:自定义的时间
@@ -591,11 +587,13 @@ export default {
         that.getprovinceData(that.stime) 
         that.getCarTypeDatas();
         if(that.isShowdiv=='3'){
+          that.clearMap()
           that.getHotCarDatas(that.stime);
         }
         if(that.isShowdiv=='2'){
            that.map.setZoom(4);
-          that.getBelongData();
+           that.clearMap()
+          that.getBelongData(that.stime);
         }
          
       })  
@@ -606,11 +604,12 @@ export default {
         that.getprovinceData(that.stime,that.xzqh);
         that.getCarTypeDatas();
         if(that.isShowdiv=='3'){
+          that.clearMap()
           that.getHotCarDatas(that.stime);
         }
         if(that.isShowdiv=='2'){
            that.map.setZoom(4);
-          that.getBelongData();
+          that.getBelongData(that.stime);
         }
       })
       blur.$on('sendTime',data=>{
@@ -693,20 +692,24 @@ export default {
       if (response && response.status == 200){
         var data = response.data;
         if (data.errcode == 0) {
-          // that.echartsData.BIGCAR=data.data.BIGCAR;
+          if(data.data){
+            that.options.series[0].data=[];
+            that.staticsSort=[];
+            // that.echartsData.BIGCAR=data.data.BIGCAR;
           // that.echartsData.SMALLCAR=data.data.SMALLCAR;
-          that.staticsSort=[
-            {color:'#0067e2',label:'大车',value:data.data.BIGCAR},
-            {color:'#00a8d2',label:'小车',value:data.data.SMALLCAR}];
-          // 绘制饼状图
-          that.options.series[0].data=[];
-          that.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
-          {value:data.data.SMALLCAR, name:'小车'},]
-          that.changechart = echarts.init(document.getElementById('accurCreateChange'));
-          that.changechart.setOption(that.options);
-          window.addEventListener("resize",()=>{
-            that.changechart.resize();
-            }) 
+            that.staticsSort=[
+              {color:'#0067e2',label:'大车',value:data.data.BIGCAR},
+              {color:'#00a8d2',label:'小车',value:data.data.SMALLCAR}];
+            // 绘制饼状图
+            that.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
+            {value:data.data.SMALLCAR, name:'小车'},]
+            that.changechart = echarts.init(document.getElementById('accurCreateChange'));
+            that.changechart.setOption(that.options);
+            window.addEventListener("resize",()=>{
+              that.changechart.resize();
+              }) 
+          }
+          
           } else{
             that.$message({
               message: data.errmsg,
@@ -776,14 +779,14 @@ export default {
       let that = this;
       that.provinceInorOut = provinceInorOut;
        that.map.setZoom(4);
-      that.getBelongData()
+      that.getBelongData(that.stime)
     },
     // 车辆流动页面  归属地分析  Vehicle/getVehicleOwnership  // 进入 流出数据
     changeIn(fxlx) {
       let that = this;
       that.fxlx = fxlx;
        that.map.setZoom(4);
-      that.getBelongData()
+      that.getBelongData(that.stime)
     },
      //  OD地图函数
     getCityMapOD(itemlist){
@@ -927,21 +930,23 @@ export default {
         // this.map_cover.lineList.push(echartslayer)
     },
     // 车辆归属地分析  右侧列表数据 fxlx	1 进 2出   provinceInorOut	1 省外  2省内
-    getBelongData(){
+    getBelongData(type){
       let that = this;
       that.map.setZoom(4);
       that.clearMap();
       let BelongData={};
-      BelongData.stime=that.stime;
       BelongData.fxlx=that.fxlx;
       BelongData.provinceInorOut=that.provinceInorOut;
+      if(type=='4'){
+        BelongData.stime=that.timeRange[0];
+        BelongData.etime=that.timeRange[1];
+      }else{
+        BelongData.stime=that.stime;
+      }
       if(that.xzqh!=''){
         BelongData.xzqh=that.xzqh;
       }
-      if(that.timeRange!=''){
-        BelongData.stime=that.timeRange[0];
-        BelongData.etime=that.timeRange[1];
-      }
+      
         interf.GET_BELONG_API(BelongData)
         .then(response => {
           if (response && response.status == 200) {
@@ -1404,7 +1409,6 @@ position: fixed;
       width: 8.5vw;
       height: 3vh;
     }
-
     .inout {
       display: flex;
       width: 100%;

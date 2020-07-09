@@ -45,25 +45,21 @@
         <div class="sort">
           <div class="text">排序方式 ：</div>
           <div style="width:120px;margin-left:3px;display:flex" class="dropdown">
-              <select v-model="orderType" style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" @change='orderChange'>
+            <el-select @change='orderChange' v-model="orderType" >
+               <el-option
+                v-for="item in typeOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+              <!-- <select v-model="orderType" style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" @change='orderChange'>
                   <option value="0">进入辆次</option>
                   <option value="1">流出辆次</option>
                   <option value="2">进出比</option>
                   <option value="3">保有量</option>
                   <option value="4">流动变化</option>
-              </select>
-            <!-- <el-dropdown>
-                <el-button type="primary">
-                  流出车辆<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>进入辆次</el-dropdown-item>
-                  <el-dropdown-item>流出辆次</el-dropdown-item>
-                  <el-dropdown-item>进出比</el-dropdown-item>
-                  <el-dropdown-item>保有量</el-dropdown-item>
-                  <el-dropdown-item>流动变化</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown> -->
+              </select> -->
               <span @click="sort" style="width:30px;height:26px;color:rgba(29,153,171,1);margin-left:15px;">              
                   <i style="font-size:20px;" v-show="downIcon" class='iconfont icon-paixu3'></i>
                   <i  style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
@@ -103,15 +99,20 @@ export default {
   name: "car_table",
   data() {
     return {
-      orderType:0,
+      orderType:'0',
       downIcon: true,  //排序切换
       showCity:false,
       xzqh:'',
       fxlx:'1',
       stime:'1',
       map: {},
-      flowDatas: [
-
+      flowDatas: [],
+      typeOption:[
+        {label:'进入辆次',value:'0'},
+        {label:'流出辆次',value:'1'},
+        {label:'进出比',value:'2'},
+        {label:'保有量',value:'3'},
+        {label:'流动变化',value:'4'}
       ],
       activeName:'1',
       selectItem:{"city":"西安",order:8},
@@ -271,14 +272,12 @@ export default {
     /**
     *  点击左上角的时间选择对应的时间
     */
-    handleClick(item){
-     
+    handleClick(item){ 
      let that = this;
      that.activeName=item.name;  //对应的时间1  2  3  4
-     blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
-     blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
-       that.realtimeData(that.activeName)
+      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
+      that.realtimeData(that.activeName)
      }
   }
 

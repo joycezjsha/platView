@@ -157,7 +157,12 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-            that.indexData=data.data;
+            for(var i=0;i<data.data.length;i++){
+              if(data.data[1].city){
+                that.indexData.push(data.data[i])
+              }
+            }
+            // that.indexData=data.data;
           }else{
             that.$message({
               message: '城市统计请求服务失败',
