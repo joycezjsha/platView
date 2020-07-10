@@ -3,10 +3,8 @@
     <div class="city-index_container boxstyle">
       <div class="city-index_title">
         <div>
-          <!-- <i class="el-icon-collection-tag">全省流动情况</i> -->
           <m-title label='全省流动情况' img_type=1 style='width:100%;height:4vh;line-height:4vh;'></m-title>
         </div>
-        
       </div>
       <div class="car-flow_content " >
         <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;" >
@@ -15,20 +13,22 @@
           <el-tab-pane label="昨天" name="3"></el-tab-pane>
           <el-tab-pane label="自定义" name="4"></el-tab-pane>
         </el-tabs>
+        <!-- prop="date1" -->
         <div class='car-table-query' v-if="activeName=='4'">
           <span class='car-table-query--label'>时间：</span><span class="car-table-query--time">
-          <el-date-picker width="100%"
-           value-format="yyyyMMdd"
-            v-model="timeRange"
-            type="daterange"
-            align="right"
-            unlink-panels
-            range-separator="-"
-            :picker-options="pickerOptions"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            >
-          </el-date-picker>
+              <el-date-picker width="100%"
+                value-format="yyyyMMdd"
+                v-model="timeRange"
+                :picker-options="pickerOptions"
+                type="daterange"
+                align="right"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                >
+              </el-date-picker>
+       
           </span>
           <span class="car-table-query--btn">
             <el-button type="primary" @click="determine">确定</el-button>
@@ -100,12 +100,14 @@ export default {
   data() {
     return {
       orderType:'0',
+      pickerOptions:{},
       downIcon: true,  //排序切换
       showCity:false,
       xzqh:'',
       fxlx:'1',
       stime:'1',
       map: {},
+      date1: [{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }],
       flowDatas: [],
       typeOption:[
         {label:'进入辆次',value:'0'},
@@ -229,9 +231,25 @@ export default {
     */ 
     determine(){
        let that = this;
-       blur.$emit("determine",that.timeRange) //发送时间格式20200505
-       blur.$emit("determinecar",that.timeRange)
-       that.realtimeData(that.activeName)
+       if(that.timeRange==''){
+         that.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "error",
+            duration: 3000
+          });
+         return;
+       }else{
+        if(that.timeRange.length<2){
+          that.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "error",
+            duration: 3000
+          });
+         return;
+        };
+        blur.$emit("determine",that.timeRange) //发送时间格式20200505
+        blur.$emit("determinecar",that.timeRange)
+        that.realtimeData(that.activeName)
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
         let timeData={
@@ -239,6 +257,8 @@ export default {
           time2
         }
         blur.$emit("sendTime",timeData) //发送时间格式  2020-06-10 23:59:59
+       }
+     
     },
     getIndexData(){
      let that = this;

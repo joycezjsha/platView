@@ -124,16 +124,31 @@ export default {
   */
   determine(){
     let that = this;
-    blur.$emit('gettimeRange',that.timeRange)
-    // blur.$emit("determine",that.timeRange)
-    that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1])
-    let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
-    let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
-    let timeData={
-      time1,
-      time2
-    }
-    blur.$emit("sendTime",timeData)
+     if(that.timeRange==''){
+         that.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "error",
+            duration: 3000
+          });
+         return;
+      }else{
+        if(that.timeRange.length<2){
+          that.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "error",
+            duration: 3000
+          });
+         return;
+        };
+         blur.$emit('gettimeRange',that.timeRange)
+        // blur.$emit("determine",that.timeRange)
+        that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1]);
+        let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00';
+        let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59';
+        let timeData={time1,time2}
+        blur.$emit("sendTime",timeData)
+      }
+   
   },
     /**
      * 点击表格事件

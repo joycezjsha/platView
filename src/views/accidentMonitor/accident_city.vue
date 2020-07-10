@@ -19,7 +19,8 @@
             end-placeholder="结束日期"
             >
           </el-date-picker>
-          </span><span class="city-accident-query--btn"><el-button type="primary" v-loading='queryLoading'>确定</el-button></span></div>
+          </span><span class="city-accident-query--btn">
+            <el-button type="primary" v-loading='queryLoading'>确定</el-button></span></div>
       <div class="city-accident_content">
          <!-- <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
           <el-tab-pane label="全部" name="first"></el-tab-pane>
