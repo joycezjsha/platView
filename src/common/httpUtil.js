@@ -3,11 +3,12 @@ import qs from 'qs'
 import { Message } from 'element-ui'
 import { Loading } from 'element-ui'
 import router from '../router'
+import state from '../store'
 // const service = axios.create({});
 // axios.defaults.headers.post['Content-Type'] = 'application/json';
 const service = axios.create({
   baseURL:urlConf.BASE_URL,
-  // timeout: 10000,
+  timeout: 15000,
   responseType:'json'
 });
 const pending = [];
@@ -38,11 +39,19 @@ const cancelPending = (config) => {
 }
 /****** request拦截器==>对请求参数做处理 ******/
 service.interceptors.request.use(config => {
-  cancelPending(config);
+  if(state.state.isClear){
+    cancelPending();
+    state.state.isClear=false;
+  }else{
+    cancelPending(config);
+  };
   config.cancelToken = new CancelToken(res => {
     pending.push({'UrlPath': config.url, 'Cancel': res})
   });
-  // startLoading();
+  startLoading();
+  setTimeout(() => {
+    endLoading();
+  }, 15000);
   // insertLog(config.method)
   if(config.method === 'post'){
     config.params=new Object();
@@ -66,7 +75,12 @@ service.interceptors.request.use(config => {
 });
 service.interceptors.response.use(function (response) {
   // token 已过期，重定向到登录页面
-  // endLoading();
+  endLoading();
+  pending.forEach((item, index) => {
+    if(response.config.url.indexOf(item.UrlPath)!=-1){
+      pending.splice(index, 1) // 移除当前请求记录
+    }
+  });
   if (response.data.stateCode == 401){
     localStorage.clear();
     sessionStorage.clear();

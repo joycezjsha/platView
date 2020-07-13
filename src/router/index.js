@@ -3,6 +3,7 @@
  */
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store'
 import Home from '@/views/home.vue'
 import cruise from '@/views/traffic-detection/TCruise'
 import overview from '@/views/overview/overViewIndex.vue'
@@ -156,29 +157,60 @@ const router = new Router({
 })
 
 
-router.beforeEach((to, from, next)=>{
-  if(to.path=='/login') return next()
-  const tokenstr=window.sessionStorage.getItem('token')
-  if(!tokenstr)   return next('/login')
-  next()
-})
-
-// router.beforeEach((to, from, next) => {
-//   if (to.path.startsWith('/login')) {
-//     sessionStorage.removeItem('token')
-//     next()
-//   } else {
-//     if(to.path.startsWith(to.path)){
-//       next()
-//     }else{
-//       let user = sessionStorage.getItem('token')
-//       if (!user) {
-//         next({path: '/login'})
-//       } else {
-//         next()
-//       }
-//     };
-//   }
-// });
+// router.beforeEach((to, from, next)=>{
+//   if(to.path=='/login') return next()
+//   const tokenstr=window.sessionStorage.getItem('token')
+//   if(!tokenstr)   return next('/login')
+//   next()
+// })
+router.beforeEach((to, from, next) => {
+  if(store.state.map){
+    debugger;
+    let _layers=store.state.map.__layersList;
+    let _markers=store.state.map.__markerList;
+    let _sources=store.state.map.__sourceList;
+    if(_sources.length>0){
+      _sources.forEach(e=>{
+        if(store.state.map.getSource(e)!=undefined){
+          store.state.map.removeSource(e);
+        }
+      })
+    };
+    if(_layers.length>0){
+      _layers.forEach(e=>{
+        if(store.state.map.getLayer(e)!=undefined){
+          store.state.map.removeLayer(e);
+        }
+      })
+    };
+    let l=_markers.length;
+    if(l>0){
+      for(let i=0;i<l;i++){
+        if(_markers.length<l){
+          l=_markers.length;
+          i=0;
+        }
+        _markers[i].remove();
+      }
+      // _markers.forEach(e=>{
+      //   e.remove();
+      // })
+    }
+  }
+  
+  if (to.path.startsWith('/login')) {
+    sessionStorage.removeItem('token')
+    return next()
+  }else{
+    if(to.path.startsWith(to.path)){
+      return next();
+    }else{
+      let user = sessionStorage.getItem('token')
+      if (!user) return next({path: '/login'})
+      next()
+    };
+  }
+  
+});
 
 export default router

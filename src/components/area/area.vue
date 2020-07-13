@@ -135,7 +135,7 @@ export default {
               },
               "properties": {
                   "title": e.city,
-                  "code":e.AdminCode
+                  "code":e.adcode
               }
             }]
         };
@@ -232,7 +232,6 @@ export default {
         else{e.color='rgba(6,143,230,0)'};
         return e;
       });
-      console.log(data);
       return data;
     },
     /**
@@ -454,8 +453,8 @@ export default {
         });
         if (features && features.length > 0) {
           let data={};
-          data.name=features[0].city;
-          data.value=features[0].code;
+          data.name=features[0].properties.title;
+          data.value=features[0].properties.code;
           this.method(data);
           break;
         }

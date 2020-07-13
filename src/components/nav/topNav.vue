@@ -201,6 +201,38 @@ export default {
     MenuTree: menuTree,
     mTime:time
   },
+  watch: {
+      '$route': function(to, from){ // 路由改变时执行
+        let _this=this;
+        _this.$store.commit("setClear", 'true');
+        // let _layers=this.$store.state.map.__layersList;
+        // let _markers=this.$store.state.map.__markerList;
+        // let _sources=this.$store.state.map.__sourceList;
+        // debugger;
+        // if(_sources.length>0){
+        //   _sources.forEach(e=>{
+        //     if(_this.$store.state.map.getSource(e)!=undefined){
+        //       _this.$store.state.map.removeSource(e);
+        //     }
+        //   })
+        // };
+        // if(_layers.length>0){
+        //   _layers.forEach(e=>{
+        //     if(_this.$store.state.map.getLayer(e)!=undefined){
+        //       _this.$store.state.map.removeLayer(e);
+        //     }
+        //   })
+        // };
+        // if(_markers.length>0){
+        //   for(let i=0;i<_markers.length;i++){
+        //     _markers[i].remove();
+        //   }
+        //   // _markers.forEach(e=>{
+        //   //   e.remove();
+        //   // })
+        // }
+      }
+    },
   created() {
     // 获取当前路由
     this.fetchNavData();

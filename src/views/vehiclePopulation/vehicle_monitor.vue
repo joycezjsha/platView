@@ -163,13 +163,8 @@ export default {
           var data= response.data;
           if (data.errcode == 0) {
             if(data.data.length>0){
-                that.trafficDatas=data.data;
-                // for(var i=0;i<that.trafficDatas.length;i++){
-                //   // let timer=item.WFSJ;
-                //   // console.log(timer.split(" ")[0])
-                // }
+              that.trafficDatas=data.data;
             }
-           
           }else{
             that.$message({
               message: '重点车辆监测超速预警请求服务失败',

@@ -19,8 +19,7 @@
             end-placeholder="结束日期"
             >
           </el-date-picker>
-          </span><span class="city-accident-query--btn">
-            <el-button type="primary" v-loading='queryLoading'>确定</el-button></span></div>
+          </span><span class="city-accident-query--btn" @click='changeRange()'><el-button type="primary" v-loading='queryLoading'>确定</el-button></span></div>
       <div class="city-accident_content">
          <!-- <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;">
           <el-tab-pane label="全部" name="first"></el-tab-pane>
@@ -28,7 +27,9 @@
           <el-tab-pane label="互联网" name="third"></el-tab-pane>
           <el-tab-pane label="视频巡查" name="fourth"></el-tab-pane>
         </el-tabs> -->
-        <el-table v-if='range_type==0' :data="indexDatas" highlight-current-row style="width: 100%" height="80%" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" @row-click='handle'>
+        <el-table v-if='range_type==0' ref='cityTable' :data="indexDatas" highlight-current-row style="width: 100%" height="80%" :row-style="getRowClass" :header-row-style="getRowClass" 
+        :header-cell-style="getRowClass" @row-click='handle'
+    @current-change="handleCurrentChange">
           <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column prop="NAME" label="城市"></el-table-column>
           <el-table-column prop="NUM" label="警情数量" sortable></el-table-column>
@@ -72,7 +73,8 @@ export default {
       range_type:0,
       defaultTime:['00:00:00','23:59:59'],
       tableLoading:false,
-      queryLoading:false
+      queryLoading:false,
+      currentRow:null
     };
   },
   components:{
@@ -113,6 +115,7 @@ export default {
      */
     getAccidentCityData(){
       let _this=this;
+      _this.indexDatas=[];
       let param={stime:1};
       if(this.timeRange!=''){
         param.stime=this.timeRange[0];
@@ -137,6 +140,15 @@ export default {
       })
       .finally(() => {
         _this.tableLoading = false;
+        blur.$on('setCurrentCityRow',(city)=>{
+        let index=0;
+        _this.indexDatas.forEach((e,i)=>{
+          if(city.indexOf(e.NAME)!=-1){
+            index=i;
+          }
+        })
+        _this.$refs.cityTable.setCurrentRow(_this.indexDatas[index]);
+      })
       });
     },
    
@@ -220,7 +232,10 @@ export default {
       })
     }
   },
-  
+  //设置城市列表，选中行
+  handleCurrentChange(val){
+    this.currentRow = val;
+  }
   }
 };
 </script>

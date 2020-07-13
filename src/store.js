@@ -10,7 +10,8 @@ const date = 'Mon Mar 24 2018 00:00:00 GMT+0800 (中国标准时间)'
 
 const state = {
   map:'',
-  right:'2vw'
+  right:'2vw',
+  isClear:false
 }
 const getters = {
 
@@ -39,6 +40,9 @@ const mutations = {
   },
   setLayerId(state, layerId) {
     state.layerId = layerId
+  },
+  setClear(state,isClear){
+    state.isClear = isClear
   }
 }
 /*从本地存储读取数据*/

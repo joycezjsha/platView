@@ -27,9 +27,9 @@ export default {
     let _this=this;
     _this.$store.commit("setRight", '26vw');
     //type:0->城市，1->道路  value：参数名称  flag：0->不显示‘返回全省’按钮，1->显示‘返回全省’按钮
-    blur.$on('initCityOrRoadStatics',function(type,value,flag){
+    setTimeout(()=>{blur.$on('initCityOrRoadStatics',function(type,value,flag){
       _this.$refs.statics.initStatics(type,value,flag);
-    });
+    });},300);
   },
   destroyed() {
   },

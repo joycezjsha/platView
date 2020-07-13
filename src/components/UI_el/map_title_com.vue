@@ -49,9 +49,8 @@ export default {
   // width:9vw;
   color:white;
   text-align: center;
-  font-size: 0.85vw;
-  line-height: 4vh;
-  height: 4vh;
+  line-height: 45px;
+  height: 45px;
   font-size: 16px;
 }
 </style>

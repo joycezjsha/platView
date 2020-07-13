@@ -72,15 +72,16 @@ export default {
     },
     /**
     * 接收传过来的数据
-    * gettime  传入的时间 1,2,3,4
-    * determine  选择的时间
+    * 定义组件内函数gettime  传入的时间 1,2,3,4
+    * 定义组件内函数determine  选择的时间
     */                
     getData(){
       let that=this;
       blur.$on('gettimecar',time=>{
         that.stime=time;
         if(that.stime!='4' && that.tableIndex==1){
-          that.clearMarkers()
+          that.clearMarkers();
+          that.showArea=false;
           that.getMapVehicleInData(that.stime) 
         }
       }) 
@@ -88,6 +89,7 @@ export default {
         if(that.tableIndex==1){
           that.timeRange=times;
           that.clearMarkers();
+          that.showArea=false;
           that.getMapVehicleInData(that.timeRange[0],that.timeRange[1]);
           }
        })

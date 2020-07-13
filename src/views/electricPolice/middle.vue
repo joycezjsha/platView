@@ -37,7 +37,7 @@ export default {
         this.map = this.$store.state.map;
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
         this.map.setZoom(6);
-        this.getRoadStatisticsDatas();
+        setTimeout(()=>{this.getRoadStatisticsDatas();},200);
         this.getData();
     },
     destroyed() {
@@ -122,7 +122,6 @@ export default {
         * 隐藏地图 
         */
         onHideLayer(num) {
-            debugger;
             let that=this;
             if(num=='1'){
                 // 热力图
@@ -234,69 +233,6 @@ export default {
         //   });
         })
         .finally(() => {});
-        // let that=this;
-        // that.map = that.$store.state.map;
-        // if(that.map.getSource('heatmapSource')!=undefined){
-        //     that.map.setLayoutProperty('heatmapLayer', 'visibility', 'visible');
-        // }else{
-        //     let param={}
-        //     if(xzqh!=undefined){
-        //         param.xzqh=xzqh
-        //     }  
-        //     interf.GET_EL_HEAT_API(param).then(response=>{
-        //     if (response && response.status == 200){
-        //         var data = response.data;
-        //         if (data.errcode == 0) {
-        //         data.data.features.map(e=>{
-        //             e.geometry.coordinates=e.geometry.coordinates[0].split(',');
-        //             return e;
-        //         });
-        //         that.map.addSource("heatmapSource", {
-        //             type: "geojson",
-        //             data: data.data//"./static/json/heat.json"/*可以是具体的服务*/
-        //         });
-        //       that.map.addLayer({
-        //           "id": "heatmapLayer",
-        //           "type": "heatmap",
-        //           "source": "heatmapSource",
-        //           "layout": {
-        //               "visibility": "visible"
-        //           },
-        //           "paint": {
-        //               // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-        //               "heatmap-radius": 30,
-        //               //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
-        //               "heatmap-weight": {
-        //                   "property": "mag",
-        //                   "stops": [[0, 0], [10, 1]]
-        //               },
-        //               // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
-        //               "heatmap-intensity": 1,
-        //               // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
-        //               "heatmap-color": [
-        //                   "interpolate",
-        //                   ["linear"],
-        //                   ["heatmap-density"],
-        //                   0, "rgba(0, 0, 255, 0)", 0.1, "royalblue", 0.3, "cyan", 0.5, "lime", 0.7, "yellow", 1, "red"
-        //               ],
-        //               // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
-        //               "heatmap-opacity": 1,
-        //           }
-        //         });
-        //         that.map_cover.sourceList.push('heatmapSource');
-        //         that.map_cover.lineList2.push('heatmapLayer');
-        //         }
-        //     }
-        //     }).catch(err=>{
-        //     that.$message({
-        //         message: '请求服务失败',
-        //         type: "error",
-        //         duration: 1500
-        //         });
-        //     })
-        //     .finally(() => {
-        //     });
-        // }
        },
         /*
         *  活跃电警点位 Electronic/getActiveEl  GET_ACTIVE_EL_API

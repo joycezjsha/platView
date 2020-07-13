@@ -313,7 +313,8 @@ export default {
      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
      blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
-      that.realtimeData(that.activeName)
+      blur.$emit('gettimecar',that.activeName);  //传入对应的时间 1  2  3  4
+      that.realtimeData(that.activeName);
      }
   }
 

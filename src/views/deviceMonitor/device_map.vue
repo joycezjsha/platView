@@ -3,8 +3,8 @@
     <div @click='changeTable(0)'>
       <m-title label='设备分布热力' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title>
     </div>
-    <div @click='changeTable(1)'>
-      <m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title>
+    <div @click='changeTable(1)' style='margin-left:15px;'>
+      <m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:11vw;'></m-title>
     </div>
     <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
   </div>
@@ -23,7 +23,9 @@ export default {
       map: {},
       tableIndex:0,
       map_cover:{
-        markers:[]
+        markers:[],
+        sourceList:[],
+        lineList:[]
       },
       showArea:false,
       isShowTxt:false,
@@ -78,11 +80,11 @@ export default {
                 e.geometry.coordinates=e.geometry.coordinates[0].split(',');
                 return e;
               });
-              that.map.addSource("heatmapSource", {
+              that.$store.state.map.addSource("heatmapSource", {
                   type: "geojson",
                   data: data.data//"./static/json/heat.json"/*可以是具体的服务*/
               });
-              that.map.addLayer({
+              that.$store.state.map.addLayer({
                   "id": "heatmapLayer",
                   "type": "heatmap",
                   "source": "heatmapSource",
@@ -201,10 +203,28 @@ export default {
       })
       this.map_cover.markers=[];
     }
+     //清除source
+      if(this.map_cover.sourceList.length>0){
+      this.map_cover.sourceList.forEach(e=>{
+          if(this.map.getSource(e)!=undefined){
+          this.map.removeSource(e);
+          }
+      })
+      }
+      //清除layer
+      if(this.map_cover.lineList.length>0){
+          this.map_cover.lineList.forEach(e=>{
+              if(this.map.getLayer(e)!=undefined){
+              this.map.removeLayer(e);
+              }
+          })
+      }
   }
-
-  
 /** */
+  },
+  beforeDestroy(){
+    this.map.setPitch(0);
+    this.clearMap();
   }
 };
 </script>
@@ -220,7 +240,7 @@ export default {
 .device-map {
   position: fixed;
   z-index: 10;
-  left: 691px;
+  left: 750px;
   width: 340px;
   height: 39px;
   bottom: 15px;

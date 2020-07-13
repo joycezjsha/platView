@@ -352,6 +352,8 @@ export default {
      */
     changeTable(t){
       this.tableIndex=t;
+      // 清除地图 道路上的设备
+      this.clearMap();
     },
     //获取巡航数据
     getIndexData() {

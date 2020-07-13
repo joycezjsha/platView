@@ -269,6 +269,7 @@ export default {
      * 地图点击事件，回调绑定事件
      */
     clickAreaEvent(data){
+      blur.$emit('setCurrentCityRow',data.name);
       blur.$emit('initAccidentStatics',0,data);
     },
 /*##清除地图加载点、线、面、弹框*/
