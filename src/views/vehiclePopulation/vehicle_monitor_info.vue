@@ -570,14 +570,16 @@ export default {
   },
   destroyed() {
     this.flyRoutes = [];
-    this.clearMap()
-    this.map.stop();
+    this.clearMap();
     if(this.timer){
       clearInterval(this.timer)
     }
     // let that = this;
     this.map.setPitch(0); //设置地图的俯仰角
     // this.onHideLayer();
+  },
+  beforeDestroy(){
+    this.clearMap();
   },
   methods: {
     /*
@@ -1278,6 +1280,7 @@ export default {
     * 热点卡口地图
     */     
       getHotspotBayMapData(item){
+        if(this.$store.state.isClear){return;}
         let itemlist=[];
         itemlist.push(item.JWD.split(" ")[0],item.JWD.split(" ")[1],);
         let lnglat = [itemlist[0],itemlist[1]];
@@ -1452,6 +1455,16 @@ export default {
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){
+    //清除marker
+    if(this.map_cover.markers.length>0){
+      for(let i=0;i<this.map_cover.markers.length;i++){
+        this.map_cover.markers[i].remove();
+      }
+      // this.map_cover.markers.forEach(e=>{
+      //     e.remove();
+      //   })
+    }
+    this.map_cover.markers=[];
     //清除source
     if(this.map_cover.sourceList.length>0){
       this.map_cover.sourceList.forEach(e=>{
@@ -1475,13 +1488,7 @@ export default {
       })
     }
     this.map_cover.popups=[];
-    //清除marker
-    if(this.map_cover.markers.length>0){
-      this.map_cover.markers.forEach(e=>{
-        e.remove();
-      })
-    }
-    this.map_cover.markers=[];
+    
   }
   }
   

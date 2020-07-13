@@ -100,6 +100,11 @@ export default {
      */
     getVehicleTrend(code){
       let that=this;
+      that. chart_data={ 
+          legend: ["注册车辆数", "同比上月(%)"], 
+          xdata:[],
+          y1data: [],
+          y2data:[]};
       let params={};
       if(code) params.xzqh=code;
       interf.GET_CITY_TREND_API(params).then(response=>{

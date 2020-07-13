@@ -14,7 +14,7 @@
              @row-click="handdleCity"
              style="width: 100%"  height="100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="40"></el-table-column>
-            <el-table-column prop="city" label="城市" width="55"></el-table-column>
+            <el-table-column prop="city" label="城市" width="70"></el-table-column>
             <el-table-column prop="COUNT" label="设备数量" sortable></el-table-column>
             <el-table-column prop="ACTIVENUM" label="活跃个数"  sortable></el-table-column>
             <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>

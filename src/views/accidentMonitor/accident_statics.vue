@@ -123,7 +123,7 @@ export default {
       let that = this;
       let params={stime:1};
       if(type!=undefined && data){
-        if(data.time!=''){
+        if(data.time && data.time!=''){
           params.stime=data.time[0];
           params.etime=data.time[1];
         };
@@ -163,7 +163,7 @@ export default {
       that.listItems=[];
       let params={stime:1};
       if(type!=undefined && data){
-        if(data.time!=''){
+        if(data.time && data.time!=''){
           params.stime=data.time[0];
           params.etime=data.time[1];
         };

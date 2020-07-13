@@ -102,44 +102,44 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
-    /**
-     * 获取西安市拥堵排名   --暂无接口
-     */
-    getXianIndexOrder(){
-      let that=this;
+    // /**
+    //  * 获取西安市拥堵排名   --暂无接口
+    //  */
+    // getXianIndexOrder(){
+    //   let that=this;
       
-      interf.GET_Xian_TAFFIC_ORDER({stime:1})
-      .then(response=>{
-        if (response && response.status == 200){
-          var data= response.data;
-          if (data.errcode == 0) {
-            that.indexDatas=data.data;
+    //   interf.GET_Xian_TAFFIC_ORDER({stime:1})
+    //   .then(response=>{
+    //     if (response && response.status == 200){
+    //       var data= response.data;
+    //       if (data.errcode == 0) {
+    //         that.indexDatas=data.data;
             
-            data.data.forEach(e=>{
-              that.addCityMarker(e);
-            })
-          }else{
-            that.$message({
-              message: data.errmsg,
-              type: "error",
-              duration: 1500
-            });
-            that.tableLoading = false;
-          }
-        }
-      })
-      .catch(err=>{
-        that.$message({
-              message: '获取拥堵排名数据失败',
-              type: "error",
-              duration: 1500
-            });
-        that.tableLoading = false;
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-    },
+    //         data.data.forEach(e=>{
+    //           that.addCityMarker(e);
+    //         })
+    //       }else{
+    //         that.$message({
+    //           message: data.errmsg,
+    //           type: "error",
+    //           duration: 1500
+    //         });
+    //         that.tableLoading = false;
+    //       }
+    //     }
+    //   })
+    //   .catch(err=>{
+    //     that.$message({
+    //           message: '获取拥堵排名数据失败',
+    //           type: "error",
+    //           duration: 1500
+    //         });
+    //     that.tableLoading = false;
+    //   })
+    //   .finally(() => {
+    //     that.tableLoading = false;
+    //   });
+    // },
     /**
      * 初始化城市拥堵排名列表
      */

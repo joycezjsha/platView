@@ -1,7 +1,7 @@
 <template>
   <div class="city_index_chart">
     <!-- <m-tile  :label="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'"></m-tile> -->
-    <div v-if="order_value==0" style="width:90%;margin:0 auto;height:80%;">
+    <div v-if="order_value==0" style="width:90%;margin:0 auto;height:100%;">
       <el-table
         :data="indexDatascar"
         highlight-current-row
@@ -18,7 +18,7 @@
         <el-table-column prop="TODAYPROPORTION" label="今日上传占比" sortable></el-table-column>
       </el-table>
     </div>
-    <div style="width:90%;margin:0 auto;height:80%;" v-else>
+    <div style="width:90%;margin:0 auto;height:100%;" v-else>
       <el-table
         :data="indexDatas"
         highlight-current-row
@@ -358,7 +358,7 @@ export default {
 <style scoped='true' lang='scss'>
 .city_index_chart {
   width: 100%;
-  height: 85%;
+  height: 550px;
   .title {
     width: 60%;
     color: white;

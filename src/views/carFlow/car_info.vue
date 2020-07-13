@@ -495,9 +495,11 @@ export default {
   destroyed() {
     this.flyRoutes = [];
     this.map.stop();
-    let that = this;
-    that.clearMap()
-    that.map.setPitch(0); //设置地图的俯仰角
+    this.clearMap();
+    this.map.setPitch(0); //设置地图的俯仰角
+  },
+  beforeDestroy(){
+    this.clearMap();
   },
   methods: {
     /*
@@ -982,6 +984,7 @@ export default {
       * 热点卡口地图
       */     
       getcardMapData(item){
+        if(this.$store.state.isClear){return;}
         let itemlist=[];
         itemlist.push(item.KKJD,item.KKWD)
         let lnglat = [itemlist[0],itemlist[1]];
@@ -1113,7 +1116,7 @@ export default {
               if(that.tableDatas.length>0){
                 //  调用卡口地图方法
                 that.tableDatas.forEach(element => {
-                  that.getcardMapData(element)
+                  that.getcardMapData(element);
                 });
               }
             }else{

@@ -164,7 +164,7 @@ export default {
           if (data.errcode == 0) {
             that.trafficDatas=data.data;
             console.log(data.data)
-            for(item of that.trafficDatas){
+            for(let item in that.trafficDatas){
               let timer=item.WFSJ;
               console.log(timer.split(" ")[0])
               // console.log(item.WFSJ.split(" ")[0])
