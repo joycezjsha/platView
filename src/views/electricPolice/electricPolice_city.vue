@@ -158,11 +158,10 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             for(var i=0;i<data.data.length;i++){
-              if(data.data[1].city){
+              if(data.data[1].city!=null){
                 that.indexData.push(data.data[i])
               }
             }
-            // that.indexData=data.data;
           }else{
             that.$message({
               message: '城市统计请求服务失败',

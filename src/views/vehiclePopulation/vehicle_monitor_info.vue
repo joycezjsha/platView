@@ -642,6 +642,7 @@ export default {
       that.param.stime='4';
       that.param.provinceInorOut='1';
       that.param.fxlx='1';
+      that.param.code='';
       that.CODE='';
       that.showback = true;
       if(num=='1'){
@@ -1172,7 +1173,13 @@ export default {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
-              that.indexDataList = data.data;
+              if(data.data.length>0){
+                for(var i=0;i<data.data.length;i++){
+                  if(data.data[i].city!=null){
+                    that.indexDataList.push(data.data[i])
+                  }
+                }
+              }
             } else {
               that.$message({
                 message: data.errmsg,
@@ -1219,7 +1226,6 @@ export default {
                 that.outboundEchartsData.xdata.push(e.date);
               });
                 that.outboundEchartsData = car_data;
-                console.log(that.outboundEchartsData)
             } else {
               that.$message({
                 message: data.errmsg,

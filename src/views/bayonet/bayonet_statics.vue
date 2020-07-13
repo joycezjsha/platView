@@ -53,7 +53,6 @@
 </template>
 
 <script>
-// getAttribute
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'

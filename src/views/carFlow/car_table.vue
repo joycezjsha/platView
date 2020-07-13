@@ -99,7 +99,7 @@ export default {
   name: "car_table",
   data() {
     return {
-      orderType:'0',
+      orderType:'4',
       pickerOptions:{},
       downIcon: true,  //排序切换
       showCity:false,
@@ -141,6 +141,7 @@ export default {
     let that = this;
     this.map.repaint = true;
     that.getIndexData();
+    that.getData()
     that.realtimeData(that.stime)
   
   },
@@ -149,6 +150,20 @@ export default {
     this.clearMap();
   },
   methods: {
+    /**
+     * 接受右侧列表传来的数据
+     */
+    getData(){
+      let that = this;
+      blur.$on('back',data=>{
+        that.activeName='1';
+        that.stime='1';
+        that.xzqh='';
+        // that.getIndexData();
+        // that.realtimeData(that.stime)
+      })
+    },
+    
     /**
      * 切换排序方式
      */

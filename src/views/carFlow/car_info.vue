@@ -108,7 +108,7 @@
           </div>
           <div class="belong-table" style="padding:0 2vw;height:100%;marfin-top:3vh">
             <el-table
-              :data="indexDatas"
+              :data="indexDatasBelong"
               style="width: 100%"
               height="100%"
               :default-sort="{prop: 'NUM', order: 'descending'}"
@@ -207,7 +207,7 @@ export default {
       showback:false,  //显示返回全省
       map: {},
       i:1,
-      indexDatas: [],
+      indexDatasBelong: [],
       tableDatas:[],
       map_cover:{
         markers:[],
@@ -526,6 +526,7 @@ export default {
       that.isActive='1';
       that.timeName='1';
       that.xzqh='';
+      blur.$emit('back',that.stime,that.xzqh)
       that.provinceInorOut="1";
       that.clearMap()
       if(num=='1'){
@@ -957,8 +958,7 @@ export default {
       if(that.xzqh!=''){
         BelongData.xzqh=that.xzqh;
       }
-      
-        interf.GET_BELONG_API(BelongData)
+      interf.GET_BELONG_API(BelongData)
         .then(response => {
           if (response && response.status == 200) {
             var data = response.data;
@@ -969,9 +969,9 @@ export default {
               data.data.provinceWithinProportion;
               that.belongData.provinceExternalProportion =
               data.data.provinceExternalProportion;
-              that.indexDatas = data.data.dataList;
-              if(that.indexDatas.length>0){
-                that.getCityMapOD(that.indexDatas) 
+              that.indexDatasBelong = data.data.dataList;
+              if(data.data.dataList.length>0){
+                that.getCityMapOD(data.data.dataList) 
               }
             } else {
               that.$message({
