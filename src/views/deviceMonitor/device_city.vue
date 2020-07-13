@@ -25,7 +25,8 @@
           :value="item.value">
             </el-option>
           </el-select>
-          <el-table :data="roadDatas" @row-click="handle" style="width: 100%;height:100%;" :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+          <el-table :data="roadDatas" @row-click="handle" style="width: 100%;height:100%;" :default-sort = "{prop: 'week_radio', order: 'descending'}" 
+          :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" highlight-current-row>
             <el-table-column type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="道路名称"></el-table-column>
             <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
@@ -104,6 +105,7 @@ export default {
      */
     changeTable(t){
       this.tableIndex=t;
+      blur.$emit('clearRoadAndMaker');
     },
     /**
      * 获取设备总览，城市统计数据

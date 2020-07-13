@@ -31,7 +31,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                  <el-input type="password" v-model="formLogin.password" placeholder="密码">
+                  <el-input type="password" v-model="formLogin.password" placeholder="密码" show-password>
                     <i slot="prepend" class="el-icon-key"></i>
                   </el-input>
                 </el-form-item>
@@ -199,9 +199,10 @@ export default {
           window.sessionStorage.setItem('token',data.data.token)
             _this.$router.push('/')
         }else{
+           _this.formLogin.password='';
           _this.$message({
             message: '登录失败，账号或密码不正确！',
-            type: 'warn'
+            type: 'error'
           });
         }
       })

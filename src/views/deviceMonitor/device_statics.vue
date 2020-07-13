@@ -182,6 +182,8 @@ export default {
        map_cover:{
         sourceList:[],
         lineList:[],
+        RoadSourceList:[],
+        RoadLineList:[],
         markers:[],
         popups:[]
       },
@@ -210,21 +212,21 @@ export default {
       if(!data) return;
       if(flag){
         this.isShowReturn=true;
+        this.clearMaker();
+        this.isShowMainDev=false;
         switch(type){
           case 0:{
-            this.isShowMainDev=true;
             this.title=data.name;
-            this.clearMarker();
             this.getSumDev(type,data.value);
+            this.getAllStaticsData(type,data.value);
             this.initdeviceAnalysisChart(type,data.value);
-            this.initAccurCharts(data.value);
             break;}
           case 1:{
             this.title=data.name;
             this.getSumDev(type,data.value);
+            this.getAllStaticsData(type,data.value);
             this.initdeviceAnalysisChart(type,data.value);
             this.getRoadDevice(data.value);
-            this.isShowMainDev=false;
             break;
           }
         }
@@ -238,10 +240,10 @@ export default {
     getSumDev(type,value){
       let _this=this;
       let params={};
-      if(type && value){
+      if(type!=undefined && value){
         switch(type){
           case 0:params.xzqh=value;break;
-          case 1:break;
+          case 1:params.dldm=value;break;
           default:break;
         }
       };
@@ -272,10 +274,10 @@ export default {
     initdeviceAnalysisChart(type,value){
       let _this=this;
       let params={};
-      if(type && value){
+      if(type!=undefined && value){
         switch(type){
           case 0:params.xzqh=value;break;
-          case 1:break;
+          case 1:params.dldm=value;break;
           default:break;
         }
       }
@@ -312,10 +314,10 @@ export default {
     getAllStaticsData(type,value){
       let _this=this;
       let params={};
-      if(type && value){
+      if(type!=undefined && value){
         switch(type){
           case 0:params.xzqh=value;break;
-          case 1:break;
+          case 1:params.dldm=value;break;
           default:break;
         }
       };
@@ -462,8 +464,8 @@ export default {
           "minzoom": 3,
           "maxzoom": 17.5
         });
-      this.map_cover.sourceList.push('device_lineSource');
-      this.map_cover.lineList.push('device_lineLayer');
+      this.map_cover.RoadSourceList.push('device_lineSource');
+      this.map_cover.RoadlineList.push('device_lineLayer');
       }
       this.map.setCenter(points[0]);
     },
@@ -533,6 +535,22 @@ export default {
           }
         })
       }
+      //清除road 的source
+      if(this.map_cover.RoadSourceList.length>0){
+        this.map_cover.RoadSourceList.forEach(e=>{
+          if(this.map.getSource(e)!=undefined){
+            this.map.removeSource(e);
+          }
+        })
+      }
+      //清除road 的layer
+      if(this.map_cover.RoadLineList.length>0){
+        this.map_cover.RoadLineList.forEach(e=>{
+          if(this.map.getLayer(e)!=undefined){
+            this.map.removeLayer(e);
+          }
+        })
+      }
       //清除marker
       if(this.map_cover.markers.length>0){
         this.map_cover.markers.forEach(e=>{
@@ -545,12 +563,52 @@ export default {
           e.remove();
         })
       }
-      this. map_cover={
+      this.map_cover={
           sourceList:[],
           lineList:[],
+          RoadSourceList:[],
+          RoadLineList:[],
           markers:[],
           popups:[]
         }
+    },
+    /**
+     * 
+     */
+    clearMaker(){
+      let _this=this;
+      //清除marker
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover.markers=[];
+      //清除popup框
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover.popups=[];
+       //清除road 的source
+      if(this.map_cover.RoadSourceList.length>0){
+        this.map_cover.RoadSourceList.forEach(e=>{
+          if(this.map.getSource(e)!=undefined){
+            _this.map.removeSource(e);
+          }
+        })
+      }
+      this.map_cover.RoadSourceList=[];
+      //清除road 的layer
+      if(this.map_cover.RoadLineList.length>0){
+        this.map_cover.RoadLineList.forEach(e=>{
+          if(this.map.getLayer(e)!=undefined){
+            _this.map.removeLayer(e);
+          }
+        })
+      }
+      this.map_cover.RoadLineList=[];
     },
     hideRoadLine(){
       if(this.map_cover.markers.length>0){

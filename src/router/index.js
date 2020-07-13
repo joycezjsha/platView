@@ -165,11 +165,11 @@ const router = new Router({
 // })
 router.beforeEach((to, from, next) => {
   if(store.state.map){
-    debugger;
     let _layers=store.state.map.__layersList;
     let _markers=store.state.map.__markerList;
     let _sources=store.state.map.__sourceList;
-    if(_sources.length>0){
+    let s=_sources.length;
+    if(s>0){
       _sources.forEach(e=>{
         if(store.state.map.getSource(e)!=undefined){
           store.state.map.removeSource(e);
