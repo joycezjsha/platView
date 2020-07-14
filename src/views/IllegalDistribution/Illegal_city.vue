@@ -53,9 +53,9 @@
               </template> -->
             </el-table-column>
             <el-table-column prop="COUNTNUM" label="全部违法"  width="100"  sortable></el-table-column>
-            <el-table-column prop="CSNUM" label="超速" width="80"  sortable></el-table-column>
-            <el-table-column prop="XNUM" label="限行" width="80"  sortable></el-table-column>
-            <el-table-column  v-if='showXZQH' prop="XZQH" width="120" label="行政区号"  ></el-table-column>
+            <el-table-column prop="CSNUM" label="超速" width="60"  sortable></el-table-column>
+            <el-table-column prop="XNUM" label="限行" width="60"  sortable></el-table-column>
+            <el-table-column  v-if='showXZQH' prop="XZQH" width="0" label="行政区号"  ></el-table-column>
         </el-table>
         </div>
       </div>

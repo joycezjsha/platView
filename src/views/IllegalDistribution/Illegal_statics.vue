@@ -147,12 +147,12 @@ export default {
           },
           legend: {
                 orient: 'vertical',
-                right: 30,
-                top:20,
+                right:27,
+                top:40,
                 data: [],
                 textStyle:{color:'white'},
                 formatter: function(name){
-            　　　return name.length>5?name.substr(0,5)+"...":name;
+                  return name.length>5?name.substr(0,10)+"...":name;
             　　}
             },
             series: [
@@ -160,7 +160,7 @@ export default {
                     name: '违法类别',
                     type: 'pie',
                     radius: ['50%', '70%'],
-                    center: ['30%', '50%'],  
+                    center: ['25%', '50%'],  
                     avoidLabelOverlap: false,
                     label: {
                         show: false,

@@ -165,7 +165,6 @@ const router = new Router({
 // })
 router.beforeEach((to, from, next) => {
   if(store.state.map){
-    debugger;
     let _layers=store.state.map.__layersList;
     let _markers=store.state.map.__markerList;
     let _sources=store.state.map.__sourceList;

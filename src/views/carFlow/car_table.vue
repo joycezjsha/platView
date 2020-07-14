@@ -13,7 +13,6 @@
           <el-tab-pane label="昨天" name="3"></el-tab-pane>
           <el-tab-pane label="自定义" name="4"></el-tab-pane>
         </el-tabs>
-        <!-- prop="date1" -->
         <div class='car-table-query' v-if="activeName=='4'">
           <span class='car-table-query--label'>时间：</span><span class="car-table-query--time">
               <el-date-picker width="100%"
@@ -28,14 +27,19 @@
                 end-placeholder="结束日期"
                 >
               </el-date-picker>
-       
           </span>
           <span class="car-table-query--btn">
             <el-button type="primary" @click="determine">确定</el-button>
           </span>
         </div>
-        <!-- <div class='car-table-query' v-else>{{tipTxt[activeName]}}</div>  item.xzqh.toString() -->
-        <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt>
+        <!-- <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt> -->
+        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==1">实时：统计上一个小时
+          <span>({{realtimer1}}:00-{{realtimer2}}:00)</span>的流动情况
+        </div>
+        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
+        </div>
+        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
+        </div>
         <div class='all_statics'>
           <div><span>陕西省</span><span>{{allStatics.addIn}}</span></div>
           <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span>
@@ -45,7 +49,7 @@
         <div class="sort">
           <div class="text">排序方式 ：</div>
           <div style="width:120px;margin-left:3px;display:flex" class="dropdown">
-            <el-select @change='orderChange' v-model="orderType" >
+            <el-select v-if="flowDatas" @change='orderChange' v-model="orderType" >
                <el-option
                 v-for="item in typeOption"
                 :key="item.value"
@@ -53,20 +57,11 @@
                 :value="item.value">
               </el-option>
             </el-select>
-              <!-- <select v-model="orderType" style="background:#000916;color:rgba(255,255,255,1);padding-bottom:3px;font-size:14px; border-radius:4px; line-height:14px" id="sortdata" @change='orderChange'>
-                  <option value="0">进入辆次</option>
-                  <option value="1">流出辆次</option>
-                  <option value="2">进出比</option>
-                  <option value="3">保有量</option>
-                  <option value="4">流动变化</option>
-              </select> -->
-              <span @click="sort" style="width:30px;height:26px;color:rgba(29,153,171,1);margin-left:15px;">              
-                  <i style="font-size:20px;" v-show="downIcon" class='iconfont icon-paixu3'></i>
-                  <i  style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
-              </span>
-         
+             <span @click="sort" style="width:30px;height:26px;color:rgba(29,153,171,1);margin-left:15px;">              
+              <i style="font-size:20px;" v-show="downIcon" class='iconfont icon-paixu3'></i>
+              <i  style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
+            </span>
           </div>
-        
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
@@ -105,6 +100,8 @@ export default {
       showCity:false,
       xzqh:'',
       fxlx:'1',
+      realtimer1:'',
+      realtimer2:'',
       stime:'1',
       map: {},
       date1: [{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }],
@@ -126,7 +123,11 @@ export default {
         popups:[]
       },
       timeRange:'',
-      tipTxt:{1:'实时：统计上一个小时(15:00-16:00)的流动情况',2:'今天：统计上今天(00:00-16:00)的流动情况',3:'昨天：统计上昨天全天的流动情况'},
+      tipTxt:{
+        1:'实时：统计上一个小时(15:00-16:00)的流动情况',
+        2:'今天：统计上今天(00:00-16:00)的流动情况',
+        3:'昨天：统计上昨天全天的流动情况'
+      },
       allStatics:{
         incount:'',
         outcount:'',
@@ -141,15 +142,28 @@ export default {
     let that = this;
     this.map.repaint = true;
     that.getIndexData();
-    that.getData()
-    that.realtimeData(that.stime)
-  
+    that.getData();
+    that.realtimeData(that.stime);
+    that.getRealTimer();
   },
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
   },
   methods: {
+    /**
+    * 实时的时间显示
+    */
+    getRealTimer(){
+      let that = this;
+      that.realtimer1=new Date().getHours() - 1;
+      that.realtimer2=new Date().getHours();
+      setInterval(()=>{
+        that.realtimer1=new Date().getHours() - 1;
+        that.realtimer2=new Date().getHours();
+      },1000*60*60)
+      
+    },
     /**
      * 接受右侧列表传来的数据
      */
@@ -167,13 +181,13 @@ export default {
     /**
      * 切换排序方式
      */
-    orderChange(e,val){
+    orderChange(){
       switch(this.orderType){
         case '0':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.inNum -a.inNum});break;
         case '1':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.outNum -a.outNum});break;
         case '2':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.proportion -a.proportion});break;
         case '3':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.inventory -a.inventory});break;
-        case '4':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.flowChange -a.flowChange});break;
+        case '4':this.flowDatas=this.flowDatas.sort((a,b)=>{return b.addIn -a.addIn});break;
         default:break;
       }
     },
@@ -199,6 +213,7 @@ export default {
     */  
     realtimeData(type){
       let that = this;
+      that.flowDatas=[];
       let param={};
       if(type!='4'){
         param.stime=type;
@@ -225,6 +240,7 @@ export default {
               }else{
                   that.flowDatas=[];
               }
+              that.orderChange();
             } else{
               that.$message({
                 message: data.errmsg,

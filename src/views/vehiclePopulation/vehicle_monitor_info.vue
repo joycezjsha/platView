@@ -1262,6 +1262,7 @@ export default {
             if (response && response.status == 200){
             var data = response.data;
                 if(data.errcode == 0){
+                  that.indexHardDatas=[];
                     that.indexHardDatas=data.data;
                     if(that.indexHardDatas.length>0){
                       // 清除地图  popus markers
@@ -1401,6 +1402,7 @@ export default {
             if (response && response.status == 200){
             var data = response.data;
                 if(data.errcode == 0){
+                  that.indexRoadDatas=[];
                   that.indexRoadDatas=data.data;
                 }
             }

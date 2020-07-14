@@ -144,10 +144,10 @@
               <div class="table">
                 <el-table :data="indexDatas"
               height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                    <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="road"  width="160"  label="道路"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="inNum"  width="90" label="进入辆次" sortable></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="outNum"  width="90" label="流出辆次" sortable></el-table-column>
+                    <el-table-column show-overflow-tooltip  type="index" label="No" width="38"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="road"  width="130"  label="道路"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="inNum"  width="80" label="进入辆次" sortable></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="outNum"  width="80" label="流出辆次" sortable></el-table-column>
                 </el-table>
               </div> 
             </div>
@@ -158,8 +158,8 @@
               <div  class="table">
                 <el-table :data="tableDatas"
               style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                    <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="city,KKMC"  width="160" label="卡口名称">
+                    <el-table-column show-overflow-tooltip  type="index" label="No" width="40"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="city,KKMC"  width="200" label="卡口名称">
                       <template slot-scope="scope">
                       [{{scope.row.city}}]{{scope.row.KKMC}}
                       </template>
@@ -1122,6 +1122,7 @@ export default {
         .then(response=>{
           if (response && response.status == 200){
             var data = response.data;
+            that.tableDatas=[];
             that.tableDatas=data.data;  
             if (data.errcode == 0) {
               if(that.tableDatas.length>0){
@@ -1146,12 +1147,20 @@ export default {
               that.tableLoading = false;
             });   
           // 请求热点道路数据
-          interf.GET_HOT_ROAD_API(hotroadData)
+        interf.GET_HOT_ROAD_API(hotroadData)
           .then(response=>{
             if (response && response.status == 200){
               var data = response.data;
                 if (data.errcode == 0) {
-                  that.indexDatas=data.data;
+                  that.indexDatas=[];
+                  // that.indexDatas=data.data;
+                  if(data.data.length>0){
+                    for(var i=0;i<data.data.length;i++){
+                      if(data.data[i].road){
+                        that.indexDatas.push(data.data[i])
+                      }
+                    }
+                  }
                 } else{
                   that.$message({
                     message: data.errmsg,
@@ -1570,7 +1579,7 @@ position: fixed;
       // border:1px solid;
       // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
       .padding{
-        padding:0 1.5vw;
+        padding:0 0.5vw;
         height: 41vh;
         .table{
           height: 41vh;
