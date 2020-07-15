@@ -110,7 +110,7 @@
             <el-table
               :data="indexDatasBelong"
               highlight-current-row
-              style="width: 90%"
+              style="width:100%"
               height="100%"
               :default-sort="{prop: 'NUM', order: 'descending'}"
               :row-style="getRowClass"
@@ -525,6 +525,9 @@ export default {
         };
         if(that.isShowdiv=='1'){
           this.map.setZoom(6);
+          that.getprovinceData(that.stime)
+          that.initSumCharts(that.timeName);
+          that.getCarTypeDatas(that.stime)
         }
       });
       //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
@@ -581,6 +584,7 @@ export default {
         that.showback=true; 
         that.getprovinceData(that.stime);
         that.getCarTypeDatas(that.stime);
+        
         if(that.isShowdiv=='3'){
           that.clearMap()
           that.getHotCarDatas(that.stime);
