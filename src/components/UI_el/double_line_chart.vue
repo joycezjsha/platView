@@ -119,28 +119,28 @@ export default {
     chart_data: {
       type: Object,
       default: () => {
-        // return {
-        //   //  legend: ["超速次数", "总检测数"], 
-        //   legend:[],
-        //    timelist:[],
-        //    inlist: [],
-        //    outlist:[] 
-        //   };
-        return { 
-          legend: ["超速次数", "总检测数"], 
-          xdata:["2016-10-4",
-              "2016-10-5",
-              "2016-10-6",
-              "2016-10-7",
-              "2016-10-8",
-              "2016-10-9",
-              "2016-10-10",
-              "2016-10-11",
-              "2016-10-12"],
-          y1data: ['204','201','198','189','192','182','177', '177','184'],
-          y2data:[34,33,33,37,39,30,27,18,18],
-          unit:['','']
-            };
+        return {
+           legend: [], 
+          legend:[],
+           timelist:[],
+           inlist: [],
+           outlist:[] 
+          };
+        // return { 
+        //   legend: ["超速次数", "总检测数"], 
+        //   xdata:["2016-10-4",
+        //       "2016-10-5",
+        //       "2016-10-6",
+        //       "2016-10-7",
+        //       "2016-10-8",
+        //       "2016-10-9",
+        //       "2016-10-10",
+        //       "2016-10-11",
+        //       "2016-10-12"],
+        //   y1data: ['204','201','198','189','192','182','177', '177','184'],
+        //   y2data:[34,33,33,37,39,30,27,18,18],
+        //   unit:['','']
+        //     };
       }
     },
     width:{
@@ -209,11 +209,10 @@ export default {
                     color:'white'
                   }};
       }else{
-        if(!this.chart_data.unit){
-          this.chart_data.unit=['',''];
-        }
-        this.option.yAxis[0].name=this.chart_data.legend[0]+'（单位：'+this.chart_data.unit[0]+')';
-        this.option.yAxis[1].name=this.chart_data.legend[1]+'（单位：'+this.chart_data.unit[0]+')';
+        if(this.chart_data.unit){
+          this.option.yAxis[0].name=this.chart_data.legend[0]+'（单位：'+this.chart_data.unit[0]+')';
+          this.option.yAxis[1].name=this.chart_data.legend[1]+'（单位：'+this.chart_data.unit[0]+')';
+        };
         this.option.series[1].yAxisIndex=1;
       };
       this.chart.setOption(this.option);

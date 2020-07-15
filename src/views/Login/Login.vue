@@ -31,9 +31,13 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                  <el-input type="password" v-model="formLogin.password" placeholder="密码" show-password>
+                  <el-input v-model="formLogin.password" :type="[flag?'text':'password']" placeholder="密码">
+                    <i slot="suffix" :class="[flag?'el-icon-minus':'el-icon-view']" style="margin-top:8px;font-size:18px;" autocomplete="auto" @click="flag=!flag" />
                     <i slot="prepend" class="el-icon-key"></i>
                   </el-input>
+                  <!-- <el-input type="password" v-model="formLogin.password" placeholder="密码" show-password slot="suffix" >
+                    <i slot="prepend" class="el-icon-key"></i>
+                  </el-input> -->
                 </el-form-item>
                 <!-- <el-form-item prop="code">
                   <el-input type="text" v-model="formLogin.code" placeholder="验证码">
@@ -125,7 +129,8 @@ export default {
       },
       //验证码图片
       captchaPath:'',
-      loginLoading:false
+      loginLoading:false,
+      flag:false
     };
   },
   components: {

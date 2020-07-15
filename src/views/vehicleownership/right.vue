@@ -112,6 +112,7 @@ export default {
            var data = response.data;
             if (data.errcode == 0) {
               let _data=that.chart_data;
+              debugger;
               if(data.data && data.data.length>0){
                 data.data.forEach(e=>{
                   _data.xdata.push(e.rq);

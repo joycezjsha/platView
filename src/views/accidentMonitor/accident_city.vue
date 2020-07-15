@@ -17,6 +17,7 @@
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            :picker-options="pickerOptions"
             >
           </el-date-picker>
           </span><span class="city-accident-query--btn" @click='changeRange()'><el-button type="primary" v-loading='queryLoading'>确定</el-button></span></div>
@@ -74,7 +75,37 @@ export default {
       defaultTime:['00:00:00','23:59:59'],
       tableLoading:false,
       queryLoading:false,
-      currentRow:null
+      currentRow:null,
+       pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+          // shortcuts: [{
+          //   text: '最近一周',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }, {
+          //   text: '最近一个月',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }, {
+          //   text: '最近三个月',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }]
+        }
     };
   },
   components:{

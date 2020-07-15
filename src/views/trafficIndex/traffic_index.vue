@@ -48,7 +48,7 @@ export default {
     let that = this;
     this.getRoadIndexData();
     this.interval=setInterval(()=>{
-      _this.getRoadIndexData();
+      that.getRoadIndexData();
     },1000*60)
   },
   destroyed() {

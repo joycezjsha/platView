@@ -152,6 +152,10 @@ export default {
         if (response && response.status == 200){
           var data= response.data;
           if (data.errcode == 0) {
+            data.data=data.data.map(e=>{
+              e.ydzs=Math.floor(e.ydzs * 10) / 10;
+              return e;
+            });
             that.indexDatas=data.data;
             data.data.forEach(e=>{
               that.addCityMarker(e);

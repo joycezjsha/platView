@@ -177,7 +177,7 @@ export default {
     addMainAccidentPopup(e){
       let lnglat=e.JWD.split(' ');
       let mainDiv=document.createElement('div');
-      mainDiv.style.width='13vw';
+      mainDiv.style.width='18vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
       // mainDiv.className='dev_popup';
@@ -194,7 +194,7 @@ export default {
       mainDiv.appendChild($(p2)[0]);
        let p3="<p style='color:#00C6FF;margin:5px 0;'><span>事故类型：</span><span>"+e.SGLX+"</span></p>";
       mainDiv.appendChild($(p3)[0]);
-       let p4="<p style='margin:5px 0;'><span>伤：</span><span>"+e.INJURY+"</span>&nbsp;&nbsp;<span>死亡：</span><span>"+e.DIE+"</span></p>";
+       let p4="<p style='margin:5px 0;'><span>伤：</span><span>"+e.INJURY?e.INJURY:''+"</span>&nbsp;&nbsp;<span>死亡：</span><span>"+e.DIE?e.DIE:''+"</span></p>";
       mainDiv.appendChild($(p4)[0]);
       let p5="<p style='margin:5px 0;'><span>地点：</span><span>"+e.SGDD+"</span></p>";
       mainDiv.appendChild($(p5)[0]);

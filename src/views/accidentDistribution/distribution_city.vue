@@ -38,7 +38,7 @@
           :row-style="getRowClass"
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
-          @row-click='handle'
+          @row-click='handle' highlight-current-row
         >
           <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column v-if='tableIndex==0' prop="CITY" label="城市"></el-table-column>
@@ -129,7 +129,7 @@ export default {
     getCityStaticsData(){
       let that = this;
       let param={stime:1};
-      if(this.timeRange!=''){
+      if(this.timeRange && this.timeRange!=''){
         param.stime=this.timeRange[0];
         param.etime=this.timeRange[1];
       };

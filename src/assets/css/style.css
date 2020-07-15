@@ -205,6 +205,12 @@ line-height:2vh;
 .page-login .el-input__inner{
   border:none;
 }
+.page-login .el-input .el-input__clear:hover,.page-login .el-input .el-input__clear {
+  color: #0254f9;
+}
+.page-login .el-input .el-icon-view::before,.page-login .el-input .el-icon-minus::before{
+  color:#0A94FD;
+}
 /*单独界面样式改写 --END*/
 
 /**
