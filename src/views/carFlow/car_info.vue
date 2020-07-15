@@ -109,6 +109,7 @@
           <div class="belong-table" style="padding:0 2vw;height:100%;marfin-top:3vh">
             <el-table
               :data="indexDatasBelong"
+              highlight-current-row
               style="width: 100%"
               height="100%"
               :default-sort="{prop: 'NUM', order: 'descending'}"
@@ -143,6 +144,7 @@
             <div class="padding">
               <div class="table">
                 <el-table :data="indexDatas"
+                highlight-current-row
               height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                     <el-table-column show-overflow-tooltip  type="index" label="No" width="38"></el-table-column>
                     <el-table-column show-overflow-tooltip prop="road"  width="130"  label="道路"></el-table-column>
@@ -157,6 +159,7 @@
             <div  class="padding"> 
               <div  class="table">
                 <el-table :data="tableDatas"
+                highlight-current-row
               style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                     <el-table-column show-overflow-tooltip  type="index" label="No" width="40"></el-table-column>
                     <el-table-column show-overflow-tooltip prop="city,KKMC"  width="200" label="卡口名称">
@@ -273,52 +276,7 @@ export default {
                     labelLine: {
                         show: false
                     },
-                    data: [
-                      
-                    ]
-                }
-            ]
-      },
-      options1: {
-        color : [ '#0065e3', '#00a5d1', '#ffffff', '#ab3ff7', '#4840e2', '#00a979'],
-          tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-          },
-          legend: {
-                orient: 'vertical',
-                right: 30,
-                top:80,
-                // data: ['大车','小车'],
-                textStyle:{color:'white'},
-                formatter: function(name){
-            　　　return name.length>5?name.substr(0,5)+"...":name;
-            　　}
-            },
-            series: [
-                {
-                    name: '车辆类型分析',
-                    type: 'pie',
-                    radius: ['50%', '70%'],
-                    center: ['30%', '50%'],  
-                    avoidLabelOverlap: false,
-                    label: {
-                        show: false,
-                        position: 'center'
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: '15',
-                            fontWeight: 'bold'
-                        }
-                    },
-                    labelLine: {
-                        show: false
-                    },
-                    data: [
-                      
-                    ]
+                    data: []
                 }
             ]
       },
@@ -572,6 +530,7 @@ export default {
       //  接收到对应的时间  1->实时，2->今天，3->昨天，4->自定义
       blur.$on("gettime",time=>{
         that.stime=time;
+        that.xzqh='';
         that.clearMap()
         if(that.stime!=4){
           that.getprovinceData(that.stime) 
@@ -596,6 +555,7 @@ export default {
       //接收自定义的  timeRange:自定义的时间
       blur.$on('determine',times=>{
         that.timeRange=times;
+        that.xzqh='';
         if(that.isShowdiv=='1'){
           that.getprovinceData(that.stime) 
           that.getCarTypeDatas(that.stime);
@@ -687,6 +647,8 @@ export default {
      */
     getCarTypeDatas(stime){
       let that=this; 
+      that.staticsSort=[];
+      that.options.series[0].data=[];
       let getCarTypeData={};
       getCarTypeData.stime=that.stime;
       getCarTypeData.fxlx=that.fxlx;
@@ -706,22 +668,20 @@ export default {
       if (response && response.status == 200){
         var data = response.data;
         if (data.errcode == 0) {
+          that.changechart = echarts.init(document.getElementById('accurCreateChange'));
           if(data.data){
-            that.options.series[0].data=[];
-            that.staticsSort=[];
-            // that.echartsData.BIGCAR=data.data.BIGCAR;
-          // that.echartsData.SMALLCAR=data.data.SMALLCAR;
             that.staticsSort=[
               {color:'#0067e2',label:'大车',value:data.data.BIGCAR},
               {color:'#00a8d2',label:'小车',value:data.data.SMALLCAR}];
             // 绘制饼状图
-            that.options.series[0].data=[{value:data.data.BIGCAR, name:'大车'},
-            {value:data.data.SMALLCAR, name:'小车'},]
-            that.changechart = echarts.init(document.getElementById('accurCreateChange'));
+             that.options.series[0].data.push({value:data.data.BIGCAR, name:'大车'},
+            {value:data.data.SMALLCAR, name:'小车'})
             that.changechart.setOption(that.options);
             window.addEventListener("resize",()=>{
               that.changechart.resize();
-              }) 
+            }) 
+          }else{
+            that.changechart.setOption(that.options);
           }
           
           } else{

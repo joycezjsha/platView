@@ -15,6 +15,7 @@
         <div v-if="!tableIndex" style="padding:0 5px">
           <el-table 
           :data="indexData" 
+          highlight-current-row
           style="width: 100%" height="73.4vh"
            v-loading='tableLoading'
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
@@ -41,6 +42,7 @@
           <el-table 
           @row-click="handleRoad"
           v-loading='tableLoading'
+          highlight-current-row
            :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No." width="60"></el-table-column>
             <el-table-column prop="NAME" label="道路名称" ></el-table-column>

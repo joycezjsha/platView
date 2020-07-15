@@ -80,6 +80,7 @@
           <div style="padding:0 1vw;margin-top:1vh;height:30vh;">
             <el-table 
             :data="indexDatas" 
+            highlight-current-row
              v-loading='tableLoading'
             style="width: 100%" height="100%" 
             :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">

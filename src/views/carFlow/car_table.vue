@@ -64,7 +64,12 @@
           </div>
         </div>
         <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
-          <li @click="showData(item.xzqh.toString(),item.city)" class="item" v-for="(item,index) in flowDatas" :key="item.id">
+          <!--   class="item"  -->
+          <li 
+          @click="showData(item.xzqh.toString(),item.city)" 
+          class="item"
+          :class="{itemselected:highlighted==item.xzqh}"
+          v-for="(item,index) in flowDatas" :key="item.id">
             <p style="padding-top:4px">
               <span>{{index+1}}</span>
               <span  class="address-name">{{item.city}}</span>
@@ -95,6 +100,7 @@ export default {
   data() {
     return {
       orderType:'4',
+      highlighted:'',  //选中行高亮显示
       pickerOptions:{},
       downIcon: true,  //排序切换
       showCity:false,
@@ -171,6 +177,7 @@ export default {
       let that = this;
       blur.$on('back',data=>{
         that.activeName='1';
+        that.highlighted='';
         that.stime='1';
         that.xzqh='';
         // that.getIndexData();
@@ -207,6 +214,7 @@ export default {
       blur.$emit("paramxzqh",xzqh,city);
       that.xzqh=xzqh;
       that.city=city;
+      that.highlighted=xzqh;
     },
     /*
     *  全省流动情况  默认显示实时的数据   
@@ -262,6 +270,7 @@ export default {
     */ 
     determine(){
        let that = this;
+       that.xzqh='';
        if(that.timeRange==''){
          that.$message({
             message: '开始日期和结束日期不能为空！',
@@ -500,6 +509,9 @@ export default {
       }
       .item:hover{
         background-color: $color-list_bg;
+      }
+      .itemselected{
+        background-color: #0069a6;
       }
     }
     &_table- {

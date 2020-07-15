@@ -45,6 +45,7 @@
         <div style="padding:0 5px;height:73vh;width:100%;overflow-x: hidden;">
           <el-table  @row-click="handItem" 
            v-loading='tableLoading'
+           highlight-current-row
           :data="indexDatas"  height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="60">
