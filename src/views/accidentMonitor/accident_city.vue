@@ -231,7 +231,7 @@ export default {
   },
   //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
-                return "background:transparent;border:none;";
+      return "background:transparent;border:none;";
    },
   //取括号内数据
   getLonlats(str){
