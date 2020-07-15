@@ -1,8 +1,11 @@
 <template>
   <div class="car-flow">
+    <!-- 左侧列表 -->
     <car-table></car-table>
-    <middle></middle>
-    <car-info />
+    <!-- 中间地图 -->
+    <middle  ref='mapModule'></middle>
+    <!-- 右侧统计区 -->
+    <car-info ref='staticsModule' />
   </div>
 </template>
 
@@ -18,6 +21,10 @@ export default {
     return {
       map: {},
       i:1,
+      xzqh:'',
+      city:'',
+      stime:'', //时间  1-实时  2-今天  3-昨天  
+      timeRange:'', //自定义时间
       isShow:1, //显示对应的组件
       map_cover:{
         sourceList:[],
@@ -39,6 +46,26 @@ export default {
     this.map.repaint = true;
     $(window).resize(function() {
     });
+    // blur.$on("determineIndex",data=>{ //接受自定义时间
+    //   that.timeRange=data;
+    // }) 
+    // blur.$on('gettimeIndex',data=>{ //接受时间  1-实时  2-今天  3-昨天  
+    //   that.stime=data;
+    // }) 
+    // blur.$on('getStatics',data=>{  //接受传过来的城市，行政区号
+    //   that.xzqh=data.xzqh;
+    //   that.city=data.city;
+    // });
+    blur.$on('getinitAccidentStatics',data=>{
+      console.log(data)
+      // that.$refs.staticsModule.getprovinceData(that.stime);
+      // that.$refs.staticsModule.initSumCharts(that.stime);
+      // that.$refs.staticsModule.getCarTypeDatas(that.stime) ;
+    });
+    // blur.$on('initAccidentMapdata',function(data){
+    //   console.log(data)
+    //   // that.$refs.mapModule.initAccidentMap(data);
+    // });
   },
   destroyed() {
     this.flyRoutes = [];

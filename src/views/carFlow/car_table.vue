@@ -63,12 +63,12 @@
             </span>
           </div>
         </div>
-        <ul v-if="flowDatas" :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
+        <ul v-if="flowDatas"  :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <!--   class="item"  -->
           <li 
           @click="showData(item.xzqh.toString(),item.city)" 
           class="item"
-          :class="{itemselected:highlighted==item.xzqh}"
+          :class="{itemselected:highlighted==item.city}"
           v-for="(item,index) in flowDatas" :key="item.id">
             <p style="padding-top:4px">
               <span>{{index+1}}</span>
@@ -214,7 +214,12 @@ export default {
       blur.$emit("paramxzqh",xzqh,city);
       that.xzqh=xzqh;
       that.city=city;
-      that.highlighted=xzqh;
+      that.highlighted=city;
+      // let datas={};
+      // datas.xzqh=xzqh;
+      // datas.city=city;
+      // datas.stime=that.stime;
+      // blur.$emit('getStatics',datas);
     },
     /*
     *  全省流动情况  默认显示实时的数据   
@@ -259,10 +264,16 @@ export default {
         }
       })
       .catch(err=>{
-         console.log(err);
+        console.log(err);
       })
       .finally(() => {
         that.tableLoading = false;
+        blur.$on('setCurrentCity',data=>{
+          // 点击地图左侧table变为选中状态
+          that.highlighted=data.name;
+          // 调用右侧统计区的方法
+          blur.$emit('getRight',data)
+        })
       });
     },
     /*
@@ -288,7 +299,8 @@ export default {
          return;
         };
         blur.$emit("determine",that.timeRange) //发送时间格式20200505
-        blur.$emit("determinecar",that.timeRange)
+        blur.$emit("determinecar",that.timeRange) //发送中间地图
+        blur.$emit("determineIndex",that.timeRange) //发送总组件中
         that.realtimeData(that.activeName)
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
         let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
@@ -334,11 +346,13 @@ export default {
     */
     handleClick(item){ 
      let that = this;
+     that.highlighted='';
      that.activeName=item.name;  //对应的时间1  2  3  4
      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
      blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
       blur.$emit('gettimecar',that.activeName);  //传入对应的时间 1  2  3  4
+      blur.$emit('gettimeIndex',that.activeName) //传给总组件中
       that.realtimeData(that.activeName);
      }
   }

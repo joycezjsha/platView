@@ -9,7 +9,7 @@
    <div @click="realtime(3)">
         <m-title  label='热点卡口道路' class="car" :img_type='tableIndex=="3"?"1":"0"'></m-title>
    </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent'></t-area>
   </div>
 </template>
 
@@ -94,7 +94,14 @@ export default {
           }
        })
     },
-
+    /**
+     * 地图点击事件，回调绑定事件
+     */
+    clickAreaEvent(data){
+      console.log(data)
+      blur.$emit('setCurrentCity',data);
+      // blur.$emit('getinitAccidentStatics',0,data);
+    },
     /**
     * 车辆流动页面地图  地图城市流动数据  Vehicle/getMapVehicleIn   GET_MAP_CITY_FLOW_API
     */

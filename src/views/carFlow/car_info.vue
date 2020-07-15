@@ -110,7 +110,7 @@
             <el-table
               :data="indexDatasBelong"
               highlight-current-row
-              style="width: 100%"
+              style="width: 90%"
               height="100%"
               :default-sort="{prop: 'NUM', order: 'descending'}"
               :row-style="getRowClass"
@@ -146,10 +146,10 @@
                 <el-table :data="indexDatas"
                 highlight-current-row
               height="90%" :default-sort = "{prop: 'inNum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                    <el-table-column show-overflow-tooltip  type="index" label="No" width="38"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="road"  width="130"  label="道路"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="inNum"  width="80" label="进入辆次" sortable></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="outNum"  width="80" label="流出辆次" sortable></el-table-column>
+                    <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="road"  width="180"  label="道路"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="inNum"  width="95" label="进入辆次" sortable></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="outNum"  width="95" label="流出辆次" sortable></el-table-column>
                 </el-table>
               </div> 
             </div>
@@ -161,8 +161,8 @@
                 <el-table :data="tableDatas"
                 highlight-current-row
               style="width: 100%" height="90%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                    <el-table-column show-overflow-tooltip  type="index" label="No" width="40"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="city,KKMC"  width="200" label="卡口名称">
+                    <el-table-column show-overflow-tooltip  type="index" label="No" width="60"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="city,KKMC"  width="220" label="卡口名称">
                       <template slot-scope="scope">
                       [{{scope.row.city}}]{{scope.row.KKMC}}
                       </template>
@@ -531,6 +531,7 @@ export default {
       blur.$on("gettime",time=>{
         that.stime=time;
         that.xzqh='';
+        that.showback=false;
         that.clearMap()
         if(that.stime!=4){
           that.getprovinceData(that.stime) 
@@ -555,6 +556,7 @@ export default {
       //接收自定义的  timeRange:自定义的时间
       blur.$on('determine',times=>{
         that.timeRange=times;
+        that.showback=false;
         that.xzqh='';
         if(that.isShowdiv=='1'){
           that.getprovinceData(that.stime) 
@@ -574,7 +576,6 @@ export default {
          
       })  
       blur.$on("paramxzqh",(xzqh,city)=>{
-        console.log(xzqh,city)
         that.xzqh=xzqh;
         that.city=city;
         that.showback=true; 
@@ -590,6 +591,13 @@ export default {
         }
       })
       blur.$on('sendTime',data=>{
+      })
+      blur.$on('getRight',data=>{
+        that.showback=true; 
+        that.city=data.name;
+        that.xzqh=data.value.length>4?data.value.substring(0,4):data.value;
+        that.getprovinceData(that.stime);
+        that.getCarTypeDatas(that.stime);
       })
     },
     // 如果选择左侧的城市，显示对应城市的车辆类型分析
@@ -1543,6 +1551,7 @@ position: fixed;
         height: 41vh;
         .table{
           height: 41vh;
+
         }
       }
       
