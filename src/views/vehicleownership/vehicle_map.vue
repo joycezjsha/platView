@@ -2,7 +2,7 @@
   <div class="device-map">
     <!-- <div @click='changeTable(0)'><m-title label='城市' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
     <div @click='changeTable(1)'><m-title label='区县' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div> -->
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'  :method='clickAreaEvent' :isResumeHight='isReturn'></t-area>
   </div>
 </template>
 
@@ -25,14 +25,17 @@ export default {
       },
       showArea:false,
       isShowTxt:false,
-      areaIndexs:[]
+      areaIndexs:[],
+      isReturn:false
     };
   },
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
-    this.map.setCenter([109.278987,35.747334]);
     this.getAreaData();
-    this.map.setZoom(6);
+    blur.$on('clearRoadAndMaker',function(){
+      _this.cancelCityLayerStatus();
+    });
   },
   components: {
     mTitle,tArea
@@ -188,8 +191,21 @@ export default {
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>汽车保有量：</span><span>"+e.num+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
       
-      let marker = new minemap.Marker(mainDiv, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
+      let marker = new minemap.Marker(mainDiv, {offset: [-100, -50]}).setLngLat(lnglat).addTo(this.map);
       this.map_cover.markers.push(marker);
+    },
+    /**
+     * 地图点击事件，回调绑定事件
+     */
+    clickAreaEvent(data){
+      blur.$emit('initVehicleStatics',data);
+      blur.$emit('setCurrentCityRow',data.name);
+    },
+    /**
+     * 是否取消地图区域选中
+     */
+    cancelCityLayerStatus(){
+      this.isReturn=true;
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){

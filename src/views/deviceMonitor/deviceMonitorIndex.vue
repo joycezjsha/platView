@@ -34,6 +34,7 @@ export default {
       blur.$on('clearRoadAndMaker',function(){
         _this.$refs.statics.clearMaker();
         });
+      
     },300);
   },
   destroyed() {

@@ -35,6 +35,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isResumeHight: {
+      type: Boolean,
+      default: false
+    },
     isShowTxt:{
        type: Boolean,
       default: true
@@ -59,6 +63,17 @@ export default {
         }else{
           this.hideArea();
         }
+      }
+    },
+    isResumeHight:{
+      immediate:false,
+      handler:function(cVAL, oVAL){
+        debugger;
+        if(cVAL){
+          this.resumeLayer();
+          this.map.setPitch(0);
+        }
+        
       }
     }
   },
@@ -125,83 +140,83 @@ export default {
       });
       }
     },
-  // addArea(data) { 
-    //   let _this = this;
-    //   data.forEach((e, i) => {
-    //     let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
-    //     lonlats = lonlats.map(s => {
-    //       if (s.split(" ")[0] != "") {
-    //         return [s.split(" ")[0], s.split(" ")[1]];
-    //       } else {
-    //         return [s.split(" ")[1], s.split(" ")[2]];
-    //       }
-    //     });
-    //     let jsonData = {
-    //       type: "FeatureCollection",
-    //       features: [{
-    //           type: "Feature",
-    //           geometry: {
-    //             type: "Polygon",
-    //             coordinates: [lonlats]
-    //           },
-    //           "properties": {
-    //               "title": e.city,
-    //               "code":e.adcode
-    //           }
-    //         }]
-    //     };
-    //     if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
-    //       _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
-    //     }else{
-    //       _this.map.addSource('area_polygonSource_'+i, {
-    //         'type': 'geojson',
-    //         'data': jsonData
-    //       });
-    //     };
-        
-    //     //面的显示
-    //     _this.map.addLayer({"id": "area_polygon_"+i,
-    //         "type": "fill",
-    //         "source": "area_polygonSource_"+i,
-    //         "layout": {
-    //             "visibility": "visible",
-    //         },
-    //         "paint": {
-    //             "fill-color": e.color,
-    //             "fill-opacity": 0.3,
-    //             "fill-outline-color": '#00b3ff'
-    //         },
-    //         "minzoom": 4,
-    //         "maxzoom": 17.5
-    //     });
-    //     //面的名称显示
-    //     if(_this.isShowTxt){
-    //       _this.map.addLayer({
-    //         "id": "area_polygon_txt_"+i,
-    //         "type": "symbol",
-    //         "source": "area_polygonSource_"+i,
-    //         "layout": {
-    //             // "icon-image": "{icon}-15",
-    //             "text-field": "{title}",
-    //             // "text-offset": [0, 0.6],
-    //             // "text-anchor": "top"
-    //         },
-    //         "paint": {
-    //             "icon-color": "#696d79",
-    //              "text-color": {
-    //                 "type": "categorical",
-    //                 "property": "kind",
-    //                 "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
-    //                 "default": "#FFF"
-    //             }
-    //         }
-    //     });
-    //     _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
-    //     };
-    //     _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
-    //     _this.mapAddItems.polygons.push("area_polygon_"+i);
-    //   });
-  // },
+    // addArea(data) { 
+      //   let _this = this;
+      //   data.forEach((e, i) => {
+      //     let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
+      //     lonlats = lonlats.map(s => {
+      //       if (s.split(" ")[0] != "") {
+      //         return [s.split(" ")[0], s.split(" ")[1]];
+      //       } else {
+      //         return [s.split(" ")[1], s.split(" ")[2]];
+      //       }
+      //     });
+      //     let jsonData = {
+      //       type: "FeatureCollection",
+      //       features: [{
+      //           type: "Feature",
+      //           geometry: {
+      //             type: "Polygon",
+      //             coordinates: [lonlats]
+      //           },
+      //           "properties": {
+      //               "title": e.city,
+      //               "code":e.adcode
+      //           }
+      //         }]
+      //     };
+      //     if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
+      //       _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
+      //     }else{
+      //       _this.map.addSource('area_polygonSource_'+i, {
+      //         'type': 'geojson',
+      //         'data': jsonData
+      //       });
+      //     };
+          
+      //     //面的显示
+      //     _this.map.addLayer({"id": "area_polygon_"+i,
+      //         "type": "fill",
+      //         "source": "area_polygonSource_"+i,
+      //         "layout": {
+      //             "visibility": "visible",
+      //         },
+      //         "paint": {
+      //             "fill-color": e.color,
+      //             "fill-opacity": 0.3,
+      //             "fill-outline-color": '#00b3ff'
+      //         },
+      //         "minzoom": 4,
+      //         "maxzoom": 17.5
+      //     });
+      //     //面的名称显示
+      //     if(_this.isShowTxt){
+      //       _this.map.addLayer({
+      //         "id": "area_polygon_txt_"+i,
+      //         "type": "symbol",
+      //         "source": "area_polygonSource_"+i,
+      //         "layout": {
+      //             // "icon-image": "{icon}-15",
+      //             "text-field": "{title}",
+      //             // "text-offset": [0, 0.6],
+      //             // "text-anchor": "top"
+      //         },
+      //         "paint": {
+      //             "icon-color": "#696d79",
+      //              "text-color": {
+      //                 "type": "categorical",
+      //                 "property": "kind",
+      //                 "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
+      //                 "default": "#FFF"
+      //             }
+      //         }
+      //     });
+      //     _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
+      //     };
+      //     _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
+      //     _this.mapAddItems.polygons.push("area_polygon_"+i);
+      //   });
+    // },
     /**
      * 添加区域面
      */

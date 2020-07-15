@@ -516,6 +516,9 @@ export default {
       this.getSumDev();
       this.initdeviceAnalysisChart();
       this.initAccurCharts();
+      blur.$emit('setCurrentRow',null);
+      blur.$emit('clearRoadAndMaker');
+      
     },
 /*##清除地图加载点、线、面、弹框*/
     clearMap(){
@@ -666,6 +669,7 @@ export default {
       position: absolute;
       left: 5%;
       cursor: pointer;
+      color:$color-primary;
     }
     .return:hover{
       color:$color-primary;

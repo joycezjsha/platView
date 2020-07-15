@@ -73,7 +73,7 @@ export default {
     getStatics(code){
       let that=this;
       let params={};
-      if(code) params.xzqh=code;
+      if(code) params.xzqh=code.length>4?code.substring(0,4):code;
       interf.GET_CITY_STATICS_API(params).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
@@ -106,13 +106,12 @@ export default {
           y1data: [],
           y2data:[]};
       let params={};
-      if(code) params.xzqh=code;
+      if(code) params.xzqh=code.length>4?code.substring(0,4):code;
       interf.GET_CITY_TREND_API(params).then(response=>{
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
               let _data=that.chart_data;
-              debugger;
               if(data.data && data.data.length>0){
                 data.data.forEach(e=>{
                   _data.xdata.push(e.rq);
@@ -194,6 +193,8 @@ export default {
       this.title='全省统计';
       this.getStatics();
       this.getVehicleTrend();
+      blur.$emit('setCurrentCityRow',null);
+      blur.$emit('clearRoadAndMaker');
     },
     }
 }
@@ -222,6 +223,7 @@ export default {
       left: 5%;
       top: 5%;
       cursor: pointer;
+      color: $color-primary;
     }
     .return:hover{
       color:$color-primary;

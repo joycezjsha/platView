@@ -12,7 +12,7 @@
         <li><div>事故</div><div @click='showOrhideConstru'><img :src='sgImg' /></div></li>
       </ul>
     </div>
-    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea' :method='clickAreaEvent'></t-area>
+    <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea' :method='clickAreaEvent' :isResumeHight='isReturn'></t-area>
     <!-- <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area> -->
   </div>
 </template>
@@ -43,13 +43,18 @@ export default {
       sgImg:IMG.SG_UNCHECK_IMG,
       areaList:[],
       ConstructionData:[],
-      showConstruction:false
+      showConstruction:false,
+      isReturn:false
     };
   },
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
     this.map.setCenter([109.278987,35.747334]);
     setTimeout(()=>{this.getAreaData();this.getConstructionData()},1000);
+    blur.$on('clearRoadAndMaker',function(){
+      _this.cancelCityLayerStatus();
+    });
   },
   components: {
     tArea
@@ -271,6 +276,12 @@ export default {
     clickAreaEvent(data){
       blur.$emit('setCurrentCityRow',data.name);
       blur.$emit('initAccidentStatics',0,data);
+    },
+    /**
+     * 是否取消地图区域选中
+     */
+    cancelCityLayerStatus(){
+      this.isReturn=true;
     },
 /*##清除地图加载点、线、面、弹框*/
     clearMap(){

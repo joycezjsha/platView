@@ -9,7 +9,7 @@
         <m-tiptxt text='设备包括：电子警察、视频设备、卡口设备...' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
         <m-tiptxt text='活跃设备：是指近一个月有抓拍违法数据的电子警察、视频设备、卡口设备；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
         <div class='device-city_content_table' v-if="tableIndex==0">
-          <el-table :data="indexcityDatas" @row-click="handle">
+          <el-table :data="indexcityDatas" @row-click="handle" ref='cityTable' highlight-current-row>
             <el-table-column type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="city"   label="城市"></el-table-column>
             <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
@@ -66,7 +66,8 @@ export default {
         {label:'全部道路',value:'0'},{label:'国/省道',value:'1'},{label:'高速',value:'2'},{label:'主干道',value:'3'}
       ],
       road_type:'0',
-      ishowicon:true
+      ishowicon:true,
+      currentRow:null,
     };
   },
   components:{mTiptxt:m_tiptxt,mTitle},
@@ -131,6 +132,17 @@ export default {
       })
       .finally(() => {
         that.tableLoading = false;
+        blur.$on('setCurrentRow',(city)=>{
+          let index=null;
+            if(city){
+              that.indexcityDatas.forEach((e,i)=>{
+                if(city.indexOf(e.city)!=-1){
+                  index=i;
+                }
+              })
+            }
+          that.$refs.cityTable.setCurrentRow(that.indexcityDatas[index]);
+        })
       });
     },
     /**

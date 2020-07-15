@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import blur from "@/blur";
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
@@ -313,6 +314,8 @@ export default {
       this.initAccidentStaticsChart();
       this.initAcciAccurCharts();
       this.initAccurCharts();
+      blur.$emit('setCurrentCityRow',null);
+      blur.$emit('clearRoadAndMaker');
     },
   }
 };
@@ -355,6 +358,7 @@ export default {
       position: absolute;
       left: 5%;
       cursor: pointer;
+      color:$color-primary;
     }
     .return:hover{
       color:$color-primary;

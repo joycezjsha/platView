@@ -239,6 +239,7 @@ export default {
       position: absolute;
       left: 5%;
       cursor: pointer;
+      color:$color-primary;
     }
     .return:hover{
       color:$color-primary;

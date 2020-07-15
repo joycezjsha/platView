@@ -405,6 +405,7 @@ export default {
       cursor: pointer;
       top: 10px;
       font-size: 14px;
+      color:$color-primary;
     }
     .return:hover{
       color:$color-primary;

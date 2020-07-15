@@ -5,7 +5,7 @@
         <m-title label='汽车保有量排名' style='width:10vw;'></m-title>
       </div>
       <div class='ranking--table'>
-        <el-table :data="tableDatas" style="width: 100%"  @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+        <el-table ref='cityTable' :data="tableDatas" style="width: 100%" highlight-current-row @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" >
           <el-table-column type="index" label="No." width="50"></el-table-column>
           <el-table-column prop="name" label="城市"  width="70"></el-table-column>
           <el-table-column prop="num" label="汽车保有量"  sortable></el-table-column>
@@ -74,6 +74,19 @@ export default {
         })
         .finally(() => {
           that.tableLoading = false;
+          blur.$on('setCurrentCityRow',(city)=>{
+            let index=null;
+            if(city){
+              
+              that.tableDatas.forEach((e,i)=>{
+                if(city.indexOf(e.name)!=-1){
+                  index=i;
+                }
+              })
+            }
+          
+          that.$refs.cityTable.setCurrentRow(that.tableDatas[index]);
+        })
         });
         // interf.GET_CITY_ORDER_API({},function(data){
         //   if (data.errcode == 0) {

@@ -6,7 +6,7 @@
     <div @click='changeTable(1)' style='margin-left:15px;'>
       <m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:11vw;'></m-title>
     </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent' :isResumeHight='isReturn'></t-area>
   </div>
 </template>
 
@@ -29,14 +29,19 @@ export default {
       },
       showArea:false,
       isShowTxt:false,
-      areaIndexs:[]
+      areaIndexs:[],
+      isReturn:false
     };
   },
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
     this.getAreaData();
     this.map.setCenter([109.278987,35.747334]);
     setTimeout(this.addHeatMap,1000);
+    blur.$on('clearRoadAndMaker',function(){
+      _this.cancelCityLayerStatus();
+    });
   },
   components: {
     mTitle,tArea
@@ -191,7 +196,7 @@ export default {
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>设备数量：</span><span>"+e.NUM+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
       
-      let marker = new minemap.Marker(mainDiv, {offset: [-25, -25]}).setLngLat(lnglat).addTo(this.map);
+      let marker = new minemap.Marker(mainDiv, {offset: [-100, -100]}).setLngLat(lnglat).addTo(this.map);
       this.map_cover.markers.push(marker);
     },
 /*##清除地图加载点、线、面、弹框*/
@@ -226,7 +231,16 @@ export default {
      */
     clickAreaEvent(data){
       blur.$emit('initCityOrRoadStatics',0,data,true);
+      blur.$emit('setCurrentRow',data.name);
     },
+    /**
+     * 是否取消地图区域选中
+     */
+    cancelCityLayerStatus(){
+      debugger;
+      this.isReturn=true;
+    }
+    
   },
   beforeDestroy(){
     this.map.setPitch(0);

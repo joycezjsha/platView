@@ -172,14 +172,17 @@ export default {
       .finally(() => {
         _this.tableLoading = false;
         blur.$on('setCurrentCityRow',(city)=>{
-        let index=0;
-        _this.indexDatas.forEach((e,i)=>{
-          if(city.indexOf(e.NAME)!=-1){
-            index=i;
-          }
+          let index=null;
+            if(city){
+              
+              _this.indexDatas.forEach((e,i)=>{
+                if(city.indexOf(e.NAME)!=-1){
+                  index=i;
+                }
+              })
+            }
+          _this.$refs.cityTable.setCurrentRow(_this.indexDatas[index]);
         })
-        _this.$refs.cityTable.setCurrentRow(_this.indexDatas[index]);
-      })
       });
     },
    
