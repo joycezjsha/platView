@@ -129,6 +129,11 @@
       //设置旋转图标旋转角度
       setCompassRotateIcon(e) {
         document.getElementsByClassName('map-ctrl-compass')[0].style.transform='rotate(' + e.target.transform.bearing + 'deg)';
+        if(this.map.getPitch()>0){
+          this.show3D=true;
+        }else{
+          this.show3D=false;
+        }
       },
       setPitch(show) {
         if (show == 'click') {

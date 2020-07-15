@@ -12,6 +12,7 @@
       <m-tab :isShowIcon="isShowIcon" label='实时监控车辆活跃数：' :value=countnum></m-tab>
       <div class='center_table'>
          <el-table @row-click="showCity"
+         highlight-current-row
          v-loading='tableLoading'
           :data="indexDatas" style="width: 100%" height="32vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
@@ -25,7 +26,11 @@
     <div class='vehicle_monitor-div--bottom borstyle'>
       <m-title label='超速预警' style='width:8vw;'></m-title>
        <ul class="traffic-index_content_table">
-          <li @click="showMapData(item)" class="index-item" v-for="item in trafficDatas" :id="item.id" :key="item.id">
+         <!--    -->
+          <li @click="showMapData(item)" 
+          class="index-item" 
+          :class="{itemselected:highlighted==item.HPHM}"
+          v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <div style="margin-bottom:3px">
                <span class="car-name">{{item.HPZL}}</span>
                <span style="color:rgba(255,255,255,1);">{{item.HPHM}}</span>
@@ -34,7 +39,6 @@
             </div>
             <div class="address-name">
               <div class="road">{{item.WFDZ}}</div>
-              
               <div class="timers">{{item.WFSJ.split(" ")[1]}}</div>
               <!-- <span>{{item.WFSJ}}</span> -->
             </div>
@@ -65,6 +69,7 @@ export default {
     return {
       map: {},
       isShowCity:false,
+      highlighted:'', //选中行高亮显示
       isShowIcon:false,
       tableLoading:false,
       map_cover:{
@@ -101,6 +106,7 @@ export default {
       that.getIndexData();
       that.getKeyVehicleDatas();
     },1000*60);
+    that.getData()
   },
   destroyed() {
     this.map.setPitch(0);
@@ -110,10 +116,21 @@ export default {
     }
   },
   methods: {
+    /**
+     * 接受传来的数据 
+     */
+    getData(){
+       blur.$on('goback',data=>{
+         this.highlighted='';
+       })
+    },
+    //  that.highlighted='';
     /*
     * 点击左侧的超速预警列表，显示对应的数据
     */
    showMapData(item){
+     let that=this;
+     that.highlighted=item.HPHM;
    },
     // 传递city参数
     showCity(row){
@@ -162,12 +179,8 @@ export default {
         if (response && response.status == 200){
           var data= response.data;
           if (data.errcode == 0) {
-            that.trafficDatas=data.data;
-            console.log(data.data)
-            for(let item in that.trafficDatas){
-              let timer=item.WFSJ;
-              console.log(timer.split(" ")[0])
-              // console.log(item.WFSJ.split(" ")[0])
+            if(data.data.length>0){
+              that.trafficDatas=data.data;
             }
           }else{
             that.$message({
@@ -300,15 +313,18 @@ export default {
     padding:10px 0;
     margin-top: 13px;
     margin-left: 1vw;
-    
+  }
+  .itemselected{
+    background-color: #0069a6;
   }
 }
-.vehicle_monitor-div li:nth-of-type(odd){ 
-  background:rgba(72,84,108,0.2);
+li:nth-of-type(odd){ 
+  background-color:rgba(72,84,108,0.2);
 }
 .vehicle_monitor-div li:hover{
-  background:rgba(4,104,166,0.6);
+  background-color:rgba(4,104,166,0.6);
 }
+
 .vehicle_monitor-div .car-name{
   width:38px;
   height:22px;
@@ -342,102 +358,5 @@ export default {
   }
 }
 
-
-//   @include flex(column, center,center);
-//   font-family: Microsoft YaHei;
-//   &--top{
-//     width: 100%;
-//     height:30%;
-//     color: #fff;
-//     .tiptxt{
-//       position: absolute;
-//       top:30px;
-//       left: 30px;
-//     }
-//     @include flex(column, start,start);
-//     .title{
-//       font-size: 1vw;
-//       padding: 2px 2% 0.6rem 2%;
-//       font-weight: bolder;
-//       position: absolute;
-//       top:0;
-//       left: 0;
-//       // border-bottom: 0.1rem solid #DCDFE6;
-//       width: 96%;
-//     }
-//     .time{
-//       position: absolute;
-//       right: 3%;
-//       top: 1%;
-//     }
-//   }
-//   &--center{
-//     position: absolute;
-//     top:133px;
-//     left: 0;
-//     // width:100%;
-//     // height:40%;
-//     @include flex(column, center,start);
-//     .center_txt{
-//       width:100%;
-//       height:3vh;
-//       // background: $color-text-sub;
-//     }
-//     .center_statics{
-//       width:100%;
-//       height:4vh;
-//       @include flex(row, center,center);
-//       &--count{
-//         width:30%;
-//         @include flex(column, center,center);
-//       }
-//       &--inout{
-//         width:30%;
-//         @include flex(column, center,center);
-//       }
-//       &--radio{
-//         width:30%;
-//         @include flex(column, center,center);
-//       }
-//     }
-//     .center_table{
-//       width:100%;
-//     }
-//   }
-//   &--bottom{
-//     width:100%;
-//     height:40%;
-//     margin-top: 5vh;
-//     @include flex(column, center,start);
-//     ul{
-//       margin:0;
-//       display: block;
-//       width: 96%;
-//       padding: 10px 4%;
-//       li{
-//         border-bottom: 1px solid $color-info;
-//       }
-//     }
-//   }
-// }
-// </style>
-// <style lang='scss'>
-// @import '@/assets/css/color.scss';
-// .el-card{
-//     background-color: $color-bg-3;
-//     color: $color-white;
-//     border: 1px solid $color-info;
-// }
-// .traffic-index_content_table{
-//   overflow: hidden;
-// }
-// .time{
-//   // position: absolute;
-//   margin-left: 10vw;
-//   margin-bottom: 2px;
-//   // text-align: right;
-//   // display: inline-block;
-
-// }
 
 </style>

@@ -173,16 +173,16 @@ export default {
         if (response && response.status == 200){
           let data= response.data;
           if (data.errcode == 0){
-            data.data=[{
-              "XZQH": "6107",
-              "FX": "陕川界入陕",
-              "KKBH": "610700100366",
-              "KKMC": "汉中市南郑县S211211省道K61喜神坝中队西陕川界省际卡口",
-              "city": "汉中市",
-              "JWD": "106.865033 32.736208",
-              "TXCLZS": 1,
-              "DLMC": "南郑211省道61公里350米"
-          }];
+          //   data.data=[{
+          //     "XZQH": "6107",
+          //     "FX": "陕川界入陕",
+          //     "KKBH": "610700100366",
+          //     "KKMC": "汉中市南郑县S211211省道K61喜神坝中队西陕川界省际卡口",
+          //     "city": "汉中市",
+          //     "JWD": "106.865033 32.736208",
+          //     "TXCLZS": 1,
+          //     "DLMC": "南郑211省道61公里350米"
+          // }];
            if(data.data && data.data.length>0){
 
              data.data.forEach(e=>{
@@ -322,7 +322,7 @@ export default {
     //  opacity: 0.82;
      border-radius: 8px;
      background-image:linear-gradient(0deg,rgba(6,143,230,0.82),rgba(246,197,0,0.82),rgba(255,127,64,0.82));
-     opacity:0.3
+     opacity:0.5
    }
   }
   &--icon{

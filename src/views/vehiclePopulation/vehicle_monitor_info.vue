@@ -59,6 +59,7 @@
         <div class="center_table" style="padding:0 20px">
           <el-table
             :data="indexDataList"
+            highlight-current-row
             v-loading='tableLoading'
             style="width: 100%"
             height="32.5vh"
@@ -126,6 +127,7 @@
             <el-table
               :data="indexDatas"
               v-loading='tableLoading'
+              highlight-current-row
               style="width: 100%"
               height="100%"
               :default-sort="{prop: 'week_radio', order: 'descending'}"
@@ -161,6 +163,7 @@
             <div class="padding">
               <div class="table">
                 <el-table :data="indexRoadDatas"
+                highlight-current-row
               style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                     <el-table-column  type="index" label="No" width="38"></el-table-column>
                     <el-table-column show-overflow-tooltip prop="road" width="130"  label="道路"></el-table-column>
@@ -176,6 +179,7 @@
               <div  class="table">
                 <el-table :data="indexHardDatas"
                 style="width: 100%" height="90%" 
+                highlight-current-row
                 :default-sort = "{prop: 'NUM', order: 'descending'}" 
                 :row-style="getRowClass" :header-row-style="getRowClass" 
                 :header-cell-style="getRowClass">
@@ -641,9 +645,11 @@ export default {
      */
     goback(num) { 
       let that = this;
+      blur.$emit('goback')
       that.param.stime='4';
       that.param.provinceInorOut='1';
       that.param.fxlx='1';
+      that.param.code='';
       that.CODE='';
       that.showback = true;
       if(num=='1'){
@@ -1174,7 +1180,13 @@ export default {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
-              that.indexDataList = data.data;
+              if(data.data.length>0){
+                for(var i=0;i<data.data.length;i++){
+                  if(data.data[i].city!=null){
+                    that.indexDataList.push(data.data[i])
+                  }
+                }
+              }
             } else {
               that.$message({
                 message: data.errmsg,
@@ -1221,7 +1233,6 @@ export default {
                 that.outboundEchartsData.xdata.push(e.date);
               });
                 that.outboundEchartsData = car_data;
-                console.log(that.outboundEchartsData)
             } else {
               that.$message({
                 message: data.errmsg,
@@ -1256,6 +1267,7 @@ export default {
             if (response && response.status == 200){
             var data = response.data;
                 if(data.errcode == 0){
+                  that.indexHardDatas=[];
                     that.indexHardDatas=data.data;
                     if(that.indexHardDatas.length>0){
                       // 清除地图  popus markers
@@ -1395,6 +1407,7 @@ export default {
             if (response && response.status == 200){
             var data = response.data;
                 if(data.errcode == 0){
+                  that.indexRoadDatas=[];
                   that.indexRoadDatas=data.data;
                 }
             }

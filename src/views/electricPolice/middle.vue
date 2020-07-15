@@ -226,11 +226,11 @@ export default {
           }
         })
         .catch(err => {
-          _this.$message({
-            message:  '电警热力分布请求服务失败',
-            type: "error",
-            duration: 1500
-          });
+        //   _this.$message({
+        //     message:  '电警热力分布请求服务失败',
+        //     type: "error",
+        //     duration: 1500
+        //   });
         })
         .finally(() => {});
        },

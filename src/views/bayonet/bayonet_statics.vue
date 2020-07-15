@@ -32,6 +32,7 @@
             <div style="padding:0 8px">
               <el-table 
               :data="tableDatas" 
+              highlight-current-row
               v-loading='tableLoading'
               style="width: 100%" height="62.4vh" 
               :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -53,7 +54,6 @@
 </template>
 
 <script>
-// getAttribute
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'

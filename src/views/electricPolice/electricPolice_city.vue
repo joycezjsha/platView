@@ -11,6 +11,7 @@
         <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:100%">
           <el-table :data="indexData" 
           v-loading='tableLoading'
+          highlight-current-row
              @row-click="handdleCity"
              style="width: 100%"  height="100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="40"></el-table-column>
@@ -32,6 +33,7 @@
             </el-select>
           <el-table @row-click="handelRoad"
            v-loading='tableLoading'
+           highlight-current-row
           :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="道路名称"></el-table-column>
@@ -158,11 +160,10 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             for(var i=0;i<data.data.length;i++){
-              if(data.data[1].city){
+              if(data.data[1].city!=null){
                 that.indexData.push(data.data[i])
               }
             }
-            // that.indexData=data.data;
           }else{
             that.$message({
               message: '城市统计请求服务失败',
@@ -182,6 +183,8 @@ export default {
     },
     changeTable(t){
       this.tableIndex=t;
+      // 清除道路上的设备
+      this.clearMap();
     },
     /**
     * 点击道路名称  触发事件
@@ -194,6 +197,7 @@ export default {
         this.getRoadMapDev(data.value)
       }
       blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
+      // this.centerTo(row.JWD.split(' '));
     },
     /*
     * 道路上的设备  Electronic/getRoadMapDev   GET_ROAD_MAP_DEV_API

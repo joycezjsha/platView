@@ -80,6 +80,7 @@
           <div style="padding:0 1vw;margin-top:1vh;height:30vh;">
             <el-table 
             :data="indexDatas" 
+            highlight-current-row
              v-loading='tableLoading'
             style="width: 100%" height="100%" 
             :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -147,12 +148,12 @@ export default {
           },
           legend: {
                 orient: 'vertical',
-                right: 30,
-                top:20,
+                right:27,
+                top:40,
                 data: [],
                 textStyle:{color:'white'},
                 formatter: function(name){
-            　　　return name.length>5?name.substr(0,5)+"...":name;
+                  return name.length>5?name.substr(0,10)+"...":name;
             　　}
             },
             series: [
@@ -160,7 +161,7 @@ export default {
                     name: '违法类别',
                     type: 'pie',
                     radius: ['50%', '70%'],
-                    center: ['30%', '50%'],  
+                    center: ['25%', '50%'],  
                     avoidLabelOverlap: false,
                     label: {
                         show: false,
@@ -437,6 +438,7 @@ export default {
           that.getIllegalAnalysisDatas(that.stime)
           that.getTrafficRestrictionDates(that.stime)
         }
+      
         
       })
     },

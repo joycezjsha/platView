@@ -45,6 +45,7 @@
         <div style="padding:0 5px;height:73vh;width:100%;overflow-x: hidden;">
           <el-table  @row-click="handItem" 
            v-loading='tableLoading'
+           highlight-current-row
           :data="indexDatas"  height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="60">
@@ -53,9 +54,9 @@
               </template> -->
             </el-table-column>
             <el-table-column prop="COUNTNUM" label="全部违法"  width="100"  sortable></el-table-column>
-            <el-table-column prop="CSNUM" label="超速" width="80"  sortable></el-table-column>
-            <el-table-column prop="XNUM" label="限行" width="80"  sortable></el-table-column>
-            <el-table-column  v-if='showXZQH' prop="XZQH" width="120" label="行政区号"  ></el-table-column>
+            <el-table-column prop="CSNUM" label="超速" width="60"  sortable></el-table-column>
+            <el-table-column prop="XNUM" label="限行" width="60"  sortable></el-table-column>
+            <el-table-column  v-if='showXZQH' prop="XZQH" width="0" label="行政区号"  ></el-table-column>
         </el-table>
         </div>
       </div>
@@ -124,16 +125,31 @@ export default {
   */
   determine(){
     let that = this;
-    blur.$emit('gettimeRange',that.timeRange)
-    // blur.$emit("determine",that.timeRange)
-    that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1])
-    let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
-    let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
-    let timeData={
-      time1,
-      time2
-    }
-    blur.$emit("sendTime",timeData)
+     if(that.timeRange==''){
+         that.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "error",
+            duration: 3000
+          });
+         return;
+      }else{
+        if(that.timeRange.length<2){
+          that.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "error",
+            duration: 3000
+          });
+         return;
+        };
+         blur.$emit('gettimeRange',that.timeRange)
+        // blur.$emit("determine",that.timeRange)
+        that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1]);
+        let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00';
+        let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59';
+        let timeData={time1,time2}
+        blur.$emit("sendTime",timeData)
+      }
+   
   },
     /**
      * 点击表格事件

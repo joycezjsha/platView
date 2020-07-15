@@ -6,7 +6,7 @@
     <div @click='changeTable(1)' style='margin-left:15px;'>
       <m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:11vw;'></m-title>
     </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent'></t-area>
   </div>
 </template>
 
@@ -219,8 +219,14 @@ export default {
               }
           })
       }
-  }
+  },
 /** */
+    /**
+     * 地图点击事件，回调绑定事件
+     */
+    clickAreaEvent(data){
+      blur.$emit('initCityOrRoadStatics',0,data,true);
+    },
   },
   beforeDestroy(){
     this.map.setPitch(0);

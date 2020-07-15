@@ -27,7 +27,10 @@
             </div>
           </div>
           <div class="electricPolice-statics_data " style="padding:0 1vw;height:66vh">
-            <el-table :data="tableDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+            <el-table 
+            :data="tableDatas" 
+            highlight-current-row
+            style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
               <el-table-column type="index" label="No" width="50"></el-table-column>
               <el-table-column show-overflow-tooltip  prop="city,ROADNAME" width="190" label="电警名称">
                 <template slot-scope="scope">
