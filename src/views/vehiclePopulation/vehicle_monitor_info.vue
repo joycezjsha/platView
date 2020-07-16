@@ -164,11 +164,11 @@
               <div class="table">
                 <el-table :data="indexRoadDatas"
                 highlight-current-row
-              style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
-                    <el-table-column  type="index" label="No" width="38"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="road" width="130"  label="道路"></el-table-column>
-                    <el-table-column  prop="innum" label="进入辆次"  width="80" sortable></el-table-column>
-                    <el-table-column  prop="outnum" label="流出辆次"  width="80" sortable></el-table-column>
+                style="width: 100%" height="90%" :default-sort = "{prop: 'innum', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+                    <el-table-column  type="index" label="No" width="50"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="road" width="180"  label="道路"></el-table-column>
+                    <el-table-column  prop="innum" label="进入辆次" sortable></el-table-column>
+                    <el-table-column  prop="outnum" label="流出辆次"  sortable></el-table-column>
                 </el-table>
               </div> 
             </div>

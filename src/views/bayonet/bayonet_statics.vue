@@ -42,8 +42,8 @@
                    [{{scope.row.city}}]{{scope.row.ROADNAME}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="TIMENUM" label="流量"  width="60" sortable></el-table-column>
-                <el-table-column prop="TODAYNUM" label="过车量"  width="90" sortable></el-table-column>
+                <el-table-column prop="TIMENUM" label="流量"  sortable></el-table-column>
+                <el-table-column prop="TODAYNUM" label="过车量"  sortable></el-table-column>
               </el-table>
             </div>          
           </div>

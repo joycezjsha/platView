@@ -47,18 +47,19 @@
           <el-table  @row-click="handItem" 
            v-loading='tableLoading'
            highlight-current-row
+           style="width:100%"
            ref="tableillegal"
           :data="indexDatas"  height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column  type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="CITY" label="城市" width="60">
+            <el-table-column prop="CITY" label="城市" >
               <!-- <template v-if="scope.row.city!=null" slot-scope="scope">
                 {{scope.row.city}}
               </template> -->
             </el-table-column>
-            <el-table-column prop="COUNTNUM" label="全部违法"  width="100"  sortable></el-table-column>
-            <el-table-column prop="CSNUM" label="超速" width="60"  sortable></el-table-column>
-            <el-table-column prop="XNUM" label="限行" width="60"  sortable></el-table-column>
-            <el-table-column  v-if='showXZQH' prop="XZQH" width="0" label="行政区号"  ></el-table-column>
+            <el-table-column prop="COUNTNUM" label="全部违法" width="120" sortable></el-table-column>
+            <el-table-column prop="CSNUM" label="超速" sortable></el-table-column>
+            <el-table-column prop="XNUM" label="限行"  sortable></el-table-column>
+            <el-table-column  v-if='showXZQH' prop="XZQH" label="行政区号"  ></el-table-column>
         </el-table>
         </div>
       </div>
