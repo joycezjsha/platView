@@ -652,6 +652,7 @@ export default {
       that.param.code='';
       that.CODE='';
       that.showback = true;
+      blur.$emit('getleft');
       if(num=='1'){
         that.initMainStaticsChart();
         that.getDomesticVehicleRankingDatas();

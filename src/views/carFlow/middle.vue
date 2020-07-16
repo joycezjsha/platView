@@ -9,7 +9,13 @@
    <div @click="realtime(3)">
         <m-title  label='热点卡口道路' class="car" :img_type='tableIndex=="3"?"1":"0"'></m-title>
    </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent'></t-area>
+    <t-area 
+      :indexData='areaIndexs' 
+      :isShowArea='showArea' 
+      :isShowTxt='isShowTxt' 
+      :method='clickAreaEvent'
+      ref="areaModule"
+    ></t-area>
   </div>
 </template>
 
@@ -37,7 +43,8 @@ export default {
                 markers:[],
                 lineList:[],
                 popups:[]
-            }
+            },
+            isReturn:false
         }
     },
     components:{
@@ -52,6 +59,9 @@ export default {
       this.map.setZoom(8);
       this.getData();
       this.getMapVehicleInData(this.stime)
+      blur.$on('clearMaker',data=>{
+        this.cancelCityLayerStatus();
+      });
     },
     destroyed(){
       this.clearMarkers();
@@ -98,9 +108,7 @@ export default {
      * 地图点击事件，回调绑定事件
      */
     clickAreaEvent(data){
-      console.log(data)
       blur.$emit('setCurrentCity',data);
-      // blur.$emit('getinitAccidentStatics',0,data);
     },
     /**
     * 车辆流动页面地图  地图城市流动数据  Vehicle/getMapVehicleIn   GET_MAP_CITY_FLOW_API
@@ -148,6 +156,13 @@ export default {
               that.tableLoading = false;
             });
         
+    },
+    /**
+     * 是否取消地图区域选中
+     */
+    cancelCityLayerStatus(){
+      this.$refs['areaModule'].resumeLayer();
+      this.map.setPitch(0);
     },
     /**
     *  添加marker

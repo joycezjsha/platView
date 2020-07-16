@@ -12,6 +12,7 @@
           <el-table :data="indexData" 
           v-loading='tableLoading'
           highlight-current-row
+          ref="tableelectricPolice"
              @row-click="handdleCity"
              style="width: 100%"  height="100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="40"></el-table-column>
@@ -34,6 +35,7 @@
           <el-table @row-click="handelRoad"
            v-loading='tableLoading'
            highlight-current-row
+           ref="tableelectricPoliceRoad"
           :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="道路名称"></el-table-column>
@@ -179,6 +181,11 @@ export default {
         })
         .finally(() => {
           that.tableLoading = false;
+          // 取消选中table状态 tablebayonet
+          blur.$on('getelectricPolice',data=>{
+            that.$refs.tableelectricPolice.setCurrentRow()
+            that.$refs.tableelectricPoliceRoad.setCurrentRow()
+          })
       });
     },
     changeTable(t){

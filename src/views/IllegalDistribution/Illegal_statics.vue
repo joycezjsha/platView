@@ -360,6 +360,7 @@ export default {
       that.showback=true;
       that.dllx='';
       blur.$emit("goback",that.stime,that.xzqh)
+      blur.$emit("gettablelllegal")
       that.getAllProvinceIllegalStatisticsDatas(that.stime);
       that.initAccidentStaticsChart(that.stime);
       that.getSpeedingViolationDatas(that.stime)

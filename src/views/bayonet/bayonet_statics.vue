@@ -148,6 +148,7 @@ export default {
       that.showback = true;
       that.xzqh='';
       blur.$emit('getXZQH',that.xzqh);
+      blur.$emit('getbayonet') //取消选中状态
       that.getbayrankDatas();
       that.getdevcountData();
     },

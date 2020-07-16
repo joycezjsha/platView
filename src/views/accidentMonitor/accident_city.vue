@@ -174,7 +174,7 @@ export default {
         blur.$on('setCurrentCityRow',(city)=>{
           let index=null;
             if(city){
-              
+    
               _this.indexDatas.forEach((e,i)=>{
                 if(city.indexOf(e.NAME)!=-1){
                   index=i;

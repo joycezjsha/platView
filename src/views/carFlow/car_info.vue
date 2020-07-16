@@ -487,6 +487,7 @@ export default {
       that.timeName='1';
       that.xzqh='';
       blur.$emit('back',that.stime,that.xzqh)
+      blur.$emit('clearMaker'); //返回时，地图复原
       that.provinceInorOut="1";
       that.clearMap()
       if(num=='1'){

@@ -137,6 +137,8 @@ export default {
       that.getDevCountDatas();
       that.getThirtyAlarm();
       blur.$emit("sendxzqu",'','');
+      blur.$emit("getelectricPolice")
+      
     },
     /**
      * 接受传过来的数据

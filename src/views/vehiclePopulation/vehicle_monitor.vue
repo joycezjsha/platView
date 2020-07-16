@@ -13,7 +13,9 @@
       <div class='center_table'>
          <el-table @row-click="showCity"
          highlight-current-row
+        @current-change="handleCurrentChange"
          v-loading='tableLoading'
+         ref="table"
           :data="indexDatas" style="width: 100%" height="32vh" :default-sort = "{prop: 'proportion', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="NAME" label="类型"></el-table-column>
@@ -165,11 +167,19 @@ export default {
       })
       .finally(() => {
         that.tableLoading = false;
+        blur.$on('getleft',data=>{
+          // 取消table选中状态
+          that.$refs.table.setCurrentRow()
+        });
       });
+    },
+    //设置城市列表，选中行
+    handleCurrentChange(val){
+      this.currentRow = val;
     },
     //设置表格样式
     getRowClass({ row, column, rowIndex, columnIndex }) {
-                return "background:transparent;";
+      return "background:transparent;";
    },
     /* 重点车辆监测超速预警 KeyVehicle/getSpeeding   GET_OVER_WARN_FLOW_API  */
     getIndexData() {

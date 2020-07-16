@@ -20,6 +20,7 @@
           <el-date-picker width="100%"
            value-format="yyyy-MM-dd"
             v-model="timeRange"
+            :picker-options="pickerOptions"
             type="daterange"
             align="right"
             unlink-panels
@@ -46,6 +47,7 @@
           <el-table  @row-click="handItem" 
            v-loading='tableLoading'
            highlight-current-row
+           ref="tableillegal"
           :data="indexDatas"  height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column  type="index" label="No" width="50"></el-table-column>
             <el-table-column prop="CITY" label="城市" width="60">
@@ -89,7 +91,37 @@ export default {
         lineList:[],
         popups:[]
       },
-      activeName:'全部'
+      activeName:'全部',
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+          // shortcuts: [{
+          //   text: '最近一周',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }, {
+          //   text: '最近一个月',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }, {
+          //   text: '最近三个月',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }]
+      },
 
     };
   },
@@ -210,6 +242,9 @@ export default {
       })
       .finally(() => { 
         that.tableLoading = false; 
+        blur.$on("gettablelllegal",data=>{
+          that.$refs.tableillegal.setCurrentRow()
+        })
       });
    },
     //获取巡航数据

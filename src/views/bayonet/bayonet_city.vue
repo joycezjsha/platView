@@ -16,6 +16,7 @@
           <el-table 
           :data="indexData" 
           highlight-current-row
+          ref="tablebayonet"
           style="width: 100%" height="73.4vh"
            v-loading='tableLoading'
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
@@ -346,6 +347,10 @@ export default {
         })
         .finally(() => {
           that.tableLoading = false;
+          // 取消选中table状态 tablebayonet
+          blur.$on('getbayonet',data=>{
+            that.$refs.tablebayonet.setCurrentRow()
+          })
         });
       },
      /**
