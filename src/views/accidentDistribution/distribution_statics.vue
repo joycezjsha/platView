@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import blur from "@/blur";
 import { IMG } from "./config";
 import { interf } from "./config";
 import echarts from 'echarts'
@@ -173,6 +174,10 @@ export default {
     that.map.setPitch(0); //设置地图的俯仰角
   },
   methods: {
+    /**
+     * 左侧选择区域，右侧联动
+     * type：
+     */
     initDistributionStatics(type,data,flag){
        this.isShowReturn=true;
         this.title=data.name;
@@ -186,14 +191,14 @@ export default {
       let that = this;
       let params={stime:1};
       if(type!=undefined && data){
-        if(data.time!=''){
+        if(data.time && data.time!=''){
           params.stime=data.time[0];
           params.etime=data.time[1];
         };
         if(type){
           params.areaid=data.value;
         }else{
-          params.xzqh=data.value;
+          params.xzqh=data.value.length>4?data.value.substring(0,4):data.value;
         }
       }
       interf.GET_ALL_STA_API(params).then(response=>{
@@ -228,14 +233,14 @@ export default {
       let that = this;
       let params={stime:1};
       if(type!=undefined && data){
-        if(data.time!=''){
+        if(data.time && data.time!=''){
           params.stime=data.time[0];
           params.etime=data.time[1];
         };
         if(type){
           params.areaid=data.value;
         }else{
-          params.xzqh=data.value;
+          params.xzqh=data.value.length>4?data.value.substring(0,4):data.value;
         }
       }
       interf.GET_ACCIDENT_TYPE_API(params).then(response=>{
@@ -276,7 +281,7 @@ export default {
         if(type){
           params.areaid=data.value;
         }else{
-          params.xzqh=data.value;
+          params.xzqh=data.value.length>4?data.value.substring(0,4):data.value;
         }
       };
       interf.GET_ACCIDENT_CHANGE_API(params).then(response=>{
@@ -324,7 +329,7 @@ export default {
         if(type){
           params.areaid=data.value;
         }else{
-          params.xzqh=data.value;
+          params.xzqh=data.value.length>4?data.value.substring(0,4):data.value;
         }
       }
       interf.GET_ACCIDENT_TREND_API(params).then(response=>{
@@ -367,6 +372,8 @@ export default {
       this.initSumCharts();
       this.initAccurCharts();
       this.initSgTypes();
+      blur.$emit('setCurrentRow',null);
+      blur.$emit('cancelCityLayerStatus');
     },
   }
 };

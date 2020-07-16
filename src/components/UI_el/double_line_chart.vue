@@ -212,7 +212,10 @@ export default {
         if(this.chart_data.unit){
           this.option.yAxis[0].name=this.chart_data.legend[0]+'（单位：'+this.chart_data.unit[0]+')';
           this.option.yAxis[1].name=this.chart_data.legend[1]+'（单位：'+this.chart_data.unit[0]+')';
-        };
+        }else{
+          this.option.yAxis[0].name=this.chart_data.legend[0];
+          this.option.yAxis[1].name=this.chart_data.legend[1]
+        }
         this.option.series[1].yAxisIndex=1;
       };
       this.chart.setOption(this.option);

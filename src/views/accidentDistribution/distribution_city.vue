@@ -39,6 +39,7 @@
           :header-row-style="getRowClass"
           :header-cell-style="getRowClass"
           @row-click='handle' highlight-current-row
+          ref='cityTable'
         >
           <el-table-column type="index" label="No" width="50"></el-table-column>
           <el-table-column v-if='tableIndex==0' prop="CITY" label="城市"></el-table-column>
@@ -152,6 +153,17 @@ export default {
       })
       .finally(() => {
         that.tableLoading = false;
+        blur.$on('setCurrentRow',(city)=>{
+          let index=null;
+            if(city){
+              that.indexDatas.forEach((e,i)=>{
+                if(city.indexOf(e.CITY)!=-1){
+                  index=i;
+                }
+              })
+            }
+          that.$refs.cityTable.setCurrentRow(that.indexDatas[index]);
+        })
       });
     },
     /**

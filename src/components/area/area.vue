@@ -68,10 +68,8 @@ export default {
     isResumeHight:{
       immediate:false,
       handler:function(cVAL, oVAL){
-        debugger;
         if(cVAL){
           this.resumeLayer();
-          this.map.setPitch(0);
         }
         
       }
@@ -604,7 +602,7 @@ export default {
                         [this.max, this.areaColorArray[2]]
                     ]
                   },
-                  'extrusion-height':30000,
+                  'extrusion-height':50000,
                   'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
                   'extrusion-opacity':0.5
                 }
@@ -631,7 +629,7 @@ export default {
         if (bbox[3] < e[1]) bbox[3] = e[1];
       });
       this.map.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], {padding: 300});
-      this.map.setPitch(45);
+      this.map.setPitch(60);
     },
     /**
      * 恢复拔高区面

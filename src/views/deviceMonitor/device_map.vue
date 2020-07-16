@@ -6,7 +6,7 @@
     <div @click='changeTable(1)' style='margin-left:15px;'>
       <m-title label='设备数量区域填充' :img_type='tableIndex?"1":"0"' style='width:11vw;'></m-title>
     </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent' :isResumeHight='isReturn'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent' ref='areaModule'></t-area>
   </div>
 </template>
 
@@ -29,8 +29,7 @@ export default {
       },
       showArea:false,
       isShowTxt:false,
-      areaIndexs:[],
-      isReturn:false
+      areaIndexs:[]
     };
   },
   mounted() {
@@ -39,7 +38,7 @@ export default {
     this.getAreaData();
     this.map.setCenter([109.278987,35.747334]);
     setTimeout(this.addHeatMap,1000);
-    blur.$on('clearRoadAndMaker',function(){
+    blur.$on('cancelCityLayerStatus',function(){
       _this.cancelCityLayerStatus();
     });
   },
@@ -237,8 +236,8 @@ export default {
      * 是否取消地图区域选中
      */
     cancelCityLayerStatus(){
-      debugger;
-      this.isReturn=true;
+      this.$refs['areaModule'].resumeLayer();
+      this.map.setPitch(0);
     }
     
   },

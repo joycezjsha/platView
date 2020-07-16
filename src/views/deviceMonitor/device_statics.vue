@@ -517,7 +517,7 @@ export default {
       this.initdeviceAnalysisChart();
       this.initAccurCharts();
       blur.$emit('setCurrentRow',null);
-      blur.$emit('clearRoadAndMaker');
+      blur.$emit('cancelCityLayerStatus');
       
     },
 /*##清除地图加载点、线、面、弹框*/

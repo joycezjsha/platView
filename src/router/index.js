@@ -21,6 +21,7 @@ import measurement from '@/views/speedMeasurement/speedMeasurementIndex.vue'
 import user from '@/views/userManager/userManage.vue'
 import vehicleownership from '@/views/vehicleownership/vehicleownership.vue'
 import induction from '@/views/induction/induction'
+import Epidemic from '@/views/EpidemicConnect.vue'
 // 懒加载方式，当路由被访问的时候才加载对应组件       
 const Login = resolve => require(['@/views/Login/Login'], resolve)
 
@@ -152,7 +153,12 @@ const router = new Router({
           }
         }
       ]
-    }
+    },
+    {
+      path: '/epidemic', 
+      name: 'epidemic',
+      component: Epidemic
+    },
   ]
 })
 

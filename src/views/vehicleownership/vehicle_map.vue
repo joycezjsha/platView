@@ -2,7 +2,7 @@
   <div class="device-map">
     <!-- <div @click='changeTable(0)'><m-title label='城市' :img_type='!tableIndex?"1":"0"' style='width:8vw;'></m-title></div>
     <div @click='changeTable(1)'><m-title label='区县' :img_type='tableIndex?"1":"0"' style='width:10vw;'></m-title></div> -->
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'  :method='clickAreaEvent' :isResumeHight='isReturn'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'  :method='clickAreaEvent' ref='areaModule'></t-area>
   </div>
 </template>
 
@@ -25,8 +25,7 @@ export default {
       },
       showArea:false,
       isShowTxt:false,
-      areaIndexs:[],
-      isReturn:false
+      areaIndexs:[]
     };
   },
   mounted() {
@@ -205,7 +204,8 @@ export default {
      * 是否取消地图区域选中
      */
     cancelCityLayerStatus(){
-      this.isReturn=true;
+      this.$refs['areaModule'].resumeLayer();
+      this.map.setPitch(0);
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){

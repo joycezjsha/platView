@@ -57,10 +57,13 @@ export default {
     }
   },
   methods: {
+    setSelectItems(name,id){
+
+    },
     /**
      * 获取高速路及主干道拥堵排名
      */
-    getRoadIndexData() {
+    getRoadIndexData(id) {
       let that = this;
        interf.GET_ROAD_TAFFIC_ORDER_API({}).then(response=>{
         if (response && response.status == 200){
@@ -92,7 +95,7 @@ export default {
         /**
      * 初始化城市拥堵排名列表
      */
-    getRoadIndexData(){
+    getRoadIndexData(id){
       let that=this;
       interf.GET_ROAD_TAFFIC_ORDER_API({})
       .then(response=>{

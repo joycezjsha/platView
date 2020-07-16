@@ -1,6 +1,6 @@
 <template>
   <div class="device-map">
-    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt' :method='clickAreaEvent' ref='areaModule'></t-area>
   </div>
 </template>
 
@@ -27,9 +27,13 @@ export default {
     };
   },
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
     this.map.setCenter([109.278987,35.747334]);
     setTimeout(()=>{this.getAreaData();this.getMainAcciData()},1000);
+    blur.$on('cancelCityLayerStatus',function(){
+      _this.cancelCityLayerStatus();
+    });
   },
   components: {
     tArea
@@ -214,6 +218,20 @@ export default {
       let marker = new minemap.Marker(el, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
       this.map_cover.markers.push(marker);
       this.map_cover.popups.push(popup);
+    },
+    /**
+     * 地图点击事件，回调绑定事件
+     */
+    clickAreaEvent(data){
+      blur.$emit('setCurrentRow',data.name);
+      blur.$emit('initDistributionStatics',0,data,true);
+    },
+    /**
+     * 是否取消地图区域选中
+     */
+    cancelCityLayerStatus(){
+      this.$refs['areaModule'].resumeLayer();
+      this.map.setPitch(0);
     },
 /*##清除地图加载点、线、面、弹框*/
     clearMap(){
