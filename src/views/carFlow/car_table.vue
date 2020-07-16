@@ -107,6 +107,7 @@ export default {
       fxlx:'1',
       realtimer1:'',
       realtimer2:'',
+      timer:null,//定时器
       stime:'1',
       map: {},
       date1: [{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }],
@@ -184,6 +185,10 @@ export default {
   destroyed() {
     this.map.setPitch(0);
     this.clearMap();
+    if(this.timer){
+      // 清除定时器
+      clearInterval(this.timer)
+    }
   },
   methods: {
     /**
@@ -193,7 +198,7 @@ export default {
       let that = this;
       that.realtimer1=new Date().getHours() - 1;
       that.realtimer2=new Date().getHours();
-      setInterval(()=>{
+      that.timer=setInterval(()=>{
         that.realtimer1=new Date().getHours() - 1;
         that.realtimer2=new Date().getHours();
       },1000*60*60)
