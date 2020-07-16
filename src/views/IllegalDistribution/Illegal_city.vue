@@ -56,7 +56,7 @@
                 {{scope.row.city}}
               </template> -->
             </el-table-column>
-            <el-table-column prop="COUNTNUM" label="全部违法" width="120" sortable></el-table-column>
+            <el-table-column prop="COUNTNUM" label="全部违法" sortable></el-table-column>
             <el-table-column prop="CSNUM" label="超速" sortable></el-table-column>
             <el-table-column prop="XNUM" label="限行"  sortable></el-table-column>
             <el-table-column  v-if='showXZQH' prop="XZQH" label="行政区号"  ></el-table-column>
