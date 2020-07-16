@@ -1,7 +1,5 @@
 <template>
-  <div class="bayonet_device-statics" style="position: fixed;z-index: 10;color: white;
-  right: 13px;
-  width: 24.6875vw;
+  <div class="bayonet_device-statics" style="position: fixed;z-index: 10;color: white;right:0.67708vw;width: 24.6875vw;
   height: 85vh;
   top: 9vh;">
     <div class="device-statics_container">
@@ -11,7 +9,10 @@
         <div class="title" v-if="showback==true">全省统计</div>
         <div class="back "  v-else @click="goback()">
           &lt;&lt; 返回全省
-          <span>{{city}}</span>
+          <span  v-if="dldm=='' && city!=''"  class="city">{{city}}</span>
+          <span style="position:absolute;left:30%;color:#fff" v-if="dldm!=''">{{name}}</span>
+          <!-- <span v-if="dldm=='' && city!=''"  class="city">{{city}}</span>
+            <span style="position:absolute;left:30%;color:#fff" v-if="dldm!=''">{{name}}</span> -->
         </div>
       </div>
       </div>
@@ -65,10 +66,12 @@ export default {
   name: "TIndex",
   data() {
     return {
+      dldm:'',
       showback: true, //是否显示返回按钮
       map: {},
       devcount:'',
       activedev:'',
+      name:'',
       todaynum:'',
       XZQH:'',
       city:'',
@@ -146,21 +149,29 @@ export default {
     goback() {
       let that = this;
       that.showback = true;
-      that.xzqh='';
-      blur.$emit('getXZQH',that.xzqh);
+      that.XZQH='';
+      that.dldm='';
+      blur.$emit('getXZQH',that.XZQH);
       blur.$emit('getbayonet') //取消选中状态
       that.getbayrankDatas();
       that.getdevcountData();
     },
     // 接受传过来的数据
     getData(){
+      blur.$on("getrow",data=>{
+        this.showback=false;
+        this.dldm=data.DLDM;
+        this.name=data.NAME;
+        this.getdevcountData();
+        this.getbayrankDatas();
+      })
       blur.$on("getxzqh",data=>{
         this.XZQH=data;
         if(this.XZQH!=''){
           this.showback=false;
         }
-        this.getbayrankDatas(this.XZQH)
-        this.getdevcountData(this.XZQH)
+        this.getbayrankDatas();
+        this.getdevcountData();
       })
       blur.$on("getcity",data=>{
         this.city=data;
@@ -169,12 +180,19 @@ export default {
     /**
      * // 卡口监测-今日卡口数据回传排名 Bayonet/getBayonetEchoRanking GET_BAY_RANK_API
     */
-   getbayrankDatas(xzqh){
+   getbayrankDatas(){
       let that = this;
-     that.tableLoading = true;
-    //  如果没有参数
-     if(xzqh===undefined){
-      interf.GET_BAY_RANK_API({})
+      that.tableLoading = true;
+      that.tableDatas=[];
+      //  如果没有参数
+      let param={}
+      if(that.XZQH!=''){
+        param.xzqh=that.XZQH;
+      }
+      if(that.dldm!=''){
+        param.dldm=that.dldm;
+      }
+     interf.GET_BAY_RANK_API(param)
        .then(response=>{
          that.tableLoading = false;
         if (response && response.status == 200){
@@ -197,92 +215,44 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
-     }else{
-       interf.GET_BAY_RANK_API({
-          xzqh:xzqh
-       })
-      .then(response=>{
-        if (response && response.status == 200){
-          var data = response.data;
-          if (data.errcode == 0) {
-            that.tableDatas=data.data;
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-          }
-        })
-       .catch(err=>{
-          console.log(err);
-       })
-       .finally(() => {
-         that.tableLoading = false;
-       });
-     }
    },
     /**
      *  卡口监测-全省统计  Bayonet/getDevCount   GET_DEV_COUNT_API
     */
-   getdevcountData(xzqh){
-      let that = this;
-     
+   getdevcountData(){
+    let that = this;
     //  如果没有参数
-    if(xzqh===undefined){
-      interf.GET_DEV_COUNT_API({})
+    let param={}
+    if(that.XZQH!=''){
+      param.xzqh=that.XZQH;
+    }
+    if(that.dldm!=''){
+      param.dldm=that.dldm;
+    }
+    interf.GET_DEV_COUNT_API(param)
       .then(response=>{
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-            that.todaynum=data.data.todaynum.toString();
-            that.devcount=data.data.devcount.toString();
-            that.activedev=data.data.activedev.toString();
+            that.todaynum=data.data.todaynum;
+            that.devcount=data.data.devcount;
+            that.activedev=data.data.activedev;
           } else{
             that.$message({
               message: data.errmsg,
               type: "error",
               duration: 1500
-              });
-            }
+            });
           }
-        })
+        }
+      })
       .catch(err=>{
-        console.log(err);
+         console.log(err);
       })
-        .finally(() => {
-          that.tableLoading = false;
-        });
-    }else{
-      interf.GET_DEV_COUNT_API({
-        xzqh:xzqh
-      })
-      .then(response=>{
-        if (response && response.status == 200){
-          var data = response.data;
-          if (data.errcode == 0) {
-                that.todaynum=data.data.todaynum;
-                that.devcount=data.data.devcount;
-                that.activedev=data.data.activedev;
-             } else{
-               that.$message({
-                 message: data.errmsg,
-                 type: "error",
-                 duration: 1500
-               });
-             }
-         }
-       })
-       .catch(err=>{
-          console.log(err);
-       })
-       .finally(() => {
-         that.tableLoading = false;
-       });
-    }
-       
-   },
+    .finally(() => {
+      that.tableLoading = false;
+    });
+  },
     //获取统计数据
     getIndexData() {
       let that = this;
@@ -433,7 +403,7 @@ export default {
           rgba(255, 255, 255, 0)
         )
         1 1;
-      span {
+      .city {
         width: 53px;
         height: 18px;
         font-size: 18px;

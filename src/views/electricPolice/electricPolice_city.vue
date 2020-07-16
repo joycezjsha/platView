@@ -197,6 +197,7 @@ export default {
     * 点击道路名称  触发事件
     */
      handelRoad(row, event, column){
+      blur.$emit("getDLDM",row)
       let data={};
       if(this.tableIndex){
         data.name=row.NAME;

@@ -60,10 +60,7 @@ export default {
                 // 隐藏热力图  显示聚合图
                 that.onHideLayer('1')
                 that.map.setZoom(6);
-                
-                that.onShowLayer(2)
-                
-                
+                that.onShowLayer(2) 
             }
         },
         /*
