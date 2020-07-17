@@ -120,7 +120,7 @@ $map_popup_border:rgb(42, 76, 162);
     opacity: 0;
   }
 }
-.container {
+.dot_marker {
   @include flex(row, center,center);
   position: relative;
   width: 15px;
