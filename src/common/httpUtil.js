@@ -57,14 +57,15 @@ service.interceptors.request.use(config => {
     config.params=new Object();
     config.params._t=new Date().getTime();
     if(config.url.indexOf('sys/login')==-1){
-      config.params.token='token_for_show';//sessionStorage.getItem("token");
+      config.params.token=sessionStorage.getItem("token");
       config.headers['Content-Type'] = 'application/json';
     }
     // insertLog(config.method);
   }else{
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     if(config.url.indexOf('117.157.231.168')==-1){
-      config.params._t=new Date().getTime();config.params.token='token_for_show';
+      config.params._t=new Date().getTime();
+      config.params.token=sessionStorage.getItem("token");;
       config.params = {...config.params};
     }
   }
