@@ -258,8 +258,6 @@ export default {
       }else if(e.TXCLZS>10){
         type='yellow';
       };
-      // el.className='container container_'+type;
-      // el.style.backgroundColor = e.TXCLZS > 0 ? "#c80101" : "#f1c600";
       el.style.width = "14px";
       el.style.height = "14px";
       el.style.borderRadius = "50%";
@@ -267,7 +265,7 @@ export default {
       let dot = document.createElement("div");
       dot.className = "dot dot_"+type;
       el.appendChild(dot);
-       let pulse = document.createElement("div");
+      let pulse = document.createElement("div");
       pulse.className = "pulse pulse_"+type;
       el.appendChild(pulse);
       //  let pulse1 = document.createElement("div");
