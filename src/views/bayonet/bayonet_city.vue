@@ -133,6 +133,7 @@ export default {
     */
      handleRoad(row, event, column){
       let data={};
+      blur.$emit("getrow",row)
       data.name=row.NAME;
       data.value=row.DLDM;
       this.getRoadMapDev(data.value)
@@ -284,7 +285,7 @@ export default {
     */
     getRoadStatisticsDatas(){
       let that = this;
-       that.roadDatas=[];
+      that.roadDatas=[];
       that.tableLoading = true;
       interf.GET_ROAD_STATIS_API({})
       .then(response=>{

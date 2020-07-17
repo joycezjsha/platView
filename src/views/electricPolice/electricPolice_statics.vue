@@ -6,7 +6,8 @@
           <div class="title" v-if="showback">全省统计</div>
           <div class="back "  v-else @click="goback()">
             &lt;&lt; 返回全省
-            <span>{{city}}</span>
+            <span v-if="dldm=='' && city!=''"  class="city">{{city}}</span>
+            <span style="width:17vw;height:100%;position:absolute;left:30%;color:#fff;white-space:nowrap;" v-if="dldm!=''">{{name}}</span>
           </div>
         </div>
         <!-- <div>
@@ -29,6 +30,7 @@
           <div class="electricPolice-statics_data " style="padding:0 1vw;height:66vh">
             <el-table 
             :data="tableDatas" 
+             v-loading='tableLoading'
             highlight-current-row
             style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
               <el-table-column type="index" label="No" width="50"></el-table-column>
@@ -60,11 +62,14 @@ export default {
     return {
       map: {},
       city:'',
+      dldm:'',
+      name:'',
       XZQH:'',
       numcount:'',
       thirtyActive:'',
       thirtyAlarm:'',
       showback:true,
+      tableLoading:false,
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
@@ -107,9 +112,7 @@ export default {
           ]
       },
       device_chart:null,
-      tableDatas:[
-        {'ROADNAME':'','NUM':''},
-      ]
+      tableDatas:[]
     }
   },
   components:{mTab:m_tab,mList:m_list,mTitle},
@@ -133,7 +136,8 @@ export default {
     goback() {
       let that = this;
       that.showback = true;
-      that.xzqh='';
+      that.XZQH='';
+      that.dldm='';
       that.getDevCountDatas();
       that.getThirtyAlarm();
       blur.$emit("sendxzqu",'','');
@@ -144,11 +148,19 @@ export default {
      * 接受传过来的数据
     */ 
     getData(){
+
+      blur.$on("getDLDM",data=>{
+        this.showback=false;
+        this.dldm=data.DLDM;
+        this.name=data.NAME;
+        this.getDevCountDatas();
+        this.getThirtyAlarm();
+      })
       blur.$on("sendXZQH",(data,city)=>{
         this.XZQH=data;
         this.city=city;
-        this.getDevCountDatas(this.XZQH);
-        this.getThirtyAlarm(this.XZQH);
+        this.getDevCountDatas();
+        this.getThirtyAlarm();
         if(this.XZQH!=''){
           this.showback=false;
         }
@@ -157,15 +169,20 @@ export default {
     /**
      * 近30天违法抓拍排名 Electronic/getThirtyAlarm   GET_THIRTY_ALARM_API
     */
-    getThirtyAlarm(xzqh){
+    getThirtyAlarm(){
       let that = this;
       let ThirtyData={}
+      that.tableLoading = true;
       // 如果没有传入参数，默认显示
-      if(xzqh!=undefined){
-        ThirtyData.xzqh=xzqh;
+      if(that.XZQH!=''){
+        ThirtyData.xzqh=that.XZQH;
+      }
+      if(that.dldm!=''){
+        ThirtyData.dldm=that.dldm;
       }
         interf.GET_THIRTY_ALARM_API(ThirtyData)
         .then(response=>{
+          that.tableLoading = false;
           if (response && response.status == 200){
             var data = response.data;
             if (data.errcode == 0) {
@@ -176,6 +193,7 @@ export default {
                 type: "error",
                 duration: 1500
                 });
+                that.tableLoading = false;
               }
             }
           })
@@ -189,12 +207,15 @@ export default {
     /**
      * 全省统计 Electronic/getDevCount  GET_PRO_STATIS_API
     */
-    getDevCountDatas(xzqh){
+    getDevCountDatas(){
       let that = this;
       let DevCountData={};
       // 如果没有传入参数，默认显示
-      if(xzqh!=undefined){
-        DevCountData.xzqh=xzqh;
+      if(that.XZQH!=''){
+        DevCountData.xzqh=that.XZQH;
+      }
+      if(that.dldm!=''){
+        DevCountData.dldm=that.dldm;
       }
         interf.GET_PRO_STATIS_API(DevCountData)
         .then(response=>{
@@ -357,6 +378,7 @@ export default {
 
 .electricPolice-statics .top {
   margin-top: 3px;
+  overflow: hidden;
     width: 100%;
     .back {
       height: 34px;
@@ -369,20 +391,26 @@ export default {
       border:1px solid;
       padding-left: 17px;
       cursor: pointer;
+      overflow: hidden;
       border-image: linear-gradient(
           182deg,
           rgba(10, 148, 255, 1),
           rgba(255, 255, 255, 0)
         )
         1 1;
-      span {
-        width: 53px;
+      .city{
+        // width: 53px;
         height: 18px;
+        position: absolute ;
+        left: 45%;
+        white-space:nowrap;
         font-size: 18px;
         font-family: Source Han Sans CN;
         font-weight: 400;
         color: rgba(254, 254, 254, 1);
-        padding-left: 108px;
+        // padding-left: 108px;
+        // text-align:center;
+        // display:inline-block;
         cursor: pointer;
       }
     }
