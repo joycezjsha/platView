@@ -91,7 +91,6 @@ export default {
      */
     onShowLayer() {
       let that = this;
-      
       if (that.map) {
         switch(this.tableIndex){
         case 1:case '1':{
@@ -104,6 +103,7 @@ export default {
           }else{
             that.getBayonetHeatMap();    //显示热力图
           }
+          break;
         }
         case 2:case '2':{
           if (this.map_cover.lineList2.length > 0) {
@@ -115,6 +115,7 @@ export default {
           }else{
             that.getBayonetActiveDatas(); //显示聚合图 
           }
+          break;
         }
       }
         
