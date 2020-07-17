@@ -201,8 +201,9 @@ export default {
             message: '登陆成功',
             type: 'success'
           });
-          window.sessionStorage.setItem('token',data.data.token)
-            _this.$router.push('/')
+          window.sessionStorage.setItem('token','token_for_show');
+          // window.sessionStorage.setItem('token',data.data.token);
+          _this.$router.push('/')
         }else{
            _this.formLogin.password='';
           _this.$message({
@@ -501,7 +502,7 @@ $color-text-main: "#ccc";
 }
 </style>
 <style >
-.el-button{
+.page-login .el-button{
   height:4vh;
   padding: 0.3vh 0;
 } 
