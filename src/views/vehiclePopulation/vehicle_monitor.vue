@@ -89,9 +89,7 @@ export default {
         radio:'25%'
       },
       timer:null,
-      indexDatas: [
-        {"index":"","proportion":"+0.3%","NUM":"-0.1%","NAME":"","CODE":""}
-        ],
+      indexDatas: [],
       trafficDatas: [],
       selectItem:{"road":"西安",order:8}
     };

@@ -120,7 +120,7 @@ $map_popup_border:rgb(42, 76, 162);
     opacity: 0;
   }
 }
-.dot_marker {
+.dot_marker{
   @include flex(row, center,center);
   position: relative;
   width: 15px;
@@ -128,12 +128,26 @@ $map_popup_border:rgb(42, 76, 162);
   left: 10px;
   top: 10px;
 }
+.dot_marker_red{
+  width: 60px;
+  height: 60px;
+}
+.dot_marker_orange{
+  width: 45px;
+  height: 45px;
+}
+.dot_marker_yellow{
+  width: 30px;
+  height: 30px;
+}
+.dot_marker_green{
+  width: 15px;
+  height: 15px;
+}
 /* 保持大小不变的小圆点 */
 .dot {
   @include flex(row, center,center);
   position:absolute;
-  width: 7px;
-  height: 7px;
   // left: 0;
   // top: 0;
   -webkit-border-radius: 50%;
@@ -144,23 +158,33 @@ $map_popup_border:rgb(42, 76, 162);
   z-index: 2;
 }
 .dot_red{
+  width: 19px;
+  height: 19px;
+  border-color: #c80101;
   background-color: #c80101;
 }
 .dot_orange{
+  width: 22px;
+  height:22px;
+  border-color: #ff6000;
   background-color: #ff6000;
 }
 .dot_yellow{
+  width: 15px;
+  height:15px;
+  border-color: #f1c600;
   background-color: #f1c600;
 }
 .dot_green{
+  width: 7px;
+  height: 7px;
+  border-color: #44b011;
   background-color: #44b011;
 }
 /* 产生动画（向外扩散变大）的圆圈 第一个圆 */
 .pulse {
   @include flex(row, center,center);
   position:absolute;
-  width: 35px;
-  height: 35px;
   // left: -10px;
   // top: -10px;
   border: 2px solid #3399ff;
@@ -168,7 +192,7 @@ $map_popup_border:rgb(42, 76, 162);
   -moz-border-radius: 50%;
   border-radius: 50%;
   z-index: 1;
- transform: scale(0.5);
+//  transform: scale(0.5);
   /* opacity: 0;
   -webkit-animation: warn 2s ease-out;
   -moz-animation: warn 2s ease-out;
@@ -179,18 +203,26 @@ $map_popup_border:rgb(42, 76, 162);
   
 }
 .pulse_red{
+  width:57px;
+  height:57px;
   border-color: #c80101;
   box-shadow: 1px 1px 30px #c80101;
 }
 .pulse_orange{
+  width:45px;
+  height:45px;
   border-color: #ff6000;
   box-shadow: 1px 1px 30px #ff6000;
 }
 .pulse_yellow{
+  width:30px;
+  height:30px;
   border-color: #f1c600;
   box-shadow: 1px 1px 30px #f1c600;
 }
 .pulse_green{
+  width:15px;
+  height:15px;
   border-color: #44b011;
   box-shadow: 1px 1px 30px #44b011;
 }

@@ -973,30 +973,12 @@ export default {
         itemlist.push(item.KKJD,item.KKWD)
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
-        let el1 = document.createElement('div'); 
+        
         el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
-        el1.id = 'marker'; 
-        el1.style.width='14px';
-        el1.style.height='14px';
-        el1.style.borderRadius='50%';
-        el1.style.border='1px solid #fff';
-        if(item.NUM>=0 && item.NUM<50) {el1.style.backgroundColor='#00b429';}
-        else if(item.NUM>50 && item.NUM<1000) {
-          el1.style.backgroundColor='#e9b806';
-          el1.style.width='8px';
-          el1.style.height='8px';
-        }else if(item.NUM>1000 && item.NUM<10000) {
-          el1.style.backgroundColor='#ff9e58';
-          el1.style.width='10px';
-          el1.style.height='10px';
-        }else if(item.NUM>10000) {
-          el1.style.backgroundColor='#fd0000';
-          el1.style.width='14px';
-          el1.style.height='14px';
-        }
+        
         let d1 = document.createElement('div');
         if(item.city){
           let citySpan= document.createElement('span');
@@ -1059,9 +1041,38 @@ export default {
         .setLngLat(lnglat)
         .setDOMContent(el);
         this.map_cover.popups.push(popup);
+
+        let el1 = document.createElement('div'); 
+        let dot = document.createElement("div");
+        let pause = document.createElement("div");
+        el1.id = 'marker'; 
+        
+        let type='';
+        if(item.NUM>=0 && item.NUM<50) {
+          type='green';
+          pause.className= "pulse pulse_"+type;
+          dot.className = "dot dot_"+type;
+          el1.style.backgroundColor='#00b429';
+        }else if(item.NUM>50 && item.NUM<1000) {
+          type='yellow';
+          // el1.style.width='8px';
+          // el1.style.height='8px';
+          pause.className= "pulse pulse_"+type;
+          dot.className = "dot dot_"+type;
+        }else if(item.NUM>1000 && item.NUM<10000) {
+          type='orange';
+          pause.className= "pulse pulse_"+type;
+          dot.className= "dot dot_"+type;
+        }else if(item.NUM>10000) {
+          type='red';
+          pause.className= "pulse pulse_"+type;
+          dot.className= "dot dot_"+type;
+        }
+        el1.appendChild(dot); //将元素追加到el1元素上
+        el1.appendChild(pause); //将元素追加到el1元素上
+        el1.className='dot_marker dot_marker_'+type;
         let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
-        
       },
       /**
        *车辆流动页面热点道路

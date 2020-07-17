@@ -459,6 +459,8 @@ export default {
    getTrafficRestrictionDates(type){
      let that = this;
       let param={};
+      that.current_option.yAxis.data=[];
+      that.current_option.series[0].data=[];
       if(that.xzqh!=''){
         param.xzqh=that.xzqh;
       }
@@ -475,19 +477,19 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
-             if(!that.current_chart){
+            if(data.data.length>0){
               that.current_chart = echarts.init(document.getElementById('current-date'));
-            };
-            that.current_option.yAxis.data=[];
-            that.current_option.series[0].data=[];
-            data.data.reverse().forEach(e=>{
-              that.current_option.yAxis.data.push(e.WEEK)
-              that.current_option.series[0].data.push(e.NUM)
-            })
-            that.current_chart.setOption(that.current_option);
-            window.addEventListener("resize",()=>{
-              that.current_chart.resize();
+              data.data.reverse().forEach(e=>{
+                that.current_option.yAxis.data.push(e.WEEK)
+                that.current_option.series[0].data.push(e.NUM)
               })
+              that.current_chart.setOption(that.current_option);
+              window.addEventListener("resize",()=>{
+                that.current_chart.resize();
+              })
+            }else{
+              that.current_chart.setOption(that.current_option);
+            }
           }else{
             that.$message({ 
               message: data.errmsg,
@@ -510,6 +512,8 @@ export default {
     getIllegalAnalyDatas(type){
       let that = this;
       let param={};
+      that.speeding_option.yAxis.data=[];  
+      that.speeding_option.series[0].data=[]; 
       if(that.xzqh!=''){
         param.xzqh=that.xzqh;
       }
@@ -527,27 +531,40 @@ export default {
           var data = response.data;
           if(data.errcode == 0){
             if(data.data.length>0){
+              // console.log(data.data)
+              // console.log(data.data.reverse())
               that.speeding_chart= echarts.init(document.getElementById('speeding-offences'));
-              that.speeding_option.yAxis.data=[];  
-              that.speeding_option.series[0].data=[]; 
-              // for(var i=0;i<data.data.length;i++){
-                // if(data.data[i].WFXW=='1'){
-                //   data.data[i].WFXW='其他'
-                // }else if(data.data[i].WFXW=='17211'){
-                //   data.data[i].WFXW='超速50%以上'
-                // }else if(data.data[i].WFXW=='16361'){
-                //   data.data[i].WFXW=" 超速20-50%"
-                // }else  if(data.data[i].WFXW=='13521'){
-                //   data.data[i].WFXW="超速10%"
-                // }
-                // that.speeding_option.yAxis.data.push(data.data[i].WFXW)
-                that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上')
-                that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
-              // }
+              for(var i=0;i<data.data.length;i++){
+                // console.log(data.data[i])
+                if(data.data[i].WFXW=='1'){
+                  // data.data[0].NUM=data.data[i].NUM;
+                  data.data[i].WFXW='其他'
+                }
+                if(data.data[i].WFXW=='17211'){
+                  // data.data[3].NUM=data.data[i].NUM;
+                  data.data[i].WFXW='超速50%以上'
+                }
+                if(data.data[i].WFXW=='16361'){
+                  // data.data[2].NUM=data.data[i].NUM;
+                  data.data[i].WFXW=" 超速20-50%"
+                }
+                if(data.data[i].WFXW=='13521'){
+                  // data.data[1].NUM=data.data[i].NUM;
+                  data.data[i].WFXW="超速10%"
+                }
+                that.speeding_option.yAxis.data.push(data.data[i].WFXW)
+                that.speeding_option.series[0].data.push(data.data[i].NUM)
+                // that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
+                // that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
+              }
+              // that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上');
+              // that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
               that.speeding_chart.setOption(that.speeding_option);
               window.addEventListener("resize",()=>{
                 that.speeding_chart.resize();
               })
+            }else{
+              that.speeding_chart.setOption(that.speeding_option);
             }
             // that.speeding_chart.setOption(that.speeding_option);
             // window.addEventListener("resize",()=>{
@@ -776,6 +793,8 @@ export default {
     initAccidentStaticsChart(type,xzqh){
       let that = this;
        let param={};
+       that.accident_option.series[0].data=[];
+       that.accident_option.legend.data=[]
       if(xzqh!=undefined){
         param.xzqh=xzqh;
       }
@@ -792,7 +811,6 @@ export default {
         if(response && response.status==200){
           var data = response.data;
           if(data.errcode == 0){
-             that.accident_option.series[0].data=[];
             if(!that.accident_chart){
               that.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
             };
@@ -802,11 +820,17 @@ export default {
                   if(e.CATEGORY && e.NUM){
                     that.accident_option.series[0].data.push({name:e.CATEGORY,value:e.NUM});
                     // that.listItems.push({color:colors[i],label:e.CATEGORY,value:e.NUM});
-                    this.accident_option.legend.data.push(e.CATEGORY);         
+                    that.accident_option.legend.data.push(e.CATEGORY);  
+                    that.accident_chart.setOption(that.accident_option);
+                    window.addEventListener("resize",()=>{
+                      that.accident_chart.resize();
+                    })       
                   }
                      
                 })
-              };
+              }else{
+                that.accident_chart.setOption(that.accident_option);
+              }
             // data.data.forEach(e=>{
             //   if(e.CATEGORY && e.NUM ){
             //     that.accident_option.legend.data.push(e.CATEGORY);
@@ -825,10 +849,7 @@ export default {
             //   {name:data.data[4].CATEGORY,value:data.data[4].NUM},
             //   {name:data.data[5].CATEGORY,value:data.data[5].NUM},
             //   ]
-            that.accident_chart.setOption(that.accident_option);
-            window.addEventListener("resize",()=>{
-                that.accident_chart.resize();
-              })
+            
           }else{
             that.$message({ 
               message: data.errmsg,
