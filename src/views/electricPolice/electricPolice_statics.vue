@@ -7,7 +7,7 @@
           <div class="back "  v-else @click="goback()">
             &lt;&lt; 返回全省
             <span v-if="dldm=='' && city!=''"  class="city">{{city}}</span>
-            <span style="position:absolute;left:30%;color:#fff" v-if="dldm!=''">{{name}}</span>
+            <span style="width:17vw;height:100%;position:absolute;left:30%;color:#fff;white-space:nowrap;" v-if="dldm!=''">{{name}}</span>
           </div>
         </div>
         <!-- <div>
@@ -378,6 +378,7 @@ export default {
 
 .electricPolice-statics .top {
   margin-top: 3px;
+  overflow: hidden;
     width: 100%;
     .back {
       height: 34px;
@@ -390,6 +391,7 @@ export default {
       border:1px solid;
       padding-left: 17px;
       cursor: pointer;
+      overflow: hidden;
       border-image: linear-gradient(
           182deg,
           rgba(10, 148, 255, 1),
@@ -401,6 +403,7 @@ export default {
         height: 18px;
         position: absolute ;
         left: 45%;
+        white-space:nowrap;
         font-size: 18px;
         font-family: Source Han Sans CN;
         font-weight: 400;

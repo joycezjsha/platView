@@ -326,11 +326,11 @@ export default {
           }
         })
         .catch(err => {
-          this.$message({
-            message: "卡口热力分布请求服务失败",
-            type: "error",
-            duration: 1500
-          });
+          // this.$message({
+          //   message: "卡口热力分布请求服务失败",
+          //   type: "error",
+          //   duration: 1500
+          // });
         })
         .finally(() => {});
     },

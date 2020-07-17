@@ -360,10 +360,10 @@ export default {
     .front,.back{position:absolute;top: 0px;left: 0px;backface-visibility:hidden;}
     .front{z-index:2;}
     .front {
-        animation: toback 8s infinite;
+        animation: toback 15s infinite;
       }
       .back {
-        animation: tofront 8s infinite;
+        animation: tofront 15s infinite;
       }
     .top-container{
       @include flex(column, center,center);

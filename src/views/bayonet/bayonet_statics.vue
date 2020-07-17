@@ -10,7 +10,7 @@
         <div class="back "  v-else @click="goback()">
           &lt;&lt; 返回全省
           <span  v-if="dldm=='' && city!=''"  class="city">{{city}}</span>
-          <span style="position:absolute;left:30%;color:#fff" v-if="dldm!=''">{{name}}</span>
+          <span style="position:absolute;left:30%;color:#fff;overflow: hidden;white-space:nowrap;" v-if="dldm!=''">{{name}}</span>
           <!-- <span v-if="dldm=='' && city!=''"  class="city">{{city}}</span>
             <span style="position:absolute;left:30%;color:#fff" v-if="dldm!=''">{{name}}</span> -->
         </div>
@@ -461,6 +461,7 @@ export default {
     .x1{
       float: right;
       margin-right: 16px;
+      
     }
   }
 </style>
