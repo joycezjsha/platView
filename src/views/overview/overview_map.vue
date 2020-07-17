@@ -258,8 +258,8 @@ export default {
       }else if(e.TXCLZS>10){
         type='yellow';
       };
-      el.style.width = "14px";
-      el.style.height = "14px";
+      // el.style.width = "14px";
+      // el.style.height = "14px";
       el.style.borderRadius = "50%";
       el.style["border-radius"] = "50%";
       let dot = document.createElement("div");

@@ -57,23 +57,176 @@ $map_popup_border:rgb(42, 76, 162);
     }
   };
 
-  $_1:#556B2F;
-  $_2:#00FFFF;
-  $_3:#0000EE;
-  $_4:#8A2BE2;
-  $_5:#c48f58;
-  $_6:#6bac91;
-  $_7:#5ad2a0;
-  $_8:#f18a52;
-  $_9:#656bd4;
-  $_10:#7ca0cd;
-  $_11:#88b7dc;
-  $_12:#a08bd3;
-  $_13:#be7fcd;
-  $_14:#30a2c4;
-  $_15:#c0ccd7;
-  $_16:#dbddab;
-  $_17:#9cd076;
-  $_18:#69b38b;
-  $_19:#437fb9;
-  $_20:"rgb(255, 143, 109)"
+/**
+设备点位样式
+**/
+@mixin flex($direction,$justify,$align) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+@keyframes warn {
+  0% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.3;
+  }
+  75% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    opacity: 0;
+  }
+}
+@keyframes warn1 {
+  0% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.3;
+  }
+  75% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0;
+  }
+}
+.container {
+  @include flex(row, center,center);
+  position: relative;
+  width: 15px;
+  height: 15px;
+  left: 10px;
+  top: 10px;
+}
+/* 保持大小不变的小圆点 */
+.dot {
+  @include flex(row, center,center);
+  position:absolute;
+  width: 7px;
+  height: 7px;
+  // left: 0;
+  // top: 0;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border: 1px solid #33ccff;
+  border-radius: 50%;
+  background-color: #33ccff; /* 实心圆 ，如果没有这个就是一个小圆圈 */
+  z-index: 2;
+}
+.dot_red{
+  background-color: #c80101;
+}
+.dot_orange{
+  background-color: #ff6000;
+}
+.dot_yellow{
+  background-color: #f1c600;
+}
+.dot_green{
+  background-color: #44b011;
+}
+/* 产生动画（向外扩散变大）的圆圈 第一个圆 */
+.pulse {
+  @include flex(row, center,center);
+  position:absolute;
+  width: 35px;
+  height: 35px;
+  // left: -10px;
+  // top: -10px;
+  border: 2px solid #3399ff;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+ transform: scale(0.5);
+  /* opacity: 0;
+  -webkit-animation: warn 2s ease-out;
+  -moz-animation: warn 2s ease-out;
+  animation: warn 2s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; */
+  
+}
+.pulse_red{
+  border-color: #c80101;
+  box-shadow: 1px 1px 30px #c80101;
+}
+.pulse_orange{
+  border-color: #ff6000;
+  box-shadow: 1px 1px 30px #ff6000;
+}
+.pulse_yellow{
+  border-color: #f1c600;
+  box-shadow: 1px 1px 30px #f1c600;
+}
+.pulse_green{
+  border-color: #44b011;
+  box-shadow: 1px 1px 30px #44b011;
+}
+/* 产生动画（向外扩散变大）的圆圈 第二个圆 */
+.pulse1 {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: -100%;
+  top: -100%;
+  border: 2px solid #3399ff;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+  /* opacity: 0;
+  -webkit-animation: warn1 2s ease-out;
+  -moz-animation: warn1 2s ease-out;
+  animation: warn1 2s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; */
+}
+.pulse1_red{
+  border-color: #c80101;
+  box-shadow: 1px 1px 30px #c80101;
+}
+.pulse1_orange{
+  border-color: #ff6000;
+  box-shadow: 1px 1px 30px #ff6000;
+}
+.pulse1_yellow{
+  border-color: #f1c600;
+  box-shadow: 1px 1px 30px #f1c600;
+}
+.pulse1_green{
+  border-color: #44b011;
+  box-shadow: 1px 1px 30px #44b011;
+}
