@@ -591,7 +591,7 @@ export default {
      */
     getData() {
       let that=this;
-      blur.$on('realtime',data=>{
+      blur.$on('Realtime',data=>{
         that.isShowdiv=data;
         that.clearMap();
         if(that.isShowdiv=='2'){
@@ -666,9 +666,9 @@ export default {
         that.getVehicleOwnershipDatas();
       }
       if(num=='3'){
-        this.getHotspotRoadRankinDatas();
-        this.clearMap()
-        this.getHotspotBayonetRankingDatas();
+        that.getHotspotRoadRankinDatas();
+        that.clearMap()
+        that.getHotspotBayonetRankingDatas();
       }
     },
   /*
@@ -708,17 +708,14 @@ export default {
      if(i.name=='1'){
        that.param.stime='2';
        that.param.fxlx='1';
-       that.getVehicleOwnershipDatas();
      }else if(i.name=='2'){
        that.param.stime='2';
        that.param.fxlx='2';
-       that.getVehicleOwnershipDatas();
      }else{
        that.param.fxlx='';
        that.param.stime=i.name;
-      
-       that.getVehicleOwnershipDatas();
      }
+     that.getVehicleOwnershipDatas();
   },
   // changeIn(fxlx) {
   //   let that = this;

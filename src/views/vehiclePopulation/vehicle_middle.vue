@@ -61,7 +61,7 @@ export default {
         realtime(i){    
             this.tableIndex=i;
             // let els=document.getElementsByClassName('.custom-popup-class');
-            blur.$emit('realtime',this.tableIndex) 
+            blur.$emit('Realtime',this.tableIndex) 
             if(this.code!=""){
               this.getMapBayonetRankingDatas()
             }

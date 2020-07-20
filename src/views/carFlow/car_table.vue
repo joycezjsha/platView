@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="car-flow_content " >
-        <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;" >
+        <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 0.5vw;" >
           <el-tab-pane label="实时" name="1"></el-tab-pane>
           <el-tab-pane label="今天" name="2"></el-tab-pane>
           <el-tab-pane label="昨天" name="3"></el-tab-pane>
@@ -33,12 +33,12 @@
           </span>
         </div>
         <!-- <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt> -->
-        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==1">实时：统计上一个小时
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==1">实时：统计上一个小时
           <span>({{realtimer1}}:00-{{realtimer2}}:00)</span>的流动情况
         </div>
-        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
         </div>
-        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
         </div>
         <div class='all_statics'>
           <div><span>陕西省</span><span>+{{allStatics.addIn}}</span></div>
@@ -77,7 +77,7 @@
               <span style="margin-left:0.5vw">出：{{item.outNum}}</span>
               <span>进出比：{{item.proportion.toFixed(2)}}%</span>
             </p>
-            <p style="padding-bottom:0px">
+            <p>
               <span></span>
               <span  class="address-name">保有量：<span style="color:#00a6fb" class='value'>{{item.inventory}}</span></span>
               <span>流动变化：
@@ -427,7 +427,7 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 2px 2% 0.6rem 2%;
+    padding: 2px 2% 0 2%;
     font-weight: bolder;
     }
     .all_statics{
@@ -498,11 +498,11 @@ export default {
         box-sizing: border-box;
         // padding-right: 0.7vw;
         // padding-top:0.5vh;
-        padding:0.5vh 0.7vw 0.5vh 0;
+        // padding:0.5vh 0.7vw 0.5vh 0;
         line-height: 1em;
         margin: 0 1%;
         cursor: pointer;
-        height:6.8vh;
+        // height:6.8vh;
         p{
           margin:0;
         }
@@ -537,7 +537,7 @@ export default {
         >p:nth-child(2){
           color: $color-info;
           font-size:0.8vw;
-          padding:1.5vh 0 ;
+          padding:1.2vh 0 ;
           @include flex(row,center,center);
           >span{
             @include flex(row,flex-end,center);
@@ -580,8 +580,8 @@ export default {
   height:32px;
   width: 100%;
   position: relative;
-  margin-top: 1.5vh;
-  margin-bottom: 3vh;
+  margin-top: 1.3vh;
+  margin-bottom:2.2vh;
   .text{
     position: absolute;
     top:0;
@@ -599,11 +599,17 @@ export default {
     position: absolute;
     top:0;
     left:120px;
-    height: 4vh;
+    height: 3.5vh;
    
   }
 }
 .carflow li:nth-of-type(odd){ 
   background:rgba(72,84,108,0.2);
+  height: 58px;
+  padding:0.5vh 0.7vw 0.5vh 0;
+}
+.carflow li:nth-of-type(even){ 
+  height: 74px;
+  padding:1.2vh 0.7vw 0.7vh 0;
 }
 </style>
