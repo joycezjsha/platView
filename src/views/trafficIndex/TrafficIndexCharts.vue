@@ -123,6 +123,15 @@ export default {
       tableLoading:false
     };
   },
+  watch:{
+    adcode: {
+      immediate: false,
+      handler: function(cVAL, oVAL) {
+        this.activeName='1';
+        this.getCityRoadData();
+      }
+    }
+  },
   components: {
     mTile: title
   },
@@ -183,6 +192,11 @@ export default {
         })
         .catch(err=>{
           console.log(err);
+          _this.$message({
+                message: data.errmsg,
+                type: "error",
+                duration: 1500
+              });
         })
         .finally(() => {
           _this.tableLoading = false;
