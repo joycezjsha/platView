@@ -123,7 +123,7 @@
               <div @click="province(2)" :style="{width:provinceWithinProportion}" class="city" :class="param.provinceInorOut=='1'? 'bg1':'changebg1'" ></div>
             </div>
           </div>
-          <div class="vehicle-table" style="padding:0 27px;height:100%">
+          <div class="vehicle-table" style="padding:0 1vw;height:100%">
             <el-table
               :data="indexDatas"
               v-loading='tableLoading'
@@ -560,8 +560,8 @@ export default {
     this.map = this.$store.state.map;
     this.map.setZoom(6);
     let that = this;
-    that.initMainStaticsChart();
     that.getData();
+    that.initMainStaticsChart();
     that.getDomesticVehicleRankingDatas();
     that.getToadyKeyVehicleInAndOutDatas();
     that.initAccurCharts();
@@ -590,45 +590,45 @@ export default {
      * 接受外部传来的数据
      */
     getData() {
+      let that=this;
       blur.$on('realtime',data=>{
-        this.isShowdiv=data;
-        this.clearMap();
-        if(this.isShowdiv=='2'){
-          this.map.setZoom(4);
-          this.getVehicleOwnershipDatas();   
+        that.isShowdiv=data;
+        that.clearMap();
+        if(that.isShowdiv=='2'){
+          that.map.setZoom(4);
+          that.getVehicleOwnershipDatas();   
         };
-        if(this.isShowdiv=='1'){
-          this.initMainStaticsChart();
-          this.getDomesticVehicleRankingDatas();
-          this.getToadyKeyVehicleInAndOutDatas();
-          this.initAccurCharts();
+        if(that.isShowdiv=='1'){
+          that.initMainStaticsChart();
+          that.getDomesticVehicleRankingDatas();
+          that.getToadyKeyVehicleInAndOutDatas();
+          that.initAccurCharts();
         }
-        if(this.isShowdiv=='3'){
-          this.map.setZoom(8);
-          this.getHotspotRoadRankinDatas();
-          this.getHotspotBayonetRankingDatas();
+        if(that.isShowdiv=='3'){
+          that.map.setZoom(8);
+          that.getHotspotRoadRankinDatas();
+          that.getHotspotBayonetRankingDatas();
         };
       })  
       blur.$on("getCity", data => {
-        this.CODE = data;
-        this.param.code=data;
-        this.clearMap();
-        if(this.isShowdiv=='1'){
-          this.getDomesticVehicleRankingDatas();
-          this.getToadyKeyVehicleInAndOutDatas();
-          this.initAccurCharts();
-          this.getMapBayonetRankingDatas();
+        that.CODE = data;
+        that.param.code=data;
+        that.clearMap();
+        if(that.isShowdiv=='1'){
+          that.getDomesticVehicleRankingDatas();
+          that.getToadyKeyVehicleInAndOutDatas();
+          that.initAccurCharts();
+          that.getMapBayonetRankingDatas();
         };
-        if(this.isShowdiv=='2'){
-          this.getVehicleOwnershipDatas();
+        if(that.isShowdiv=='2'){
+          that.getVehicleOwnershipDatas();
         }
-        if(this.isShowdiv=='3'){
-          this.getHotspotRoadRankinDatas();
-          this.getHotspotBayonetRankingDatas();
+        if(that.isShowdiv=='3'){
+          that.getHotspotRoadRankinDatas();
+          that.getHotspotBayonetRankingDatas();
         };
-       
-        if (this.CODE !== "") {
-          this.showback = false;
+        if (that.CODE !== "") {
+          that.showback = false;
         }
       });
       
@@ -637,8 +637,9 @@ export default {
       * 切换 省内外  1省外  2 省内
       */
      province(i){
-        this.param.provinceInorOut=i;
-        this.getVehicleOwnershipDatas();
+       let that=this;
+        that.param.provinceInorOut=i;
+        that.getVehicleOwnershipDatas();
      },
     /*
      * 点击返回按钮
@@ -661,6 +662,7 @@ export default {
       }
       
       if(num=='2'){
+        
         that.getVehicleOwnershipDatas();
       }
       if(num=='3'){
@@ -675,9 +677,9 @@ export default {
   onShowLayer() {
     let that=this;
     if (that.map) {
-      if(this.map_cover.lineList.length>0){
-        this.map_cover.lineList.forEach(e=>{
-          if(this.map.getLayer(e)!=undefined){
+      if(that.map_cover.lineList.length>0){
+        that.map_cover.lineList.forEach(e=>{
+          if(that.map.getLayer(e)!=undefined){
             that.map.setLayoutProperty(e, 'visibility', 'visible');
           }
         })
@@ -689,9 +691,9 @@ export default {
   */
   onHideLayer() {
     let that=this;
-    if(this.map_cover.lineList.length>0){
-      this.map_cover.lineList.forEach(e=>{
-        if(this.map.getLayer(e)!=undefined){
+    if(that.map_cover.lineList.length>0){
+      that.map_cover.lineList.forEach(e=>{
+        if(that.map.getLayer(e)!=undefined){
           that.map.setLayoutProperty(e, 'visibility', 'none');
         }
       })
@@ -701,20 +703,21 @@ export default {
   * 切换实时活跃 传4  今日入陕1  出陕2
   */
   handleClick(i){
-    this.clearMap()
+    let that=this;
+    that.clearMap()
      if(i.name=='1'){
-       this.param.stime='2';
-       this.param.fxlx='1';
-       this.getVehicleOwnershipDatas();
+       that.param.stime='2';
+       that.param.fxlx='1';
+       that.getVehicleOwnershipDatas();
      }else if(i.name=='2'){
-       this.param.stime='2';
-       this.param.fxlx='2';
-       this.getVehicleOwnershipDatas();
+       that.param.stime='2';
+       that.param.fxlx='2';
+       that.getVehicleOwnershipDatas();
      }else{
-       this.param.fxlx='';
-       this.param.stime=i.name;
+       that.param.fxlx='';
+       that.param.stime=i.name;
       
-       this.getVehicleOwnershipDatas();
+       that.getVehicleOwnershipDatas();
      }
   },
   // changeIn(fxlx) {
@@ -779,7 +782,8 @@ export default {
      * OD地图函数
      */  
     getVehicleOwnershipMapOD(itemlist){
-      this.clearMap()
+      let that=this;
+      that.clearMap()
       var data = [] ;
       itemlist.forEach(item => {
         if(item.STARTJWD && item.ENDJWD){
@@ -841,10 +845,13 @@ export default {
                     data: lineData
                 }, {
                 name: 'scatter',
-                type: 'scatter',
+                type: 'effectScatter',
                 coordinateSystem: 'GLMap',
                 zlevel: 2,
-
+                rippleEffect: {
+                    scale: 50,
+                    brushType: 'stroke'
+                },
                 label: {
                     normal: {
                         show: true,
@@ -852,7 +859,7 @@ export default {
                         formatter: '{b}'
                     }
                 },
-                symbolSize: 10,
+                symbolSize: 0.8,
                 itemStyle: {
                     normal: {
                         show: true,
@@ -914,9 +921,9 @@ export default {
                 },
                 series: series
             };
-        var echartslayer = minemap.Template.create({map: this.map, type: 'od'});
+        var echartslayer = minemap.Template.create({map: that.map, type: 'od'});
         echartslayer.chart.setOption(option);
-        this.map_cover.popups.push(echartslayer)
+        that.map_cover.popups.push(echartslayer)
       },
 
   /**
@@ -957,7 +964,7 @@ export default {
     /**
      *	 聚合图
      */
-     getBayonetMap(item){
+    getBayonetMap(item){
        let that=this;
        that.map = that.$store.state.map;
        if(that.map.getLayer('data-point')!=undefined){
@@ -1037,96 +1044,9 @@ export default {
                 }); 
                 
                 that.map_cover.lineList.push("cluster-count"); 
-            }
-        },
-    // getMapRank(item) {
-    //   let that = this;
-    //   that.map = that.$store.state.map;
-    //   if (that.map.getLayer("data-point") != undefined) {
-    //     that.map.setLayoutProperty("data-point", "visibility", "visible");
-    //   } else {
-    //     let jsonData = {
-    //       type: "FeatureCollection",
-    //       features: []
-    //     };
-    //     item.forEach(e => {
-    //       if (e.JWD) {
-    //         for (let i = 0; i < e.NUM; i++) {
-    //           jsonData.features.push({
-    //             type: "Feature",
-    //             geometry: {
-    //               type: "Point",
-    //               coordinates: e.JWD.split(" ")
-    //             }
-    //           });
-    //         }
-    //       }
-    //     });
-    //     that.map.addSource("data-point", {
-    //       type: "geojson",
-    //       data: jsonData,
-    //       cluster: true,
-    //       clusterMaxZoom: 15,
-    //       clusterRadius: 50,
-    //       enableQueryChildren: false /*是否显示聚合详细信息，默认为false，如果为true，则开启显示详细信息功能，备注（如果开启显示详细信息功能，会引发性能问题，建议数据量较少（1000点以内）时使用）*/
-    //     });
-    //     that.map_cover.sourceList.push("data-point");
-    //     //添加非聚合图层
-    //     that.map.addLayer({
-    //       id: "unclustered-points",
-    //       type: "symbol",
-    //       source: "data-point",
-    //       filter: ["!has", "point_count"],
-    //       layout: {
-    //         "icon-image": "bank-15"
-    //       }
-    //     });
-    //     that.map_cover.lineList.push("unclustered-points");
-    //     //添加聚合图层
-    //     var layers = [
-    //       [3, "#ff5a0f"],
-    //       [5, "#D25C06"],
-    //       [1, "#6C9B06"]
-    //     ];
-    //     layers.forEach(function(layer, i) {
-    //       let clusterId = "cluster" + i;
-    //       that.map.addLayer({
-    //         id: clusterId, //+ i,
-    //         type: "circle",
-    //         source: "data-point",
-    //         paint: {
-    //           "circle-color": layer[1],
-    //           "circle-radius": 18
-    //         },
-    //         filter:
-    //           i === 0
-    //             ? [">=", "point_count", layer[0]]
-    //             : [
-    //                 "all",
-    //                 [">=", "point_count", layer[0]],
-    //                 ["<", "point_count", layers[i - 1][0]]
-    //               ]
-    //       });
-    //       that.map_cover.lineList.push(clusterId);
-    //     });
-    //     //添加数量图层
-    //     that.map.addLayer({
-    //       id: "cluster-count",
-    //       type: "symbol",
-    //       source: "data-point",
-    //       layout: {
-    //         "text-field": "{point_count}",
-    //         "text-size": 14
-    //       },
-    //       paint: {
-    //         "text-color": "#ffffff"
-    //       },
-    //       filter: ["has", "point_count"]
-    //     });
-    //     that.map_cover.lineList.push("cluster-count");
-    //   }
-    // },
-
+          }
+      },
+    
     /*
      *今日入陕 出陕 KeyVehicle/getToadyKeyVehicleInAndOut   GET_TOADY_VEHICLE_API 参数  code		车辆类型
      */
@@ -1298,30 +1218,30 @@ export default {
         itemlist.push(item.JWD.split(" ")[0],item.JWD.split(" ")[1],);
         let lnglat = [itemlist[0],itemlist[1]];
         let el = document.createElement('div');
-        let el1 = document.createElement('div'); 
+        // let el1 = document.createElement('div'); 
         el.style.backgroundColor='rgba(3,12,32,0.74)';
         el.style.width='218px';
         el.style.height='130px';
         el.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
-        el1.id = 'marker'; //
-        el1.style.width='8px';
-        el1.style.height='8px';
-        el1.style.borderRadius='50%';
-        el1.style.border='1px solid #fff';
-        if(item.NUM>=0 && item.NUM<50) {el1.style.backgroundColor='#00b429';}
-        else if(item.NUM>50 && item.NUM<500) {
-          el1.style.backgroundColor='#e9b806';
-          el1.style.width='10px';
-          el1.style.height='10px';
-        }else if(item.NUM>500 && item.NUM<1000) {
-          el1.style.backgroundColor='#ff9e58';
-          el1.style.width='12px';
-          el1.style.height='12px';
-        }else if(item.NUM>1000) {
-          el1.style.backgroundColor='#fd0000';
-          el1.style.width='14px';
-          el1.style.height='14px';
-        }
+        // el1.id = 'marker'; //
+        // el1.style.width='8px';
+        // el1.style.height='8px';
+        // el1.style.borderRadius='50%';
+        // el1.style.border='1px solid #fff';
+        // if(item.NUM>=0 && item.NUM<50) {el1.style.backgroundColor='#00b429';}
+        // else if(item.NUM>50 && item.NUM<500) {
+        //   el1.style.backgroundColor='#e9b806';
+        //   el1.style.width='10px';
+        //   el1.style.height='10px';
+        // }else if(item.NUM>500 && item.NUM<1000) {
+        //   el1.style.backgroundColor='#ff9e58';
+        //   el1.style.width='12px';
+        //   el1.style.height='12px';
+        // }else if(item.NUM>1000) {
+        //   el1.style.backgroundColor='#fd0000';
+        //   el1.style.width='14px';
+        //   el1.style.height='14px';
+        // }
 
         let d1 = document.createElement('div');
        if(item.city){
@@ -1388,8 +1308,38 @@ export default {
         .setDOMContent(el);
         this.map_cover.popups.push(popup)
         // (".minemap-popup-tip").style.background='red';
+
+        let el1 = document.createElement('div'); 
+        let dot = document.createElement("div");
+        let pause = document.createElement("div");
+        el1.id = 'marker'; 
+        
+        let type='';
+        if(item.NUM>=0 && item.NUM<50) {
+          type='green';
+          pause.className= "pulse pulse_"+type;
+          dot.className = "dot dot_"+type;
+        }else if(item.NUM>50 && item.NUM<500) {
+          type='yellow';
+          // el1.style.width='8px';
+          // el1.style.height='8px';
+          pause.className= "pulse pulse_"+type;
+          dot.className = "dot dot_"+type;
+        }else if(item.NUM>500 && item.NUM<1000) {
+          type='orange';
+          pause.className= "pulse pulse_"+type;
+          dot.className= "dot dot_"+type;
+        }else if(item.NUM>1000) {
+          type='red';
+          pause.className= "pulse pulse_"+type;
+          dot.className= "dot dot_"+type;
+        }
+        el1.appendChild(dot); //将元素追加到el1元素上
+        el1.appendChild(pause); //将元素追加到el1元素上
+        el1.className='dot_marker dot_marker_'+type;
+
         let lnglat1 = [itemlist[0],itemlist[1]];
-        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat1).setPopup(popup).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [0,0]}).setLngLat(lnglat1).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
       },
     /**
@@ -1741,7 +1691,7 @@ export default {
   .provinces {
     // width: 213px;
     // flex: 1;
-    margin-right: 2px;
+    // margin-right: 2px;
   }
   .city {
     // width: 207px;

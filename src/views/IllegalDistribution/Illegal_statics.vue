@@ -531,34 +531,18 @@ export default {
           var data = response.data;
           if(data.errcode == 0){
             if(data.data.length>0){
-              // console.log(data.data)
-              // console.log(data.data.reverse())
+              let list={
+                '1':'其他',
+                '17211':'超速50%以上',
+                '16361':'超速20-50%',
+                '13521':'超速10%'
+              };
               that.speeding_chart= echarts.init(document.getElementById('speeding-offences'));
               for(var i=0;i<data.data.length;i++){
-                // console.log(data.data[i])
-                if(data.data[i].WFXW=='1'){
-                  // data.data[0].NUM=data.data[i].NUM;
-                  data.data[i].WFXW='其他'
-                }
-                if(data.data[i].WFXW=='17211'){
-                  // data.data[3].NUM=data.data[i].NUM;
-                  data.data[i].WFXW='超速50%以上'
-                }
-                if(data.data[i].WFXW=='16361'){
-                  // data.data[2].NUM=data.data[i].NUM;
-                  data.data[i].WFXW=" 超速20-50%"
-                }
-                if(data.data[i].WFXW=='13521'){
-                  // data.data[1].NUM=data.data[i].NUM;
-                  data.data[i].WFXW="超速10%"
-                }
-                that.speeding_option.yAxis.data.push(data.data[i].WFXW)
-                that.speeding_option.series[0].data.push(data.data[i].NUM)
-                // that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
-                // that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
+                let item=data.data[i];
+                that.speeding_option.series[0].data.push({name:list[item.WFXW],value:item.NUM});
               }
-              // that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上');
-              // that.speeding_option.series[0].data.push(data.data[0].NUM,data.data[1].NUM,data.data[2].NUM,data.data[3].NUM)
+              that.speeding_option.yAxis.data.push('其他',"超速10%","超速20-50%",'超速50%以上');
               that.speeding_chart.setOption(that.speeding_option);
               window.addEventListener("resize",()=>{
                 that.speeding_chart.resize();
@@ -566,10 +550,6 @@ export default {
             }else{
               that.speeding_chart.setOption(that.speeding_option);
             }
-            // that.speeding_chart.setOption(that.speeding_option);
-            // window.addEventListener("resize",()=>{
-            //   that.speeding_chart.resize();
-            // })
           }else{
             that.$message({ 
               message: data.errmsg,

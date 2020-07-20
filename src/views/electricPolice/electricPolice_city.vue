@@ -162,7 +162,7 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             for(var i=0;i<data.data.length;i++){
-              if(data.data[1].city!=null){
+              if(data.data[i].city!=null){
                 that.indexData.push(data.data[i])
               }
             }

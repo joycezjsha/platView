@@ -3,7 +3,7 @@
     <div class='vehicle_monitor-div--top borstyle '>
       <div class='title'>
         <m-title label='车辆监测' style='width:6vw;'></m-title>
-        <span style="margin-right:1.5vw;margin-top:1vh">
+        <span style="margin-right:1.5vw;margin-top:1vh;color:#fff">
           <i class="iconfont icon-shijian" style='margin-right:1vw;'></i>{{time}}
         </span>
       </div>

@@ -779,6 +779,7 @@ export default {
     getCityMapOD(itemlist){
       // this.clearMap();
       let data = [] ;
+      //  [116.4551, 40.2539, 121.4648, 31.2891, '北京', '上海', 20],
       itemlist.forEach(item => {
         if(item.STARTJWD && item.ENDJWD){
           data.push([
@@ -838,10 +839,13 @@ export default {
             data: lineData
         }, {
             name: 'scatter',
-            type: 'scatter',
+            type: 'effectScatter', //scatter
             coordinateSystem: 'GLMap',
             zlevel: 2,
-
+            rippleEffect: {
+                scale: 50,
+                brushType: 'stroke'
+            },
             label: {
                 normal: {
                     show: true,
@@ -849,7 +853,7 @@ export default {
                     formatter: '{b}'
                 }
             },
-            symbolSize: 10,
+            symbolSize: 0.8,
             itemStyle: {
                 normal: {
                     show: true,
@@ -1052,7 +1056,7 @@ export default {
           type='green';
           pause.className= "pulse pulse_"+type;
           dot.className = "dot dot_"+type;
-          el1.style.backgroundColor='#00b429';
+          // el1.style.backgroundColor='#00b429';
         }else if(item.NUM>50 && item.NUM<1000) {
           type='yellow';
           // el1.style.width='8px';
@@ -1071,7 +1075,7 @@ export default {
         el1.appendChild(dot); //将元素追加到el1元素上
         el1.appendChild(pause); //将元素追加到el1元素上
         el1.className='dot_marker dot_marker_'+type;
-        let marker = new minemap.Marker(el1, {offset: [-8,0]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [0,0]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
       },
       /**
@@ -1498,7 +1502,7 @@ position: fixed;
   margin-top: 4vh;
   cursor: pointer;
   // flex: 1;
-  margin-right: 2px;
+  // margin-right: 2px;
 }
 .carFlowBelong .city {
   // width: 207px;
