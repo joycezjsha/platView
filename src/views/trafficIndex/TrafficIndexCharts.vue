@@ -5,7 +5,7 @@
       <el-tab-pane label="分时段分析" name="1"></el-tab-pane>
       <el-tab-pane label="近30天分析" name="2"></el-tab-pane>
     </el-tabs>
-    <div id="exponentChart"></div>
+    <div id="exponentChart" v-loading='tableLoading'></div>
     <div class='txt'>说明：指数越高，代表拥堵程度越严重</div>
   </div>
 </template>
@@ -119,7 +119,8 @@ export default {
           }
         ]
       },
-      myChart:null
+      myChart:null,
+      tableLoading:false
     };
   },
   components: {
@@ -128,7 +129,6 @@ export default {
   mounted() {
     this.getCityRoadData();
     this.map = this.$store.state.map;
-    this.map.setCenter([109.278987,35.747334]);
   },
   methods: {
     handleClick(tab) {
@@ -140,6 +140,7 @@ export default {
      */
     getCityRoadData(){
       let _this=this;
+      _this.tableLoading=true;
       _this.option.xAxis.data=[];
       _this.option.series[0].data=[];
       _this.option.series[1].data=[];
@@ -153,6 +154,7 @@ export default {
           if (response && response.status == 200){
             var data= response.data;
             if (data.errcode == 0) {
+              _this.tableLoading=false;
               if(data.data.today && data.data.today.length>0){
                 data.data.today.map(e=>{
                   _this.option.xAxis.data.push(e.time);
@@ -170,6 +172,7 @@ export default {
               }
               _this.myChart.setOption(_this.option);
             }else{
+              _this.tableLoading=false;
               _this.$message({
                 message: data.errmsg,
                 type: "error",

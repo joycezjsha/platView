@@ -128,7 +128,7 @@ export default {
     },
     addCityMarker(item) {
       let el = document.createElement("div");
-      el.id = "marker";
+      // el.id = "marker";
       // el.style["border"] = "solid 1px #333333";
       // el.style["backgroundColor"] = "#333";
       el.style["padding"] = "4px 6px";
@@ -172,6 +172,10 @@ export default {
         .setLngLat(lnglat)
         .addTo(this.map);
       this.map_cover.markers.push(marker);
+      let eles= $('.minemap-marker');
+      for(let i=0;i<eles.length;i++){
+        eles[i].style.cursor='default';
+      };
     },
     /**
      * 获取卡口设备数据
@@ -383,6 +387,7 @@ export default {
           width: 50%;
           text-align: center;
           font-size: 14px;
+          float: left;
         }
         div:nth-child(2) {
           img {

@@ -138,187 +138,192 @@ export default {
       });
       }
     },
-    // addArea(data) { 
-      //   let _this = this;
-      //   data.forEach((e, i) => {
-      //     let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
-      //     lonlats = lonlats.map(s => {
-      //       if (s.split(" ")[0] != "") {
-      //         return [s.split(" ")[0], s.split(" ")[1]];
-      //       } else {
-      //         return [s.split(" ")[1], s.split(" ")[2]];
-      //       }
-      //     });
-      //     let jsonData = {
-      //       type: "FeatureCollection",
-      //       features: [{
-      //           type: "Feature",
-      //           geometry: {
-      //             type: "Polygon",
-      //             coordinates: [lonlats]
-      //           },
-      //           "properties": {
-      //               "title": e.city,
-      //               "code":e.adcode
-      //           }
-      //         }]
-      //     };
-      //     if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
-      //       _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
-      //     }else{
-      //       _this.map.addSource('area_polygonSource_'+i, {
-      //         'type': 'geojson',
-      //         'data': jsonData
-      //       });
-      //     };
-          
-      //     //面的显示
-      //     _this.map.addLayer({"id": "area_polygon_"+i,
-      //         "type": "fill",
-      //         "source": "area_polygonSource_"+i,
-      //         "layout": {
-      //             "visibility": "visible",
-      //         },
-      //         "paint": {
-      //             "fill-color": e.color,
-      //             "fill-opacity": 0.3,
-      //             "fill-outline-color": '#00b3ff'
-      //         },
-      //         "minzoom": 4,
-      //         "maxzoom": 17.5
-      //     });
-      //     //面的名称显示
-      //     if(_this.isShowTxt){
-      //       _this.map.addLayer({
-      //         "id": "area_polygon_txt_"+i,
-      //         "type": "symbol",
-      //         "source": "area_polygonSource_"+i,
-      //         "layout": {
-      //             // "icon-image": "{icon}-15",
-      //             "text-field": "{title}",
-      //             // "text-offset": [0, 0.6],
-      //             // "text-anchor": "top"
-      //         },
-      //         "paint": {
-      //             "icon-color": "#696d79",
-      //              "text-color": {
-      //                 "type": "categorical",
-      //                 "property": "kind",
-      //                 "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
-      //                 "default": "#FFF"
-      //             }
-      //         }
-      //     });
-      //     _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
-      //     };
-      //     _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
-      //     _this.mapAddItems.polygons.push("area_polygon_"+i);
-      //   });
-    // },
     /**
      * 添加区域面
      */
     addArea(data) { 
-      let _this = this;
-      data.forEach((e, i) => {
-        let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
-        lonlats = lonlats.map(s => {
-          if (s.split(" ")[0] != "") {
-            return [s.split(" ")[0], s.split(" ")[1]];
-          } else {
-            return [s.split(" ")[1], s.split(" ")[2]];
-          }
-        });
-        let jsonData = {
-          type: "FeatureCollection",
-          features: [{
-            "geometry": {
-              "type": "MultiPolygon",
-              "coordinates": [
-                  [lonlats]
-                ]
-              },
-              "type": "Feature",
-              "properties": {
-                "code": e.adcode,
-                "title": e.city,
-                "level": "province",
-                "subFeatureIndex": 0,
-                "levels": e.Num
-              }
-            }]
-        };
-        if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
-          _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
-        }else{
-          _this.map.addSource('area_polygonSource_'+i, {
-            'type': 'geojson',
-            'data': jsonData//'./static/json/geojson-level.json'//
+        let _this = this;
+        data.forEach((e, i) => {
+          let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
+          lonlats = lonlats.map(s => {
+            if (s.split(" ")[0] != "") {
+              return [s.split(" ")[0], s.split(" ")[1]];
+            } else {
+              return [s.split(" ")[1], s.split(" ")[2]];
+            }
           });
-        };
-        
-        //面的显示
-        _this.map.addLayer({
-          "id": "area_polygon_"+i,
-          "type": "extrusion",    // 建筑物图层
-          "source": "area_polygonSource_"+i,
-          "layout": {
-            // "histogram-max-height-render": true  // 是否开启柱状图极大高度控制
-          },
-          "paint": {
-            'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
-                "property": "levels",
-                "stops": [
-                    [_this.min, _this.areaColorArray[0]],
-                    [_this.min+((_this.max-_this.min)/2), _this.areaColorArray[1]],
-                    [_this.max, _this.areaColorArray[2]]
-                ]
-              },
-              'extrusion-height':100,
-              // {   // 建筑物的高度
-              //     'property': 'levels',
-              //     "stops": [
-              //         [_this.min, 10000],
-              //         [_this.min+((_this.max-_this.min)/2), 30000],
-              //         [_this.max, 45000]                  ]
-              // },
-              'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
-              'extrusion-opacity':0.5
-              // {  // 建筑物的透明度，值为数值，默认为1
-              //     "base": 0.3,
-              //     "stops": [[3, 0.8], [8, 0.5]]
-              // }
-            }
-        });
-        //面的名称显示
-        if(_this.isShowTxt){
-          _this.map.addLayer({
-            "id": "area_polygon_txt_"+i,
-            "type": "symbol",
-            "source": "area_polygonSource_"+i,
-            "layout": {
-                // "icon-image": "{icon}-15",
-                "text-field": "{title}",
-                // "text-offset": [0, 0.6],
-                // "text-anchor": "top"
-            },
-            "paint": {
-                "icon-color": "#696d79",
-                 "text-color": {
-                    "type": "categorical",
-                    "property": "kind",
-                    "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
-                    "default": "#FFF"
+          let jsonData = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                  type: "Polygon",
+                  coordinates: [lonlats]
+                },
+                "properties": {
+                    "title": e.city,
+                    "code":e.adcode,
+                    "num":e.Num,
+                    "color":e.color
                 }
-            }
+              }]
+          };
+          if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
+            _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
+          }else{
+            _this.map.addSource('area_polygonSource_'+i, {
+              'type': 'geojson',
+              'data': jsonData
+            });
+          };
+          
+          //面的显示
+          _this.map.addLayer({"id": "area_polygon_"+i,
+              "type": "fill",
+              "source": "area_polygonSource_"+i,
+              "layout": {
+                  "visibility": "visible",
+              },
+              "paint": {
+                  "fill-color": e.color,
+                  "fill-opacity": 0.5,
+                  "fill-outline-color": '#00b3ff'
+              },
+              "minzoom": 4,
+              "maxzoom": 17.5
+          });
+          //面的名称显示
+          if(_this.isShowTxt){
+            _this.map.addLayer({
+              "id": "area_polygon_txt_"+i,
+              "type": "symbol",
+              "source": "area_polygonSource_"+i,
+              "layout": {
+                  // "icon-image": "{icon}-15",
+                  "text-field": "{title}",
+                  // "text-offset": [0, 0.6],
+                  // "text-anchor": "top"
+              },
+              "paint": {
+                  "icon-color": "#696d79",
+                   "text-color": {
+                      "type": "categorical",
+                      "property": "kind",
+                      "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
+                      "default": "#FFF"
+                  }
+              }
+          });
+          _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
+          };
+          _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
+          _this.mapAddItems.polygons.push("area_polygon_"+i);
         });
-        _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
-        };
-        _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
-        _this.mapAddItems.polygons.push("area_polygon_"+i);
-      });
-      
     },
+  /**
+     * 添加区域面
+     */
+  // addArea(data) { 
+    //   let _this = this;
+    //   data.forEach((e, i) => {
+    //     let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
+    //     lonlats = lonlats.map(s => {
+    //       if (s.split(" ")[0] != "") {
+    //         return [s.split(" ")[0], s.split(" ")[1]];
+    //       } else {
+    //         return [s.split(" ")[1], s.split(" ")[2]];
+    //       }
+    //     });
+    //     let jsonData = {
+    //       type: "FeatureCollection",
+    //       features: [{
+    //         "geometry": {
+    //           "type": "MultiPolygon",
+    //           "coordinates": [
+    //               [lonlats]
+    //             ]
+    //           },
+    //           "type": "Feature",
+    //           "properties": {
+    //             "code": e.adcode,
+    //             "title": e.city,
+    //             "level": "province",
+    //             "subFeatureIndex": 0,
+    //             "levels": e.Num
+    //           }
+    //         }]
+    //     };
+    //     if(_this.map.getSource('area_polygonSource_'+i)!=undefined){
+    //       _this.map.getSource('area_polygonSource_'+i).setData(jsonData);
+    //     }else{
+    //       _this.map.addSource('area_polygonSource_'+i, {
+    //         'type': 'geojson',
+    //         'data': jsonData//'./static/json/geojson-level.json'//
+    //       });
+    //     };
+        
+    //     //面的显示
+    //     _this.map.addLayer({
+    //       "id": "area_polygon_"+i,
+    //       "type": "extrusion",    // 建筑物图层
+    //       "source": "area_polygonSource_"+i,
+    //       "layout": {
+    //         // "histogram-max-height-render": true  // 是否开启柱状图极大高度控制
+    //       },
+    //       "paint": {
+    //         'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
+    //             "property": "levels",
+    //             "stops": [
+    //                 [_this.min, _this.areaColorArray[0]],
+    //                 [_this.min+((_this.max-_this.min)/2), _this.areaColorArray[1]],
+    //                 [_this.max, _this.areaColorArray[2]]
+    //             ]
+    //           },
+    //           'extrusion-height':100,
+    //           // {   // 建筑物的高度
+    //           //     'property': 'levels',
+    //           //     "stops": [
+    //           //         [_this.min, 10000],
+    //           //         [_this.min+((_this.max-_this.min)/2), 30000],
+    //           //         [_this.max, 45000]                  ]
+    //           // },
+    //           'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
+    //           'extrusion-opacity':0.5
+    //           // {  // 建筑物的透明度，值为数值，默认为1
+    //           //     "base": 0.3,
+    //           //     "stops": [[3, 0.8], [8, 0.5]]
+    //           // }
+    //         }
+    //     });
+    //     //面的名称显示
+    //     if(_this.isShowTxt){
+    //       _this.map.addLayer({
+    //         "id": "area_polygon_txt_"+i,
+    //         "type": "symbol",
+    //         "source": "area_polygonSource_"+i,
+    //         "layout": {
+    //             // "icon-image": "{icon}-15",
+    //             "text-field": "{title}",
+    //             // "text-offset": [0, 0.6],
+    //             // "text-anchor": "top"
+    //         },
+    //         "paint": {
+    //             "icon-color": "#696d79",
+    //              "text-color": {
+    //                 "type": "categorical",
+    //                 "property": "kind",
+    //                 "stops": [["school", "#ff0000"], ["park", "#00ff00"], ["hospital", "#0000ff"]],
+    //                 "default": "#FFF"
+    //             }
+    //         }
+    //     });
+    //     _this.mapAddItems.polygons.push("area_polygon_txt_"+i);
+    //     };
+    //     _this.mapAddItems.sourceList.push("area_polygonSource_"+i);
+    //     _this.mapAddItems.polygons.push("area_polygon_"+i);
+    //   });
+      
+  // },
     /**
      * 根据一定权重给区域排序
      */
@@ -586,6 +591,27 @@ export default {
             this.resumeLayer();
             this.map.removeLayer(features[0].layer.id);
             this.changeHightLayer.push({id:features[0].layer.id,source:features[0].layer.source});
+            let jsonData = {
+              type: "FeatureCollection",
+              features: [{
+                "geometry": {
+                  "type": "MultiPolygon",
+                  "coordinates": [
+                      features[0].geometry.coordinates
+                    ]
+                  },
+                  "type": "Feature",
+                  "properties": {
+                    "code": features[0].properties.code,
+                    "title": features[0].properties.title,
+                    "color":features[0].properties.color,
+                    "level": "province",
+                    "subFeatureIndex": 0,
+                    "levels": features[0].properties.num
+                  }
+                }]
+            };
+            this.map.getSource(features[0].layer.source).setData(jsonData);
             this.map.addLayer({
               "id": features[0].layer.id,
               "type": "extrusion",    // 建筑物图层
@@ -594,17 +620,18 @@ export default {
                 // "histogram-max-height-render": true  // 是否开启柱状图极大高度控制
               },
               "paint": {
-                'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
-                    "property": "levels",
-                    "stops": [
-                        [this.min, this.areaColorArray[0]],
-                        [this.min+((this.max-this.min)/2), this.areaColorArray[1]],
-                        [this.max, this.areaColorArray[2]]
-                    ]
-                  },
-                  'extrusion-height':50000,
+                'extrusion-color':features[0].properties.color,
+                //  {    // 建筑物的填充颜色，默认值为"#000000"
+                //     "property": "levels",
+                //     "stops": [
+                //         [this.min, this.areaColorArray[0]],
+                //         [this.min+((this.max-this.min)/2), this.areaColorArray[1]],
+                //         [this.max, this.areaColorArray[2]]
+                //     ]
+                //   },
+                  'extrusion-height':30000,
                   'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
-                  'extrusion-opacity':0.5
+                  'extrusion-opacity':0.9
                 }
             });
              this.fitBox(features[0].geometry.coordinates[0]);
@@ -635,30 +662,37 @@ export default {
      * 恢复拔高区面
      */
     resumeLayer(){
+      let _this=this;
       if(this.changeHightLayer.length>0){
-        this.changeHightLayer.forEach(e=>{
+        _this.changeHightLayer.forEach(e=>{
+          let source=_this.map.getSource(e.source);
+          let jsonData = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                  type: "Polygon",
+                  coordinates: source._options.data.features[0].geometry.coordinates
+                },
+                "properties":source._options.data.features[0].properties
+              }]
+          };
+          source.setData(jsonData);
           this.map.removeLayer(e.id);
-            this.map.addLayer({
-              "id": e.id,
-              "type": "extrusion",    // 建筑物图层
-              "source": e.source,
-              "layout": {
-                // "histogram-max-height-render": true  // 是否开启柱状图极大高度控制
-              },
-              "paint": {
-                'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
-                    "property": "levels",
-                    "stops": [
-                        [this.min, this.areaColorArray[0]],
-                        [this.min+((this.max-this.min)/2), this.areaColorArray[1]],
-                        [this.max, this.areaColorArray[2]]
-                    ]
-                  },
-                  'extrusion-height':10000,
-                  'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
-                  'extrusion-opacity':0.5
-                }
-            });
+          _this.map.addLayer({"id": e.id,
+            "type": "fill",
+            "source": e.source,
+            "layout": {
+                "visibility": "visible",
+            },
+            "paint": {
+                "fill-color": source._options.data.features[0].properties.color,
+                "fill-opacity": 0.5,
+                "fill-outline-color": '#00b3ff'
+            },
+            "minzoom": 4,
+            "maxzoom": 17.5
+        });
         })
         this.changeHightLayer=[];
       }

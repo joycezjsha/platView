@@ -705,17 +705,14 @@ export default {
      if(i.name=='1'){
        this.param.stime='2';
        this.param.fxlx='1';
-       this.getVehicleOwnershipDatas();
      }else if(i.name=='2'){
        this.param.stime='2';
        this.param.fxlx='2';
-       this.getVehicleOwnershipDatas();
      }else{
        this.param.fxlx='';
        this.param.stime=i.name;
-      
-       this.getVehicleOwnershipDatas();
      }
+     this.getVehicleOwnershipDatas();
   },
   // changeIn(fxlx) {
   //   let that = this;
@@ -755,8 +752,8 @@ export default {
               data.data.provinceExternalProportion;
               that.indexDatas = data.data.dataList;
               if(that.indexDatas.length>0){
-                that.clearMap()
-                that.getVehicleOwnershipMapOD(that.indexDatas) 
+                that.clearMap();
+                that.getVehicleOwnershipMapOD(that.indexDatas);
               }
             } else {
               that.$message({

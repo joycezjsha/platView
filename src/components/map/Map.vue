@@ -26,7 +26,7 @@
         iconCompass:conf.IMG.iconCompass,
         iconPitch2d:conf.IMG.iconPitch2d,
         iconPitch3d:conf.IMG.iconPitch3d,
-        iconTraffic:conf.IMG.iconTraffic,
+        iconTraffic:conf.IMG.icon_traffic_hide,
         iconRoadCondition:'',
         show3D:false,
         compassBoxStyle:{"display":"flex","align-items": "center","justify-content":"center","background":"url("+conf.IMG.iconCompassBG+")","background-repeat":"no-repeat","width":"33px","height": "33px"},
