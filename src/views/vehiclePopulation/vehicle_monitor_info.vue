@@ -311,241 +311,13 @@ export default {
         ]
       },
       sort_chart: null,
-      countChangeOption: {
-        // title: {
-        //     text: '特性示例：渐变色 阴影 点击缩放',
-        //     subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        // },
-        xAxis: {
-          data: [
-            "点",
-            "击",
-            "柱",
-            "子",
-            "或",
-            "者",
-            "两",
-            "指",
-            "在",
-            "触",
-            "屏",
-            "上",
-            "滑",
-            "动",
-            "能",
-            "够",
-            "自",
-            "动",
-            "缩",
-            "放"
-          ],
-          axisLabel: {
-            inside: true,
-            textStyle: {
-              color: "#fff"
-            }
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          z: 10
-        },
-        yAxis: {
-          axisLine: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisLabel: {
-            textStyle: {
-              color: "#999"
-            }
-          }
-        },
-        dataZoom: [
-          {
-            type: "inside"
-          }
-        ],
-        series: [
-          //   { // For shadow
-          //     type: 'bar',
-          //     itemStyle: {
-          //         color: 'rgba(0,0,0,0.05)'
-          //     },
-          //     barGap: '-100%',
-          //     barCategoryGap: '40%',
-          //     data: dataShadow,
-          //     animation: false
-          // },
-          {
-            type: "bar",
-            itemStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "#83bff6" },
-                { offset: 0.5, color: "#188df0" },
-                { offset: 1, color: "#188df0" }
-              ])
-            },
-            emphasis: {
-              itemStyle: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#2378f7" },
-                  { offset: 0.7, color: "#2378f7" },
-                  { offset: 1, color: "#83bff6" }
-                ])
-              }
-            },
-            data: [
-              220,
-              182,
-              191,
-              234,
-              290,
-              330,
-              310,
-              123,
-              442,
-              321,
-              90,
-              149,
-              210,
-              122,
-              133,
-              334,
-              198,
-              123,
-              125,
-              220
-            ]
-          }
-        ]
-      },
-      countChart: null,
-      accurChangeOption: {
-        // title: {
-        //     text: '特性示例：渐变色 阴影 点击缩放',
-        //     subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        // },
-        xAxis: {
-          data: [
-            "点",
-            "击",
-            "柱",
-            "子",
-            "或",
-            "者",
-            "两",
-            "指",
-            "在",
-            "触",
-            "屏",
-            "上",
-            "滑",
-            "动",
-            "能",
-            "够",
-            "自",
-            "动",
-            "缩",
-            "放"
-          ],
-          axisLabel: {
-            inside: true,
-            textStyle: {
-              color: "#fff"
-            }
-          },
-          axisTick: {
-            show: true
-          },
-          axisLine: {
-            show: true
-          },
-          z: 10
-        },
-        yAxis: {
-          axisLine: {
-            show: true
-          },
-          axisTick: {
-            show: true
-          },
-          axisLabel: {
-            textStyle: {
-              color: "#999"
-            }
-          }
-        },
-        dataZoom: [
-          {
-            type: "inside"
-          }
-        ],
-        series: [
-          //   { // For shadow
-          //     type: 'bar',
-          //     itemStyle: {
-          //         color: 'rgba(0,0,0,0.05)'
-          //     },
-          //     barGap: '-100%',
-          //     barCategoryGap: '40%',
-          //     data: dataShadow,
-          //     animation: false
-          // },
-          {
-            type: "bar",
-            itemStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "#83bff6" },
-                { offset: 0.5, color: "#188df0" },
-                { offset: 1, color: "#188df0" }
-              ])
-            },
-            emphasis: {
-              itemStyle: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#2378f7" },
-                  { offset: 0.7, color: "#2378f7" },
-                  { offset: 1, color: "#83bff6" }
-                ])
-              }
-            },
-            data: [
-              220,
-              182,
-              191,
-              234,
-              290,
-              330,
-              310,
-              123,
-              442,
-              321,
-              90,
-              149,
-              210,
-              122,
-              133,
-              334,
-              198,
-              123,
-              125,
-              220
-            ]
-          }
-        ]
-      },
       accurChart: null,
       tabItems: ["超速检测次数", "平均行驶速度/限速"],
       listItems: [
         { label: "超速次数", value: "12" },
         { label: "总检测数", value: "12345" }
-      ]
+      ],
+      echartslayer:null
     };
   },
   components: {
@@ -741,6 +513,7 @@ export default {
       }
         interf.GET_OWN_SHIP_API(getBelongData).then(response => {
           that.tableLoading = false;
+          debugger;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -911,9 +684,12 @@ export default {
                 },
                 series: series
             };
-        var echartslayer = minemap.Template.create({map: this.map, type: 'od'});
-        echartslayer.chart.setOption(option);
-        this.map_cover.popups.push(echartslayer)
+       
+        if(!this.echartslayer){
+           this.echartslayer = minemap.Template.create({map: this.map, type: 'od'});
+        };
+        this.echartslayer.chart.setOption(option);
+        // this.map_cover.popups.push(this.echartslayer);
       },
 
   /**
@@ -1499,7 +1275,9 @@ export default {
       })
     }
     this.map_cover.popups=[];
-    
+    if(this.echartslayer){
+      this.echartslayer.remove();
+    }
   }
   }
   

@@ -55,10 +55,10 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(11);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
+    this.map.setZoom(6);
     this.map.repaint = true;
-    this.$store.commit("setRight", '2vw');
+    this.$store.commit("setRight", '1vw');
     //      this.map.repaint = true;
     //this.resizeContainer();
     // setTimeout(function(){

@@ -391,9 +391,12 @@ export default {
     
   }
   .accident-statics--tab:nth-child(2){
-    margin-top:38px;
+    margin-top:5px;
   }
   .accident-statics--tab:nth-child(3){
+    margin-top:32px;
+  }
+  .accident-statics--tab:nth-child(4){
     margin-top:21px;
   }
   .accident-statics_content {

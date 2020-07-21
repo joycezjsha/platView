@@ -401,11 +401,13 @@ export default {
   .distribution-statics_title {
     position: relative;
     width: 100%;
-    height:40px;
+    // height:45px;
     font-family: Microsoft YaHei;
-    font-size: 1vw;
+    background-color: $color-bg-1;
+    // border:1px solid;
+    // border-image:linear-gradient(182deg, rgba(10,148,255,1), rgba(255,255,255,0)) 1 1;
     color: $color-white;
-    margin:0 auto;
+    margin:0 auto 1vh auto;
     .return{
       position: absolute;
       left: 5%;

@@ -3,7 +3,7 @@
 @import './base.css';
 /* top */
 .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
-  background: #545a8a;
+  background: #183061;
   color:#00C6FF;
 }
 .topbar-bar .el-menu,.topbar-bar .el-submenu ,.topbar-bar .el-menu-item,.topbar-bar .el-submenu .el-submenu__title{
@@ -13,6 +13,9 @@
   color: #BEC5DE;
   width: 100%;
   font-size:20px;
+}
+.el-icon-arrow-down:before{
+  content: "\e790";
 }
 .topbar-bar .el-submenu .el-submenu__title:active{
   border:none;
@@ -134,8 +137,8 @@ line-height:2vh;
 } */
 .el-button--primary {
   color: #FFF;
-  background-color: #047DC2;
-  border-color: #047DC2;
+  background-color: #0979C0;
+  border-color: #0979C0;
 }
 .el-submenu__icon-arrow{
   right:4px;
@@ -170,10 +173,10 @@ line-height:2vh;
   color:white;
 }
 .el-scrollbar,.el-popper[x-placement^=bottom]{
-  border:none;
+  /* border:none;
   margin-top:2px;
   width:124px;
-  background-color: transparent;
+  background-color: transparent; */
 }
 .el-popper[x-placement^=bottom] .popper__arrow{
   display:none;
