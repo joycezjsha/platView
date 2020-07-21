@@ -97,7 +97,7 @@ export default {
     this.getIndexData();
     this.getCityStatisticsDatas();
     this.getRoadStatisticsDatas();
-    blur.$on('clearMapRoad',()=>{this.clearMap();});
+    blur.$on('clearMapRoadele',()=>{this.clearMap();});
   },
   destroyed() {
     this.map.setPitch(0);
@@ -111,8 +111,8 @@ export default {
       let that=this;
       that.XZQH=row.XZQH;
       that.city=row.city;
-      blur.$emit("sendXZQH",that.XZQH,that.city);
-      blur.$emit("sendxzqu",that.XZQH,that.city);
+      blur.$emit("sendXZQHele",that.XZQH,that.city);  //传给右侧列表
+      blur.$emit("sendMiddlexzqu",that.XZQH,that.city); //传给地图
       that.centerTo(row.jwd.split(' '));
     },
     /*
@@ -144,6 +144,13 @@ export default {
             })
             .finally(() => {
               that.tableLoading = false;
+              // 取消选中table状态 tablebayonet
+              blur.$on('getelectricPolice',data=>{
+                if(that.tableIndex=='1'){
+                  that.$refs.tableelectricPoliceRoad.setCurrentRow()
+                }
+              })
+              
             });
    },
     /**
@@ -183,8 +190,9 @@ export default {
           that.tableLoading = false;
           // 取消选中table状态 tablebayonet
           blur.$on('getelectricPolice',data=>{
-            that.$refs.tableelectricPolice.setCurrentRow()
-            that.$refs.tableelectricPoliceRoad.setCurrentRow()
+            if(that.tableIndex=='0'){
+              that.$refs.tableelectricPolice.setCurrentRow()
+            }
           })
       });
     },

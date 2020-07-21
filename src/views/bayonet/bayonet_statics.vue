@@ -152,7 +152,8 @@ export default {
       that.XZQH='';
       that.dldm='';
       blur.$emit('getXZQH',that.XZQH);
-      blur.$emit('getbayonet') //取消选中状态
+      blur.$emit('getbayonet') //取消城市列表选中状态
+      blur.$emit('tablebayonetRoad') //取消道路统计列表选中状态
       that.getbayrankDatas();
       that.getdevcountData();
     },
@@ -165,7 +166,7 @@ export default {
         this.getdevcountData();
         this.getbayrankDatas();
       })
-      blur.$on("getxzqh",data=>{
+      blur.$on("getxzqhbay",data=>{
         this.XZQH=data;
         if(this.XZQH!=''){
           this.showback=false;
@@ -173,7 +174,7 @@ export default {
         this.getbayrankDatas();
         this.getdevcountData();
       })
-      blur.$on("getcity",data=>{
+      blur.$on("getcitybay",data=>{
         this.city=data;
       })
     },

@@ -248,6 +248,13 @@ line-height:2vh;
   border-top-color: rgba(3, 12, 32, 0.74);
   border-bottom-color: rgba(3, 12, 32, 0.74);
 }
+<<<<<<< HEAD
+=======
+#map .no-pointer{
+  cursor: none;
+}
+
+>>>>>>> 3bd5dd8650fee45ea12259d64bfac57b0123a47a
 .el-message-box {
   background-color: #01245d;
   border: 1px solid #0361f9;

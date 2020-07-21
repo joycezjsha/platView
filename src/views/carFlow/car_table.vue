@@ -459,7 +459,7 @@ export default {
     }
   .car-flow_content {
     width: 98%;
-    height: 73%;
+    height: 100%;
     background-color: $color-bg-1;
     margin: 1%;
     .car-table-query{

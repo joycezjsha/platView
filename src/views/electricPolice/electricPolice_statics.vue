@@ -140,9 +140,9 @@ export default {
       that.dldm='';
       that.getDevCountDatas();
       that.getThirtyAlarm();
-      blur.$emit("sendxzqu",'','');
-      blur.$emit("getelectricPolice")
-      
+      blur.$emit("sendxzqu",'',''); //点击返回，传给地图数据
+      blur.$emit("getelectricPolice",'')
+      // blur.$emit("getelectricPoliceRoad",'')
     },
     /**
      * 接受传过来的数据
@@ -156,7 +156,7 @@ export default {
         this.getDevCountDatas();
         this.getThirtyAlarm();
       })
-      blur.$on("sendXZQH",(data,city)=>{
+      blur.$on("sendXZQHele",(data,city)=>{
         this.XZQH=data;
         this.city=city;
         this.getDevCountDatas();

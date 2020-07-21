@@ -660,9 +660,7 @@ export default {
         that.getToadyKeyVehicleInAndOutDatas();
         that.initAccurCharts();
       }
-      
       if(num=='2'){
-        
         that.getVehicleOwnershipDatas();
       }
       if(num=='3'){
@@ -706,16 +704,16 @@ export default {
     let that=this;
     that.clearMap()
      if(i.name=='1'){
-       that.param.stime='2';
-       that.param.fxlx='1';
+       this.param.stime='2';
+       this.param.fxlx='1';
      }else if(i.name=='2'){
-       that.param.stime='2';
-       that.param.fxlx='2';
+       this.param.stime='2';
+       this.param.fxlx='2';
      }else{
-       that.param.fxlx='';
-       that.param.stime=i.name;
+       this.param.fxlx='';
+       this.param.stime=i.name;
      }
-     that.getVehicleOwnershipDatas();
+     this.getVehicleOwnershipDatas();
   },
   // changeIn(fxlx) {
   //   let that = this;
@@ -755,8 +753,8 @@ export default {
               data.data.provinceExternalProportion;
               that.indexDatas = data.data.dataList;
               if(that.indexDatas.length>0){
-                that.clearMap()
-                that.getVehicleOwnershipMapOD(that.indexDatas) 
+                that.clearMap();
+                that.getVehicleOwnershipMapOD(that.indexDatas);
               }
             } else {
               that.$message({
@@ -1087,6 +1085,7 @@ export default {
       let that = this;
       that.tableLoading = true;
       let DomesticVehicleData = {};
+      that.indexDataList=[];
       if (that.CODE !='') {
         // 如果传入参数code  车辆类型
         DomesticVehicleData.code =that.CODE;

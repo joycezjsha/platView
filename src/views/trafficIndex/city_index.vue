@@ -97,7 +97,7 @@ export default {
       // blur.$emit("setSelectItems", item.city, item.index);
       this.drawer = true;
       this.city=item.name;
-      this.adcode=item.id;
+      this.adcode=item.id.toString();
     },
     handleCurrentChange(val) {
       this.currentRow = val;

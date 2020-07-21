@@ -24,14 +24,7 @@ export default {
     accidentMap
   },
   mounted() {
-    let _this=this;
-    _this.$store.commit("setRight", '26vw');
-    blur.$on('initAccidentStatics',function(type,value,flag){
-      _this.$refs.staticsModule.initAccidentStatics(type,value,flag);
-    });
-    blur.$on('initAccidentMapdata',function(data){
-      _this.$refs.mapModule.initAccidentMap(data);
-    });
+    this.$store.commit("setRight", '26vw');
   },
   destroyed() {
   },

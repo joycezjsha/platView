@@ -98,11 +98,18 @@ export default {
   },
   components:{barChart,mTitle,mComTitle,mTab,mListO:m_list},
   mounted() {
+    let _this=this;
     this.map = this.$store.state.map;
     this.getAllStatics();
     this.initAccidentStaticsChart();
     this.initAcciAccurCharts();
     this.initAccurCharts();
+    blur.$on('initAccidentStatics',function(type,value,flag){
+      _this.initAccidentStatics(type,value,flag);
+    });
+    blur.$on('initAccidentMapdata',function(data){
+      _this.initAccidentMap(data);
+    });
   },
   destroyed() {
     this.flyRoutes = [];

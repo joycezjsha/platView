@@ -1,9 +1,9 @@
 <template>
   <div class="electricPolice-middle">
-      <div @click="change(1)">
+      <div @click="isChange(1)">
          <m-title  label='电警热力分布'  :img_type='tableIndex==1?"1":"0"' class="car"></m-title> 
       </div>
-      <div @click="change(2)">
+      <div @click="isChange(2)">
         <m-title  label='活跃电警点位'  :img_type='tableIndex==2?"1":"0"' class="car"></m-title> 
       </div> 
   </div>
@@ -35,7 +35,7 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        this.map.setCenter(mapConfig.DEFAULT_CENTER);
+        this.map.setCenter([108.967368, 34.302634]);
         this.map.setZoom(6);
         setTimeout(()=>{this.getRoadStatisticsDatas();},200);
         this.getData();
@@ -46,39 +46,52 @@ export default {
     },
     methods:{
         // 切换卡口热力分布  与   活跃卡口点位
-        change(i){   
+        isChange(i){
             let that=this;
             that.tableIndex=i;
-            blur.$emit('clearMapRoad');
+            blur.$emit('clearMapRoadele');
             // that.clearMap();
             if(that.tableIndex=='1'){
                 //  隐藏聚合图 显示热力图
-                that.onHideLayer(2)
+                that.onHideLayer('2')
                 that.onShowLayer('1')
-                // that.getRoadStatisticsDatas(); 
             }else{
                 // 隐藏热力图  显示聚合图
                 that.onHideLayer('1')
                 that.map.setZoom(6);
-                that.onShowLayer(2) 
+                that.onShowLayer('2') 
             }
         },
         /*
-         *  接收城市统计传过来的数据  sendXZQH--XZQH  sendcity--city
+         *  接收城市统计传过来的数据  
          */
         getData(){
             let that=this;
+            // 点击返回传来的数据
             blur.$on("sendxzqu",(data,city)=>{
                 that.clearMap();
                 that.xzqh=data;
                 that.city=city;
+                that.map.setCenter([108.967368, 34.302634]);
+                that.map.setZoom(6);
                 if(that.tableIndex=='1'){
                     that.getRoadStatisticsDatas();
                 }else{
                     that.getActiveElDatas();
                 }
-                
             })
+            // 接收城市统计传过来的数据
+            blur.$on("sendMiddlexzqu",data=>{
+                that.clearMap();
+                that.xzqh=data;
+                if(that.tableIndex=='1'){
+                    that.clearMap();
+                    that.getRoadStatisticsDatas();
+                }else{
+                    that.clearMap();
+                    that.getActiveElDatas();
+                }
+            });
         },
          /*
         * 显示地图 
@@ -272,6 +285,7 @@ export default {
             that.map = that.$store.state.map;
             if(that.map.getLayer('data-point')!=undefined){
                 that.map.setLayoutProperty('data-point', 'visibility', 'visible');
+                that.map.getSource("data-point").setData(data.data);
             }else{
                 let jsonData={
                     "type": "FeatureCollection", 
@@ -363,6 +377,7 @@ export default {
                 }
             })
             }
+            this.map_cover.sourceList=[];
             //清除layer
             if(this.map_cover.lineList1.length>0){
                 this.map_cover.lineList1.forEach(e=>{
@@ -371,6 +386,7 @@ export default {
                     }
                 })
             }
+            this.map_cover.lineList1=[];
             //清除layer
             if(this.map_cover.lineList2.length>0){
                 this.map_cover.lineList2.forEach(e=>{
@@ -379,6 +395,7 @@ export default {
                     }
                 })
             }
+            this.map_cover.lineList2=[];
         },
     }
 }
