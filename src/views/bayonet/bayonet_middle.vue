@@ -62,10 +62,12 @@ export default {
         that.clearMap();
         that.map.setCenter([108.967368, 34.302634]);
         that.map.setZoom(6);
-        that.xzqh=data;
+        that.xzqh='';
         if (that.tableIndex == '1') {
+          that.clearMap();
           that.getBayonetHeatMap();
         } else {
+          that.clearMap();
           that.getBayonetActiveDatas();
         }
       });

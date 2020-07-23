@@ -151,6 +151,8 @@ export default {
     if(item.name!='4'){
       that.stime=item.name;
       that.getIllegalAnalysisDatas(that.stime)
+    }else{
+      that.timeRange= undefined;
     }
   },
   /**

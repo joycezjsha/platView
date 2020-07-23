@@ -100,7 +100,7 @@ export default {
       default:'chart_id'
     },
     chart_type:{
-       type: String,
+      type: String,
       default:''
     }
   },

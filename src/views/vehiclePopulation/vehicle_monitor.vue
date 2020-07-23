@@ -80,7 +80,7 @@ export default {
         lineList:[],
         popups:[]
       },
-      time:'5:00',
+      time:'',
       countnum:'',
       centerstatics:{
         Count:'',
@@ -100,13 +100,16 @@ export default {
     let that = this;
     this.map.setZoom(11);
     this.map.repaint = true;
+    that.getTimer();
     that.getIndexData();
+    that.getData();
     that.getKeyVehicleDatas();
     that.timer=setInterval(() => {
       that.getIndexData();
       that.getKeyVehicleDatas();
+      that.getTimer()
     },1000*60);
-    that.getData()
+
   },
   destroyed() {
     this.map.setPitch(0);
@@ -123,6 +126,22 @@ export default {
        blur.$on('goback',data=>{
          this.highlighted='';
        })
+    },
+    /**
+     * 获取时间
+     */
+    getTimer(){
+      let that = this;
+      // let myDate=new Date();
+      let h = new Date().getHours();//获取当前小时数(0-23)
+      let m = new Date().getMinutes();//获取当前分钟数(0-59)
+      // let s = new Date().getSeconds();//获取当前秒
+      // if(s<10){
+      //   s="0"+s;
+      // }
+      if(h<10) h="0"+h;
+      if(m<10) m="0"+m;
+      that.time=`${h}:${m}`;
     },
     //  that.highlighted='';
     /*
@@ -152,7 +171,7 @@ export default {
            that.indexDatas=data.data.list;
           }else{
             that.$message({
-              message: data.errmsg,
+              message:'重点车辆监测',
               type: "error",
               duration: 1500
             });

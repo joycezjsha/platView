@@ -1075,7 +1075,7 @@ export default {
         el1.appendChild(dot); //将元素追加到el1元素上
         el1.appendChild(pause); //将元素追加到el1元素上
         el1.className='dot_marker dot_marker_'+type;
-        let marker = new minemap.Marker(el1, {offset: [0,0]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [-5,-5]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
       },
       /**

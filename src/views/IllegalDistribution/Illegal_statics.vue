@@ -38,7 +38,7 @@
           <div class="speedecharts borstyle" >
             <m-title  label='超速违法分类' style='width:8vw'></m-title>
             <div>
-              <div style="width:330px;height:180px;" id="speeding-offences"></div>
+              <div style="width:24.5vw;height:23.5vh;" id="speeding-offences"></div>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
                 <m-title label='限行日期分布' style='width:9vw'></m-title>
               <!-- </div> -->
               <!-- <div style="padding-left:1vw"> -->
-                <div style="width:330px;height:180px;" id="current-date"></div>
+                <div style="width:24.5vw;height:23.5vh;"  id="current-date"></div>
               <!-- </div> -->
             </div>
          </div>
@@ -940,10 +940,11 @@ export default {
       height:80%;
     }
     .accident-statics_sort-list{
-      width:30%;
+      width:50%;
       height:80%;
       float: right;
       margin-top:3vh;
+      overflow: hidden;
     }
     // #sumCountChange{
     //   width:100%;

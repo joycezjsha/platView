@@ -24,7 +24,7 @@ export default {
     accidentMap
   },
   mounted() {
-    this.$store.commit("setRight", '26vw');
+    this.$store.commit("setRight", '25.5vw');
   },
   destroyed() {
   },

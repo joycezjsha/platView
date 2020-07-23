@@ -564,6 +564,7 @@ export default {
     that.initMainStaticsChart();
     that.getDomesticVehicleRankingDatas();
     that.getToadyKeyVehicleInAndOutDatas();
+    that.getMapBayonetRankingDatas();
     that.initAccurCharts();
     that.onShowLayer()
     that.timer=setInterval(() => {
@@ -591,6 +592,7 @@ export default {
      */
     getData() {
       let that=this;
+      // 接收中间传过来的数据 1  2  3
       blur.$on('Realtime',data=>{
         that.isShowdiv=data;
         that.clearMap();
@@ -609,7 +611,8 @@ export default {
           that.getHotspotRoadRankinDatas();
           that.getHotspotBayonetRankingDatas();
         };
-      })  
+      })
+      // 左侧列表-车辆监测 传过来的code 
       blur.$on("getCity", data => {
         that.CODE = data;
         that.param.code=data;
@@ -653,12 +656,13 @@ export default {
       that.param.code='';
       that.CODE='';
       that.showback = true;
-      blur.$emit('getleft');
+      blur.$emit('getleft','');
       if(num=='1'){
         that.initMainStaticsChart();
         that.getDomesticVehicleRankingDatas();
         that.getToadyKeyVehicleInAndOutDatas();
         that.initAccurCharts();
+        that.getMapBayonetRankingDatas();
       }
       if(num=='2'){
         that.getVehicleOwnershipDatas();
@@ -758,7 +762,7 @@ export default {
               }
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '车辆归属地OD地图',
                 type: "error",
                 duration: 1500
               });
@@ -942,7 +946,7 @@ export default {
               that.getBayonetMap(data.data);
             } else {
               that.$message({
-                message: data.errmsg,
+                message: 'info车辆实时监测地图显示',
                 type: "error",
                 duration: 1500
               });
@@ -1064,7 +1068,7 @@ export default {
               that.outcount = data.data.outcount;
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '今日入陕 出陕 ',
                 type: "error",
                 duration: 1500
               });
@@ -1106,7 +1110,7 @@ export default {
               }
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '境内城市监测车辆实时排名',
                 type: "error",
                 duration: 1500
               });
@@ -1152,7 +1156,7 @@ export default {
                 that.outboundEchartsData = car_data;
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '近30日重点车辆出入陕趋势',
                 type: "error",
                 duration: 1500
               });
@@ -1335,7 +1339,7 @@ export default {
         el1.className='dot_marker dot_marker_'+type;
 
         let lnglat1 = [itemlist[0],itemlist[1]];
-        let marker = new minemap.Marker(el1, {offset: [0,0]}).setLngLat(lnglat1).setPopup(popup).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [-5,-5]}).setLngLat(lnglat1).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
       },
     /**
@@ -1399,7 +1403,7 @@ export default {
               that.sort_chart.setOption(that.statics_sort_option);
             } else {
               that.$message({
-                message: data.errmsg,
+                message: '生成超速占比饼图',
                 type: "error",
                 duration: 1500
               });

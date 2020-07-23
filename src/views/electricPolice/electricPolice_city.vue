@@ -8,7 +8,7 @@
       <div class="electricPolice_city_content">
         <i class="iconfont icon-dianjing" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:20px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃电警是指近一个月有抓拍违法数据的设备'></m-tiptxt>
-        <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:100%">
+        <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:96%">
           <el-table :data="indexData" 
           v-loading='tableLoading'
           highlight-current-row
@@ -592,7 +592,7 @@ export default {
   }
   .electricPolice_city_content {
     width: 98%;
-    height: 87%;
+    height: 90%;
     // background-color: $color-bg-1;
     margin: 1%;
     

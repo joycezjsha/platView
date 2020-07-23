@@ -12,12 +12,12 @@
       <div class="bayonet_city_content">
         <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:17px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
-        <div v-if="!tableIndex" style="padding:0 5px">
+        <div v-if="!tableIndex" style="padding:0 5px;height:90%">
           <el-table 
           :data="indexData" 
           highlight-current-row
           ref="tablebayonet"
-          style="width: 100%" height="73.4vh"
+          style="width: 100%" height="98%"
            v-loading='tableLoading'
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
           @row-click="handdle"
@@ -626,7 +626,7 @@ export default {
 
   .bayonet_city_content {
     width: 98%;
-    height: 87%;
+    height: 97%;
     // background-color: $color-bg-1;
     margin: 1%;
     

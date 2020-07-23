@@ -30,7 +30,7 @@ export default {
   },
   mounted() {
     let _this=this;
-    _this.$store.commit("setRight", '25.8vw');
+    _this.$store.commit("setRight", '25.4vw');
     blur.$on('isShowEvent',function(flag){
       _this.isShowCity=flag;
     })

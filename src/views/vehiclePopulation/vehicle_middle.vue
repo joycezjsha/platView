@@ -39,40 +39,45 @@ export default {
         this.map = this.$store.state.map;
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
         this.map.setZoom(8);
-        setTimeout(()=>{this.getMapBayonetRankingDatas();},300);
+        // setTimeout(()=>{this.getMapBayonetRankingDatas();},300);
+        this.getData()
     },
     destroyed(){
       this.clearMap()
     },
     methods:{
       // 进入页面，默认实现聚合图，如果选择车辆类型，调用函数
-      // 在调用之前清除之前的数据
-
+      // 在调用之前清除之前的数据  
+      //地图数据全部在 monitor_info文件中
       /* 
       * 接收传来的参数  getCity--车辆类型
       */
      getData(){
         blur.$on('getCitycar',data=>{
           this.code=data;
-          // this.getMapBayonetRankingDatas(this.code)
+          // this.getMapBayonetRankingDatas()
         });
+        blur.$on("getmiddle",data=>{
+          this.code='';
+          // this.getMapBayonetRankingDatas()
+        })
      },
         // 车辆实时监测
         realtime(i){    
             this.tableIndex=i;
             // let els=document.getElementsByClassName('.custom-popup-class');
-            blur.$emit('Realtime',this.tableIndex) 
+            blur.$emit('Realtime',this.tableIndex)  //传给右侧列表
             if(this.code!=""){
-              this.getMapBayonetRankingDatas()
+              // this.getMapBayonetRankingDatas()
             }
             if(this.code==""){
               // this.getMapBayonetRankingDatas()
             }
-            if(this.tableIndex!=1){
+            if(this.tableIndex=='1'){
               this.onHideLayer()
             }else{
               this.onShowLayer()
-              this.getMapBayonetRankingDatas()
+              // this.getMapBayonetRankingDatas()
             }
             
         },
@@ -208,7 +213,7 @@ export default {
                 that.getBayonetMapRank(data.data)
               }else{
                 that.$message({
-                message: data.errmsg,
+                message: '中间车辆实时监测地图显示',
                 type: "error",
                 duration: 1500
               });

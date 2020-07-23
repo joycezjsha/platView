@@ -146,6 +146,13 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
+        // //修改给定日期的样式
+				// 	cellClassName(time){
+				// 		if(containerVue.notWriteDaily.includes(containerVue.getLocalTimes(time.getTime()))){
+				// 			return 'red';
+				// 		}
+        // 	}
+        // 其他时间
           // shortcuts: [{
           //   text: '最近一周',
           //   onClick(picker) {
@@ -346,7 +353,10 @@ export default {
         }
         blur.$emit("sendTime",timeData) //发送时间格式  2020-06-10 23:59:59
        }
-     
+      //  清空选择的时间
+      // setTimeout(()=>{
+      //   that.timeRange= undefined;
+      // },2000)
     },
     getIndexData(){
      let that = this;
@@ -387,11 +397,13 @@ export default {
      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
      blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
-      blur.$emit('gettimecar',that.activeName);  //传入对应的时间 1  2  3  4
-      blur.$emit('gettimeIndex',that.activeName) //传给总组件中
-      that.realtimeData(that.activeName);
+        blur.$emit('gettimecar',that.activeName);  //传入对应的时间 1  2  3  4
+        blur.$emit('gettimeIndex',that.activeName) //传给总组件中
+        that.realtimeData(that.activeName);
+     }else{
+       that.timeRange= undefined;
      }
-  }
+    }
 
   }
 };
