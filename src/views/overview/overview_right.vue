@@ -7,15 +7,18 @@
         </div>
         <div class="top-main">
           <!-- 切换时间 -->
-          <div style="display:flex;box-sizing: border-box;text-align:center;cursor:pointer;">
-            <div @click='switchtime(1)' :class="isSelected==1? 'isSelected':''" style="flex:1">
-              <div>今日：12</div>
+          <div style="display:flex;box-sizing:border-box;text-align:center;cursor:pointer;">
+            <div @click='switchtime(1)' :class="isSelected==1? 'isSelected':''" style="flex:1;">
+              <div>今日
+                <span v-show="isSelected==1">{{count}}</span></div>
             </div>
             <div @click='switchtime(2)' :class="isSelected==2? 'isSelected':''" style="flex:1">
-              <div>本周：12</div>
+              <div >本周
+                <span v-show="isSelected==2">{{count}}</span></div>
             </div>
             <div @click='switchtime(3)' :class="isSelected==3? 'isSelected':''" style="flex:1">
-              <div>本月：12</div>
+              <div>本月
+                <span v-show="isSelected==3">{{count}}</span></div>
             </div>
           </div>
           <!-- 显示详细数据 -->
@@ -29,7 +32,7 @@
             </div>
             <!-- 折线图  chart_type='line' -->
             <div style="flex:9">
-              <bar-chart :chart_data="speeding_data" c_id="speed-province"></bar-chart>
+              <bar-chart :chart_data="speeding_data" xAxis_data='0' c_id="speed-province"></bar-chart>
             </div>
           </div>
         </div>
@@ -96,16 +99,19 @@ export default {
     return {
       avg:'',
       map: {},
+      stime:'1',
       data1:null, 
+      count:'',
       speedingprovince:[
-        {'name':'总检测次数:','value':'112'},
-        {'name':'超速比例:','value':'112%'},
-        {'name':'平均速度/限速:','value':'112'}
+        {'name':'总检测次数:','value':''},
+        {'name':'超速比例:','value':''},
+        {'name':'平均速度/限速:','value':''}
       ],
       listItems:[
         {'label':'超速次数','value':null},
         {'label':'总检测数','value':null}
       ],
+      listmap:[],
       speeding_data:{
         legend: ["次数", "幅度"],
         xdata:[],
@@ -287,19 +293,66 @@ export default {
      * 点击切换时间
      */
     switchtime(i){
-      let _this=this;
-      _this.isSelected=i;
+      let that=this;
+      that.isSelected=i;
+      that.stime=i;
+      that.initSumCharts1()
     },
      /**
      * 生成 省内超速情况 echarts
+     * 省内超速情况   获取省内车辆运行态势数据  GET_PRO_CAR_API   1 今日 2 本周 3 本月   xzqh
      */
     initSumCharts1(){
-      let _this=this;
-      _this.speeding_data={
-        legend: ["次数", "幅度"],
-        xdata:['00','22','33'],
-        ydata:['122','222','333']
-      }
+      let that=this;
+      that.speeding_data.ydata=[];
+      that.speeding_data.xdata=[];
+      let param={};
+      param.stime=that.stime;
+      interf.GET_PRO_CAR_API(param)
+      .then(response => {
+          if (response && response.status == 200) {
+            var data = response.data;
+            if (data.errcode == 0) {
+              that.speedingprovince[0].value=data.data.count;
+              that.speedingprovince[1].value=data.data.ratio;
+              that.speedingprovince[2].value=data.data.avg;
+              that.count=data.data.cscount;
+              // 超速次数--cscount    平均行駛速度--avg
+              if(data.data.listmap.length>0){
+                let arr=[
+                  {name:'10%',value:'0'},
+                  {name:'20-50%',value:'0'},
+                  {name:'50%',value:'0'},
+                  {name:'其他',value:'0'}
+                ];
+                for(var i=0;i<data.data.listmap.length;i++){
+                  let item=data.data.listmap[i];
+                  for(var j=0;j<arr.length;j++){
+                    if(item.WFXW==arr[j].name){
+                      arr[j].value=item.NUM;
+                    }
+                  }
+                };
+                arr.map((e)=>{
+                  that.speeding_data.ydata.push(e.value);
+                  that.speeding_data.xdata.push(e.name);
+                })
+              }
+            } else {
+              that.$message({
+                message: '省内超速情况',
+                type: "error",
+                duration: 1500
+              });
+            }
+          }
+        })
+       .catch(err => {
+          console.error(err);
+        })
+        .finally(() => {
+          that.tableLoading = false;
+        })
 
     },
     /**
@@ -342,6 +395,7 @@ export default {
           that.tableLoading = false;
         });
     },
+    
     /**
      * 初始化进出陕车辆趋势echarts
      */
@@ -448,6 +502,9 @@ export default {
       padding:0 1vw;
       width: 100%;
       height: 85.5%;
+    }
+    .top-main span{
+      padding-left: 1vw;
     }
     .isSelected{
       color: #00a0ff;

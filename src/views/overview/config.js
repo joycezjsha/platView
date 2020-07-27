@@ -7,6 +7,7 @@ import accident from './image/accident.png'
 import jqImg from './image/jq.png'
 import sgImg from './image/sg.png'
 export const interf={
+
   // 	总览页面地图城市流动数据 Overview/getMapVehicleIn
   GET_MAP_CITY_FLOW_API:data => {
     return http.service({
@@ -63,7 +64,7 @@ export const interf={
       params:data
     })
   },
-  // 获取省内车辆运行态势数据
+  // 省内超速情况   获取省内车辆运行态势数据
   GET_PRO_CAR_API:data => {
     return http.service({
       url:`Overview/getVehicleOperation`,
