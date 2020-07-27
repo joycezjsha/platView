@@ -62,8 +62,8 @@
       </div>
       <div class="boxstyle">
         <m-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-title>
-        <div style='width:100%;height:28.99vh'> 
-          <m-line-chart style='width:100%;height:28.99vh' :chart_data="chart_data" c_id='overViewsumCountChange' ></m-line-chart>
+        <div style='width:100%;height:26vh'> 
+          <m-line-chart style='width:100%;height:26vh' :chart_data="chart_data" c_id='overViewsumCountChange' ></m-line-chart>
         </div>
       </div>
       <div class="boxstyle">
@@ -74,8 +74,8 @@
           <div><span>本月注册</span><span>{{carStatics.this_month}}</span></div>
           <div><span>上月注册</span><span>{{carStatics.front_month}}</span></div>
         </div>
-        <div style="height:25.32vh;width:100%;">
-          <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" style="height:20vh;width:100%;"></bar-chart>
+        <div style="height:23vh;width:100%;">
+          <bar-chart c_id='accurCreateChange' :chart_data="car_chart_data" style="height:22vh;width:100%;"></bar-chart>
         </div>
         
       </div>
@@ -496,7 +496,7 @@ export default {
   height: 100%;
   .top{
     width: 100%;
-    height: 28vh;
+    height: 25vh;
     .top-main{
       box-sizing: border-box;
       padding:0 1vw;
