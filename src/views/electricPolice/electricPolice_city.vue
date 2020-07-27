@@ -8,7 +8,7 @@
       <div class="electricPolice_city_content">
         <i class="iconfont icon-dianjing" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:20px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃电警是指近一个月有抓拍违法数据的设备'></m-tiptxt>
-        <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:100%">
+        <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:96%">
           <el-table :data="indexData" 
           v-loading='tableLoading'
           highlight-current-row
@@ -97,7 +97,7 @@ export default {
     this.getIndexData();
     this.getCityStatisticsDatas();
     this.getRoadStatisticsDatas();
-    blur.$on('clearMapRoad',()=>{this.clearMap();});
+    blur.$on('clearMapRoadele',()=>{this.clearMap();});
   },
   destroyed() {
     this.map.setPitch(0);
@@ -111,8 +111,8 @@ export default {
       let that=this;
       that.XZQH=row.XZQH;
       that.city=row.city;
-      blur.$emit("sendXZQH",that.XZQH,that.city);
-      blur.$emit("sendxzqu",that.XZQH,that.city);
+      blur.$emit("sendXZQHele",that.XZQH,that.city);  //传给右侧列表
+      blur.$emit("sendMiddlexzqu",that.XZQH,that.city); //传给地图
       that.centerTo(row.jwd.split(' '));
     },
     /*
@@ -144,6 +144,13 @@ export default {
             })
             .finally(() => {
               that.tableLoading = false;
+              // 取消选中table状态 tablebayonet
+              blur.$on('getelectricPolice',data=>{
+                if(that.tableIndex=='1'){
+                  that.$refs.tableelectricPoliceRoad.setCurrentRow()
+                }
+              })
+              
             });
    },
     /**
@@ -162,7 +169,7 @@ export default {
           var data = response.data;
           if (data.errcode == 0) {
             for(var i=0;i<data.data.length;i++){
-              if(data.data[1].city!=null){
+              if(data.data[i].city!=null){
                 that.indexData.push(data.data[i])
               }
             }
@@ -183,8 +190,9 @@ export default {
           that.tableLoading = false;
           // 取消选中table状态 tablebayonet
           blur.$on('getelectricPolice',data=>{
-            that.$refs.tableelectricPolice.setCurrentRow()
-            that.$refs.tableelectricPoliceRoad.setCurrentRow()
+            if(that.tableIndex=='0'){
+              that.$refs.tableelectricPolice.setCurrentRow()
+            }
           })
       });
     },
@@ -584,7 +592,7 @@ export default {
   }
   .electricPolice_city_content {
     width: 98%;
-    height: 87%;
+    height: 90%;
     // background-color: $color-bg-1;
     margin: 1%;
     

@@ -249,11 +249,8 @@ line-height:2vh;
 }
 #map .minemap-popup-tip{
   border-top-color: rgba(3, 12, 32, 0.74);
+  border-bottom-color: rgba(3, 12, 32, 0.74);
 }
-#map .no-pointer{
-  cursor: none;
-}
-
 .el-message-box {
   background-color: #01245d;
   border: 1px solid #0361f9;

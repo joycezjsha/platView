@@ -60,13 +60,18 @@ export default {
       let that = this;
       blur.$on("getXZQH", data => {
         that.clearMap();
-        that.xzqh=data;
+        that.map.setCenter([108.967368, 34.302634]);
+        that.map.setZoom(6);
+        that.xzqh='';
         if (that.tableIndex == '1') {
-          that.getBayonetHeatMap(that.xzqh);
+          that.clearMap();
+          that.getBayonetHeatMap();
         } else {
-          that.getBayonetActiveDatas(that.xzqh);
+          that.clearMap();
+          that.getBayonetActiveDatas();
         }
       });
+      
       //    blur.$on('initCityOrRoadStatics',data=>{
 
       //    });
@@ -93,31 +98,31 @@ export default {
       let that = this;
       if (that.map) {
         switch(this.tableIndex){
-        case 1:case '1':{
-          if (this.map_cover.lineList1.length > 0) {
-            this.map_cover.lineList1.forEach(e => {
-              if (this.map.getLayer(e) != undefined) {
-                that.map.setLayoutProperty(e, "visibility", "visible");
-              }
-            });
-          }else{
-            that.getBayonetHeatMap();    //显示热力图
+          case 1:case '1':{
+            if (this.map_cover.lineList1.length > 0) {
+              this.map_cover.lineList1.forEach(e => {
+                if (this.map.getLayer(e) != undefined) {
+                  that.map.setLayoutProperty(e, "visibility", "visible");
+                }
+              });
+            }else{
+              that.getBayonetHeatMap();    //显示热力图
+            }
+            break;
           }
-          break;
-        }
-        case 2:case '2':{
-          if (this.map_cover.lineList2.length > 0) {
-            this.map_cover.lineList2.forEach(e => {
-              if (this.map.getLayer(e) != undefined) {
-                that.map.setLayoutProperty(e, "visibility", "visible");
-              }
-            });
-          }else{
-            that.getBayonetActiveDatas(); //显示聚合图 
+          case 2:case '2':{
+            if (this.map_cover.lineList2.length > 0) {
+              this.map_cover.lineList2.forEach(e => {
+                if (this.map.getLayer(e) != undefined) {
+                  that.map.setLayoutProperty(e, "visibility", "visible");
+                }
+              });
+            }else{
+              that.getBayonetActiveDatas(); //显示聚合图 
+            }
+            break;
           }
-          break;
         }
-      }
         
       }
     },
@@ -375,6 +380,7 @@ export default {
           }
         });
       }
+      this.map_cover.sourceList=[];
       //清除layer
       if (this.map_cover.lineList1.length > 0) {
         this.map_cover.lineList1.forEach(e => {

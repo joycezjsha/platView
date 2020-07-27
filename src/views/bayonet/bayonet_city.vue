@@ -12,12 +12,12 @@
       <div class="bayonet_city_content">
         <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:17px;"></i>
         <m-tiptxt style="margin-left:1vw" text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
-        <div v-if="!tableIndex" style="padding:0 5px">
+        <div v-if="!tableIndex" style="padding:0 5px;height:90%">
           <el-table 
           :data="indexData" 
           highlight-current-row
           ref="tablebayonet"
-          style="width: 100%" height="73.4vh"
+          style="width: 100%" height="98%"
            v-loading='tableLoading'
           :default-sort = "{prop: 'NUM', order: 'descending'}" 
           @row-click="handdle"
@@ -44,6 +44,7 @@
           @row-click="handleRoad"
           v-loading='tableLoading'
           highlight-current-row
+          ref="tablebayonetRoad"
            :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No." width="60"></el-table-column>
             <el-table-column prop="NAME" label="道路名称" ></el-table-column>
@@ -124,8 +125,8 @@ export default {
       let that=this;
       that.XZQH=row.XZQH;
       that.city=row.city;
-      blur.$emit("getxzqh",that.XZQH)
-      blur.$emit("getcity",that.city)
+      blur.$emit("getxzqhbay",that.XZQH)
+      blur.$emit("getcitybay",that.city)
       that.centerTo(row.jwd.split(' '));
     },
     /**
@@ -309,12 +310,18 @@ export default {
       })
       .finally(() => { 
         that.tableLoading = false; 
+        blur.$emit('tablebayonetRoad',data=>{
+          if(that.tableIndex=='1'){
+            that.$refs.tablebayonetRoad.setCurrentRow()
+          }
+        })
+        
       });
     },
     /**
-     *  城市统计 数据  GET_CITY_STA_API
-     */
-    getcitystatDatas(){
+    * * 城市统计 数据  GET_CITY_STA_API
+    */
+    getcitystatDatas(){
       let that = this;
       that.indexData=[];
       that.tableLoading = true;
@@ -350,10 +357,12 @@ export default {
           that.tableLoading = false;
           // 取消选中table状态 tablebayonet
           blur.$on('getbayonet',data=>{
-            that.$refs.tablebayonet.setCurrentRow()
+            if(that.tableIndex=='0'){
+              that.$refs.tablebayonet.setCurrentRow()
+            }
           })
         });
-      },
+    },
      /**
      * 切换显示table类型
      * @param 0->城市统计，1->道路统计
@@ -617,7 +626,7 @@ export default {
 
   .bayonet_city_content {
     width: 98%;
-    height: 87%;
+    height: 97%;
     // background-color: $color-bg-1;
     margin: 1%;
     

@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="car-flow_content " >
-        <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 15px;" >
+        <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 0.5vw;" >
           <el-tab-pane label="实时" name="1"></el-tab-pane>
           <el-tab-pane label="今天" name="2"></el-tab-pane>
           <el-tab-pane label="昨天" name="3"></el-tab-pane>
@@ -33,18 +33,18 @@
           </span>
         </div>
         <!-- <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt> -->
-        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==1">实时：统计上一个小时
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==1">实时：统计上一个小时
           <span>({{realtimer1}}:00-{{realtimer2}}:00)</span>的流动情况
         </div>
-        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
         </div>
-        <div style="color:#8d98b4;margin:0.8vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
         </div>
         <div class='all_statics'>
-          <div><span>陕西省</span><span>{{allStatics.addIn}}</span></div>
+          <div><span>陕西省</span><span>+{{allStatics.addIn}}</span></div>
           <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span>
           <span >流出：-{{allStatics.outcount}}</span></div>
-          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
+          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}%</span></div>
         </div>
         <div class="sort">
           <div class="text">排序方式 ：</div>
@@ -57,9 +57,9 @@
                 :value="item.value">
               </el-option>
             </el-select>
-             <span @click="sort" style="width:30px;height:26px;color:rgba(29,153,171,1);margin-left:15px;">              
+            <span @click="sort" style="width:30px;height:26px;color:#00C6FF;margin-left:10px;padding-top:3px;">              
               <i style="font-size:20px;" v-show="downIcon" class='iconfont icon-paixu3'></i>
-              <i  style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
+              <i style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
             </span>
           </div>
         </div>
@@ -70,17 +70,19 @@
           class="item"
           :class="{itemselected:highlighted==item.city}"
           v-for="(item,index) in flowDatas" :key="item.id">
-            <p style="padding-top:4px">
+            <p>
               <span>{{index+1}}</span>
               <span  class="address-name">{{item.city}}</span>
-              <span style="margin-left:20px">进：{{item.inNum}}</span>
-              <span>出：{{item.outNum}}</span>
+              <span style="margin-left:1.8vw" >进：{{item.inNum}}</span>
+              <span style="margin-left:0.5vw">出：{{item.outNum}}</span>
               <span>进出比：{{item.proportion.toFixed(2)}}%</span>
             </p>
-            <p style="padding-bottom:0px">
+            <p>
               <span></span>
               <span  class="address-name">保有量：<span style="color:#00a6fb" class='value'>{{item.inventory}}</span></span>
-              <span>流动变化：<span style="color:#d38c08" :class="item.flowChange>0?'up_value':'down_value'">{{item.addIn}}辆</span></span>
+              <span>流动变化：
+                <span  
+                :class="item.addIn>0?'up_value':'down_value'">{{item.addIn}}辆</span></span>
             </p>
           </li>
         </ul>
@@ -144,6 +146,13 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
+        // //修改给定日期的样式
+				// 	cellClassName(time){
+				// 		if(containerVue.notWriteDaily.includes(containerVue.getLocalTimes(time.getTime()))){
+				// 			return 'red';
+				// 		}
+        // 	}
+        // 其他时间
           // shortcuts: [{
           //   text: '最近一周',
           //   onClick(picker) {
@@ -344,7 +353,10 @@ export default {
         }
         blur.$emit("sendTime",timeData) //发送时间格式  2020-06-10 23:59:59
        }
-     
+      //  清空选择的时间
+      // setTimeout(()=>{
+      //   that.timeRange= undefined;
+      // },2000)
     },
     getIndexData(){
      let that = this;
@@ -385,11 +397,13 @@ export default {
      blur.$emit('gettime',that.activeName)   //传入对应的时间 1  2  3  4
      blur.$emit('gettimecar',that.activeName)
      if(that.activeName!='4'){
-      blur.$emit('gettimecar',that.activeName);  //传入对应的时间 1  2  3  4
-      blur.$emit('gettimeIndex',that.activeName) //传给总组件中
-      that.realtimeData(that.activeName);
+        blur.$emit('gettimecar',that.activeName);  //传入对应的时间 1  2  3  4
+        blur.$emit('gettimeIndex',that.activeName) //传给总组件中
+        that.realtimeData(that.activeName);
+     }else{
+       that.timeRange= undefined;
      }
-  }
+    }
 
   }
 };
@@ -425,7 +439,7 @@ export default {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 2px 2% 0.6rem 2%;
+    padding: 2px 2% 0 2%;
     font-weight: bolder;
     }
     .all_statics{
@@ -457,7 +471,7 @@ export default {
     }
   .car-flow_content {
     width: 98%;
-    height: 73%;
+    height: 100%;
     background-color: $color-bg-1;
     margin: 1%;
     .car-table-query{
@@ -490,16 +504,22 @@ export default {
       overflow-y: auto;
       color:white;
       padding: 1px 7px;
-      height: 86%;
+      height: 92%;
       .item{
         // border-bottom: 1px solid $color-white;
         box-sizing: border-box;
+        // padding-right: 0.7vw;
+        // padding-top:0.5vh;
+        // padding:0.5vh 0.7vw 0.5vh 0;
         line-height: 1em;
-        margin: 0 2%;
-        // padding:2px 0;
+        margin: 0 1%;
         cursor: pointer;
-        height:6.8vh;
+        // height:6.8vh;
+        p{
+          margin:0;
+        }
         >p:nth-child(1){
+          padding-top:0.5vh;
           @include flex(row,center,center);
           >span{
             @include flex(row,center,center);
@@ -520,7 +540,7 @@ export default {
             color: $color-info;
           }
           >span:nth-child(5){
-            width:35%;
+            width:30%;
             color: $color-info;
             padding-right:3px;
             @include flex(row,flex-end,center);
@@ -529,6 +549,7 @@ export default {
         >p:nth-child(2){
           color: $color-info;
           font-size:0.8vw;
+          padding:1.2vh 0 ;
           @include flex(row,center,center);
           >span{
             @include flex(row,flex-end,center);
@@ -537,7 +558,7 @@ export default {
             width:8%;
           }
           >span:nth-child(2){
-            width:50%;
+            width:51%;
             @include flex(row,flex-start,center);
             // margin-left:-7.39583vw
           }
@@ -571,7 +592,8 @@ export default {
   height:32px;
   width: 100%;
   position: relative;
-  margin-top: 1.5vh;
+  margin-top: 1.3vh;
+  margin-bottom:2.2vh;
   .text{
     position: absolute;
     top:0;
@@ -583,16 +605,23 @@ export default {
     font-weight:400;
     color:rgba(166,175,205,1);
     margin-top: 2px;
+    padding-top:5px;
   }
   .dropdown{
     position: absolute;
     top:0;
     left:120px;
-    height: 4vh;
+    height: 3.5vh;
    
   }
 }
 .carflow li:nth-of-type(odd){ 
   background:rgba(72,84,108,0.2);
+  height: 58px;
+  padding:0.5vh 0.7vw 0.5vh 0;
+}
+.carflow li:nth-of-type(even){ 
+  height: 74px;
+  padding:1.2vh 0.7vw 0.7vh 0;
 }
 </style>

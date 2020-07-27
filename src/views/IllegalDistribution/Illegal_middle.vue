@@ -235,6 +235,7 @@ export default {
             }
             });
         }
+        this.map_cover.sourceList=[];
         //清除layer
         if (this.map_cover.lineList.length > 0) {
             this.map_cover.lineList.forEach(e => {
@@ -243,13 +244,16 @@ export default {
             }
             });
         }
+        this.map_cover.lineList=[];
         //清除popup
         if (this.map_cover.popups.length > 0) {
             this.map_cover.popups.forEach(e => {
             e.remove();
             });
         }
-        }
+        this.map_cover.popups=[];
+    }
+    
     }
 }
 </script>

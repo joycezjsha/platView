@@ -29,13 +29,13 @@
               <!-- <i class="el-icon-collection-tag">今日卡口数据回传排名:</i> -->
             </div>
           </div>
-          <div class="device-statics_data">
-            <div style="padding:0 8px">
+          <div style="height:85%" class="device-statics_data">
+            <div style="padding:0 8px;height:100%">
               <el-table 
               :data="tableDatas" 
               highlight-current-row
               v-loading='tableLoading'
-              style="width: 100%" height="62.4vh" 
+              style="width: 100%" height="98%" 
               :default-sort = "{prop: 'week_radio', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
                 <el-table-column  type="index" label="No" width="50"></el-table-column>
                 <el-table-column  show-overflow-tooltip  prop="city,ROADNAME"  width="190" label="设备名称">
@@ -151,8 +151,9 @@ export default {
       that.showback = true;
       that.XZQH='';
       that.dldm='';
-      blur.$emit('getXZQH',that.XZQH);
-      blur.$emit('getbayonet') //取消选中状态
+      blur.$emit('getXZQH','');
+      blur.$emit('getbayonet') //取消城市列表选中状态
+      blur.$emit('tablebayonetRoad') //取消道路统计列表选中状态
       that.getbayrankDatas();
       that.getdevcountData();
     },
@@ -165,7 +166,7 @@ export default {
         this.getdevcountData();
         this.getbayrankDatas();
       })
-      blur.$on("getxzqh",data=>{
+      blur.$on("getxzqhbay",data=>{
         this.XZQH=data;
         if(this.XZQH!=''){
           this.showback=false;
@@ -173,7 +174,7 @@ export default {
         this.getbayrankDatas();
         this.getdevcountData();
       })
-      blur.$on("getcity",data=>{
+      blur.$on("getcitybay",data=>{
         this.city=data;
       })
     },

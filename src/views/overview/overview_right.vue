@@ -1,8 +1,39 @@
 <template>
   <div class="overview-info">
     <div class="overview-info_container">
-      <div class="boxstyle">
+      <div class="boxstyle top">
         <div>
+          <m-title label='省内超速情况' img_type=1 style='width:9vw;height:10%'></m-title>
+        </div>
+        <div class="top-main">
+          <!-- 切换时间 -->
+          <div style="display:flex;box-sizing: border-box;text-align:center;cursor:pointer;">
+            <div @click='switchtime(1)' :class="isSelected==1? 'isSelected':''" style="flex:1">
+              <div>今日：12</div>
+            </div>
+            <div @click='switchtime(2)' :class="isSelected==2? 'isSelected':''" style="flex:1">
+              <div>本周：12</div>
+            </div>
+            <div @click='switchtime(3)' :class="isSelected==3? 'isSelected':''" style="flex:1">
+              <div>本月：12</div>
+            </div>
+          </div>
+          <!-- 显示详细数据 -->
+          <div style="display:flex;margin-top:0.5vh;height:85%">
+            <!-- 左侧信息 :style="i==1? 'border-top:1px solid #333333;border-bottom:1px solid #333333':''" -->
+            <div class="top-left">
+              <div v-for="(item,i) of speedingprovince" :key='i' >
+                <div>{{item.name}}</div>
+                <div style="color:#00a0ff">{{item.value}}</div>
+              </div>
+            </div>
+            <!-- 折线图  chart_type='line' -->
+            <div style="flex:9">
+              <bar-chart :chart_data="speeding_data" c_id="speed-province"></bar-chart>
+            </div>
+          </div>
+        </div>
+        <!-- <div>
           <m-title label='今日省内车辆运行态势' img_type=1 style='width:11vw;'></m-title>
         </div>
         <div class="tab">
@@ -24,7 +55,7 @@
           <div id="overview-info_sort" v-loading='tableLoading'>
             
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="boxstyle">
         <m-title label='进出陕车辆趋势' img_type=1 style='width:9vw;'></m-title>
@@ -66,16 +97,28 @@ export default {
       avg:'',
       map: {},
       data1:null, 
+      speedingprovince:[
+        {'name':'总检测次数:','value':'112'},
+        {'name':'超速比例:','value':'112%'},
+        {'name':'平均速度/限速:','value':'112'}
+      ],
       listItems:[
         {'label':'超速次数','value':null},
         {'label':'总检测数','value':null}
       ],
+      speeding_data:{
+        legend: ["次数", "幅度"],
+        xdata:[],
+        ydata:[]
+      },
+      countChart:null,
       chart_data:{
         legend: ["进入辆次", "流出辆次"],
         xdata:[],
         y1data:[],
         y2data:[]
       },
+      isSelected:1,
       car_chart_data:{
         legend: [],
         xdata:[],
@@ -207,7 +250,7 @@ export default {
       tableLoading:false,//加载中...控制
       carStatics:{count:0,front_month:0,this_month:0},
       showIcon:false,
-      interval:null
+      interval:null,
     }
   },
   components: {
@@ -222,12 +265,13 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.initAccidentStaticsChart();
+    // this.initAccidentStaticsChart();
     that.initSumCharts();
     that.initAccurCharts();
     this.interval=setInterval(()=>{
-      that.initAccidentStaticsChart();
+      // that.initAccidentStaticsChart();
     },1000*60)
+    that.initSumCharts1();
   },
   destroyed() {
     this.flyRoutes = [];
@@ -239,6 +283,25 @@ export default {
     }
   },
   methods: {
+    /**
+     * 点击切换时间
+     */
+    switchtime(i){
+      let _this=this;
+      _this.isSelected=i;
+    },
+     /**
+     * 生成 省内超速情况 echarts
+     */
+    initSumCharts1(){
+      let _this=this;
+      _this.speeding_data={
+        legend: ["次数", "幅度"],
+        xdata:['00','22','33'],
+        ydata:['122','222','333']
+      }
+
+    },
     /**
      * 初始化省内车辆运行态势echarts
      */
@@ -377,6 +440,28 @@ export default {
 .overview-info_container {
   width: 100%;
   height: 100%;
+  .top{
+    width: 100%;
+    height: 28vh;
+    .top-main{
+      box-sizing: border-box;
+      padding:0 1vw;
+      width: 100%;
+      height: 85.5%;
+    }
+    .isSelected{
+      color: #00a0ff;
+      border-bottom: 2px solid #00a0ff;
+      padding-bottom: 0.5vh;
+      text-align: center;
+    }
+    .top-main .top-left{
+      flex: 3.5;
+      div{
+        margin:0.3vh 0;
+      }
+    }
+  }
   .register{
     width:100%;
     height:4vh;
@@ -444,13 +529,16 @@ export default {
   >div{
     width:100%;}
   >div:nth-child(2),>div:nth-child(3){
-    margin-top:5%;
+    margin-top:2.5%;
   }
   #accurCreateChange{
     width:100%;
     height:25vh;
-    
   }
 }
-
+#speed-province{
+  width:100%;
+  height: 100%;
+ 
+}
 </style>
