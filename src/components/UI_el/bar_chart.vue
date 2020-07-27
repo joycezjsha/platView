@@ -23,6 +23,7 @@ export default {
                   show:true,
                   axisLabel:{
                       show:true,
+                      interval:1,
                       color:'white',
                       fontSize :10 
                   },
@@ -61,7 +62,7 @@ export default {
                   itemStyle: {
                     color: '#2f498a'
                   },
-                  barWidth:14
+                  barWidth:10
               }
           ]
       },
@@ -87,8 +88,12 @@ export default {
             };
       }
     },
+    xAxis_data:{
+      type:String,
+      default:'1'
+    },
     width:{
-       type: String,
+      type: String,
       default:'400px'
     },
     height:{
@@ -142,6 +147,9 @@ export default {
       if(this.chart_type!=''){
         this.option.series[0].type=this.chart_type;
       };
+      if(this.xAxis_data!=1){
+        this.option.xAxis[0].axisLabel.interval=this.xAxis_data;
+      }
       this.chart.setOption(this.option);
     }
   }
