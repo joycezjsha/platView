@@ -1153,8 +1153,7 @@ export default {
      */
     initMainStaticsChart() {
       let that = this;
-      interf.GET_OPERA_API({})
-        .then(response => {
+      interf.GET_OPERA_API({stime:1}).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -1176,9 +1175,9 @@ export default {
               that.sort_chart.setOption(that.statics_sort_option);
             } else {
               that.$message({
-                message: '生成超速占比饼图',
+                message: '请求今日省内重点车辆运行态势平均超速数据失败',
                 type: "error",
-                duration: 1500
+                duration: 3000
               });
             }
           }
