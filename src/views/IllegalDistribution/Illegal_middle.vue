@@ -62,6 +62,7 @@ export default {
          */
         gatData(){
             let that = this;
+            that.clearMap();
             blur.$on("sendTime",data=>{
                 that.timeRange.time1=data.time1;
                 that.timeRange.time2=data.time2;
@@ -206,8 +207,11 @@ export default {
                 if(data.errcode == 0){
                     if(data.data.features.length>0){
                         setTimeout(() => {
+                            that.clearMap();
                             that.getMapDatas(data.data)   
                         }, 200);
+                    }else{
+                        that.clearMap();
                     }
                 }else{
                     that.$message({ 
