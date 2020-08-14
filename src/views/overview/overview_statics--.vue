@@ -1,0 +1,285 @@
+<template>
+  <div class="overview-statics">
+   <div class='overview-statics--tab' v-loading='jqLoading'>
+     <div class='overview-statics--tab_title'>
+       <span>今日警情</span><span>{{datas.jq.todayNum}}</span>起
+      </div>
+      <div class='overview-statics--tab_radio'>
+       <div><span class='label'>昨日:</span><span class='value'>{{datas.jq.yesterNum}}</span></div>
+       <div><span class='label'>历史日均:</span><span class='value'>{{datas.jq.monthAvg}}</span></div>
+      </div>
+      <div class='overview-statics--tab_main'>
+       <span class='img'><i class='iconfont icon-jingqing'></i></span>
+       <span class='label'>重大警情:</span><span class='value' @mouseover="showJqInfo=!showJqInfo" @mouseout="showJqInfo=!showJqInfo">{{datas.jq.importantNum}}</span>起</div>
+   </div>
+   <div class='overview-statics--split'></div>
+   <div class='overview-statics--tab' v-loading='sgLoading'>
+     <div class='overview-statics--tab_title'>
+       <span>本月事故</span><span>{{datas.sg.ACCIDENTNUM}}</span>起</div>
+     <div class='overview-statics--tab_radio'>
+       <div><span class='label'>伤:</span><span class='value'>{{datas.sg.INJURYNUM}}</span></div>
+       <div><span class='label'>死亡:</span><span class='value'>{{datas.sg.DEATHNUM}}</span></div>
+    </div>
+    <div class='overview-statics--tab_main'><span class='img'>
+       <i class='iconfont icon-shigu'></i></span><span class='label'>重大事故:</span><span class='value'>{{datas.sg.MAJORACCIDENTNUM}}</span>起
+    </div>
+   </div>
+   <div class='overview-statics--split'></div>
+    <div class='overview-statics--tab'  >
+     <div class='overview-statics--tab_title'><span>活跃设备</span><span>{{datas.dj.activeDev}}</span>个</div>
+     <div class='overview-statics--tab_radio'>
+       <div><span class='label'>总设备:</span><span class='value'>{{datas.dj.devcount}}</span></div>
+       <div><span class='label'>活跃率:</span><span class='value'>{{datas.dj.activityRate}}</span></div>
+     </div>
+     <div class='overview-statics--tab_main_'><span class='label'>重点设备活跃率:</span><span class='value'>{{datas.dj.keyactivityRate}}</span></div>
+   </div>
+   <transition name="el-zoom-in-top">
+        <div class='jqInfo' v-show='showJqInfo'>
+          <el-table :data="jqInfoDatas" width='300px'
+              height="200px" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+              <el-table-column prop="CITY" label="城市" width="70"></el-table-column>
+                <el-table-column prop="NUM" label="数量"></el-table-column>
+                <el-table-column prop="RADIO" label="比例"></el-table-column>
+            </el-table>
+        </div>
+      </transition>
+  </div>
+</template>
+
+<script>
+import { IMG } from "./config";
+import { interf } from "./config";` `
+export default {
+  name: "overview_statics",
+  data() {
+    return {
+      map: {},
+      jqInfoDatas:[],
+      datas:{
+        jq:{"importantList":[{"xzqh":0,"city":"","num":0,"ratio":""}],"monthAvg":0,"importantNum":0,"todayNum":0,"yesterNum":0},
+        sg:{"injuryNum":0,"deathNum":0,"importantAccidentNum":0,"sameMonthAccidentNum":0},
+        dj:{"activeDev":3,"devcount":6,"keyactivityRate":0,"activityRate":"50.0%"}
+      },
+      warn_img:IMG.warningInstanceIMG,
+      accident_img:IMG.accidentIMG,
+      interval:null,
+      jqLoading:false,
+      sgLoading:false,
+      showJqInfo:false
+    };
+  },
+  mounted() {
+    this.map = this.$store.state.map;
+    let that = this,i=0;
+    that.getIndexData();
+    that.getJqData();
+    that.getSgData();
+    this.interval=setInterval(()=>{
+      that.getJqData();
+      if(i%5==0){
+        that.getSgData();
+      }
+      i++;
+    },1000*60);
+  },
+  destroyed() {
+    this.map.setPitch(0);
+    if(this.interval){
+      clearInterval(this.interval);
+    }
+  },
+  methods: {
+    //设置表格样式
+    getRowClass({ row, column, rowIndex, columnIndex }) {
+                return "background:transparent;";
+   },
+   /**
+     * 获取今日警情统计数据
+     **/
+    getJqData() {
+      let that = this;
+      that.jqLoading=true;
+      interf.GET_ACCI_STATICS_API({}).then(response=>{
+        if (response && response.status == 200){
+          let data= response.data;
+          if (data.errcode == 0){
+           that.datas.jq=data.data;
+           that.jqInfoDatas=data.data.importantList;
+          }
+        }
+        }).catch(err => {
+        that.$message({
+          message: '请求今日警情数据失败！',
+          type: "error",
+          duration: 1500
+        });
+        that.jqLoading=false;
+      })
+      .finally(() => {
+        that.jqLoading = false;
+      });
+    },
+   /**
+     * 获取事故统计数据
+     **/
+    getSgData() {
+      let that = this;
+      that.sgLoading=true;
+      interf.GET_SG_STATICS_API({}).then(response=>{
+        that.sgLoading=false;
+        if (response && response.status == 200){
+          let data= response.data;
+          if (data.errcode == 0){
+           that.datas.sg=data.data;
+          }
+        }
+      }).catch(err => {
+        that.$message({
+          message: '请求本月事故数据失败！',
+          type: "error",
+          duration: 1500
+        });
+        that.sgLoading=false;
+      })
+      .finally(() => {
+        that.sgLoading = false;
+      });
+    },
+    /**
+     * 获取设备统计数据
+     **/
+    getIndexData() {
+      let that = this;
+      interf.GET_DEV_STATICS_API({})
+      .then(response=>{
+        if (response && response.status == 200){
+          let data= response.data;
+          console.log(data)
+          if (data.errcode == 0){
+           that.datas.dj=data.data;
+          }
+        }
+
+      })
+    },
+  /**
+   * 点击标签页
+   */
+  handleClick(){
+    
+  }
+  }
+};
+</script>
+<style scope lang='scss'>
+@import '@/assets/css/color.scss';
+@mixin flex($direction,$justify,$align) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+.overview-statics {
+  position: absolute;
+  z-index: 10;
+  left: 28vw;
+  width: 835px;
+  height: 147px;
+  top: 87px;
+  color:$color-white;
+  background: url('./image/center_bg.png') no-repeat;
+    background-size: 100% 100%;
+  @include flex(row, center,center);
+  &--tab{
+    width:33%;
+    height:10vh;
+    // border-right: 1px solid;
+    // border-image-source: url('./image/split.png');
+    // border-image: linear-gradient(rgba(0,255,255,0), #27345b 20%, #2f4162 80%, rgba(236, 239, 239, 0)) 1;
+    padding: 2% 5%;
+    @include flex(column, center,center);
+     >div{
+       @include flex(row, center,center);
+       width:100%;
+       height:30%;
+       >div{
+          @include flex(row, center,center);
+          span{
+            display:inline-block;
+            font-size:0.7vw;
+          }
+       }
+      
+       span.label{
+            color:$color-text-label;
+          }
+          span.value{
+            font-family: Hiragino Sans GB;
+          }
+     }
+    &_title{
+      span{
+        width: 50%;
+        @include flex(column, center,center);
+      }
+      span:nth-child(2){
+        font-family: 'DS-Digital-BoldItalic';
+        width: 40%;
+        font-size: 1.5vw;
+        color: $color-primary;
+        margin-bottom: 0.3vw;
+      }
+    }
+    &_radio{
+      >div{
+        width: 50%;
+        @include flex(column, center,center);
+      }
+    }
+    &_main{
+      span{
+        @include flex(column, center,center);
+      }
+      span.img{
+        width:20%;
+      }
+      span.label{
+        width:40%;
+        align-items: start;
+      }
+      span.value{
+        width:30%;
+        color:$color-red;
+        cursor: pointer;
+      }
+    }
+    &_main_{
+      span.label{
+        width:65%;
+      }
+      span.value{
+        width:10%;
+        color:$color-primary;
+      }
+    }
+  }
+  
+  &--tab:last-child{border:none;} 
+  &--split{
+    @include flex(column, center,center);
+    width:1px;
+    height:119px;
+    background: radial-gradient(#f3f0f0, #757ba340,transparent);
+  }
+  .jqInfo{
+      position: absolute;
+      width:33%;
+      top:100%;
+      left:0px;
+      background: #30426287;
+      border: 1px solid #116cf3;
+    }
+  
+}
+</style>

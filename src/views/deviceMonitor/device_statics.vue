@@ -7,7 +7,7 @@
       </div>
       <div class="device-statics_content boxstyle">
         <m-title-com label='设备类型分析' style='width:8vw;height:4vh;line-height:4vh;margin-bottom:10px;'></m-title-com>
-        <m-tab :value="num" label='设备总数' icon_style="font-size:15px" icon='icon-shebei1'></m-tab>
+        <m-tab style='padding:0 3%;width:87%;' :value="num" label='设备总数' icon_style="font-size:15px" icon='icon-shebei1'></m-tab>
         <div>
           <div class='device-statics_sort_list'>
             <m-list :list='staticsSort'></m-list>
@@ -226,7 +226,7 @@ export default {
             this.getSumDev(type,data.value);
             this.getAllStaticsData(type,data.value);
             this.initdeviceAnalysisChart(type,data.value);
-            this.getRoadDevice(data.value);
+            // this.getRoadDevice(data.value);
             break;
           }
         }
@@ -648,7 +648,7 @@ export default {
   right: 10px;
   width: 474px;
   height: auto;
-  top: 90px;
+  top: 9vh;
   color: white;
 }
 .device-statics_container {

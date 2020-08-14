@@ -3,7 +3,7 @@
     <!-- 车辆实时监测 -->
     <div v-if="isShowdiv=='1'" class="vehicle-statics_container">
       <div class="top borstyle" >
-        <div class="title" v-if="showback==true">全部车辆监控</div>
+        <div class="title" v-if="showback==true">全部监控车辆</div>
         <div class="back" v-else @click="goback(1)">
           &lt;&lt; 返回全省
           <span>{{CODE}}</span>
@@ -518,7 +518,6 @@ export default {
       }
         interf.GET_OWN_SHIP_API(getBelongData).then(response => {
           that.tableLoading = false;
-          debugger;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -867,8 +866,7 @@ export default {
         // 如果传入参数code  车辆类型
         DomesticVehicleData.code =that.CODE;
       }
-      interf
-        .GET_DOM_VEH_RANKING_API(DomesticVehicleData)
+      interf.GET_DOM_VEH_RANKING_API(DomesticVehicleData)
         .then(response => {
           that.tableLoading = false;
           if (response && response.status == 200) {

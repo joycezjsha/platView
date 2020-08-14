@@ -369,7 +369,7 @@ export default {
     &_table {
       height: 550px;
       overflow-y: auto;
-      padding:0 26px;
+      padding:0 5px;
     }
     .road_label{
       color:$color-label;

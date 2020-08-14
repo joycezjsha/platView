@@ -106,14 +106,21 @@ export default {
           sorting: '0',
           node: [
             {
-              id: 3-1,
+              id: '3-1',
+              parent_id: '3',
+              menu_name: "车辆预警",
+              sorting: 0,
+              path:'/main/vehicle-warning'
+            },
+            {
+              id: '3-2',
               parent_id: 3,
               menu_name: "车辆流动",
               sorting: 0,
               path:'/main/car-flow'
             },
             {
-              id: '3-2',
+              id: '3-3',
               parent_id: '3',
               menu_name: "重点车辆",
               sorting: 0,
@@ -187,6 +194,13 @@ export default {
             },
             {
               id: '5-3',
+              parent_id: 5,
+              menu_name: "超速分析",
+              sorting: 0,
+              path:'/main/over-speed'
+            },
+            {
+              id: '5-4',
               parent_id: 5,
               menu_name: "事故分析",
               sorting: 0,

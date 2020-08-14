@@ -4,7 +4,7 @@
       <div class="traffic-index_title">
         <m-title label='境内高速路及主干道路况' img_type=1 class='title'></m-title>
       </div>
-      <m-tab :isShowIcon="isShowIcon" label='当前选择范围' :value='selectItem.road' style='width:90%;margin:0 auto;'></m-tab>
+      <!-- <m-tab :isShowIcon="isShowIcon" label='当前选择范围' :value='selectItem.road' style='width:90%;margin:0 auto;'></m-tab> -->
       <div class="traffic-index_content">
         <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,index) in indexDatas" :id="item.id" :key="item.id">
@@ -182,7 +182,7 @@ export default {
       margin: 0;
       padding: 23px 5% 2% 5%;
       width: 90%;
-      height: 80%;
+      height: 100%;
       overflow-y: auto;
       .index-item{
         padding:10px 0 5px 0;

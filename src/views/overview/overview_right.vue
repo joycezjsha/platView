@@ -10,15 +10,15 @@
           <div style="display:flex;box-sizing:border-box;text-align:center;cursor:pointer;">
             <div @click='switchtime(1)' :class="isSelected==1? 'isSelected':''" style="flex:1;">
               <div>今日
-                <span v-show="isSelected==1">{{count}}</span></div>
+                <span>{{overSpeedData.today}}</span></div>
             </div>
             <div @click='switchtime(2)' :class="isSelected==2? 'isSelected':''" style="flex:1">
               <div >本周
-                <span v-show="isSelected==2">{{count}}</span></div>
+                <span>{{overSpeedData.lastWeek}}</span></div>
             </div>
             <div @click='switchtime(3)' :class="isSelected==3? 'isSelected':''" style="flex:1">
               <div>本月
-                <span v-show="isSelected==3">{{count}}</span></div>
+                <span>{{overSpeedData.lastMonth}}</span></div>
             </div>
           </div>
           <!-- 显示详细数据 -->
@@ -101,7 +101,7 @@ export default {
       map: {},
       stime:'1',
       data1:null, 
-      count:'',
+      overSpeedData:{today:'',lastWeek:'',lastMonth:''},
       speedingprovince:[
         {'name':'总检测次数:','value':''},
         {'name':'超速比例:','value':''},
@@ -131,128 +131,11 @@ export default {
         ydata:[]
       },
       staticsData: {sum: 10,mainCount:0},
-      accident_option: {
-        grid:{
-          top:'35%',
-          left:'15%',
-          right:'15%',
-          bottom:'15%'
-        },
-        color:['#03baff','#333c73 '],
-          tooltip: {
-            show:false,
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-          },
-          series: [
-              {
-                  name: '车辆运行态势',
-                  type: 'pie',
-                  radius: ['70%', '80%'],
-                  avoidLabelOverlap: false,
-                  label: {
-                      show: false,
-                      position: 'center'
-                  },
-                  emphasis: {
-                      label: {
-                          show: false,
-                          fontSize: '30',
-                          fontWeight: 'bold'
-                      }
-                  },
-                  labelLine: {
-                      show: false
-                  },
-                  data:this.data
-              }
-          ]
-      },
-      accident_chart:null,
       sg_sort_data: [
         { name: "机动车与机动车", value: "12", radio: "32%" },
         { name: "机动车与非机动车", value: "122", radio: "32%" },
         { name: "行人", value: "2", radio: "32%" }
       ],
-      countChangeOption:{
-        title: {
-            text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        },
-        xAxis: {
-            data:['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'],
-            axisLabel: {
-                inside: true,
-                textStyle: {
-                    color: '#fff'
-                }
-            },
-            axisTick: {
-                show: false
-            },
-            axisLine: {
-                show: false
-            },
-            z: 10
-        },
-        yAxis: {
-            axisLine: {
-                show: false
-            },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                textStyle: {
-                    color: '#999'
-                }
-            }
-        },
-        dataZoom: [
-            {
-                type: 'inside'
-            }
-        ],
-        series: [
-          //   { // For shadow
-          //     type: 'bar',
-          //     itemStyle: {
-          //         color: 'rgba(0,0,0,0.05)'
-          //     },
-          //     barGap: '-100%',
-          //     barCategoryGap: '40%',
-          //     data: dataShadow,
-          //     animation: false
-          // },
-          {
-              type: 'bar',
-              itemStyle: {
-                  color: new echarts.graphic.LinearGradient(
-                      0, 0, 0, 1,
-                      [
-                          {offset: 0, color: '#83bff6'},
-                          {offset: 0.5, color: '#188df0'},
-                          {offset: 1, color: '#188df0'}
-                      ]
-                  )
-              },
-              emphasis: {
-                  itemStyle: {
-                      color: new echarts.graphic.LinearGradient(
-                          0, 0, 0, 1,
-                          [
-                              {offset: 0, color: '#2378f7'},
-                              {offset: 0.7, color: '#2378f7'},
-                              {offset: 1, color: '#83bff6'}
-                          ]
-                      )
-                  }
-              },
-              data: [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220]
-          }
-        ]
-      },
-      countChart:null,
       tableLoading:false,//加载中...控制
       carStatics:{count:0,front_month:0,this_month:0},
       showIcon:false,
@@ -271,13 +154,15 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    // this.initAccidentStaticsChart();
     that.initSumCharts();
     that.initAccurCharts();
-    this.interval=setInterval(()=>{
-      // that.initAccidentStaticsChart();
-    },1000*60)
+    // this.interval=setInterval(()=>{
+    //   that.initOverSpeedModule();
+    // },1000*60)
     that.initSumCharts1();
+    this.getOverSpeedData();
+    that.overSpeedData.lastWeek=urlConf.overview_weekCount?urlConf.overview_weekCount:'';
+    that.overSpeedData.lastMonth=urlConf.overview_monthCount?urlConf.overview_monthCount:'';
   },
   destroyed() {
     this.flyRoutes = [];
@@ -289,6 +174,18 @@ export default {
     }
   },
   methods: {
+    getOverSpeedData(){
+      let that=this;
+      let param={};
+      interf.GET_PRO_COUNT_API(param).then(response => {
+        if (response && response.status == 200) {
+          let data = response.data;
+          that.overSpeedData.today=data.data.todayCount;
+          if(that.overSpeedData.lastWeek=='')  that.overSpeedData.lastWeek=data.data.weekCount;
+          if(that.overSpeedData.lastMonth=='') that.overSpeedData.lastMonth=data.data.monthCount;
+        }
+      })
+    },
     /**
      * 点击切换时间
      */
@@ -308,15 +205,13 @@ export default {
       that.speeding_data.xdata=[];
       let param={};
       param.stime=that.stime;
-      interf.GET_PRO_CAR_API(param)
-      .then(response => {
+      interf.GET_PRO_CAR_API(param).then(response => {
           if (response && response.status == 200) {
-            var data = response.data;
+            let data = response.data;
             if (data.errcode == 0) {
               that.speedingprovince[0].value=data.data.count;
               that.speedingprovince[1].value=data.data.ratio;
               that.speedingprovince[2].value=data.data.avg;
-              that.count=data.data.cscount;
               // 超速次数--cscount    平均行駛速度--avg
               if(data.data.listmap.length>0){
                 let arr=[

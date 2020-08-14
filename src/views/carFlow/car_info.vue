@@ -493,7 +493,7 @@ export default {
       if(num=='1'){
         that.getprovinceData(that.stime);
         that.initSumCharts(that.timeName);
-        that.getCarTypeDatas(that.stime) ;
+        that.getCarTypeDatas(that.stime);
       }
       if(num=='2'){
         that.map.setZoom(4);
@@ -525,6 +525,13 @@ export default {
           that.getBelongData(that.stime);   
         };
         if(that.isShowdiv=='1'){
+          this.showback=false;
+          that.stime='1';
+          that.fxlx='1';
+          that.isActive='1';
+          that.timeName='1';
+          that.xzqh='';
+          blur.$emit('back',that.stime,that.xzqh);
           this.map.setZoom(6);
           that.getprovinceData(that.stime)
           that.initSumCharts(that.timeName);
@@ -821,6 +828,9 @@ export default {
       let getColor=(param)=>{
               let factor = (param.data.count - min) / (max - min);
               let index = Math.round(colors.length * factor);
+              if(index>3 || index<0){
+                index=0;
+              }
               return colors[index];
             }
       let series = [{

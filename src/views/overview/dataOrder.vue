@@ -29,7 +29,7 @@
         :header-row-style="getRowClass"
         :header-cell-style="getRowClass"
       >
-        <el-table-column fixed='left' type="index" label="序号" width="70"></el-table-column>
+        <el-table-column type="index" label="序号" width="70"></el-table-column>
         <el-table-column prop="city" label="城市" width="100"></el-table-column>
         <el-table-column
           :prop="item.jzdm"
@@ -129,6 +129,7 @@ export default {
       ],
       tableData: {
         RECORDS: [
+          { jzdm: "count", name: "总计" },
           { jzdm: "00", name: "公安局" },
           { jzdm: "01", name: "国内安全保卫" },
           { jzdm: "02", name: "经济犯罪侦查" },
@@ -303,7 +304,8 @@ export default {
           {
             jzdm: "98",
             name: "科技委"
-          }
+          },
+          { jzdm: "17", name: "其他" },
         ]
       }
     };
@@ -325,7 +327,7 @@ export default {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
-              // that.indexDatas = data.data;
+              that.indexDatas = data.data;
             }
           }
         });
@@ -334,6 +336,7 @@ export default {
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
+              debugger;
               let _data=[];
               data.data.map(e=>{
                 if(e.YJDFZJG && e.YJDFZJG!=''){

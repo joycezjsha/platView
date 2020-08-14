@@ -30,7 +30,7 @@
        <ul class="traffic-index_content_table">
          <!--    -->
           <li @click="showMapData(item)" 
-          class="index-item" 
+          class="index-item"
           :class="{itemselected:highlighted==item.HPHM}"
           v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <div style="margin-bottom:3px">
@@ -150,6 +150,8 @@ export default {
    showMapData(item){
      let that=this;
      that.highlighted=item.HPHM;
+     this.addOverSpeedMarker(item);
+     $('#'+item.HPHM+'_marker').trigger('click');
    },
     // 传递city参数
     showCity(row){
@@ -161,8 +163,7 @@ export default {
     getKeyVehicleDatas(){
      let that = this;
      that.tableLoading = true;
-    interf.GET_KEY_VEHICLE_API({})
-    .then(response=>{
+    interf.GET_KEY_VEHICLE_API({}).then(response=>{
       that.tableLoading = false;
         if (response && response.status == 200){
           var data= response.data;
@@ -201,6 +202,7 @@ export default {
     /* 重点车辆监测超速预警 KeyVehicle/getSpeeding   GET_OVER_WARN_FLOW_API  */
     getIndexData() {
     let that = this;
+    that.clearMarker();
     interf.GET_OVER_WARN_FLOW_API({})
     .then(response=>{
         if (response && response.status == 200){
@@ -208,6 +210,9 @@ export default {
           if (data.errcode == 0) {
             if(data.data.length>0){
               that.trafficDatas=data.data;
+              data.data.forEach(e=>{
+                that.addOverSpeedMarker(e);
+              });
             }
           }else{
             that.$message({
@@ -224,68 +229,141 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
-    // $.ajax({
-    //     url: "./static/json/city_accident_data.json", //globals.CRUISE_ALL_INFO_URL,
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     responseType: "json",
-    //     method: "get",
-    //     dataType: "json",
-    //     data: {
-    //       // token: window.localStorage.getItem("loginUserToken")
-    //     },
-    //     success: function(data) {
-    //       if (data.errcode == -2) {
-    //         that.$router.push({ name: "/login" });
-    //       }
-    //       if (data.errmsg == "success" && data.data.length > 0) {
-    //         let datas=[];
-    //         data.data.map(e=>{
-    //           datas.push(
-    //             {"city":e.areaName,"index":Math.round(e.areaTpi)*10/100,"week_radio":"+0.3%","his_radio":"-0.1%"}
-    //           )
-    //         });
-    //         that.indexDatas=datas;
-    //       }
-    //     },
-    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //       debugger
-    //     }
-    //   });
     },
-   
+    /**
+     * 展示超速预警点位
+     */
+    addOverSpeedMarker(item){
+      let center=[item.JD,item.WD];
+
+      let el = document.createElement('div'); 
+      el.style["background-image"] = "url("+IMG.OVER_SPEED_IMG+")";
+      el.style["background-size"] = "100% 100%";
+      el.style.width='25px';
+      el.style.height='25px';
+      el.id=item.HPHM+'_marker';
+
+      let mainDiv = document.createElement('div');
+      mainDiv.style.backgroundColor='rgba(3,12,32,0.74)';
+      mainDiv.style.width='218px';
+       mainDiv.style.paddingTop='6px';
+      mainDiv.style.height='auto';
+      mainDiv.className = 'custom-popup-class'; //custom-popup-class为自定义的css类名
+
+      
+      let d1 = document.createElement('div');
+      let span1= document.createElement('span'); 
+      let span2= document.createElement('span'); 
+      span1.innerHTML=item.HPZL;
+      span1.style.backgroundColor='#591A1A';
+      span1.style.marginRight='5px';
+      span2.innerHTML=item.HPHM;
+      d1.fontFamily='Source Han Sans CN';
+      d1.style.color = "rgba(255,255,255,1)";
+      d1.appendChild(span1);
+      d1.appendChild(span2);
+      mainDiv.appendChild(d1);
+
+      let d2 = document.createElement('div');
+      let span3= document.createElement('span'); 
+      let span4= document.createElement('span'); 
+      span3.innerHTML='时速/限速 :  ';
+      span4.innerHTML=item.SJ;
+      d2.style.color = "#00C6FF";
+      d2.appendChild(span3)
+      d2.appendChild(span4)
+      mainDiv.appendChild(d2);
+
+      let d3= document.createElement('div');
+      let span5= document.createElement('span'); 
+      let span6= document.createElement('span'); 
+      span5.innerHTML='监测时间 :  ';
+      span6.innerHTML=item.WFSJ;
+      d3.fontFamily='Source Han Sans CN';
+      d3.style.color = "rgba(255,255,255,1)";
+      d3.appendChild(span5)
+      d3.appendChild(span6)
+      mainDiv.appendChild(d3);
+
+      if(item.tupian) {
+        let d4= document.createElement('div');
+        let span7= document.createElement('img'); 
+        span7.src=item.tupian;
+        span7.style.width='97%';
+        span7.style.height='157px';
+        span7.style.margin='8px 5px';
+        d4.appendChild(span7);
+        mainDiv.appendChild(d4);
+      }
+      
+      
+      let popup= new minemap.Popup({closeOnClick: true, closeButton: false, offset: [0, 0]})
+      .setLngLat(center)
+      .setDOMContent(mainDiv);
+      this.map_cover.popups.push(popup);
+
+      let marker = new minemap.Marker(el, {offset: [-5,-5]}).setLngLat(center).setPopup(popup).addTo(this.map);
+      this.map_cover.markers.push(marker);
+    },
   //清除地图加载点、线、面、弹框
-  clearMap(){
-    //清除source
-    // if(this.mapAddItems.sourceList.length>0){
-    //   this.mapAddItems.sourceList.forEach(e=>{
-    //     if(this.map.getSource(e)!=undefined){
-    //       this.map.removeSource(e);
-    //     }
-    //   })
-    // }
-    //清除layer
-    if(this.mapAddItems.lineList.length>0){
-      this.mapAddItems.lineList.forEach(e=>{
-        if(this.map.getLayer(e)!=undefined){
-          this.map.removeLayer(e);
-        }
-      })
+    clearMap(){
+      //清除source
+      // if(this.mapAddItems.sourceList.length>0){
+      //   this.mapAddItems.sourceList.forEach(e=>{
+      //     if(this.map.getSource(e)!=undefined){
+      //       this.map.removeSource(e);
+      //     }
+      //   })
+      // }
+      //清除layer
+      if(this.map_cover.lineList.length>0){
+        this.map_cover.lineList.forEach(e=>{
+          if(this.map.getLayer(e)!=undefined){
+            this.map.removeLayer(e);
+          }
+        })
+      }
+      this.map_cover.lineList=[];
+      //清除marker
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover.markers=[];
+      //清除popup
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover.popups=[];
+    },
+    /**
+     * 清除超速预警的点位
+     */
+    clearMarker(){
+       //清除marker
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover.markers=[];
+      //清除popup
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover.popups=[];
+    },
+    /**
+     * 点击标签页
+     */
+    handleClick(){
+      
     }
-    //清除popup
-    if(this.mapAddItems.popups.length>0){
-      this.mapAddItems.popups.forEach(e=>{
-        e.remove();
-      })
-    }
-  },
-  /**
-   * 点击标签页
-   */
-  handleClick(){
-    
-  }
   }
 };
 </script>

@@ -57,7 +57,7 @@
             </span>
          </div>
          <div class='center_statics--radio'>进出比&nbsp;
-         <span class="">{{centerstatics.inoutProportion | number}}%</span></div>
+         <span class="">{{centerstatics.inoutProportion | number}}</span></div>
        </div>
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->

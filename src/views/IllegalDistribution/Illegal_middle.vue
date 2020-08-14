@@ -50,9 +50,8 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        // this.map.setCenter([108.967368, 34.302634]);
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
-        this.map.setZoom(11);
+        this.map.setZoom(6);
         this.getIllegalHeatMapDatas(this.stime)
         this.gatData()
     },
@@ -143,42 +142,117 @@ export default {
         /**
         *  柱形热力图
         */
-       getMapDatas(item){
-        let that = this;
-        if (that.map.getLayer("histogram-layer") != undefined) {
-            that.map.setLayoutProperty("histogram-layer", "visibility", "visible");
-            that.map.getSource("histogram-source").setData(item);
+    //    getMapDatas(item){
+    //     let that = this;
+    //     if (that.map.getLayer("histogram-layer") != undefined) {
+    //         that.map.setLayoutProperty("histogram-layer", "visibility", "visible");
+    //         that.map.getSource("histogram-source").setData(item);
+    //     }else{
+    //         that.map.addSource('histogram-source', {
+    //             'type': 'geojson',
+    //             'data': item//'./static/json/wuhuannei_level1.json'//
+    //         });
+    //         that.map.addLayer({
+    //             "id": "histogram-layer",
+    //             'type': 'histogram',
+    //             'source': 'histogram-source',
+    //             'layout': {
+    //                 'histogram-max-height-render': true, /* 是否开启柱状图极大高度控制 */
+    //                 "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
+    //             },
+    //             'paint': {
+    //                 "histogram-colors": ['#00ece8','#00ece8','#00ece8','#00ece8','#00ece8'],//['green', 'blue', 'yellow', 'orange', 'red'],//['#ad0532', '#8e7146', '#00ece8', '#a24228', '#ad0532'],
+    //                 /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
+    //                 'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
+    //                 'histogram-height': {
+    //                     'type': 'identity',
+    //                     'property': 'levels'
+    //                 }, /*高度*/
+    //                 'histogram-base': 0,/*基础高度*/
+    //                 'histogram-opacity': 0.8
+    //             }
+    //         });
+    //         that.map_cover.sourceList.push("histogram-source");
+    //         that.map_cover.lineList.push("histogram-layer");
+    //         }
+    //         that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
+    //         that.map.setPitch(60);
+        
+    //    },
+    getMapDatas(datas){
+        let _this=this;
+        let jsonData = {
+           type: "FeatureCollection",
+              features: []
+        };
+        
+        datas.features.forEach(e=>{
+            jsonData.features.push({
+                "geometry": {
+                  "type": "MultiPolygon",
+                  "coordinates": [
+                      e.geometry.coordinates
+                    ]
+                  },
+                  "type": "Feature",
+                  "properties": {
+                    // "code": features[0].properties.code,
+                    // "title": features[0].properties.title,
+                    // "color":features[0].properties.color,
+                    "level": "province",
+                    "subFeatureIndex": 0,
+                    "levels": e.properties.levels
+                  }
+                })
+        })
+        if(_this.map.getSource('illegal_polygonSource')!=undefined){
+            _this.map.getSource('illegal_polygonSource').setData(jsonData);
         }else{
-            that.map.addSource('histogram-source', {
+            _this.map.addSource('illegal_polygonSource', {
                 'type': 'geojson',
-                'data': item//'./static/json/wuhuannei_level1.json'//
+                'data': jsonData
             });
-            that.map.addLayer({
-                "id": "histogram-layer",
-                'type': 'histogram',
-                'source': 'histogram-source',
-                'layout': {
-                    'histogram-max-height-render': true, /* 是否开启柱状图极大高度控制 */
-                    "histogram-color-render": true /* 是否开启分段颜色，如果为true，paint中histogram-color的stops */
+        //面的显示
+            this.map.addLayer({
+                "id": 'illegal_polygon',
+                "type": "extrusion",    // 建筑物图层
+                "source": 'illegal_polygonSource',
+                "layout": {
+                // "histogram-max-height-render": true  // 是否开启柱状图极大高度控制
                 },
-                'paint': {
-                    "histogram-colors": ['#ad0532', '#8e7146', '#00ece8', '#a24228', '#ad0532'],
-                    /**开启分段颜色，根据柱状图高度从下到上设置颜色值，备注：颜色数组值长度必须为5个*/
-                    'histogram-max-height': 100,/*该参数针对histogram-colors进行配合使用，该值为从下到上的前四段颜色的最大限定高度值，备注：如果不开启分段颜色，该参数不用设置*/
-                    'histogram-height': {
-                        'type': 'identity',
-                        'property': 'levels'
-                    }, /*高度*/
-                    'histogram-base': 0,/*基础高度*/
-                    'histogram-opacity': 0.8
+                "paint": {
+                'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
+                    "property": "levels",
+                    "stops": [
+                        [0, "green"],
+                        [50, "yellow"],
+                        [100, "orange"],
+                        [200, "#ff2b03"],
+                        [500, "red"],
+                    ]
+                },
+                'extrusion-height': {   // 建筑物的高度
+                    'property': 'levels',
+                    "stops": [
+                        [0, 2000.0],
+                        [100, 3000.0],
+                        [300, 5000.0],
+                        [500, 6000.0],
+                        [1000, 7000.0],
+                    ]
+                },
+                'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
+                'extrusion-opacity': {  // 建筑物的透明度，值为数值，默认为1
+                    "base": 1,
+                    "stops": [[3, 0.8], [8, 0.5]]
+                    }
                 }
             });
-            that.map_cover.sourceList.push("histogram-source");
-            that.map_cover.lineList.push("histogram-layer");
-            }
-            that.map.setCenter(item.features[0].geometry.coordinates[0][0]);
-            that.map.setPitch(60);
-        
+            _this.map_cover.sourceList.push("illegal_polygonSource");
+            _this.map_cover.lineList.push("illegal_polygon");
+        };
+        _this.map.setCenter(datas.features[0].geometry.coordinates[0][0]);
+        _this.map.setPitch(60);
        },
         /**
         * 违法热力图数据及展示 IllegalAnalysis/getIllegalHeatMap  GET_HEAT_MAP_API

@@ -158,7 +158,7 @@ export default {
             that.map_cover.lineList.push("unclustered-points"); 
             //添加聚合图层
               var layers = [
-              [3,'#ff5a0f'], [5,'#D25C06'], [1,'#6C9B06']
+              [5,'#ff5a0f'], [3,'#D25C06'], [1,'#6C9B06']
               ];
               layers.forEach(function (layer, i) {
                 let clusterId="cluster"+i;

@@ -22,6 +22,8 @@ import user from '@/views/userManager/userManage.vue'
 import vehicleownership from '@/views/vehicleownership/vehicleownership.vue'
 import induction from '@/views/induction/induction'
 import Epidemic from '@/views/EpidemicConnect.vue'
+import vehicleWarning from '@/views/vehicleWarning/vehicleWarningIndex.vue'
+import overSpeed from '@/views/overSpeed/overSpeedIndex.vue'
 // 懒加载方式，当路由被访问的时候才加载对应组件       
 const Login = resolve => require(['@/views/Login/Login'], resolve)
 
@@ -104,6 +106,13 @@ const router = new Router({
           }
         },
         {
+          path: '/main/vehicle-warning',//重点车辆
+          name: 'vehicleWarning',
+          components: {
+            default: vehicleWarning
+          }
+        },
+        {
           path: '/main/illegal-distribution',//违法分析
           name: 'vehiclePopulation',
           components: {
@@ -150,6 +159,13 @@ const router = new Router({
           name: 'user',
           components: {
             default: user
+          }
+        },
+        {
+          path: '/main/over-speed',//超速
+          name: 'overSpeed',
+          components: {
+            default: overSpeed
           }
         }
       ]

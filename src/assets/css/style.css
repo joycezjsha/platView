@@ -106,7 +106,7 @@ color:white;
 }
 
 .el-input__inner,.el-range-editor .el-range-input {
-  background: #0A173A;
+  background: #020916;
   color:white;
 }
 .el-date-editor .el-range-separator{
@@ -177,11 +177,47 @@ line-height:2vh;
   margin-top:2px;
   width:124px;
   background-color: transparent; */
+  border-color:#409eff;
 }
 .el-popper[x-placement^=bottom] .popper__arrow{
   display:none;
 }
-.el-select-dropdown__list{padding:0;}
+.el-select-dropdown__list{padding:0;background: #020916;}
+.el-select{
+  width: 6.25vw;
+  background-color: #050d4e;
+  height: 1.66667vw;
+  color: #fff;
+}   
+.el-select .el-input .el-input__inner {
+  height: 1.66667vw;
+  width: 6.45833vw;
+  border-radius: 0.10417vw;
+  background-color: transparent;
+  border-color: #27438B;
+  color: #fff;
+}
+.el-table th{
+  /* color:#1D99AB; */
+  color:#a6afcd;
+  padding:8px;
+}
+.el-table th .cell{ 
+  padding:0 5px;
+  font-size:14px;
+}
+.el-table .sort-caret.descending{
+  border-top-color: #1D99AB;
+  font-size: 16px;
+}
+.el-table .sort-caret.ascending{
+  border-bottom-color: #1D99AB;
+  font-size: 16px;
+}
+.el-date-table td.disabled div{
+  background-color: #282c27;
+  color: #6b717d;
+}
 /*el样式改写 --END*/
 
 /*登陆单独界面样式改写*/
@@ -214,24 +250,14 @@ line-height:2vh;
 .page-login .el-input .el-icon-view::before,.page-login .el-input .el-icon-minus::before{
   color:#0A94FD;
 }
+
 /*单独界面样式改写 --END*/
 
 /**
 *公共样式
 **/
-.el-table th{
-  /* color:#1D99AB; */
-  color:#a6afcd;
-  font-size: 16px;
-}
-.el-table .sort-caret.descending{
-  border-top-color: #1D99AB;
-  font-size: 16px;
-}
-.el-table .sort-caret.ascending{
-  border-bottom-color: #1D99AB;
-  font-size: 16px;
-}
+
+
 .boxstyle{
   /* background: url('../images/box_bg.png') no-repeat !important; */
   background: url('../images/box_bg.png') no-repeat;
@@ -240,6 +266,10 @@ line-height:2vh;
 .borstyle{
   background: url('../images/box_bg.png') no-repeat ;
   background-size: 100% 100%;
+}
+#map .closeImgDiv{float:right;}
+#app .closeImgDiv .closeImg{
+  cursor:pointer;
 }
 #map .minemap-popup-content{
   background-color: rgba(3, 12, 32, 0.74);

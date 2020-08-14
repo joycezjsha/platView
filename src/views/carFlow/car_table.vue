@@ -2,17 +2,29 @@
   <div class="city-index-div carflow">
     <div class="city-index_container boxstyle">
       <div class="city-index_title">
-        <div>
-          <m-title label='全省流动情况' img_type=1 style='width:100%;height:4vh;line-height:4vh;'></m-title>
-        </div>
+        <m-title label='全省流动情况' img_type=1 style='width:100%;height:4vh;line-height:4vh;width:7vw;'></m-title>
       </div>
-      <div class="car-flow_content " >
+      <div class="car-flow_content" >
         <el-tabs v-model="activeName" @tab-click="handleClick" style="padding:0 0.5vw;" >
           <el-tab-pane label="实时" name="1"></el-tab-pane>
           <el-tab-pane label="今天" name="2"></el-tab-pane>
           <el-tab-pane label="昨天" name="3"></el-tab-pane>
           <el-tab-pane label="自定义" name="4"></el-tab-pane>
         </el-tabs>
+        
+        <!-- <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt> -->
+        <!-- <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==1">实时：统计上一个小时
+          <span>({{realtimer1}}:00-{{realtimer2}}:00)</span>的流动情况
+        </div> -->
+        <!-- <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
+        </div>
+        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
+        </div> -->
+        <m-tiptxt class='tiptxt' v-if="activeName==1" :text="'实时：统计上一个小时('+realtimer1+':00-'+realtimer2+':00)'" :isShowIcon='isShowIcon'></m-tiptxt>
+        
+        <m-tiptxt class='tiptxt' v-if="activeName==2" :text="'今天：统计今天(00:00-'+realtimer2+':00)的流动情况'" :isShowIcon='isShowIcon'></m-tiptxt>
+        
+        <m-tiptxt class='tiptxt' v-if="activeName==3" :text="'昨天：统计昨天全天的流动情况'" :isShowIcon='isShowIcon'></m-tiptxt>
         <div class='car-table-query' v-if="activeName=='4'">
           <span class='car-table-query--label'>时间：</span><span class="car-table-query--time">
               <el-date-picker width="100%"
@@ -32,23 +44,15 @@
             <el-button type="primary" @click="determine">确定</el-button>
           </span>
         </div>
-        <!-- <m-tiptxt :text='tipTxt[activeName]' v-else></m-tiptxt> -->
-        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==1">实时：统计上一个小时
-          <span>({{realtimer1}}:00-{{realtimer2}}:00)</span>的流动情况
-        </div>
-        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==2">今天：统计上今天(00:00-16:00)的流动情况
-        </div>
-        <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
-        </div>
         <div class='all_statics'>
           <div><span>陕西省</span><span>+{{allStatics.addIn}}</span></div>
           <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span>
           <span >流出：-{{allStatics.outcount}}</span></div>
-          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}%</span></div>
+          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
         </div>
         <div class="sort">
           <div class="text">排序方式 ：</div>
-          <div style="width:120px;margin-left:3px;display:flex" class="dropdown">
+          <div class="dropdown">
             <el-select v-if="flowDatas" @change='orderChange' v-model="orderType" >
                <el-option
                 v-for="item in typeOption"
@@ -57,7 +61,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <span @click="sort" style="width:30px;height:26px;color:#00C6FF;margin-left:10px;padding-top:3px;">              
+            <span @click="sort" class='sort_img'>              
               <i style="font-size:20px;" v-show="downIcon" class='iconfont icon-paixu3'></i>
               <i style="font-size:20px;"  v-show="!downIcon" class='iconfont icon-paixu1'></i>
             </span>
@@ -66,7 +70,7 @@
         <ul v-if="flowDatas"  :class="activeName=='4'?'car-flow_content_table car-flow_content_table-':'car-flow_content_table'">
           <!--   class="item"  -->
           <li 
-          @click="showData(item.xzqh.toString(),item.city)" 
+          @click="showData(item)" 
           class="item"
           :class="{itemselected:highlighted==item.city}"
           v-for="(item,index) in flowDatas" :key="item.id">
@@ -179,6 +183,7 @@ export default {
           //   }
           // }]
       },
+      isShowIcon:false
     };
   },
   components:{mTitle,mTiptxt},
@@ -219,7 +224,7 @@ export default {
     getData(){
       let that = this;
       blur.$on('back',data=>{
-        that.activeName='1';
+        // that.activeName='1';
         that.highlighted='';
         that.stime='1';
         that.xzqh='';
@@ -251,18 +256,20 @@ export default {
     /**
     *   showData() 列表中的每一项
     */
-    showData(xzqh,city){
+    showData(item){
       let that = this;
       // 车辆类型分析
-      blur.$emit("paramxzqh",xzqh,city);
-      that.xzqh=xzqh;
-      that.city=city;
-      that.highlighted=city;
-      // let datas={};
-      // datas.xzqh=xzqh;
-      // datas.city=city;
-      // datas.stime=that.stime;
-      // blur.$emit('getStatics',datas);
+      blur.$emit("paramxzqh",item.xzqh.toString(),item.city);
+      that.xzqh=item.xzqh.toString();
+      that.city=item.city;
+      that.highlighted=item.city;
+      that.map.flyTo({
+            center: item.jwd.split(' '),
+            // zoom: 10,
+            bearing: 10,
+            pitch: 0,
+            duration: 2000
+        });
     },
     /*
     *  全省流动情况  默认显示实时的数据   
@@ -500,6 +507,9 @@ export default {
         @include flex(row,center);
       }
     }
+    .tiptxt{
+      padding:0 10px;
+    }
     &_table {
       overflow-y: auto;
       color:white;
@@ -589,31 +599,22 @@ export default {
   }
 }
 .carflow .sort{
-  height:32px;
-  width: 100%;
-  position: relative;
-  margin-top: 1.3vh;
-  margin-bottom:2.2vh;
+  height: 4vh;
+  width: 95%;
+  display: flex;
+  margin: 15px auto;
   .text{
-    position: absolute;
-    top:0;
-    left: 37px;
-    width:6vw;
-    height:16px;
-    font-size:16px;
-    font-family:Source Han Sans CN;
-    font-weight:400;
-    color:rgba(166,175,205,1);
-    margin-top: 2px;
-    padding-top:5px;
+    height: 4vh;
+    font-size: 16px;
+    color: #a6afcd;
+    line-height: 4vh;
   }
   .dropdown{
-    position: absolute;
-    top:0;
-    left:120px;
-    height: 3.5vh;
-   
+    width: 120px;
+    margin-left: 3px;
+    display: flex;
   }
+  .sort_img{width:30px;height:28px;color:#00C6FF;margin-left:15px;padding-top:8px;cursor:pointer;}
 }
 .carflow li:nth-of-type(odd){ 
   background:rgba(72,84,108,0.2);
@@ -623,5 +624,22 @@ export default {
 .carflow li:nth-of-type(even){ 
   height: 74px;
   padding:1.2vh 0.7vw 0.7vh 0;
+}
+</style>
+<style lang='scss'>
+.car-flow_content {
+  .el-tabs__nav{width:100%;}
+  .el-tabs__item{
+    width:25%;
+    text-align:center;
+  }
+}
+.dropdown{
+  .el-input__inner{
+    width: 124px;
+    height: 32px;
+    border: 1px solid #27438B;
+    border-radius: 0;
+  }
 }
 </style>

@@ -72,6 +72,14 @@ export const interf={
       params:data
     })
   },
+  // 省内超速情况   获取省内车辆运行态势数据总数
+  GET_PRO_COUNT_API:data => {
+    return http.service({
+      url:`Overview/getVehicleOperationNum`,
+      method:'get',
+      params:data
+    })
+  },
   // 获取进出陕车辆趋势数据
   GET_VEH_CAR_API:data => {
     return http.service({
@@ -148,6 +156,32 @@ export const interf={
   GET_DEVICE_MAP_API:data => {
     return http.service({
       url:`Overview/getMapActiveBayone`,
+      method:'get',
+      params:data
+    })
+  },
+  //获取大、小车流量数据
+  GET_BIG_CAR_API:data => {
+    return http.service({
+      url:`Overview/getBigCarOrSmallCarFlow`,
+      method:'get',
+      params:data
+    })
+  },
+  //获取今日预警
+  
+  GET_TODAY_ALARM_API:data => {
+    return http.service({
+      url:`Overview/getTodayAlarm`,
+      method:'get',
+      params:data
+    })
+  },
+  //获取今日执法
+  
+  GET_TODAY_ENFORCEMENT_API:data => {
+    return http.service({
+      url:`Overview/getTodayIntercept`,
       method:'get',
       params:data
     })
