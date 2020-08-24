@@ -22,6 +22,7 @@
             v-model="timeRange"
             :picker-options="pickerOptions"
             type="daterange"
+            :default-time="defaultTime"
             align="right"
             unlink-panels
             range-separator="至"
@@ -51,7 +52,7 @@
            ref="tableillegal"
           :data="indexDatas"  height="100%" :default-sort = "{prop: 'COUNTNUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
           <el-table-column  type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="CITY" label="城市" >
+            <el-table-column prop="CITY" label="管理部门" >
               <!-- <template v-if="scope.row.city!=null" slot-scope="scope">
                 {{scope.row.city}}
               </template> -->
@@ -92,6 +93,7 @@ export default {
         lineList:[],
         popups:[]
       },
+      defaultTime:['00:00:00','00:00:00'],
       activeName:'全部',
       pickerOptions: {
         disabledDate(time) {
@@ -150,9 +152,11 @@ export default {
     blur.$emit('getstime',item.name)
     if(item.name!='4'){
       that.stime=item.name;
-      that.getIllegalAnalysisDatas(that.stime)
+      that.getIllegalAnalysisDatas(that.stime);
+      this.timeRange='';
     }else{
       that.timeRange= undefined;
+      that.indexDatas=[];
     }
   },
   /**
@@ -160,23 +164,18 @@ export default {
   */
   determine(){
     let that = this;
-     if(that.timeRange==''){
+     if(!that.timeRange || that.timeRange==''){
          that.$message({
             message: '开始日期和结束日期不能为空！',
-            type: "error",
+            type: "warning",
             duration: 3000
           });
          return;
       }else{
-        if(that.timeRange.length<2){
-          that.$message({
-            message: '开始日期和结束日期不能为空！',
-            type: "error",
-            duration: 3000
-          });
-         return;
-        };
-         blur.$emit('gettimeRange',that.timeRange)
+        if(new Date(this.timeRange[1]).getTime()==new Date(new Date().toLocaleDateString()).getTime()){
+          this.timeRange[1]=this.timeRange[1].split(' ')[0]+' '+new Date().getHours()+':'+new Date().getMinutes()+':'+new Date().getSeconds();
+        }
+        blur.$emit('gettimeRange',that.timeRange)
         // blur.$emit("determine",that.timeRange)
         that.getIllegalAnalysisDatas(that.timeRange[0],that.timeRange[1]);
         let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00';

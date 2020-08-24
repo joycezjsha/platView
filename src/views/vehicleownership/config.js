@@ -4,6 +4,8 @@
 import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
+import close_img from './image/close.png'
+import close_hover_img from './image/close_hover.png'
 export const interf={
   /*获取汽车保有量排名数据 VehiclePopulation/getVehiclePopulation*/
   GET_CITY_ORDER_API:data=> {
@@ -60,5 +62,7 @@ export const interf={
 export const IMG={
   /*路况巡航*/
   CRUISE_IMG_PLAY: playImg,
-  CRUISE_IMG_STOP:stopImg
+  CRUISE_IMG_STOP:stopImg,
+  CLOSE_IMG:close_img,
+  CLOSE_HOVER_IMG:close_hover_img
 }

@@ -3,6 +3,8 @@
  */
 import http from '../../common/httpUtil'
 import jqImg from './image/jq.png'
+import close_img from './image/close.png'
+import close_hover_img from './image/close_hover.png'
 export const interf={
   /*获取城市统计数据*/
   GET_CITY_STA_API:data=> {
@@ -71,5 +73,7 @@ export const interf={
 }
 export const IMG={
   /*路况巡航*/
-  ACCI_IMG: jqImg
+  ACCI_IMG: jqImg,
+  CLOSE_IMG:close_img,
+  CLOSE_HOVER_IMG:close_hover_img
 }

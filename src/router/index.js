@@ -24,6 +24,7 @@ import induction from '@/views/induction/induction'
 import Epidemic from '@/views/EpidemicConnect.vue'
 import vehicleWarning from '@/views/vehicleWarning/vehicleWarningIndex.vue'
 import overSpeed from '@/views/overSpeed/overSpeedIndex.vue'
+import IntersectionEvaluation from '@/views/IntersectionEvaluation/IntersectionEvaluation.vue'
 // 懒加载方式，当路由被访问的时候才加载对应组件       
 const Login = resolve => require(['@/views/Login/Login'], resolve)
 
@@ -90,7 +91,13 @@ const router = new Router({
             default: trafficIndex
           }
         },
-        
+        {
+          path: '/main/Intersection', //路口均衡指数
+          name: 'Intersection',
+          components: {
+            default: IntersectionEvaluation
+          }
+        },
         {
           path: '/main/accident-distribution', //事故分析
           name: 'accidentDistribution',
@@ -175,16 +182,9 @@ const router = new Router({
       name: 'epidemic',
       component: Epidemic
     },
+    
   ]
 })
-
-
-// router.beforeEach((to, from, next)=>{
-//   if(to.path=='/login') return next()
-//   const tokenstr=window.sessionStorage.getItem('token')
-//   if(!tokenstr)   return next('/login')
-//   next()
-// })
 router.beforeEach((to, from, next) => {
   if(store.state.map){
     let _layers=store.state.map.__layersList;

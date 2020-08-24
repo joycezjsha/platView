@@ -96,6 +96,13 @@ export default {
               menu_name: "交通巡航",
               sorting: 0,
               path:'/main/cruise'
+            },
+            {
+              id: '2-4',
+              parent_id: '2',
+              menu_name: "路口均衡指数",
+              sorting: 0,
+              path:'/main/Intersection'
             }
           ]
         },

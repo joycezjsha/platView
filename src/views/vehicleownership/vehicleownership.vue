@@ -26,13 +26,6 @@ export default {
    mounted() {
     let _this=this;
     _this.$store.commit("setRight", '25vw');
-    blur.$on('initVehicleStatics',function(data){
-      _this.$refs.statics.initStatics(data);
-    })
-  },
-  destroyed() {
-  },
-  methods: {
   }
 };
 </script>

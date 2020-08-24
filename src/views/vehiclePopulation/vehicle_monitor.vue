@@ -34,8 +34,8 @@
           :class="{itemselected:highlighted==item.HPHM}"
           v-for="item in trafficDatas" :id="item.id" :key="item.id">
             <div style="margin-bottom:3px">
-               <span class="car-name">{{item.HPZL}}</span>
-               <span style="color:rgba(255,255,255,1);">{{item.HPHM}}</span>
+               <span class="car-name" :style="'color:rgba(255,255,255,1);background-color:'+item.color">{{item.HPZL}}</span>
+               <span :style="'color:'+item.color">{{item.HPHM}}</span>
                <span class="per-hour">时速/限速:{{item.SJ}}</span>
                <span style="float: right;color:rgba(255,255,255,1);">{{item.WFSJ.split(" ")[0]}}</span>
             </div>
@@ -123,8 +123,16 @@ export default {
      * 接受传来的数据 
      */
     getData(){
+      let that=this;
        blur.$on('goback',data=>{
          this.highlighted='';
+       })
+       blur.$on('hideOverSpeedMarker',data=>{
+         if(data){
+           that.getIndexData();
+         }else{
+           that.clearMap();
+         }
        })
     },
     /**
@@ -163,7 +171,7 @@ export default {
     getKeyVehicleDatas(){
      let that = this;
      that.tableLoading = true;
-    interf.GET_KEY_VEHICLE_API({}).then(response=>{
+     interf.GET_KEY_VEHICLE_API({}).then(response=>{
       that.tableLoading = false;
         if (response && response.status == 200){
           var data= response.data;
@@ -203,14 +211,19 @@ export default {
     getIndexData() {
     let that = this;
     that.clearMarker();
-    interf.GET_OVER_WARN_FLOW_API({})
-    .then(response=>{
+    that.trafficDatas=[];
+    interf.GET_OVER_WARN_FLOW_API({}).then(response=>{
         if (response && response.status == 200){
           var data= response.data;
           if (data.errcode == 0) {
+            // data.data=[{"XZQH":"610602","SJ":"76\\60","HPZL":"小型汽车","HPHM":"鲁R528HW","WFDZ":"303省道61公里700米至303省道67公里700米","WFSJ":"2020-06-03 00:00:00",WD:'33.79388',JD:'108.37161'}];
             if(data.data.length>0){
               that.trafficDatas=data.data;
-              data.data.forEach(e=>{
+              that.trafficDatas.map(e=>{
+                e.color=that.getColor(e.HPZL);
+                return e;
+              });
+              that.trafficDatas.forEach(e=>{
                 that.addOverSpeedMarker(e);
               });
             }
@@ -229,6 +242,19 @@ export default {
       .finally(() => {
         that.tableLoading = false;
       });
+    },
+    /**
+     * 根据车辆类型匹配颜色
+     */
+    getColor(type){
+      let color='#8bb7b7';
+      switch(type){
+        case '大型汽车': case '大型普通客车' :color='#ffa414';break;
+        case '小型汽车' :color='#16c5ff';break;
+        case '小型新能源汽车' :color='#10de28';break;
+        default:break;
+      }
+      return color;
     },
     /**
      * 展示超速预警点位
@@ -433,9 +459,9 @@ li:nth-of-type(odd){
 .vehicle_monitor-div .car-name{
   width:38px;
   height:22px;
-  background:rgba(89,26,26,1);
+  // background:rgba(89,26,26,1);
   border-radius:2px;
-  border: 1px solid #631415;
+  // border: 1px solid #631415;
   margin-left: 12px;
   font-size:14px;
   font-family:Source Han Sans CN;

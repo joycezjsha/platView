@@ -92,7 +92,7 @@ export default {
         },
         toolbox: {
           feature: {
-            saveAsImage: {}
+             saveAsImage: {backgroundColor: 'black'}
           }
         },
         xAxis: {

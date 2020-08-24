@@ -212,6 +212,52 @@ export default {
                 'type': 'geojson',
                 'data': jsonData
             });
+            let height= [
+                        [0, 0.0],
+                        [2000, 2000.0],
+                        [3000, 10000.0],
+                        [4000, 20000.0],
+                        [5000, 50000.0],
+                    ],
+                color=[
+                        [0, "green"],
+                        [500, "yellow"],
+                        [1000, "orange"],
+                        [3000, "#ff2b03"],
+                        [5000, "red"],
+                    ]
+            if(this.tableIndex==2){
+                height= [
+                        [0, 0.0],
+                        [200, 2000.0],
+                        [300, 10000.0],
+                        [500, 20000.0],
+                        [600, 50000.0],
+                    ]
+                color=[
+                        [0, "green"],
+                        [50, "yellow"],
+                        [100, "orange"],
+                        [300, "#ff2b03"],
+                        [500, "red"],
+                    ]
+            }
+            if(this.tableIndex==3){
+                height= [
+                        [0, 0.0],
+                        [200, 2000.0],
+                        [300, 10000.0],
+                        [500, 20000.0],
+                        [1000, 50000.0],
+                    ]
+                color=[
+                        [0, "green"],
+                        [50, "yellow"],
+                        [100, "orange"],
+                        [300, "#ff2b03"],
+                        [800, "red"],
+                    ]
+            }
         //面的显示
             this.map.addLayer({
                 "id": 'illegal_polygon',
@@ -223,29 +269,17 @@ export default {
                 "paint": {
                 'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
                     "property": "levels",
-                    "stops": [
-                        [0, "green"],
-                        [50, "yellow"],
-                        [100, "orange"],
-                        [200, "#ff2b03"],
-                        [500, "red"],
-                    ]
+                    "stops":color
                 },
                 'extrusion-height': {   // 建筑物的高度
                     'property': 'levels',
-                    "stops": [
-                        [0, 2000.0],
-                        [100, 3000.0],
-                        [300, 5000.0],
-                        [500, 6000.0],
-                        [1000, 7000.0],
-                    ]
+                    "stops":height
                 },
                 'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
                 'extrusion-opacity': {  // 建筑物的透明度，值为数值，默认为1
                     "base": 1,
-                    "stops": [[3, 0.8], [8, 0.5]]
-                    }
+                    "stops": [[3, 0.8], [8, 0.8]]
+                 }
                 }
             });
             _this.map_cover.sourceList.push("illegal_polygonSource");

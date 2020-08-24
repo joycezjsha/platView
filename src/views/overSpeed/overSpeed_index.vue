@@ -42,9 +42,9 @@
           >
             <el-table-column type="index" label="No." width="50"></el-table-column>
             <el-table-column prop="CITYNAME" label="管理部门" width="90"></el-table-column>
-            <el-table-column prop="WFNUM" label="超速次数" sortable></el-table-column>
             <el-table-column prop="YJWFNUM" label="超速预警次数" sortable></el-table-column>
             <el-table-column prop="LJNUM" label="拦截次数" sortable></el-table-column>
+            <el-table-column prop="WFNUM" label="处罚次数" sortable></el-table-column>
             <el-table-column prop="RATIO" label="拦截率" sortable></el-table-column>
           </el-table>
         </div>
@@ -76,9 +76,12 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
-        }
+        },
+        // endDateDisabled(time){
+        //   return time.getTime() > Date.now()
+        // }
       },
-      defaultTime:['00:00:00','23:59:59'],
+      defaultTime:['00:00:00','00:00:00'],
       warningStatics:{tCount:'',yestoadyCount:'',weekCount:'',customCount:''},
       map_cover:{
         sourceList:[],
@@ -107,7 +110,6 @@ export default {
       that.getIndexData();
     },1000*60);
     blur.$on('return',()=>{
-      debugger;
       // this.currentRow=null;
       that.$refs.cityTable.setCurrentRow(that.overSpeedTableDatas[null]);
     });
@@ -171,8 +173,12 @@ export default {
         this.selectParam.stime=type;this.selectParam.etime=null;
         $('.tab').eq(type-1).addClass('active');
         this.isCustom=false;
+        this.timeRange='';
       }else{
         this.selectParam.stime=this.timeRange[0];
+        if(new Date(this.timeRange[1]).getTime()==new Date(new Date().toLocaleDateString()).getTime()){
+          this.timeRange[1]=this.timeRange[1].split(' ')[0]+new Date().getHours()+':'+new Date().getMinutes()+':'+new Date().getSeconds();
+        }
         this.selectParam.etime=this.timeRange[1];
         this.getStaticsData(this.selectParam.stime,this.selectParam.etime);
         this.isCustom=true;

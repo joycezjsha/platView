@@ -10,8 +10,7 @@
         </div>
       </div>
       <div class="bayonet_city_content">
-        <i class="iconfont icon-kakou" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:17px;"></i>
-        <m-tiptxt style="margin-left:1vw" text='活跃卡口是指近一天有数据回传的设备'></m-tiptxt>
+        <m-tiptxt icon='icon-kakou' icon_style='color:#00aadd;font-size:17px;height:30px;' :isShowIcon='ishowicon' text='回传设备是指近一天有数据回传的设备。'></m-tiptxt>
         <div v-if="!tableIndex" style="padding:0 5px;height:90%">
           <el-table 
           :data="indexData" 
@@ -23,11 +22,11 @@
           @row-click="handdle"
           :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No"  width="50"></el-table-column>
-            <el-table-column prop="city" label="城市"  width="60" ></el-table-column>      
-            <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
-            <el-table-column prop="ACTIVENUM" label="活跃个数" sortable></el-table-column>
-            <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
-            <el-table-column prop="XZQH" v-if="showXZQH" width="0"></el-table-column>
+            <el-table-column prop="city" label="管理部门"  width="90" ></el-table-column>      
+            <el-table-column prop="NUM" label="设备总数" sortable></el-table-column>
+            <el-table-column prop="ACTIVENUM" label="回传设备" sortable><template slot-scope="scope">{{ scope.row.ACTIVENUM?scope.row.ACTIVENUM:0}}</template></el-table-column>
+            <el-table-column prop="ACTIVE" label="回传设备率" sortable><template slot-scope="scope">{{ scope.row.ACTIVE?scope.row.ACTIVE:0}}</template></el-table-column>
+            <el-table-column prop="XZQH" v-if="showXZQH" width="0"><template slot-scope="scope">{{ scope.row.XZQH?scope.row.XZQH:'-'}}</template></el-table-column>
           </el-table>
         </div>
         <div v-else>
@@ -59,6 +58,7 @@
 
 <script>
 import { IMG } from "./config";
+import util from "@/common/util";
 import { interf } from "./config";
 import m_tiptxt from '@/components/UI_el/tiptxt.vue'
 import mTitle from "@/components/UI_el/title_com.vue";
@@ -78,6 +78,7 @@ export default {
         popups:[]
       },
       showXZQH:false,
+      ishowicon:true,
       indexData: [],
       roadDatas:[],
       selectItem:{"city":"西安",order:8},
@@ -137,7 +138,7 @@ export default {
       blur.$emit("getrow",row)
       data.name=row.NAME;
       data.value=row.DLDM;
-      this.getRoadMapDev(data.value)
+      // this.getRoadMapDev(data.value);
       blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
       // else{
       //   data.name=row.city;
@@ -310,10 +311,8 @@ export default {
       })
       .finally(() => { 
         that.tableLoading = false; 
-        blur.$emit('tablebayonetRoad',data=>{
-          if(that.tableIndex=='1'){
-            that.$refs.tablebayonetRoad.setCurrentRow()
-          }
+        blur.$on('tablebayonetRoad',data=>{
+          that.$refs.tablebayonetRoad.setCurrentRow(null)
         })
         
       });
@@ -334,6 +333,7 @@ export default {
               if(data.data.length>0){
                 for(var i=0;i<data.data.length;i++){
                   if(data.data[i].city!=null){
+                    util.initAreaDatas(data.data,1);
                     that.indexData.push(data.data[i])
                   }
                 }
@@ -358,7 +358,7 @@ export default {
           // 取消选中table状态 tablebayonet
           blur.$on('getbayonet',data=>{
             if(that.tableIndex=='0'){
-              that.$refs.tablebayonet.setCurrentRow()
+              that.$refs.tablebayonet.setCurrentRow(null)
             }
           })
         });

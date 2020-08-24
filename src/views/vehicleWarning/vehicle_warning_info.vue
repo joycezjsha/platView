@@ -59,7 +59,8 @@
             :header-cell-style="getRowClass"
           >
             <el-table-column type="index" label="No." width="80"></el-table-column>
-            <el-table-column prop="YJDFZJG" label="城市" width="130"></el-table-column>
+            <el-table-column v-if='car_owner_param.type==1' prop="YJDFZJG" label="省份" width="80"></el-table-column>
+            <el-table-column v-else prop="YJDFZJG" label="管理部门" width="130"></el-table-column>
             <el-table-column prop="NUM" label="辆次" width="130"></el-table-column>
             <el-table-column prop="PROPORTION" label="比例" sortable></el-table-column>
           </el-table>
@@ -119,6 +120,7 @@ export default {
       statics_sort_option: { //车辆类型分析环形图
         color: ['#16c5ff','#ffa414','#8bb7b7','#10de28','#0F6FD2','#00B5B7','#FF2B2B'],
         tooltip: {
+          show:true,
           trigger: 'item',
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
@@ -153,12 +155,7 @@ export default {
             labelLine: {
               show: false
             },
-            data: [],
-            label: {
-              normal: {
-                show: false
-              }
-            }
+            data: []
           }
         ]
       },
@@ -185,6 +182,7 @@ export default {
     that.initMainStaticsChart();
     that.getVehicleOwnershipDatas();
     that.initAccurCharts();
+    that.map.on('click',that.setZoom);
     setTimeout(()=>{
       that.getMapBayonetRankingDatas();
     },300);
@@ -219,9 +217,11 @@ export default {
     // let that = this;
     this.map.setPitch(0); //设置地图的俯仰角
     // this.onHideLayer();
+    this.map.off('click',this.setZoom);
   },
   beforeDestroy(){
     this.clearMap();
+    this.map.off('click',this.setZoom);
   },
   methods: {
   /*
@@ -362,16 +362,16 @@ export default {
                 var option = this.getOption();
                 var select_key = Object.keys(params.selected);
                 var select_value = Object.values(params.selected);
-                var n = 0;
-                select_value.map(res => {
-                  if(!res){
-                      n++;
-                    }
-                });
+                // var n = 0;
+                // select_value.map(res => {
+                //   if(!res){
+                //       n++;
+                //     }
+                // });
                 
-                if( n ==select_value.length){
-                    option.legend[0].selected[params.name] = true;
-                }
+                // if( n ==select_value.length){
+                //     option.legend[0].selected[params.name] = true;
+                // }
                 // this.setOption(option);
                 let value='';
                 that.selectCarType.type=params.name;
@@ -520,17 +520,16 @@ export default {
           "source": "data-point",
           "paint": {
               "circle-color": 'green',
-              "circle-radius": 15
+              "circle-radius": 15,
             },
           "filter": ["!has", "point_count"],
-          
           // "layout": {
           //   "icon-image": "bank-15"
           //   }
         })
         that.map_cover.lineList.push("unclustered-points"); 
         //添加聚合图层
-        var layers =[[1000,'#ff5a0f',20], [100,'#D25C06',18], [0,'#6C9B06',15]];
+        var layers =[[1000,'#ff5a0f',20], [100,'#D25C06',18], [1,'#6C9B06',15]];
         layers.forEach(function (layer, i) {
           let clusterId="cluster"+i;
           that.map.addLayer({
@@ -559,9 +558,24 @@ export default {
           "paint":{
               "text-color":"#ffffff"
           },
-          // "filter": ["has", "point_count"]
+          "filter": ["has", "point_count"]
         });
         that.map_cover.lineList.push("cluster-count"); 
+        //添加非聚合数量图层
+        that.map.addLayer({
+          "id": "-cluster-count",
+          "type": "symbol",
+          "source": "data-point",
+          "layout": {
+              "text-field": "1",
+              "text-size": 14
+          },
+          "paint":{
+              "text-color":"#ffffff"
+          },
+          "filter": ["!has", "point_count"]
+        });
+        that.map_cover.lineList.push("-cluster-count"); 
       }
     },
     /*
@@ -597,7 +611,32 @@ export default {
     getRowClass({ row, column, rowIndex, columnIndex }) {
       return "background:transparent;";
     },
-    
+    /**
+      * 点击聚合图-离散效果
+      */
+    setZoom(e){
+      let bbox = [
+      [e.point.x - 5, e.point.y - 5],
+      [e.point.x + 5, e.point.y + 5]
+      ];
+      let features0 = this.map.queryRenderedFeatures(bbox, {
+        layers: ["cluster0"]
+      });
+      let features1 = this.map.queryRenderedFeatures(bbox, {
+        layers: ["cluster1"]
+      });
+      let features2 = this.map.queryRenderedFeatures(bbox, {
+        layers: ["cluster2"]
+      });
+      let features3 = this.map.queryRenderedFeatures(bbox, {
+        layers: ["cluster3"]
+      });
+      if(features0.length>0 || features1.length>0 || features2.length>0){
+        this.map.setZoom(this.map.getZoom()+1);
+        this.map.setCenter([e.lngLat.lng,e.lngLat.lat]);
+      }
+      // console.log(JSON.stringify(features0));
+    },
     /*##清除地图加载点、线、面、弹框*/
       clearMap(){
         //清除marker
@@ -636,6 +675,9 @@ export default {
         if(this.echartslayer){
           this.echartslayer.remove();
         }
+        // this.map.on('click',()=>{
+        //   return;
+        // });
       }
     /*##清除地图加载点、线、面、弹框 --END*/
     }
@@ -747,7 +789,6 @@ export default {
       position: relative;
       .left,
       .right {
-        height: 60px;
         width: 50%;
         .inouttext {
           width: 160px;

@@ -48,7 +48,7 @@ export default {
     blur.$on('changeParam',(data)=>{
       that.param=data;
       switch(that.tableIndex){
-        case 1: break;
+        case 1: that.addCityMarker(data.xzqh);break;
         case 2: that.clearMap();that.getBayonetActiveDatas();break;
         default:break;
       }
@@ -57,7 +57,7 @@ export default {
       that.param={stime:1,etime:null,xzqh:null};
       that.map.setCenter(mapConfig.DEFAULT_CENTER);that.map.setZoom(mapConfig.DEFAULT_ZOOM);
       switch(that.tableIndex){
-        case 1: break;
+        case 1: that.map_cover.popups.forEach(e=>{ e.remove();});break;
         case 2: that.clearMap();that.getBayonetActiveDatas();break;
         default:break;
       }
@@ -115,7 +115,7 @@ export default {
             that.showArea = true;
             if (data.data.length > 0) {
               data.data.forEach(e => {
-                that.addCityMarker(e);
+                // that.addCityMarker(e);
               });
             }
           }
@@ -125,23 +125,55 @@ export default {
     /*
      *显示统计分析弹框
      */
-    addCityMarker(e) {
+    addCityMarker(code) {
+      let that=this;
+      that.map_cover.popups.forEach(e=>{
+        e.remove();
+      });
+      let e={};
+      for(let i=0;i<this.areaIndexs.length;i++){
+        if(this.areaIndexs[i].XZQH==code){
+          e=this.areaIndexs[i];
+          break;
+        }
+      };
       let mainDiv=document.createElement('div');
       mainDiv.style.width='8vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
-      mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
-      mainDiv.style.border='1px solid rgb(42, 76, 162)';
-      mainDiv.style.fontFamily='SourceHanSansCN';
-      mainDiv.style.padding='4px 13px';
+      // mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
+      // mainDiv.style.border='1px solid rgb(42, 76, 162)';
+      // mainDiv.style.fontFamily='SourceHanSansCN';
+      // mainDiv.style.padding='4px 13px';
       // mainDiv.className='dev_popup';
 
       let title=document.createElement('p');
       title.innerHTML=e.CITYNAME;
       title.className='title';
       title.style.margin='5px 0';
-      mainDiv.appendChild(title);
+     
 
+      let closeimgDiv = document.createElement("div");
+      closeimgDiv.className = "closeImgDiv";
+      let closeimg = document.createElement("img");
+      closeimg.src = IMG.CLOSE_IMG;
+      closeimg.className = "closeImg";
+      closeimgDiv.appendChild(closeimg);
+      title.appendChild(closeimgDiv);
+      closeimg.addEventListener("click", function() {
+        that.map_cover.popups.forEach(e=>{
+          e.remove();
+        });
+      });
+      closeimg.addEventListener("mouseover", function() {
+        this.setAttribute("src", IMG.CLOSE_HOVER_IMG);
+      });
+      closeimg.addEventListener("mouseout", function() {
+        this.setAttribute("src", IMG.CLOSE_IMG);
+      });
+
+      mainDiv.appendChild(title);
+      
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>超速次数：</span><span>"+e.WFNUM+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
 
@@ -156,14 +188,16 @@ export default {
 
       //添加marker
       let lnglat = e.JWD.split(' ');
-      let marker = new minemap.Marker(mainDiv, { offset: [-25, -25] })
-        .setLngLat(lnglat)
-        .addTo(this.map);
-      this.map_cover.markers.push(marker);
-      let eles= $('.minemap-marker');
-      for(let i=0;i<eles.length;i++){
-        eles[i].style.cursor='default';
-      };
+      // let marker = new minemap.Marker(mainDiv, { offset: [-25, -25] })
+      //   .setLngLat(lnglat)
+      //   .addTo(this.map);
+      // this.map_cover.markers.push(marker);
+      let popup= new minemap.Popup({closeOnClick: false, closeButton: false, offset: [0, 0],autoPan: true}).setDOMContent(mainDiv).setLngLat(lnglat).addTo(this.map);
+      this.map_cover.popups.push(popup);
+      // let eles= $('.minemap-marker');
+      // for(let i=0;i<eles.length;i++){
+      //   eles[i].style.cursor='default';
+      // };
     },
     /*
      * 活跃卡口点位  Bayonet/getBayonetActive   GET_BAY_ACTIVE_API

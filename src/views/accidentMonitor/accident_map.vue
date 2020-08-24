@@ -54,6 +54,9 @@ export default {
     blur.$on('clearRoadAndMaker',function(){
       _this.cancelCityLayerStatus();
     });
+    blur.$on('changeCitySelect',function(data){
+      _this.addCityAccidentPopup(data);
+    });
   },
   components: {
     tArea
@@ -86,7 +89,6 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-            that.addCityAccident(data.data);
             let max,min,datas=[];
               data.data=data.data.map(e=>{
                 e.Num=e.NUM;
@@ -124,31 +126,61 @@ export default {
       .finally(() => {
       });
     },
-    addCityAccident(data){
+    addCityAccidentPopup(xzqh){
       let _this=this;
-      data.map(e=>{
-        _this.addCityPopup(e);
-      })
+      let data=this.areaIndexs;
+      _this.map_cover.popups.forEach(e=>{
+          e.remove();
+        });
+      for(let i=0;i<data.length;i++){
+        if(data[i].XZQH==xzqh){
+          _this.addCityPopup(data[i]);
+        }
+      }
+      // data.map(e=>{
+        // _this.addCityPopup(e);
+      // })
     },
     /**
      * 地图显示各市警情数量
      */
     addCityPopup(e){
+      let that=this;
       let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
       mainDiv.style.width='6vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
-      mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
-      mainDiv.style.border='1px solid rgb(42, 76, 162)';
-      mainDiv.style.fontFamily='SourceHanSansCN';
-      mainDiv.style.padding='4px 13px';
+      // mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
+      // mainDiv.style.border='1px solid rgb(42, 76, 162)';
+      // mainDiv.style.fontFamily='SourceHanSansCN';
+      // mainDiv.style.padding='4px 13px';
       // mainDiv.className='dev_popup';
 
       let title=document.createElement('p');
       title.innerHTML=e.NAME;
       title.className='title';
       title.style.margin='5px 0';
+
+       let closeimgDiv = document.createElement("div");
+      closeimgDiv.className = "closeImgDiv";
+      let closeimg = document.createElement("img");
+      closeimg.src = IMG.CLOSE_IMG;
+      closeimg.className = "closeImg";
+      closeimgDiv.appendChild(closeimg);
+      title.appendChild(closeimgDiv);
+      closeimg.addEventListener("click", function() {
+        that.map_cover.popups.forEach(e=>{
+          e.remove();
+        });
+      });
+      closeimg.addEventListener("mouseover", function() {
+        this.setAttribute("src", IMG.CLOSE_HOVER_IMG);
+      });
+      closeimg.addEventListener("mouseout", function() {
+        this.setAttribute("src", IMG.CLOSE_IMG);
+      });
+
       mainDiv.appendChild(title);
 
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>警情：</span><span>"+e.NUM+"</span></p>";
@@ -164,9 +196,11 @@ export default {
       // el.style.height = "8px";
       // el.style["border-radius"] = "50%";
       // el.style.backgroundColor='red';
-      let marker = new minemap.Marker(mainDiv, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map);
-      this.map_cover.markers.push(marker);
-      // this.map_cover.popups.push(popup);
+      // let marker = new minemap.Marker(mainDiv, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map);
+      // this.map_cover.markers.push(marker);
+      let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+      this.map_cover.popups.push(popup);
     },
     /**
      * 获取施工数据
@@ -282,6 +316,7 @@ export default {
     cancelCityLayerStatus(){
       this.$refs['areaModule'].resumeLayer();
       this.map.setPitch(0);
+      this.clearMap();
     },
 /*##清除地图加载点、线、面、弹框*/
     clearMap(){

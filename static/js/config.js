@@ -28,7 +28,7 @@ var urlConf = {
   BASE_URL: '//'+ip+'/',
   IMG_PATH :'./static/images/',
   JT_PATH:'//'+'92.1.48.106/xasimg/',
-  YQ_PATH:'//117.157.231.168/minemapapi/demo/index.html#base_map',
+  YQ_PATH:'//117.157.231.168/minemapapi/demo/index.html#base_map', //疫情地址
   overview_weekCount:1611,//总览超速统计-配置数据：上周
   overview_monthCount:88810//总览超速统计-配置数据：本月
 }

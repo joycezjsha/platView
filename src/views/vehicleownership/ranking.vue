@@ -7,7 +7,7 @@
       <div class='ranking--table'>
         <el-table ref='cityTable' :data="tableDatas" style="width: 100%" highlight-current-row @row-click='handle' :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" >
           <el-table-column type="index" label="No." width="50"></el-table-column>
-          <el-table-column prop="name" label="城市"  width="70"></el-table-column>
+          <el-table-column prop="name" label="管理部门"  width="90"></el-table-column>
           <el-table-column prop="num" label="汽车保有量"  sortable></el-table-column>
           <el-table-column prop="khcnum" label="客货车数量"  sortable></el-table-column>
         </el-table>
@@ -23,9 +23,7 @@ export default {
     name:"ranking",
     data(){
       return{
-        tableDatas:[
-          {"index":"","name":"","num":"","khcnum":""}
-        ]
+        tableDatas:[]
       }
     },
     components:{
@@ -43,6 +41,7 @@ export default {
         data.name=row.name;
         data.value=row.xzqh;
         blur.$emit('initVehicleStatics',data);
+        // blur.$emit('changeSelect',data.value);
       },
       /**
       * 获取车辆保有量，排名数据
@@ -54,7 +53,6 @@ export default {
           if (response && response.status == 200){
             var data = response.data;
               if (data.errcode == 0) {
-
                 that.tableDatas=data.data;
               }else{
                 that.$message({
@@ -106,9 +104,6 @@ export default {
       getRowClass({ row, column, rowIndex, columnIndex }) {
         return "background:transparent;cursor:pointer;";
       },
-    },
-    destroyed:{
-
     }
 }
 </script>

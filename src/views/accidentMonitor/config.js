@@ -5,6 +5,8 @@ import http from '../../common/httpUtil'
 import sgImg from './image/sg.png'
 import sgUncheckImg from './image/sg_.png'
 import jqImg from './image/jq.png'
+import close_img from './image/close.png'
+import close_hover_img from './image/close_hover.png'
 export const interf={
   /*获取巡航数据*/
   getCityIndexData:(data,callback,err)=>{
@@ -85,5 +87,7 @@ export const IMG={
   /*路况巡航*/
   SG_IMG: sgImg,
   SG_UNCHECK_IMG:sgUncheckImg,
-  jqImg:jqImg
+  jqImg:jqImg,
+  CLOSE_IMG:close_img,
+  CLOSE_HOVER_IMG:close_hover_img
 }

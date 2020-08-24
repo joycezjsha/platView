@@ -119,7 +119,7 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      defaultTime:['00:00:00','23:59:59'],
+      defaultTime:['00:00:00','00:00:00'],
       warningStatics:{tCount:2328,t_radio:[],yestoadyCount:2328,weekCount:'2308',customCount:'2308',y_radio:[],w_radio:[]},
       map_cover:{
         sourceList:[],
@@ -285,8 +285,20 @@ export default {
         this.selectParam.stime=type;this.selectParam.etime=null;
         $('.tab').eq(type-1).addClass('active');
         this.isCustom=false;
+        this.timeRange='';
       }else{
+        if(!this.timeRange || this.timeRange==''){
+          this.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "warning",
+            duration: 3000
+          });
+         return;
+        };
         this.selectParam.stime=this.timeRange[0];
+        if(new Date(this.timeRange[1]).getTime()==new Date(new Date().toLocaleDateString()).getTime()){
+          this.timeRange[1]=this.timeRange[1].split(' ')[0]+' '+new Date().getHours()+':'+new Date().getMinutes()+':'+new Date().getSeconds();
+        }
         this.selectParam.etime=this.timeRange[1];
         this.getCustomWarnStatics();
         this.isCustom=true;
@@ -328,7 +340,7 @@ export default {
             if(data.data.length>0){
               
               that.trafficDatas=data.data.map(e=>{
-                e.color=that.getColor(e.CLLX);
+                e.color=that.getColor(e.HPZL);
                 return e;
               });
               // data.data.forEach(e=>{
@@ -380,6 +392,7 @@ export default {
       mainDiv.appendChild(closeimgDiv);
       closeimg.addEventListener("click", function() {
         that.clearMarker();
+        that.highlighted='';
       });
       closeimg.addEventListener("mouseover", function() {
         this.setAttribute("src", IMG.CLOSE_HOVER_IMG);
@@ -434,7 +447,7 @@ export default {
       }
       
       
-      let popup= new minemap.Popup({closeOnClick: false, closeButton: false, offset: [0, 0]})
+      let popup= new minemap.Popup({closeOnClick: false, closeButton: false, offset: [8, -5]})
       .setLngLat(center)
       .setDOMContent(mainDiv).addTo(this.map);
       this.map_cover.popups.push(popup);
@@ -494,7 +507,6 @@ export default {
         })
       }
       this.map_cover.popups=[];
-      this.highlighted='';
     },
     /**
      * 点击标签页
@@ -509,7 +521,7 @@ export default {
       let color='#8bb7b7';
       switch(type){
         case '大型汽车': case '大型普通客车' :color='#ffa414';break;
-        case '小型轿车' :color='#16c5ff';break;
+        case '小型汽车' :color='#16c5ff';break;
         case '小型新能源汽车' :color='#10de28';break;
         default:break;
       }
@@ -706,9 +718,9 @@ li:nth-of-type(odd){
 .vehicle_warning-div .car-name{
   width:38px;
   height:22px;
-  background:rgba(89,26,26,1);
+  // background:rgba(89,26,26,1);
   border-radius:2px;
-  border: 1px solid #631415;
+  // border: 1px solid #631415;
   margin-left: 12px;
   font-size:14px;
   font-family:Source Han Sans CN;

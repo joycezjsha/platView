@@ -17,11 +17,13 @@ export default {
     data() {
     return {
       map: {},
+      city:'',
       tableIndex:0,
       map_cover:{
         sourceList:[],
         lineList:[],
-        markers:[]
+        markers:[],
+        popups:[]
       },
       showArea:false,
       isShowTxt:false,
@@ -31,16 +33,30 @@ export default {
   mounted() {
     let _this=this;
     this.map = this.$store.state.map;
-    this.getAreaData();
+    
+    setTimeout(()=>{
+      this.getAreaData();
+    },300);
     blur.$on('clearRoadAndMaker',function(){
       _this.cancelCityLayerStatus();
     });
+    // blur.$on('changeSelect',function(data){
+    //   if(_this.city==data) return;
+    //   _this.city=data;
+    //   _this.addCityPopup(data);
+    // });
   },
   components: {
     mTitle,tArea
   },
   destroyed() {
     this.map.setPitch(0);
+    this.map_cover.popups.forEach(e=>{
+        e.remove();
+      });
+    this.clearMap();
+  },
+  beforeDestroy(){
     this.clearMap();
   },
   methods: {
@@ -170,6 +186,7 @@ export default {
       };
     },
     addCityPopup(e){
+      if(!e.jwd) return;
       let lnglat=e.jwd.split(' ');
       let mainDiv=document.createElement('div');
       mainDiv.style.width='8vw';
@@ -185,14 +202,84 @@ export default {
       title.innerHTML=e.name;
       title.className='title';
       title.style.margin='5px 0';
+
+      
+
       mainDiv.appendChild(title);
 
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>汽车保有量：</span><span>"+e.num+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
-      
-      let marker = new minemap.Marker(mainDiv, {offset: [-100, -50]}).setLngLat(lnglat).addTo(this.map);
+
+      let marker = new minemap.Marker(mainDiv, { offset: [-25, -25] })
+        .setLngLat(lnglat)
+        .addTo(this.map);
       this.map_cover.markers.push(marker);
+      
+      // let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
+      // popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+      // this.map_cover.popups.push(popup);
     },
+    // addCityPopup(xzqh){
+    //   let _this=this,e={};
+    //   _this.map_cover.popups.forEach(e=>{
+    //     e.remove();
+    //   });
+    //   if(!xzqh) return;
+    //   _this.map_cover.popups.forEach(e=>{
+    //       e.remove();
+    //     });
+    //   for(let i=0;i<_this.areaIndexs.length;i++){
+    //     if(_this.areaIndexs[i].XZQH==xzqh || xzqh.indexOf(_this.areaIndexs[i].XZQH)!=-1){
+    //       e=_this.areaIndexs[i];
+    //       break;
+    //     }
+    //   };
+    //   if(!e.jwd) return;
+    //   let lnglat=e.jwd.split(' ');
+    //   let mainDiv=document.createElement('div');
+    //   mainDiv.style.width='8vw';
+    //   mainDiv.style.fontSize='0.7vw';
+    //   mainDiv.style.color='white';
+    //   // mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
+    //   // mainDiv.style.border='1px solid rgb(42, 76, 162)';
+    //   mainDiv.style.fontFamily='SourceHanSansCN';
+    //   mainDiv.style.padding='4px 13px';
+    //   // mainDiv.className='dev_popup';
+
+    //   let title=document.createElement('p');
+    //   title.innerHTML=e.name;
+    //   title.className='title';
+    //   title.style.margin='5px 0';
+
+    //   let closeimgDiv = document.createElement("div");
+    //   closeimgDiv.className = "closeImgDiv";
+    //   let closeimg = document.createElement("img");
+    //   closeimg.src = IMG.CLOSE_IMG;
+    //   closeimg.className = "closeImg";
+    //   closeimgDiv.appendChild(closeimg);
+    //   title.appendChild(closeimgDiv);
+    //   closeimg.addEventListener("click", function() {
+    //     _this.map_cover.popups.forEach(e=>{
+    //       e.remove();
+    //     });
+    //     _this.cancelCityLayerStatus();
+    //   });
+    //   closeimg.addEventListener("mouseover", function() {
+    //     this.setAttribute("src", IMG.CLOSE_HOVER_IMG);
+    //   });
+    //   closeimg.addEventListener("mouseout", function() {
+    //     this.setAttribute("src", IMG.CLOSE_IMG);
+    //   });
+
+    //   mainDiv.appendChild(title);
+
+    //   let p1="<p style='color:#00C6FF;margin:5px 0;'><span>汽车保有量：</span><span>"+e.num+"</span></p>";
+    //   mainDiv.appendChild($(p1)[0]);
+      
+    //   let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
+    //   popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+    //   this.map_cover.popups.push(popup);
+    // },
     /**
      * 地图点击事件，回调绑定事件
      */
@@ -227,12 +314,19 @@ export default {
       });
       this.map_cover.lineList=[];
     }
-    //清除popup
+    //清除marker
     if(this.map_cover.markers.length>0){
       this.map_cover.markers.forEach(e=>{
         e.remove();
       })
       this.map_cover.markers=[];
+    }
+    //清除popup
+    if(this.map_cover.popups.length>0){
+      this.map_cover.popups.forEach(e=>{
+        e.remove();
+      })
+      this.map_cover.popups=[];
     }
   },
 /** */

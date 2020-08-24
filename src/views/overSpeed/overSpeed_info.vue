@@ -127,7 +127,7 @@ export default {
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
         legend:{
-          x : '40%',
+          x : '50%',
           y : '5%',
           orient: 'vertical',
           align: 'right',
@@ -157,12 +157,7 @@ export default {
             labelLine: {
               show: false
             },
-            data: [],
-            label: {
-              normal: {
-                show: false
-              }
-            }
+            data: []
           }
         ]
       },
@@ -713,6 +708,7 @@ export default {
         that.tableLoading = false; 
       });
    },
+   
     /*##清除地图加载点、线、面、弹框*/
       clearMap(){
         //清除marker

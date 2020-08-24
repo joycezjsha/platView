@@ -218,6 +218,9 @@ line-height:2vh;
   background-color: #282c27;
   color: #6b717d;
 }
+.el-date-editor .el-range__close-icon{
+  line-height:20px;
+}
 /*el样式改写 --END*/
 
 /*登陆单独界面样式改写*/

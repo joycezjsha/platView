@@ -60,6 +60,7 @@ export default {
       handler: function(cVAL, oVAL) {
         if(cVAL){
           this.initArea();
+          if(this.method) this.map.on('click',this.clickArea);
         }else{
           this.hideArea();
         }
@@ -358,13 +359,15 @@ export default {
             }
         }
         if(!f){
-          data[j].Num='--';
+          // data[j].Num='--';
         }
       })
       data=data.sort((a,b)=>{return a.Num -b.Num});
       data.map(e=>{
-        if(e.Num && e.Num!='--') {e.color=_this.multiply(_this.max,_this.min,e.Num);}
-        else{e.color='rgba(6,143,230,0)'};
+        if(e.Num!=undefined && e.Num!='--') {e.color=_this.multiply(_this.max,_this.min,e.Num);}
+        else{
+          e.color='rgba(6,143,230,0)';
+        };
         return e;
       });
       return data;

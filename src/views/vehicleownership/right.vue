@@ -10,7 +10,7 @@
       <m-title-com label='保有量变化趋势' img_type=1 style='width:8vw;'></m-title-com>
       <m-line-chart :chart_data="chart_data" c_id='v-changechart' style='width:100%;height:28vh'></m-line-chart>
     </div>
-    <div class='boxstyle' v-show='isCity'>
+    <!-- <div class='boxstyle' v-show='isCity'>
       <m-title-com label='区县排名' style='width:6vw;'></m-title-com>
       <div class='statics-table'>
          <el-table :data="tableDatas" style="width: 100%" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
@@ -20,7 +20,7 @@
           <el-table-column prop="khcnum" label="占比" sortable></el-table-column>
         </el-table>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -53,8 +53,12 @@ export default {
       mLineChart
     },
     mounted(){
+      let _this=this;
       this.getStatics();
       this.getVehicleTrend();
+      blur.$on('initVehicleStatics',function(data){
+        _this.initStatics(data);
+      })
     },
     methods:{
     /*

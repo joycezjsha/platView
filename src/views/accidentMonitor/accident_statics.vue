@@ -14,9 +14,9 @@
           <div id="accident-statics_sort">
             
           </div>
-          <div>
+          <!-- <div>
             <m-list-o :list='listItems'></m-list-o>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="accident-statics--tab boxstyle">
@@ -52,22 +52,29 @@ export default {
       staticsData: {sum: 10,mainCount:0},
       listItems:[],
       accident_option: {
-        color:['#02FDF4','#4D76F9','#01D647'],
+        // color:['#02FDF4','#4D76F9','#01D647'],
+          color: ['#16c5ff','#ffa414','#8bb7b7','#10de28','#0F6FD2','#00B5B7','#FF2B2B','#02FDF4','#4D76F9','#01D647'],
           tooltip: {
             show:true,
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
-          // legend:{
-          //   data:[],
-          //   orient: 'vertical',
-          //   right: 10},
+          legend:{
+            x : '45%',
+            y : '5%',
+            orient: 'vertical',
+            align: 'right',
+            "itemGap": 3,
+            'itemWidth':20,
+            data:[],
+            textStyle:{color:'white'}
+          },
           series: [
               {
                   name: '警情统计',
                   type: 'pie',
-                  // center:['30%','50%'],
-                  radius: ['60%', '75%'],
+                  center:['30%','50%'],
+                  radius: ['55%', '75%'],
                   avoidLabelOverlap: false,
                   label: {
                       show: false,
@@ -168,6 +175,7 @@ export default {
     initAccidentStaticsChart(type,data){
       let that = this;
       this.accident_option.series[0].data=[];
+      that.accident_option.legend.data=[];
       that.listItems=[];
       let params={stime:1};
       if(type!=undefined && data){
@@ -190,10 +198,19 @@ export default {
                 let colors=['#00B5B7','#0572ED','#4F35D0']
                 data.data.map((e,i)=>{
                   _data.push({name:e.NAME,value:e.NUM});
-                  i=i%3;
-                  that.listItems.push({color:colors[i],label:e.NAME,value:e.NUM});
-                  // this.accident_option.legend.data.push(e.NAME);             
+                  // i=i%3;
+                  // that.listItems.push({label:e.NAME,value:e.NUM});//color:colors[i],
+                  this.accident_option.legend.data.push(e.NAME);             
                 })
+              };
+              that.accident_option.legend.formatter=function (name) {
+                let value='';
+                for(let i=0;i<data.data.length;i++){
+                  if(data.data[i].NAME==name){
+                    value=data.data[i].NUM;
+                  }
+                }
+                return name+'：'+value;
               };
                if(!this.accident_chart){
                   this.accident_chart = echarts.init(document.getElementById('accident-statics_sort'));
@@ -376,17 +393,17 @@ export default {
     height: 28vh;
     .accident-statics_sort {
       width:90%;
-      height:13vh;
-      margin:2vh auto;
+      height:200px;
+      margin:0 auto;
       @include flex(row, center,center);
       >div{
-        @include flex(row, center,center);
-        width:50%;
+        // @include flex(row, center,center);
+        width:100%;
         height: 100%;
       }
-      >div:nth-child(2){
-        width: 50%;
-      }
+      // >div:nth-child(2){
+      //   width: 50%;
+      // }
     }
     
   }

@@ -25,7 +25,7 @@
         </div>
         <div v-show='isShowMainDev' class='device-statics_chart boxstyle'>
           <m-title-com label='重点设备监测' style='width:8vw;height:4vh;line-height:4vh;'></m-title-com>
-          <m-line-chart :chart_data="device_data" c_id='deviceStaticsMainDevice' style='width:100%;height:28vh' :showDoubleX='showDoubleX'></m-line-chart>
+          <m-line-chart :chart_data="device_data" c_id='deviceStaticsMainDevice' style='width:100%;height:24vh' :showDoubleX='showDoubleX'></m-line-chart>
         </div>
       </div>
   </div>
@@ -53,7 +53,7 @@ export default {
       staticsData: {sum: 10,mainCount:0},
       staticsSort:[],
       device_option: {
-        color:['#00B5B7','#4f35d0','#4F35D0'],
+        color:['#00B5B7','#0572ED','#67c23a','#67c23a'],
           tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b}: {c} ({d}%)'
@@ -67,9 +67,9 @@ export default {
           },
           series: [
               {
-                  name: '警情统计',
+                  name: '设备统计',
                   type: 'pie',
-                  radius: ['50%', '75%'],
+                  radius: ['60%', '80%'],
                   avoidLabelOverlap: false,
                   hoverAnimation:false,
                   label: {
@@ -251,7 +251,7 @@ export default {
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
-              _this.num=data.data.num;
+              _this.num=parseInt(data.data.num)+2608;
             } else{
               that.$message({
                 message: data.errmsg,
@@ -288,8 +288,8 @@ export default {
              if(!_this.device_chart){
                _this.device_chart = echarts.init(document.getElementById('device-statics_sort'));
               };
-            _this.staticsSort=[{color:'#00B5B7',label:'视频设备',value:data.data.viocount},{color:'#0572ED',label:'电警',value:data.data.pcount}];
-            _this.device_option.series[0].data=[{name:'视频设备',value:data.data.viocount},{name:'电警',value:data.data.pcount}]
+            _this.staticsSort=[{color:'#00B5B7',label:'视频设备',value:data.data.viocount},{color:'#0572ED',label:'电警',value:data.data.pcount},{color:'#67c23a',label:'连通区间测速',value:2608}];
+            _this.device_option.series[0].data=[{name:'视频设备',value:data.data.viocount},{name:'电警',value:data.data.pcount},{name:'连通区间测速',value:2608}]
             _this.device_chart.setOption(_this.device_option);
             }else{
               that.$message({

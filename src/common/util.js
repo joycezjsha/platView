@@ -23,5 +23,42 @@ export default{
       return true;
     } else {      return false;
     }
+  },
+  //补全所有10个支队
+  initAreaDatas:function(data,flag){ //flag:0->NAME:城市 1->city:城市名称
+    let newData=data;
+    let areaList=['西安','榆林','宝鸡','商洛','咸阳','延安','汉中','铜川','安康','渭南'];
+    if(flag){
+      for(let i=0;i<areaList.length;i++){
+        let f=true,index='';
+        for(let j=0;j<data.length;j++){
+          if(!data[j].city) continue;
+          if(data[j].city==areaList[i] || data[j].city.indexOf(areaList[i])!=-1){
+            f=false;
+            index=i;
+            break;
+          }
+        }
+        if(f){
+          newData.push({city:areaList[i]+'支队',NUM:'0'});
+        }
+      }
+    }else{
+      for(let i=0;i<areaList.length;i++){
+        let f=true,index='';
+        for(let j=0;j<data.length;j++){
+          if(data[j].NAME==areaList[i] || data[j].NAME.indexOf(areaList[i])!=-1){
+            f=false;
+            index=i;
+            break;
+          }
+        }
+        if(f){
+          newData.push({NAME:areaList[i]+'支队',NUM:'0'});
+        }
+      }
+    }
+    
+    return newData;
   }
 };

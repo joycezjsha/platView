@@ -138,7 +138,7 @@ export default {
 
       let rightDiv = document.createElement("div");
       rightDiv.style.float = "right";
-      rightDiv.style.width = "40px";
+      rightDiv.style.width = "55px";
       rightDiv.style.height = "30px";
       let span1 = document.createElement("p");
       span1.innerHTML = item.city;

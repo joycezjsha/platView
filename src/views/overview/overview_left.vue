@@ -44,7 +44,7 @@
     <div class='overview-left-div--center boxstyle'>
        <!-- <span class='span_title'>交通动态监测</span> -->
        <m-title label='交通动态监测' img_type=1  class='title'></m-title>
-       <div class='center_txt'>实时统计上一个小时（{{center_time}}）的流动情况</div>
+       <div class='center_txt'>实时统计上六个小时（{{center_time}}）的流动情况</div>
        <div class='center_statics'>
          <div class='center_statics--count'>陕西省&nbsp;
          <span class="center_statics_">{{centerstatics.addIn}}</span></div>
@@ -66,10 +66,10 @@
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" 
            v-loading='tableLoading'>
            <el-table-column type="index" label="No" width="50"></el-table-column>
-           <el-table-column prop="city" label="城市" width="70"></el-table-column>
+           <el-table-column prop="city" label="管理部门" width="90"></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
-            <el-table-column prop="proportion" label="进出比">
+            <el-table-column prop="proportion" label="进出比" width="70">
              <template slot-scope="scope">
               <span>{{scope.row.proportion | number}}</span>
             </template>
@@ -120,7 +120,7 @@ export default {
   name: "overview_left",
     data() {
     return {
-      center_time:(new Date().getHours()-1)+'：00-'+new Date().getHours()+':00',
+      center_time:(new Date().getHours()-6)+'：00-'+new Date().getHours()+':00',
       map: {},
       indexDatascar:[],
       passCarCount:{
@@ -163,9 +163,12 @@ export default {
     this.interval=setInterval(()=>{
       _this.getIndexData();
       _this.getTrafficorder();
+      if(i%60==0){
+       _this.center_time=(new Date().getHours()-6)+'：00-'+new Date().getHours()+':00'
+      };
       if(i%5==0){
         _this.getTrafficMonitorData();
-      }
+      };
       i++;
     },1000*60)
   },

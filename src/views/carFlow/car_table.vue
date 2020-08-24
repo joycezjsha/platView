@@ -332,7 +332,7 @@ export default {
     determine(){
        let that = this;
        that.xzqh='';
-       if(that.timeRange==''){
+       if(!that.timeRange || that.timeRange==''){
          that.$message({
             message: '开始日期和结束日期不能为空！',
             type: "error",
@@ -340,20 +340,12 @@ export default {
           });
          return;
        }else{
-        if(that.timeRange.length<2){
-          that.$message({
-            message: '开始日期和结束日期不能为空！',
-            type: "error",
-            duration: 3000
-          });
-         return;
-        };
-        blur.$emit("determine",that.timeRange) //发送时间格式20200505
-        blur.$emit("determinecar",that.timeRange) //发送中间地图
-        blur.$emit("determineIndex",that.timeRange) //发送总组件中
-        that.realtimeData(that.activeName)
-        let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00'
-        let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59'
+        blur.$emit("determine",that.timeRange); //发送时间格式20200505
+        blur.$emit("determinecar",that.timeRange); //发送中间地图
+        blur.$emit("determineIndex",that.timeRange); //发送总组件中
+        that.realtimeData(that.activeName);
+        let time1=(that.timeRange[0].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'00:00:00';
+        let time2=(that.timeRange[1].replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3"))+' '+'23:59:59';
         let timeData={
           time1,
           time2
@@ -409,6 +401,13 @@ export default {
         that.realtimeData(that.activeName);
      }else{
        that.timeRange= undefined;
+       that.allStatics={
+        incount:'',
+        outcount:'',
+        addIn:'',
+        inoutProportion:0
+       }
+       that.flowDatas=[];
      }
     }
 
@@ -614,7 +613,7 @@ export default {
     margin-left: 3px;
     display: flex;
   }
-  .sort_img{width:30px;height:28px;color:#00C6FF;margin-left:15px;padding-top:8px;cursor:pointer;}
+  .sort_img{width:30px;height:28px;color:#00C6FF;margin-left:15px;padding-top:3px;cursor:pointer;}
 }
 .carflow li:nth-of-type(odd){ 
   background:rgba(72,84,108,0.2);

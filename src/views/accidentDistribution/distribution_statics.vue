@@ -36,7 +36,7 @@
         </div>
         <div class='distribution-statics_main boxstyle'>
           <m-com-title label='重大事故发生趋势' style="width:9vw;"></m-com-title>
-          <bar-chart c_id='accurCreateChange' :chart_data="bar_chart_data" style='width:100%;height:20vh'></bar-chart>
+          <bar-chart c_id='accurCreateChange' :chart_data="bar_chart_data" style='width:100%;height:18vh'></bar-chart>
         </div>
     </div>
   </div>
@@ -392,7 +392,7 @@ export default {
   right: 14px;
   width: 474px;
   height: 977px;
-  top: 99px;
+  top: 90px;
   color: white;
 }
 .distribution-statics_container {

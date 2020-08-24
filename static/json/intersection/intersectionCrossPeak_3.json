@@ -1,0 +1,16 @@
+{
+	"data": {
+		"tableTwo": {
+			"total": 0,
+			"tableName": "今日早高峰",
+			"rows": []
+		},
+		"tableOne": {
+			"total": 0,
+			"tableName": "昨日晚高峰",
+			"rows": []
+		}
+	},
+	"errmsg": "success",
+	"errcode": 0
+}

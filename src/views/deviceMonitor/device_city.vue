@@ -6,14 +6,14 @@
         <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:4vh;line-height:4vh;'></m-title></div>
       </div>
       <div class="device-city_content">
-        <m-tiptxt text='设备包括：电子警察、视频设备、卡口设备...' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
-        <m-tiptxt text='活跃设备：是指近一个月有抓拍违法数据的电子警察、视频设备、卡口设备；视频设备可查看视频画面。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
+        <m-tiptxt text='设备包括：电子警察、视频设备、卡口设备。' icon='icon-shebei1' icon_style='color:#A6AFCD;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
+        <m-tiptxt text='回传设备：是指当天有抓拍违法数据的电警；当天有回传数据的卡口设备；可查看视频画面的视频设备。' icon='icon-shebei1' icon_style='color:#00C6FF;font-size:23px;height:30px;' :isShowIcon='ishowicon'></m-tiptxt>
         <div class='device-city_content_table' v-if="tableIndex==0">
           <el-table :data="indexcityDatas" @row-click="handle" ref='cityTable' highlight-current-row>
             <el-table-column type="index" label="No" width="50"></el-table-column>
-            <el-table-column prop="city"   label="城市"></el-table-column>
-            <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
-            <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
+            <el-table-column prop="city"   label="管理部门"></el-table-column>
+            <el-table-column prop="NUM" label="设备总数" sortable></el-table-column>
+            <el-table-column prop="ACTIVE" label="回传设备率" sortable><template slot-scope="scope">{{ scope.row.ACTIVE?scope.row.ACTIVE:'0'}}</template></el-table-column>
           </el-table>
         </div>
 
@@ -40,9 +40,10 @@
 
 <script>
 import { IMG } from "./config";
+import util from "@/common/util";
 import blur from "@/blur";
 import { interf } from "./config";
-import m_tiptxt from '@/components/UI_el/tiptxt.vue'
+import m_tiptxt from '@/components/UI_el/tiptxt.vue';
 import mTitle from "@/components/UI_el/title_com.vue";
 export default {
   name: "TCruise",
@@ -74,11 +75,12 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(6);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
+    this.map.setZoom(mapConfig.DEFAULT_ZOOM);
     this.map.repaint = true;
     that.getIndexData();
     that.getRoadData();
+
   },
   destroyed() {
     this.map.setPitch(0);
@@ -97,6 +99,7 @@ export default {
         data.name=row.city;
         data.value=row.XZQH;
         this.centerTo(row.jwd.split(' '));
+        blur.$emit('changeCitySelect',data.value);
       }
       blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
     },
@@ -117,6 +120,7 @@ export default {
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
+              util.initAreaDatas(data.data,1);
                that.indexcityDatas=data.data;
             } else{
               that.$message({
