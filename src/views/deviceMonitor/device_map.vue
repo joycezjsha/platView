@@ -194,7 +194,7 @@ export default {
     },
     /**
      * 不显示设备分布热力图
-     */
+    */
     hideHeatMap(){
       if(this.map.getLayer('heatmapLayer')!=undefined){
         this.map.setLayoutProperty('heatmapLayer', 'visibility', 'none');

@@ -108,6 +108,7 @@
     <el-dialog :title="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'" :visible.sync="drawer" append-to-body class='data-order'>
       <data-order :order_value="order_value"></data-order>
     </el-dialog>
+    <div class='export'><el-button type="primary" @click='exportReport'>交通报告导出</el-button></div>
   </div>
 </template>
 
@@ -191,47 +192,47 @@ export default {
     this.order_value=t;
   },
   //设置表格样式
-    getRowClass({ row, column, rowIndex, columnIndex }) {
-      return "background:transparent;";
-   },
+  getRowClass({ row, column, rowIndex, columnIndex }) {
+    return "background:transparent;";
+  },
   /**
    * 获取过车/轨迹数据
   */
-    getIndexData() {
-      let that = this;
-      interf.GET_HIS_CAR_API({})
-      .then(response=>{
-        if (response && response.status == 200){
-          var data= response.data;
-          if (data.errcode == 0){
-            that.passCarCount=data.data;
+  getIndexData() {
+    let that = this;
+    interf.GET_HIS_CAR_API({})
+    .then(response=>{
+      if (response && response.status == 200){
+        var data= response.data;
+        if (data.errcode == 0){
+          that.passCarCount=data.data;
+        }
+      }
+
+    });
+
+    interf.GET_TRAIL_API({})
+    .then(response=>{
+      if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+            that.trailCallCount=data.data;
+          } else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
           }
-        }
-
-      });
-
-      interf.GET_TRAIL_API({})
-      .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-            if (data.errcode == 0) {
-              that.trailCallCount=data.data;
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-        //  console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-    },
+      }
+    })
+    .catch(err=>{
+      //  console.log(err);
+    })
+    .finally(() => {
+      that.tableLoading = false;
+    });
+  },
   /**
    * 获取交通动态监测数据
    */
@@ -318,6 +319,12 @@ export default {
     .finally(() => {
       that.trafficLoading = false;
     });
+  },
+  /**
+   *  导出交通报告
+   */
+  exportReport(){
+    window.open("http://92.1.48.106/xasimg/jtbg.csv");
   }
   }
 };
@@ -518,6 +525,11 @@ export default {
 }
 .overview-left-div li:nth-of-type(odd){
   background:rgba(72,84,108,0.2);
+}
+.export{
+  position: fixed;
+  top: 28%;
+  left: 18%;
 }
 </style>
 <style lang='scss'>
