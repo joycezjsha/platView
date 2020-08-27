@@ -19,7 +19,8 @@ export default {
         sourceList:[],
         lineList:[],
         markers:[],
-        popups:[]
+        popups:[],
+        area_popups:[]
       },
       showArea:false,
       isShowTxt:false,
@@ -29,10 +30,16 @@ export default {
   mounted() {
     let _this=this;
     this.map = this.$store.state.map;
-    this.map.setCenter([109.278987,35.747334]);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
     setTimeout(()=>{this.getAreaData();this.getMainAcciData()},1000);
     blur.$on('cancelCityLayerStatus',function(){
       _this.cancelCityLayerStatus();
+      _this.map_cover.popups.forEach(e=>{
+        e.remove();
+      });
+    });
+    blur.$on('changeCitySelect',function(data){
+      _this.addCityAccident(data);
     });
   },
   components: {
@@ -65,7 +72,7 @@ export default {
         if (response && response.status == 200){
           var data = response.data;
           if (data.errcode == 0) {
-              that.addCityAccident(data.data);
+              // that.addCityAccident(data.data);
               data.data.map(e=>{
                 e.Num=e.ACCIDENTNUM;
                 return e;
@@ -91,23 +98,35 @@ export default {
       .finally(() => {
       });
     },
-    addCityAccident(data){
+    addCityAccident(xzqh){
       let _this=this;
-      data.map(e=>{
-        _this.addCityPopup(e);
-      })
+      _this.map_cover.area_popups.forEach(e=>{
+        e.remove();
+      });
+      // data.map(e=>{
+      //   _this.addCityPopup(e);
+      // })
+      if(!xzqh) return;
+      let data=this.areaIndexs;
+      _this.map_cover.popups.forEach(e=>{
+          e.remove();
+        });
+      for(let i=0;i<data.length;i++){
+        if(data[i].XZQH==xzqh || xzqh.indexOf(data[i].XZQH)!=-1){
+          _this.addCityPopup(data[i]);
+        }
+      }
     },
     /**
      * 地图显示各市重大事故数量
      */
     addCityPopup(e){
+      let that=this;
       let lnglat=e.JWD.split(' ');
       let mainDiv=document.createElement('div');
       mainDiv.style.width='6vw';
       mainDiv.style.fontSize='0.7vw';
       mainDiv.style.color='white';
-      mainDiv.style.backgroundColor='rgba(3, 12, 32, 0.74)';
-      mainDiv.style.border='1px solid rgb(42, 76, 162)';
       mainDiv.style.fontFamily='SourceHanSansCN';
       mainDiv.style.padding='4px 13px';
       // mainDiv.className='dev_popup';
@@ -116,24 +135,34 @@ export default {
       title.innerHTML=e.CITY;
       title.className='title';
       title.style.margin='5px 0';
-      mainDiv.appendChild(title);
 
+      let closeimgDiv = document.createElement("div");
+      closeimgDiv.className = "closeImgDiv";
+      let closeimg = document.createElement("img");
+      closeimg.src = IMG.CLOSE_IMG;
+      closeimg.className = "closeImg";
+      closeimgDiv.appendChild(closeimg);
+      title.appendChild(closeimgDiv);
+      closeimg.addEventListener("click", function() {
+        that.map_cover.area_popups.forEach(e=>{
+          e.remove();
+        });
+        that.cancelCityLayerStatus();
+      });
+      closeimg.addEventListener("mouseover", function() {
+        this.setAttribute("src", IMG.CLOSE_HOVER_IMG);
+      });
+      closeimg.addEventListener("mouseout", function() {
+        this.setAttribute("src", IMG.CLOSE_IMG);
+      });
+
+      mainDiv.appendChild(title);
       let p1="<p style='color:#00C6FF;margin:5px 0;'><span>事故：</span><span>"+e.ACCIDENTNUM+"</span></p>";
       mainDiv.appendChild($(p1)[0]);
-      
-      // let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
-      // popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
 
-      // let el = document.createElement('div');
-      // // el.style["background-image"] = "url(./static/images/"+(e.KKZT>1?"kakou":"kakou_")+".png)";
-      // // el.style["background-size"] = "100% 100%";
-      // el.style.width = "8px";
-      // el.style.height = "8px";
-      // el.style["border-radius"] = "50%";
-      // el.style.backgroundColor='red';
-      let marker = new minemap.Marker(mainDiv, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map);
-      this.map_cover.markers.push(marker);
-      // this.map_cover.popups.push(popup);
+     let popup=new minemap.Popup({closeOnClick: false, closeButton: true, offset: [-8, -13]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv).addTo(this.map);
+      this.map_cover.area_popups.push(popup);
     },
     /**
      * 获取重大事故数据
@@ -263,11 +292,18 @@ export default {
           e.remove();
         })
       }
+      //清除区域的popup框
+      if(this.map_cover.area_popups.length>0){
+        this.map_cover.area_popups.forEach(e=>{
+          e.remove();
+        })
+      }
       this. map_cover={
           sourceList:[],
           lineList:[],
           markers:[],
-          popups:[]
+          popups:[],
+          area_popups:[]
         }
     },
 /** */

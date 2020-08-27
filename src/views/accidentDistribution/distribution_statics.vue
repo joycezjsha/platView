@@ -7,7 +7,7 @@
       </div>
       <div class="distribution-statics--tab boxstyle">
         <!--</div> +"(其中重大事故:"+staticsData.esplish+")"-->
-        <m-tab label='事故总数' :value='staticsData.ACCIDENTNUM' :right_value='"(其中重大事故:"+staticsData.MAJORACCIDENTNUM+")"' icon='icon-weifaguanli' icon_style='color:#FFFFFF' style="width:90%;margin:0 auto;"></m-tab>
+        <m-tab label='事故总数' :value='staticsData.ACCIDENTNUM' :right_value='"(其中重大事故:"+staticsData.MAJORACCIDENTNUM+")"' icon='icon-weifaguanli' icon_style='color:#FFFFFF' style="width:94%;margin:0 auto;"></m-tab>
         
         <div class='item_content'>
             <div class='item'>
@@ -31,12 +31,12 @@
           </div>
         </div>
         <div class='distribution-statics_count boxstyle'>
-          <m-com-title label='事故发生数量变化' style="width:10vw;"></m-com-title>
+          <m-com-title label='事故发生数量变化' style="width:9vw;"></m-com-title>
           <m-line-chart :chart_data="chart_data" c_id='sumCountChange' style='width:100%;height:25vh'></m-line-chart>
         </div>
         <div class='distribution-statics_main boxstyle'>
-          <m-com-title label='重大事故发生趋势' style="width:10vw;"></m-com-title>
-          <bar-chart c_id='accurCreateChange' :chart_data="bar_chart_data" style='width:100%;height:20vh'></bar-chart>
+          <m-com-title label='重大事故发生趋势' style="width:9vw;"></m-com-title>
+          <bar-chart c_id='accurCreateChange' :chart_data="bar_chart_data" style='width:100%;height:18vh'></bar-chart>
         </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
 import blur from "@/blur";
 import { IMG } from "./config";
 import { interf } from "./config";
-import echarts from 'echarts'
+import echarts from 'echarts';
 import mTitle from "@/components/UI_el/title.vue";
 import mComTitle from "@/components/UI_el/title_com.vue";
 import mLineChart from "@/components/UI_el/double_line_chart.vue";
@@ -392,7 +392,7 @@ export default {
   right: 14px;
   width: 474px;
   height: 977px;
-  top: 99px;
+  top: 90px;
   color: white;
 }
 .distribution-statics_container {
@@ -423,7 +423,7 @@ export default {
   .distribution-statics--tab {
     width: 100%;
     height: 130px;
-    padding:0 auto;
+    padding-top:8px;
     .item_content{
       width:100%;
       margin: 15px 0;

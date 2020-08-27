@@ -35,14 +35,16 @@ export default {
     },
     mounted(){
         this.map = this.$store.state.map;
-        this.map.setCenter([108.967368, 34.302634]);
-        this.map.setZoom(6);
+        this.map.setCenter(mapConfig.DEFAULT_CENTER);
+        this.map.setZoom(mapConfig.DEFAULT_ZOOM);
         setTimeout(()=>{this.getRoadStatisticsDatas();},200);
         this.getData();
+        this.map.on('click',this.setZoom);
     },
     destroyed() {
         this.map.setPitch(0);
         this.clearMap();
+        this.map.off('click',this.setZoom);
     },
     methods:{
         // 切换卡口热力分布  与   活跃卡口点位
@@ -72,8 +74,8 @@ export default {
                 that.clearMap();
                 that.xzqh=data;
                 that.city=city;
-                that.map.setCenter([108.967368, 34.302634]);
-                that.map.setZoom(6);
+                that.map.setCenter(mapConfig.DEFAULT_CENTER);
+                that.map.setZoom(mapConfig.DEFAULT_ZOOM);
                 if(that.tableIndex=='1'){
                     that.getRoadStatisticsDatas();
                 }else{
@@ -319,11 +321,15 @@ export default {
                 //添加非聚合图层
                 that.map.addLayer({
                     "id": "unclustered-points",
-                    "type": "symbol",
+                    "type": "circle",
                     "source": "data-point",
                     "filter": ["!has", "point_count"],
                     "layout": {
-                        "icon-image": "bank-15"
+                        // "icon-image": "bank-15"
+                    },
+                    "paint": {
+                        "circle-color": 'green',
+                        "circle-radius": 15,
                     }
                 })
                 that.map_cover.lineList2.push("unclustered-points"); 
@@ -365,7 +371,48 @@ export default {
                 }); 
                 
                 that.map_cover.lineList2.push("cluster-count"); 
+                //添加非聚合数量图层
+                that.map.addLayer({
+                  "id": "-cluster-count",
+                  "type": "symbol",
+                  "source": "data-point",
+                  "layout": {
+                      "text-field": "1",
+                      "text-size": 14
+                  },
+                  "paint":{
+                      "text-color":"#ffffff"
+                  },
+                  "filter": ["!has", "point_count"]
+                });
+                that.map_cover.lineList2.push("-cluster-count");
             }
+        },
+        /**
+         * 点击聚合图-离散效果
+         */
+        setZoom(e){
+            let bbox = [
+            [e.point.x - 5, e.point.y - 5],
+            [e.point.x + 5, e.point.y + 5]
+            ];
+            let features0 = this.map.queryRenderedFeatures(bbox, {
+                layers: ["cluster0"]
+            });
+            let features1 = this.map.queryRenderedFeatures(bbox, {
+                layers: ["cluster1"]
+            });
+            let features2 = this.map.queryRenderedFeatures(bbox, {
+                layers: ["cluster2"]
+            });
+            let features3 = this.map.queryRenderedFeatures(bbox, {
+                layers: ["cluster3"]
+            });
+            if(features0.length>0 || features1.length>0 || features2.length>0){
+                this.map.setZoom(this.map.getZoom()+1);
+                this.map.setCenter([e.lngLat.lng,e.lngLat.lat]);
+            }
+        // console.log(JSON.stringify(features0));
         },
        /*##清除地图加载点、线、面、弹框*/
         clearMap(){

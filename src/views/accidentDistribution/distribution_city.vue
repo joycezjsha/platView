@@ -42,7 +42,7 @@
           ref='cityTable'
         >
           <el-table-column type="index" label="No" width="50"></el-table-column>
-          <el-table-column v-if='tableIndex==0' prop="CITY" label="城市"></el-table-column>
+          <el-table-column v-if='tableIndex==0' prop="CITY" label="管理部门"></el-table-column>
            <el-table-column v-else prop="CITY" label="区域"></el-table-column>
           <el-table-column prop="ACCIDENTNUM" label="事故数量" sortable></el-table-column>
           <el-table-column prop="MAJORSNUM" label="重大事故" sortable v-if='tableIndex==0'></el-table-column>
@@ -65,7 +65,7 @@ export default {
       indexDatas: [],
       selectItem: { city: "西安", order: 8 },
       timeRange: "",
-      defaultTime:['00:00:00','23:59:59'],
+      defaultTime:['00:00:00','00:00:00'],
       tableIndex: 0,
       mapAddItems: {
         polygons: [],
@@ -98,9 +98,22 @@ export default {
       if(t!=undefined) {
         if(this.range_type==t) return; 
         else this.tableIndex = t;
+        this.timeRange='';
       }else{
         this.queryLoading=true;
-        if(this.timeRange!='') blur.$emit('initDistributionMapdata',{time:this.timeRange});
+        if(this.timeRange && this.timeRange!='') {
+          if(new Date(this.timeRange[1]).getTime()==new Date(new Date().toLocaleDateString()).getTime()){
+            this.timeRange[1]=this.timeRange[1].split(' ')[0]+' '+new Date().getHours()+':'+new Date().getMinutes()+':'+new Date().getSeconds();
+          }
+          blur.$emit('initDistributionMapdata',{time:this.timeRange});
+        }else{
+          this.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "warning",
+            duration: 3000
+          });
+         return;
+        }
         setTimeout(()=>{_this.queryLoading=false;},500);
       }
       if(this.tableIndex){
@@ -121,6 +134,7 @@ export default {
       }else{
         data.name=row.CITY;
         data.value=row.XZQH;
+        blur.$emit('changeCitySelect',data.value);
       }
       blur.$emit('initDistributionStatics',this.tableIndex,data);
     },

@@ -5,10 +5,26 @@ import http from '../../common/httpUtil'
 import sgImg from './image/sg.png'
 import sgUncheckImg from './image/sg_.png'
 import jqImg from './image/jq.png'
+import spImg from './image/zq.png'
+import spUncheckImg from './image/zq-uncheck.png'
+import xcImg from './image/xc.png'
+import xcUncheckImg from './image/xc-uncheck.png'
+import close_img from './image/close.png'
+import close_hover_img from './image/close_hover.png'
 export const interf={
   /*获取巡航数据*/
   getCityIndexData:(data,callback,err)=>{
     return http._httpConnect("get", "AreaList/list",data,
+          function(data){
+            callback(data);
+          },function(e){
+            // _this.$message({type: 'warning', message: '服务异常'});
+            err(e);
+          })
+  },
+  /*获取应急处置json数据*/
+  GET_EMERGENCY_API:(callback,err)=>{
+    return http.httpConnect("get", "./static/json/jwz.json",{},
           function(data){
             callback(data);
           },function(e){
@@ -79,11 +95,25 @@ export const interf={
       method:'get',
       params:data
     })
+  },
+  //获取视频巡查数据
+  GET_SP_API:data=> {
+    return http.service({
+      url:`Bayonet/getAllDev`,
+      method:'get',
+      params:data
+    })
   }
 }
 export const IMG={
   /*路况巡航*/
   SG_IMG: sgImg,
   SG_UNCHECK_IMG:sgUncheckImg,
-  jqImg:jqImg
+  SP_IMG: spImg,
+  SP_UNCHECK_IMG:spUncheckImg,
+  jqImg:jqImg,
+  CLOSE_IMG:close_img,
+  CLOSE_HOVER_IMG:close_hover_img,
+  XC_IMG: xcImg,
+  XC_UNCHECK_IMG:xcUncheckImg
 }

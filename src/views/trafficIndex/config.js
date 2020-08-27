@@ -2,8 +2,7 @@
  * Created by ThinkPad on 2019/4/10.
  */
 import http from '../../common/httpUtil'
-import playImg from './image/cruise-play.png'
-import stopImg from './image/cruise-stop.png'
+import cx_png from './image/cx.png'
 export const interf={
   //获取西安市交通拥堵排名
   // GET_Xian_TAFFIC_ORDER:data => {
@@ -49,6 +48,6 @@ export const interf={
 }
 export const IMG={
   /*路况巡航*/
-  CRUISE_IMG_PLAY: playImg,
-  CRUISE_IMG_STOP:stopImg
+  // CRUISE_IMG_PLAY: playImg,
+  CX_IMG:cx_png
 }

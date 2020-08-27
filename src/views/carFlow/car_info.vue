@@ -77,7 +77,7 @@
         </div>
         <div class="carFlow-main borstyle">
           <div>
-            <m-title class="analysis" label="车辆归属地分析"></m-title>
+            <m-title class="analysis" label="预警车辆归属地分析" style='width:10vw;'></m-title>
           </div>
           <div class="inout">
             <div class="left">
@@ -493,7 +493,7 @@ export default {
       if(num=='1'){
         that.getprovinceData(that.stime);
         that.initSumCharts(that.timeName);
-        that.getCarTypeDatas(that.stime) ;
+        that.getCarTypeDatas(that.stime);
       }
       if(num=='2'){
         that.map.setZoom(4);
@@ -525,6 +525,13 @@ export default {
           that.getBelongData(that.stime);   
         };
         if(that.isShowdiv=='1'){
+          this.showback=false;
+          that.stime='1';
+          that.fxlx='1';
+          that.isActive='1';
+          that.timeName='1';
+          that.xzqh='';
+          blur.$emit('back',that.stime,that.xzqh);
           this.map.setZoom(6);
           that.getprovinceData(that.stime)
           that.initSumCharts(that.timeName);
@@ -777,11 +784,16 @@ export default {
     },
      //  OD地图函数
     getCityMapOD(itemlist){
+      let that=this;
       // this.clearMap();
       let data = [] ;
       //  [116.4551, 40.2539, 121.4648, 31.2891, '北京', '上海', 20],
       itemlist.forEach(item => {
         if(item.STARTJWD && item.ENDJWD){
+          if(that.xzqh==''){
+            item.ENDNAME='陕西';
+          };
+          // item.STRATNAME
           data.push([
           item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
           item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
@@ -821,6 +833,9 @@ export default {
       let getColor=(param)=>{
               let factor = (param.data.count - min) / (max - min);
               let index = Math.round(colors.length * factor);
+              if(index>3 || index<0){
+                index=0;
+              }
               return colors[index];
             }
       let series = [{

@@ -110,21 +110,6 @@ export default {
           }
         }
       });
-      //  interf.GET_MAP_CAR_FLOW_API({stime:'1'})
-      //   .then(response=>{
-      //     if (response && response.status == 200){
-      //       let data= response.data;
-      //       console.log(data)
-      //       if (data.errcode == 0){
-      //        if(data.data.length>0){
-      //          data.data.forEach(e=>{
-      //           //  that.addCityMarker(e);
-      //          })
-      //        }
-      //       }
-      //     }
-
-      //   })
     },
     addCityMarker(item) {
       let el = document.createElement("div");
@@ -153,7 +138,7 @@ export default {
 
       let rightDiv = document.createElement("div");
       rightDiv.style.float = "right";
-      rightDiv.style.width = "40px";
+      rightDiv.style.width = "55px";
       rightDiv.style.height = "30px";
       let span1 = document.createElement("p");
       span1.innerHTML = item.city;

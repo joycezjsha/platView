@@ -19,9 +19,9 @@
           @row-click="clickHandle"
         >
           <el-table-column type="index" label="No" width="50"></el-table-column>
-          <el-table-column prop="name" label="城市" width="70"></el-table-column>
-          <el-table-column prop="ydzs" label="拥堵指数"></el-table-column>
-          <el-table-column prop="tbsz" label="同比上周" sortable></el-table-column>
+          <el-table-column prop="NAME" label="管理部门" width="90"></el-table-column>
+          <el-table-column prop="ydzs" label="拥堵指数"><template slot-scope="scope">{{ scope.row.ydzs?scope.row.ydzs:0}}</template></el-table-column>
+          <el-table-column prop="tbsz" label="同比上周" sortable><template slot-scope="scope">{{ scope.row.tbsz?scope.row.tbsz:0}}</template></el-table-column>
           <!-- <el-table-column prop="his_radio" label="历史均值" sortable></el-table-column> -->
         </el-table>
       </div>
@@ -35,6 +35,7 @@
 
 <script>
 import { IMG } from "./config";
+import util from "@/common/util";
 import { interf } from "./config";
 import blur from "@/blur";
 import TrafficIndexCharts from "./TrafficIndexCharts.vue";
@@ -154,9 +155,9 @@ export default {
           if (data.errcode == 0) {
             data.data=data.data.map(e=>{
               e.ydzs=Math.floor(e.ydzs * 10) / 10;
+              e.NAME=e.name.split('市')[0]+'支队';
               return e;
             });
-            that.indexDatas=data.data;
             data.data.forEach(e=>{
               that.addCityMarker(e);
             });
@@ -167,6 +168,8 @@ export default {
             });
             that.areaIndexs=data.data;
             that.showArea=true;
+            util.initAreaDatas(data.data,0);
+            that.indexDatas=data.data;
           }else{
             that.$message({
               message: data.errmsg,

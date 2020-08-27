@@ -4,6 +4,8 @@
 import http from '../../common/httpUtil'
 import playImg from './image/cruise-play.png'
 import stopImg from './image/cruise-stop.png'
+import close_img from './image/close.png'
+import close_hover_img from './image/close_hover.png'
 export const interf={
   // 设备查询 设备类型分析
   GET_QUERY_API:data=> {
@@ -76,10 +78,20 @@ export const interf={
       method:'get',
       params:data
     })
+  },
+  /*获取测区设备数据*/
+  GET_DEVICE_SPEED_API:data=> {
+    return http.service({
+      url:`Device/getAllSpeedingDev`,
+      method:'get',
+      params:data
+    })
   }
 }
 export const IMG={
   /*路况巡航*/
   CRUISE_IMG_PLAY: playImg,
-  CRUISE_IMG_STOP:stopImg
+  CRUISE_IMG_STOP:stopImg,
+  CLOSE_IMG:close_img,
+  CLOSE_HOVER_IMG:close_hover_img
 }

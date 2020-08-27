@@ -6,8 +6,7 @@
         <div @click='changeTable(1)'><m-title label='道路统计' :img_type='tableIndex?"1":"0"' style='width:6vw;height:3.5vh;line-height:3.5vh;'></m-title></div>
       </div>
       <div class="electricPolice_city_content">
-        <i class="iconfont icon-dianjing" style="color:#00aadd;position:absolute;top:6.5vh;left:1.416vw;font-size:20px;"></i>
-        <m-tiptxt style="margin-left:1vw" text='活跃电警是指近一个月有抓拍违法数据的设备'></m-tiptxt>
+        <m-tiptxt icon='icon-dianjing' icon_style='color:#00aadd;font-size:17px;height:30px;' :isShowIcon='ishowicon' text='回传设备是指当天有抓拍违法数据的电警。'></m-tiptxt>
         <div v-if="!tableIndex" style="padding:0 5px;width:98%;height:96%">
           <el-table :data="indexData" 
           v-loading='tableLoading'
@@ -16,11 +15,11 @@
              @row-click="handdleCity"
              style="width: 100%"  height="100%"  :default-sort = "{prop: 'COUNT', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No" width="40"></el-table-column>
-            <el-table-column prop="city" label="城市" width="70"></el-table-column>
-            <el-table-column prop="COUNT" label="设备数量" sortable></el-table-column>
-            <el-table-column prop="ACTIVENUM" label="活跃个数"  sortable></el-table-column>
-            <el-table-column prop="ACTIVE" label="活跃率" sortable></el-table-column>
-            <el-table-column prop="XZQH" v-if='showXZQH'  ></el-table-column>
+            <el-table-column prop="city" label="管理部门" width="90"></el-table-column>
+            <el-table-column prop="NUM" label="设备总数" sortable></el-table-column>
+            <el-table-column prop="ACTIVENUM" label="回传设备"  sortable><template slot-scope="scope">{{ scope.row.ACTIVENUM?scope.row.ACTIVENUM:0 }}</template></el-table-column>
+            <el-table-column prop="ACTIVE" label="回传设备率" sortable><template slot-scope="scope">{{ scope.row.ACTIVE?scope.row.ACTIVE:0 }}</template></el-table-column>
+            <el-table-column prop="XZQH" v-if='showXZQH'  ><template slot-scope="scope">{{ scope.row.XZQH?scope.row.XZQH:'-' }}</template></el-table-column>
           </el-table>
         </div>
         <div v-else>
@@ -50,6 +49,7 @@
 
 <script>
 import { IMG } from "./config";
+import util from "@/common/util";
 import { interf } from "./config";
 import m_tiptxt from '@/components/UI_el/tiptxt.vue';
 import mTitle from "@/components/UI_el/title_com.vue";
@@ -63,6 +63,7 @@ export default {
       city:'',
       tableLoading:false,
       showXZQH:false,
+      ishowicon:true,
       map_cover:{
         sourceList:[],
         lineList:[],
@@ -170,9 +171,12 @@ export default {
           if (data.errcode == 0) {
             for(var i=0;i<data.data.length;i++){
               if(data.data[i].city!=null){
+                data.data[i].NUM=data.data[i].COUNT;
                 that.indexData.push(data.data[i])
               }
             }
+            that.indexData=util.initAreaDatas(that.indexData,1);
+
           }else{
             that.$message({
               message: '城市统计请求服务失败',
@@ -205,12 +209,12 @@ export default {
     * 点击道路名称  触发事件
     */
      handelRoad(row, event, column){
-      blur.$emit("getDLDM",row)
+      blur.$emit("getDLDM",row);
       let data={};
       if(this.tableIndex){
         data.name=row.NAME;
         data.value=row.DLDM;
-        this.getRoadMapDev(data.value)
+        // this.getRoadMapDev(data.value)
       }
       blur.$emit('initCityOrRoadStatics',this.tableIndex,data,true);
       // this.centerTo(row.JWD.split(' '));

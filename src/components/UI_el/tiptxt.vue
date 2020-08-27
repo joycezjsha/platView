@@ -1,7 +1,7 @@
 <template>
   <div class='tiptxt'>
-    <div class='img'>
-      <i :class='"iconfont "+icon' :style='icon_style' v-show='isShowIcon' />
+    <div class='img' v-show='isShowIcon'>
+      <i :class='"iconfont "+icon' :style='icon_style' />
     </div>
     <div class='txt'>{{text}}</div>
   </div>

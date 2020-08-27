@@ -3,7 +3,7 @@
     <!-- 车辆实时监测 -->
     <div v-if="isShowdiv=='1'" class="vehicle-statics_container">
       <div class="top borstyle" >
-        <div class="title" v-if="showback==true">全部车辆监控</div>
+        <div class="title" v-if="showback==true">全部监控车辆</div>
         <div class="back" v-else @click="goback(1)">
           &lt;&lt; 返回全省
           <span>{{CODE}}</span>
@@ -69,7 +69,7 @@
             :header-cell-style="getRowClass"
           >
             <el-table-column  type="index" label="No." width="80"></el-table-column>
-            <el-table-column prop="city" label="城市" width="130"></el-table-column>
+            <el-table-column prop="city" label="管理部门" width="130"></el-table-column>
             <el-table-column prop="NUM" label="辆次" sortable></el-table-column>
           </el-table>
         </div>
@@ -344,6 +344,7 @@ export default {
       that.initMainStaticsChart();
       that.getToadyKeyVehicleInAndOutDatas()
     },1000*60);
+    this.map.on('click',this.setZoom);
   },
   destroyed() {
     this.flyRoutes = [];
@@ -354,9 +355,11 @@ export default {
     // let that = this;
     this.map.setPitch(0); //设置地图的俯仰角
     // this.onHideLayer();
+    this.map.off('click',this.setZoom);
   },
   beforeDestroy(){
     this.clearMap();
+    this.map.off('click',this.setZoom);
   },
   methods: {
     /*
@@ -518,7 +521,6 @@ export default {
       }
         interf.GET_OWN_SHIP_API(getBelongData).then(response => {
           that.tableLoading = false;
-          debugger;
           if (response && response.status == 200) {
             var data = response.data;
             if (data.errcode == 0) {
@@ -559,6 +561,8 @@ export default {
       var data = [] ;
       itemlist.forEach(item => {
         if(item.STARTJWD && item.ENDJWD){
+          if(item.ENDNAME=='西安支队') item.ENDNAME='陕西';
+          if(item.STRATNAME=='西安支队') item.STRATNAME='陕西';
           data.push([
             item.STARTJWD.split(" ")[0],item.STARTJWD.split(" ")[1],
             item.ENDJWD.split(" ")[0],item.ENDJWD.split(" ")[1],
@@ -771,12 +775,17 @@ export default {
           //添加非聚合图层
           that.map.addLayer({
             "id": "unclustered-points",
-            "type": "symbol",
+            "type": "circle",
             "source": "data-point",
             "filter": ["!has", "point_count"],
             "layout": {
-              "icon-image": "bank-15"
-              }
+              // "icon-image": "bank-15"
+              },
+             "paint": {
+               "circle-color": 'green',
+                "circle-radius": 15,
+               } 
+
             })
             that.map_cover.lineList.push("unclustered-points");
             //添加聚合图层
@@ -816,6 +825,21 @@ export default {
                 }); 
                 
                 that.map_cover.lineList.push("cluster-count"); 
+                 //添加非聚合数量图层
+                that.map.addLayer({
+                  "id": "-cluster-count",
+                  "type": "symbol",
+                  "source": "data-point",
+                  "layout": {
+                      "text-field": "1",
+                      "text-size": 14
+                  },
+                  "paint":{
+                      "text-color":"#ffffff"
+                  },
+                  "filter": ["!has", "point_count"]
+                });
+                that.map_cover.lineList.push("-cluster-count");
           }
       },
     
@@ -867,8 +891,7 @@ export default {
         // 如果传入参数code  车辆类型
         DomesticVehicleData.code =that.CODE;
       }
-      interf
-        .GET_DOM_VEH_RANKING_API(DomesticVehicleData)
+      interf.GET_DOM_VEH_RANKING_API(DomesticVehicleData)
         .then(response => {
           that.tableLoading = false;
           if (response && response.status == 200) {
@@ -1188,6 +1211,32 @@ export default {
         .finally(() => {
           that.tableLoading = false;
         });
+    },
+    /**
+     * 点击聚合图-离散效果
+     */
+    setZoom(e){
+        let bbox = [
+        [e.point.x - 5, e.point.y - 5],
+        [e.point.x + 5, e.point.y + 5]
+        ];
+        let features0 = this.map.queryRenderedFeatures(bbox, {
+            layers: ["cluster0"]
+        });
+        let features1 = this.map.queryRenderedFeatures(bbox, {
+            layers: ["cluster1"]
+        });
+        let features2 = this.map.queryRenderedFeatures(bbox, {
+            layers: ["cluster2"]
+        });
+        let features3 = this.map.queryRenderedFeatures(bbox, {
+            layers: ["cluster3"]
+        });
+        if(features0.length>0 || features1.length>0 || features2.length>0){
+            this.map.setZoom(this.map.getZoom()+1);
+            this.map.setCenter([e.lngLat.lng,e.lngLat.lat]);
+        }
+    // console.log(JSON.stringify(features0));
     },
 /*##清除地图加载点、线、面、弹框*/
   clearMap(){

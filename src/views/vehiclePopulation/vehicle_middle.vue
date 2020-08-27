@@ -38,12 +38,14 @@ export default {
     mounted(){
         this.map = this.$store.state.map;
         this.map.setCenter(mapConfig.DEFAULT_CENTER);
-        this.map.setZoom(8);
+        this.map.setZoom(mapConfig.DEFAULT_ZOOM);
         // setTimeout(()=>{this.getMapBayonetRankingDatas();},300);
-        this.getData()
+        this.getData();
+        
     },
     destroyed(){
-      this.clearMap()
+      this.clearMap();
+      
     },
     methods:{
       // 进入页面，默认实现聚合图，如果选择车辆类型，调用函数
@@ -52,7 +54,7 @@ export default {
       /* 
       * 接收传来的参数  getCity--车辆类型
       */
-     getData(){
+      getData(){
         blur.$on('getCitycar',data=>{
           this.code=data;
           // this.getMapBayonetRankingDatas()
@@ -61,24 +63,26 @@ export default {
           this.code='';
           // this.getMapBayonetRankingDatas()
         })
-     },
-        // 车辆实时监测
-        realtime(i){    
-            this.tableIndex=i;
-            // let els=document.getElementsByClassName('.custom-popup-class');
-            blur.$emit('Realtime',this.tableIndex)  //传给右侧列表
-            if(this.code!=""){
-              // this.getMapBayonetRankingDatas()
-            }
-            if(this.code==""){
-              // this.getMapBayonetRankingDatas()
-            }
-            if(this.tableIndex=='1'){
-              this.onHideLayer()
-            }else{
-              this.onShowLayer()
-              // this.getMapBayonetRankingDatas()
-            }
+      },
+      // 车辆实时监测
+      realtime(i){    
+          this.tableIndex=i;
+          // let els=document.getElementsByClassName('.custom-popup-class');
+          blur.$emit('Realtime',this.tableIndex)  //传给右侧列表
+          if(this.code!=""){
+            // this.getMapBayonetRankingDatas()
+          }
+          if(this.code==""){
+            // this.getMapBayonetRankingDatas()
+          }
+          if(this.tableIndex=='1'){
+            this.onHideLayer();
+            blur.$emit('hideOverSpeedMarker',true);
+          }else{
+            this.onShowLayer();
+            blur.$emit('hideOverSpeedMarker',false);
+            // this.getMapBayonetRankingDatas()
+          }
             
         },
         /*
@@ -148,17 +152,18 @@ export default {
            //添加非聚合图层
            that.map.addLayer({
              "id": "unclustered-points",
-             "type": "symbol",
+             "type": "circle",
              "source": "data-point",
              "filter": ["!has", "point_count"],
-             "layout": {
-               "icon-image": "bank-15"
+             "paint": {
+               "circle-color": 'green',
+                "circle-radius": 15,
                }
             })
             that.map_cover.lineList.push("unclustered-points"); 
             //添加聚合图层
               var layers = [
-              [3,'#ff5a0f'], [5,'#D25C06'], [1,'#6C9B06']
+              [5,'#ff5a0f'], [3,'#D25C06'], [1,'#6C9B06']
               ];
               layers.forEach(function (layer, i) {
                 let clusterId="cluster"+i;
@@ -191,6 +196,21 @@ export default {
                     "filter": ["has", "point_count"]
                 }); 
                 that.map_cover.lineList.push("cluster-count"); 
+                //添加非聚合数量图层
+                that.map.addLayer({
+                  "id": "-cluster-count",
+                  "type": "symbol",
+                  "source": "data-point",
+                  "layout": {
+                      "text-field": "1",
+                      "text-size": 14
+                  },
+                  "paint":{
+                      "text-color":"#ffffff"
+                  },
+                  "filter": ["!has", "point_count"]
+                });
+                that.map_cover.lineList.push("-cluster-count"); 
             }
     },
      /**
@@ -227,6 +247,32 @@ export default {
           that.tableLoading = false;
         });
       },  
+      /**
+       * 点击聚合图-离散效果
+       */
+      setZoom(e){
+          let bbox = [
+          [e.point.x - 5, e.point.y - 5],
+          [e.point.x + 5, e.point.y + 5]
+          ];
+          let features0 = this.map.queryRenderedFeatures(bbox, {
+              layers: ["cluster0"]
+          });
+          let features1 = this.map.queryRenderedFeatures(bbox, {
+              layers: ["cluster1"]
+          });
+          let features2 = this.map.queryRenderedFeatures(bbox, {
+              layers: ["cluster2"]
+          });
+          let features3 = this.map.queryRenderedFeatures(bbox, {
+              layers: ["cluster3"]
+          });
+          if(features0.length>0 || features1.length>0 || features2.length>0){
+              this.map.setZoom(this.map.getZoom()+1);
+              this.map.setCenter([e.lngLat.lng,e.lngLat.lat]);
+          }
+      // console.log(JSON.stringify(features0));
+      },
     /*##清除地图加载点、线、面、弹框*/
       clearMap(){
         //清除source

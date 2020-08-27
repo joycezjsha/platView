@@ -32,7 +32,7 @@
         :header-cell-style="getRowClass" @row-click='handle'
     @current-change="handleCurrentChange">
           <el-table-column type="index" label="No" width="50"></el-table-column>
-          <el-table-column prop="NAME" label="城市"></el-table-column>
+          <el-table-column prop="NAME" label="管理部门"></el-table-column>
           <el-table-column prop="NUM" label="警情数量" sortable></el-table-column>
           <!-- <el-table-column prop="week_radio" label="重大警情" sortable></el-table-column> -->
         </el-table>
@@ -49,6 +49,7 @@
 
 <script>
 import blur from "@/blur";
+import util from "@/common/util";
 import { IMG } from "./config";
 import { interf } from "./config";
 import mTitle from "@/components/UI_el/title_com.vue";
@@ -72,40 +73,15 @@ export default {
       },
       activeName:'first',
       range_type:0,
-      defaultTime:['00:00:00','23:59:59'],
+      defaultTime:['00:00:00','00:00:00'],
       tableLoading:false,
       queryLoading:false,
       currentRow:null,
-       pickerOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
-          // shortcuts: [{
-          //   text: '最近一周',
-          //   onClick(picker) {
-          //     const end = new Date();
-          //     const start = new Date();
-          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-          //     picker.$emit('pick', [start, end]);
-          //   }
-          // }, {
-          //   text: '最近一个月',
-          //   onClick(picker) {
-          //     const end = new Date();
-          //     const start = new Date();
-          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-          //     picker.$emit('pick', [start, end]);
-          //   }
-          // }, {
-          //   text: '最近三个月',
-          //   onClick(picker) {
-          //     const end = new Date();
-          //     const start = new Date();
-          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-          //     picker.$emit('pick', [start, end]);
-          //   }
-          // }]
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
         }
+      }
     };
   },
   components:{
@@ -114,8 +90,8 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
-    this.map.setCenter([108.967368, 34.302634]);
-    this.map.setZoom(6);
+    this.map.setCenter(mapConfig.DEFAULT_CENTER);
+    this.map.setZoom(mapConfig.DEFAULT_ZOOM);
     this.map.repaint = true;
     that.getAccidentCityData();
   },
@@ -132,7 +108,20 @@ export default {
       if(t!=undefined) {if(this.range_type==t) return; else this.range_type = t;}
       else{
         this.queryLoading=true;
-        if(this.timeRange!='') blur.$emit('initAccidentMap',{time:this.timeRange});
+       
+        if(this.timeRange && this.timeRange!='') {
+          if(new Date(this.timeRange[1]).getTime()==new Date(new Date().toLocaleDateString()).getTime()){
+            this.timeRange[1]=this.timeRange[1].split(' ')[0]+' '+new Date().getHours()+':'+new Date().getMinutes()+':'+new Date().getSeconds();
+          }
+          blur.$emit('initAccidentMap',{time:this.timeRange});
+        }else{
+          this.$message({
+            message: '开始日期和结束日期不能为空！',
+            type: "warning",
+            duration: 3000
+          });
+         return;
+        }
         setTimeout(()=>{_this.queryLoading=false;},500);
       }
       if(this.range_type){
@@ -156,6 +145,7 @@ export default {
         if (response && response.status == 200){
            var data = response.data;
             if (data.errcode == 0) {
+              util.initAreaDatas(data.data,0);
               _this.indexDatas=data.data;
             } else{
               that.$message({
@@ -218,7 +208,7 @@ export default {
       });
     },
   /**
-   * 点击标签页
+   * 选择城市列表
    */
   handle(row, event, column){
     let data={};
@@ -229,6 +219,7 @@ export default {
     }else{
       data.name=row.NAME;
       data.value=row.XZQH;
+      blur.$emit('changeCitySelect',data.value);
     }
     blur.$emit('initAccidentStatics',this.range_type,data);
   },

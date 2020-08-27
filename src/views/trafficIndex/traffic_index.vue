@@ -4,7 +4,7 @@
       <div class="traffic-index_title">
         <m-title label='境内高速路及主干道路况' img_type=1 class='title'></m-title>
       </div>
-      <m-tab :isShowIcon="isShowIcon" label='当前选择范围' :value='selectItem.road' style='width:90%;margin:0 auto;'></m-tab>
+      <!-- <m-tab :isShowIcon="isShowIcon" label='当前选择范围' :value='selectItem.road' style='width:90%;margin:0 auto;'></m-tab> -->
       <div class="traffic-index_content">
         <ul class="traffic-index_content_table">
           <li class="index-item" v-for="(item,index) in indexDatas" :id="item.id" :key="item.id">
@@ -37,7 +37,11 @@ export default {
       selectItem:{"road":"全省",order:8},
       isShowCharts:true,
       isShowIcon:false,
-      interval:null
+      interval:null,
+       map_cover:{
+        markers:[],
+        popups:[]
+      },
     };
   },
   components: {
@@ -49,9 +53,11 @@ export default {
     this.getRoadIndexData();
     this.interval=setInterval(()=>{
       that.getRoadIndexData();
-    },1000*60)
+    },1000*60);
+    this.addTidalLane();
   },
   destroyed() {
+    this.clearMap();
     if(this.interval){
       clearInterval(this.interval);
     }
@@ -119,6 +125,57 @@ export default {
         that.tableLoading = false;
       });
     },
+     /**
+     * 添加潮汐车道marker
+     */
+    addTidalLane(){
+      let lnglat=[109.06079,34.277382];
+      let mainDiv=document.createElement('div');
+      mainDiv.style.width='13vw';
+      mainDiv.style.fontSize='0.7vw';
+      mainDiv.style.color='white';
+      // mainDiv.className='dev_popup';
+
+      let title=document.createElement('p');
+      title.innerHTML='长安东路/信义路西侧潮汐车道路段';
+      title.className='title';
+      title.style.fontSize='0.7vw';
+      mainDiv.appendChild(title);
+
+       let p2="<p style='margin:5px 0;'><span>描述：</span><span>内侧第二条车道使用LED车道标志，每天从早6时到10时，为左转箭头，其余时间段变为直行箭头，使其行车道由两条变成三条。</span></p>";
+      mainDiv.appendChild($(p2)[0]);
+
+      let popup=new minemap.Popup({closeOnClick: true, closeButton: true, offset: [5, -5]});
+      popup.setLngLat(lnglat).setDOMContent(mainDiv);
+
+      let el = document.createElement('div');
+      el.style["background-image"] = "url("+IMG.CX_IMG+")";
+      el.style["background-size"] = "100% 100%";
+      el.style.width = "32px";
+      el.style.height = "32px";
+      let marker = new minemap.Marker(el, {offset: [-8, -8]}).setLngLat(lnglat).addTo(this.map).setPopup(popup);
+      this.map_cover.cons_markers.push(marker);
+      this.map_cover.cons_popups.push(popup);
+    },
+    clearMap(){
+     
+      //清除marker
+      if(this.map_cover.markers.length>0){
+        this.map_cover.markers.forEach(e=>{
+          e.remove();
+        })
+      }
+      //清除popup框
+      if(this.map_cover.popups.length>0){
+        this.map_cover.popups.forEach(e=>{
+          e.remove();
+        })
+      }
+      this.map_cover={
+          markers:[],
+          popups:[]
+        }
+    }
   }
 }
 </script>
@@ -182,7 +239,7 @@ export default {
       margin: 0;
       padding: 23px 5% 2% 5%;
       width: 90%;
-      height: 80%;
+      height: 100%;
       overflow-y: auto;
       .index-item{
         padding:10px 0 5px 0;

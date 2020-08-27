@@ -44,7 +44,7 @@
     <div class='overview-left-div--center boxstyle'>
        <!-- <span class='span_title'>交通动态监测</span> -->
        <m-title label='交通动态监测' img_type=1  class='title'></m-title>
-       <div class='center_txt'>实时统计上一个小时（{{center_time}}）的流动情况</div>
+       <div class='center_txt'>实时统计上六个小时（{{center_time}}）的流动情况</div>
        <div class='center_statics'>
          <div class='center_statics--count'>陕西省&nbsp;
          <span class="center_statics_">{{centerstatics.addIn}}</span></div>
@@ -57,7 +57,7 @@
             </span>
          </div>
          <div class='center_statics--radio'>进出比&nbsp;
-         <span class="">{{centerstatics.inoutProportion | number}}%</span></div>
+         <span class="">{{centerstatics.inoutProportion | number}}</span></div>
        </div>
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->
@@ -66,10 +66,10 @@
            :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass" 
            v-loading='tableLoading'>
            <el-table-column type="index" label="No" width="50"></el-table-column>
-           <el-table-column prop="city" label="城市" width="70"></el-table-column>
+           <el-table-column prop="city" label="管理部门" width="90"></el-table-column>
             <el-table-column prop="inNum" label="进入车辆"  sortable></el-table-column>
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
-            <el-table-column prop="proportion" label="进出比">
+            <el-table-column prop="proportion" label="进出比" width="70">
              <template slot-scope="scope">
               <span>{{scope.row.proportion | number}}</span>
             </template>
@@ -108,6 +108,7 @@
     <el-dialog :title="order_value==1 ? '今日轨迹接口调用情况':'过车数据回传排行'" :visible.sync="drawer" append-to-body class='data-order'>
       <data-order :order_value="order_value"></data-order>
     </el-dialog>
+    <div class='export'><el-button type="primary" @click='exportReport'>交通报告导出</el-button></div>
   </div>
 </template>
 
@@ -120,7 +121,7 @@ export default {
   name: "overview_left",
     data() {
     return {
-      center_time:(new Date().getHours()-1)+'：00-'+new Date().getHours()+':00',
+      center_time:(new Date().getHours()-6)+'：00-'+new Date().getHours()+':00',
       map: {},
       indexDatascar:[],
       passCarCount:{
@@ -163,9 +164,12 @@ export default {
     this.interval=setInterval(()=>{
       _this.getIndexData();
       _this.getTrafficorder();
+      if(i%60==0){
+       _this.center_time=(new Date().getHours()-6)+'：00-'+new Date().getHours()+':00'
+      };
       if(i%5==0){
         _this.getTrafficMonitorData();
-      }
+      };
       i++;
     },1000*60)
   },
@@ -188,47 +192,47 @@ export default {
     this.order_value=t;
   },
   //设置表格样式
-    getRowClass({ row, column, rowIndex, columnIndex }) {
-      return "background:transparent;";
-   },
+  getRowClass({ row, column, rowIndex, columnIndex }) {
+    return "background:transparent;";
+  },
   /**
    * 获取过车/轨迹数据
   */
-    getIndexData() {
-      let that = this;
-      interf.GET_HIS_CAR_API({})
-      .then(response=>{
-        if (response && response.status == 200){
-          var data= response.data;
-          if (data.errcode == 0){
-            that.passCarCount=data.data;
+  getIndexData() {
+    let that = this;
+    interf.GET_HIS_CAR_API({})
+    .then(response=>{
+      if (response && response.status == 200){
+        var data= response.data;
+        if (data.errcode == 0){
+          that.passCarCount=data.data;
+        }
+      }
+
+    });
+
+    interf.GET_TRAIL_API({})
+    .then(response=>{
+      if (response && response.status == 200){
+          var data = response.data;
+          if (data.errcode == 0) {
+            that.trailCallCount=data.data;
+          } else{
+            that.$message({
+              message: data.errmsg,
+              type: "error",
+              duration: 1500
+            });
           }
-        }
-
-      });
-
-      interf.GET_TRAIL_API({})
-      .then(response=>{
-        if (response && response.status == 200){
-           var data = response.data;
-            if (data.errcode == 0) {
-              that.trailCallCount=data.data;
-            } else{
-              that.$message({
-                message: data.errmsg,
-                type: "error",
-                duration: 1500
-              });
-            }
-        }
-      })
-      .catch(err=>{
-        //  console.log(err);
-      })
-      .finally(() => {
-        that.tableLoading = false;
-      });
-    },
+      }
+    })
+    .catch(err=>{
+      //  console.log(err);
+    })
+    .finally(() => {
+      that.tableLoading = false;
+    });
+  },
   /**
    * 获取交通动态监测数据
    */
@@ -315,6 +319,12 @@ export default {
     .finally(() => {
       that.trafficLoading = false;
     });
+  },
+  /**
+   *  导出交通报告
+   */
+  exportReport(){
+    window.open("http://92.1.48.106/xasimg/jtbg.csv");
   }
   }
 };
@@ -515,6 +525,11 @@ export default {
 }
 .overview-left-div li:nth-of-type(odd){
   background:rgba(72,84,108,0.2);
+}
+.export{
+  position: fixed;
+  top: 28%;
+  left: 18%;
 }
 </style>
 <style lang='scss'>

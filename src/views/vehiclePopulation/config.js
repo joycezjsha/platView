@@ -1,7 +1,6 @@
 
 import http from '../../common/httpUtil'
-import playImg from './image/cruise-play.png'
-import stopImg from './image/cruise-stop.png'
+import overSpeedImg from './image/over_speed.png'
 export const interf={ 
   // 车辆实时监测地图数据  KeyVehicle/getMapBayonetRanking
   GET_MAP_BAY_RANK_API:data=> {
@@ -96,6 +95,5 @@ export const interf={
 }
 export const IMG={
   /*路况巡航*/
-  CRUISE_IMG_PLAY: playImg,
-  CRUISE_IMG_STOP:stopImg
+  OVER_SPEED_IMG: overSpeedImg
 }

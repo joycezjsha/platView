@@ -201,8 +201,8 @@ export default {
             message: '登陆成功',
             type: 'success'
           });
-          window.sessionStorage.setItem('token','token_for_show');
-          // window.sessionStorage.setItem('token',data.data.token);
+          // window.sessionStorage.setItem('token','token_for_show');
+          window.sessionStorage.setItem('token',data.data.token);
           _this.$router.push('/')
         }else{
            _this.formLogin.password='';

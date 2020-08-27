@@ -27,9 +27,11 @@ let endLoading = () => { // 使用Element loading-close 方法
 const cancelPending = (config) => {
   pending.forEach((item, index) => {
     if (config) {
-      if (item.UrlPath === config.url ) {//&& (config.url.indexOf('jointSearch')!=-1 || config.url.indexOf('querymileagelist')!=-1 || config.url.indexOf('querylist')!=-1)
-        item.Cancel() // 取消请求
-        pending.splice(index, 1) // 移除当前请求记录
+      if (item.UrlPath === config.url) {//&& (config.url.indexOf('jointSearch')!=-1 || config.url.indexOf('querymileagelist')!=-1 || config.url.indexOf('querylist')!=-1)
+        if(!item.params.c_flag || item.params.c_flag<1){
+          item.Cancel() // 取消请求
+          pending.splice(index, 1) // 移除当前请求记录
+        }
       };
     } else {
       item.Cancel() // 取消请求
@@ -46,7 +48,7 @@ service.interceptors.request.use(config => {
     cancelPending(config);
   };
   config.cancelToken = new CancelToken(res => {
-    pending.push({'UrlPath': config.url, 'Cancel': res})
+    pending.push({'UrlPath': config.url, 'Cancel': res,'params':config.params})
   });
   startLoading();
   setTimeout(() => {
