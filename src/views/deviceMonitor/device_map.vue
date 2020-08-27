@@ -72,6 +72,7 @@ export default {
      * @param 0->设备分布热力，1->区域填充，2->测速执法设备
      */
     changeTable(t){
+      this.clearMap()
       this.tableIndex=t;
       //清除popup
       if(this.map_cover.popups.length>0){
@@ -81,18 +82,20 @@ export default {
         this.map_cover.popups=[];
       }
       if(t==1){
+        this.clearMap()
         this.showArea=true;
         // this.addCityToMap();
         this.hideHeatMap();
-        this.hideOrShowDeviceLayer(false);
+        this.getAreaData();
+        // this.hideOrShowDeviceLayer(false);
       }else if(t==0){
         this.showArea=false;
         this.clearMap();
         this.addHeatMap();
-        this.hideOrShowDeviceLayer(false);
+        // this.hideOrShowDeviceLayer(false);
       }else{
         this.showArea=false;
-        // this.clearMap();
+        this.clearMap();
         this.hideHeatMap();
         this.hideOrShowDeviceLayer(true);
         this.map.on('click',this.clickSpeedDevice);

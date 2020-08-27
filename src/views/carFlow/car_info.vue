@@ -100,7 +100,6 @@
                 </span>
               </div>
             </div>
-            <!-- 切换省内外 -->
             <div class="change">
               <div @click="province(1)" class="provinces"  :style="{width:belongData.provinceExternalProportion}" :class="provinceInorOut=='1'? 'bg': 'changebg'"></div>
               <div @click="province(2)" class="city"  :style="{width:belongData.provinceWithinProportion}" :class="provinceInorOut=='1'? 'bg1': 'changebg1'"></div>

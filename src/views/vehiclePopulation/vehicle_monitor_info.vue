@@ -16,7 +16,7 @@
           <div class="left">
             <div>
               <span style="color:#116cf3;margin-right:3px">|</span>
-              速度检测次数
+              省内违法情况
             </div>
             <div style="margin-top:1.5vh;margin-bottom:1vh;">
               <span>超速次数：
@@ -24,7 +24,7 @@
               </span>
             </div>
             <div>
-              <span>总检测次数次数：
+              <span>违法总次数：
                 <span>{{count}}次</span>
               </span>
             </div>

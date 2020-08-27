@@ -8,7 +8,7 @@ import state from '../store'
 // axios.defaults.headers.post['Content-Type'] = 'application/json';
 const service = axios.create({
   baseURL:urlConf.BASE_URL,
-  timeout: 15000,
+  // timeout: 15000,
   responseType:'json'
 });
 const pending = [];
