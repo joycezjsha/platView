@@ -366,6 +366,12 @@ export default {
       let val='visible';
       if(!f){
         val='none';
+        if(this.map_cover.popups.length>0){
+          this.map_cover.popups.forEach(e=>{
+            e.remove();
+          })
+          this.map_cover.popups=[];
+        }
       };
       if(this.map.getLayer('deviceLayer')!=undefined){
         this.map.setLayoutProperty('deviceLayer', 'visibility', val);
