@@ -407,7 +407,7 @@ export default {
         let p2="<p style='color:#00C6FF;margin:5px 0;'><span>设备名称：</span><span>"+e.SBMC+"</span></p>";
         mainDiv.appendChild($(p2)[0]);
 
-        let p3="<p style='color:#00C6FF;margin:5px 0;'><span>管理管理部门：</span><span>"+e.CITY+"</span></p>";
+        let p3="<p style='color:#00C6FF;margin:5px 0;'><span>管理部门：</span><span>"+e.CITY+"</span></p>";
         mainDiv.appendChild($(p3)[0]);
 
         // let marker = new minemap.Marker(mainDiv, { offset: [-25, -25] })
