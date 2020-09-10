@@ -3,9 +3,9 @@
     <div @click="realtime(1)" >
         <m-title label='城市车辆分析' class="car" :img_type='tableIndex=="1"?"1":"0"'></m-title>
     </div>
-    <div @click="realtime(2)" >
+    <!-- <div @click="realtime(2)" >
         <m-title label='车辆归属地OD' class="car" :img_type='tableIndex=="2"?"1":"0"'></m-title>
-    </div>
+    </div> -->
    <div @click="realtime(3)">
         <m-title  label='卡口流量排名' class="car" :img_type='tableIndex=="3"?"1":"0"'></m-title>
    </div>

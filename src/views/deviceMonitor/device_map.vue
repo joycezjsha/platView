@@ -369,9 +369,8 @@ export default {
       };
       if(this.map.getLayer('deviceLayer')!=undefined){
         this.map.setLayoutProperty('deviceLayer', 'visibility', val);
-        
       }else{
-        this.showMeasurementDevice();
+        if(f) this.showMeasurementDevice();
       }
     },
     /**
