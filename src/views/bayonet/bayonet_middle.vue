@@ -176,7 +176,7 @@ export default {
           features: []
         };
         item.forEach(e => {
-          if (e.jwd) {
+          if (e.JWD) {
             for (let i = 0; i < e.ACTIVENUM; i++) {
               jsonData.features.push({
                 type: "Feature",
@@ -351,14 +351,22 @@ export default {
      */
     getBayonetActiveDatas(xzqh) {
       let that = this;
+      debugger
       let param = {};
       if (xzqh != undefined) {
         param.xzqh = xzqh;
       }
+      // var data=[
+      //         {KKBH:'6082328493',JWD:"108.9104 34.2382",ACTIVENUM:292},
+      //         {KKBH:'6082328493',JWD:"108.917743 34.275248",ACTIVENUM:92}
+      //       ]
+      // that.getBayonetMap(data)
       interf.GET_BAY_ACTIVE_API(param).then(response => {
           if (response && response.status == 200) {
             var data = response.data;
+           
             if (data.errcode == 0) {
+            
               that.getBayonetMap(data.data);
             } else {
               that.$message({

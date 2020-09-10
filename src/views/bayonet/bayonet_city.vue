@@ -44,7 +44,11 @@
           v-loading='tableLoading'
           highlight-current-row
           ref="tablebayonetRoad"
-           :data="roadDatas" style="width: 100%" height="100%" :default-sort = "{prop: 'NUM', order: 'descending'}" :row-style="getRowClass" :header-row-style="getRowClass" :header-cell-style="getRowClass">
+           :data="roadDatas" style="width: 100%" height="100%" 
+           :default-sort = "{prop: 'NUM', order: 'descending'}" 
+           :row-style="getRowClass" 
+           :header-row-style="getRowClass"
+            :header-cell-style="getRowClass">
             <el-table-column  type="index" label="No." width="60"></el-table-column>
             <el-table-column prop="NAME" label="道路名称" ></el-table-column>
             <el-table-column prop="NUM" label="设备数量" sortable></el-table-column>
