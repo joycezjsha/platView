@@ -9,7 +9,7 @@
     <div class='accident-map--icon'>
       <ul>
         <li><div>警情</div><div><img :src='jqImg' /></div></li>
-        <li><div>事故</div><div @click='showOrhideConstru'><img :src='sgImg' /></div></li>
+        <li><div>施工</div><div @click='showOrhideConstru'><img :src='sgImg' /></div></li>
         <li><div>视频巡查</div><div @click='showOrhideSp'><img :src='xcImg' /></div></li>
         <li><div>应急调度</div><div @click='showOrhideEmergency'><img :src='spImg' /></div></li>
       </ul>
@@ -122,6 +122,7 @@ export default {
               });
               that.areaIndexs=data.data;
               that.areaList.push(max,(max-min)/2+min,min);
+              console.log(that.areaList)
               that.showArea=true;
           }else{
             that.$message({
@@ -339,7 +340,6 @@ export default {
      * 点击-打开或关闭视频巡查图层
      */
     showOrhideSp(){
-      debugger;
       this.showSp=!this.showSp;
       if(this.showSp){
         this.hideOrShowSpLayer(true);

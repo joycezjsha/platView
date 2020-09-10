@@ -54,6 +54,7 @@
 
 <script>
 import blur from "@/blur";
+import util from "@/common/util.js";
 import { IMG } from "./config";
 import { interf } from "./config";
 import mTitle from "@/components/UI_el/title_com.vue";
@@ -64,7 +65,7 @@ export default {
       map: {},
       indexDatas: [],
       selectItem: { city: "西安", order: 8 },
-      timeRange: "",
+      timeRange: [],
       defaultTime:['00:00:00','00:00:00'],
       tableIndex: 0,
       mapAddItems: {
@@ -80,9 +81,14 @@ export default {
   mounted() {
     this.map = this.$store.state.map;
     let that = this;
+    let starttime=new Date(new Date(new Date().getTime()-30*24*60*60*1000));
+    let endtime=new Date();
+    this.timeRange.push(util.getTimeStr(starttime));
+    this.timeRange.push(util.getTimeStr(endtime));
     this.map.setCenter([108.967368, 34.302634]);
     this.map.setZoom(6);
-    setTimeout(()=>{this.getCityStaticsData();},1000);
+
+    setTimeout(()=>{this.changeTable(0);},1000);
   },
   destroyed() {
     this.map.setPitch(0);
@@ -98,7 +104,7 @@ export default {
       if(t!=undefined) {
         if(this.range_type==t) return; 
         else this.tableIndex = t;
-        this.timeRange='';
+        // this.timeRange=''; //取消清空时间
       }else{
         this.queryLoading=true;
         if(this.timeRange && this.timeRange!='') {

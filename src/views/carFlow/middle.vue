@@ -7,7 +7,7 @@
         <m-title label='车辆归属地OD' class="car" :img_type='tableIndex=="2"?"1":"0"'></m-title>
     </div>
    <div @click="realtime(3)">
-        <m-title  label='热点卡口道路' class="car" :img_type='tableIndex=="3"?"1":"0"'></m-title>
+        <m-title  label='卡口流量排名' class="car" :img_type='tableIndex=="3"?"1":"0"'></m-title>
    </div>
     <t-area 
       :indexData='areaIndexs' 
@@ -194,7 +194,7 @@ export default {
 
         let rightDiv=document.createElement('div');
         rightDiv.style.float='right';
-        rightDiv.style.width='40px';
+        rightDiv.style.width='50px';
         rightDiv.style.height='30px';
         let span1 = document.createElement('p');
         span1.innerHTML = item.city;

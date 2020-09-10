@@ -60,5 +60,13 @@ export default{
     }
     
     return newData;
+  },
+  //时间戳获取
+  getTimeStr(date){
+    function addZero(t){
+      if(t>9) return t;
+      else return '0'+t;
+    }
+    return date.getFullYear()+'-'+addZero(date.getMonth()+1)+'-'+addZero(date.getDate())+' '+addZero(date.getHours())+':'+addZero(date.getMinutes())+':'+addZero(date.getSeconds());
   }
 };

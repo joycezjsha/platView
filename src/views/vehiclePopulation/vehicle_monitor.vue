@@ -7,7 +7,7 @@
           <i class="iconfont icon-shijian" style='margin-right:1vw;'></i>{{time}}
         </span>
       </div>
-      <m-tiptxt class="tiptxt" text='“活跃”是指：30分钟内有被卡口监测到车辆'></m-tiptxt>
+      <m-tiptxt class="tiptxt" text='“活跃”是指：1小时内有被卡口监测到车辆'></m-tiptxt>
       <!-- <div class='right-time'><i class="iconfont icon-shijian" style='margin-right:1vw;'></i>{{time}}</div> -->
       <m-tab :isShowIcon="isShowIcon" label='实时监控车辆活跃数：' :value=countnum></m-tab>
       <div class='center_table'>
@@ -163,7 +163,7 @@ export default {
    },
     // 传递city参数
     showCity(row){
-      blur.$emit('getCity',row.CODE);
+      blur.$emit('getCity',row.CODE,row.NAME);
       blur.$emit('getCitycar',row.CODE);
       blur.$emit('getCityhard',row.CODE);
     },

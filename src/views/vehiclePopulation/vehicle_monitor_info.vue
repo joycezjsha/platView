@@ -3,10 +3,10 @@
     <!-- 车辆实时监测 -->
     <div v-if="isShowdiv=='1'" class="vehicle-statics_container">
       <div class="top borstyle" >
-        <div class="title" v-if="showback==true">全部监控车辆</div>
+        <div class="title" v-if="showback==true">重点车辆监测</div>
         <div class="back" v-else @click="goback(1)">
           &lt;&lt; 返回全省
-          <span>{{CODE}}</span>
+          <span>{{name}}</span>
         </div>
       </div>
       <div class="Provincial borstyle">
@@ -82,7 +82,7 @@
           <div class="title" v-if="showback==true">全部车辆监控</div>
           <div class="back" v-else @click="goback(2)">
             &lt;&lt; 返回全省
-            <span>{{param.code}}</span>
+            <span>{{name}}</span>
           </div>
         </div>
         <div class="vehicle-main borstyle">
@@ -155,7 +155,7 @@
           <div class="top ">
             <div class="title" v-if="showback==true" >全部车辆监控</div>
               <div class="back" v-else @click="goback(3)" >&lt;&lt; 返回全省
-                <span> {{CODE}}</span>
+                <span> {{name}}</span>
             </div>
           </div>
           <div class="hotroad borstyle" style="height:41.29vh;margin-top:5px;padding-top:5px;">
@@ -226,6 +226,7 @@ export default {
       indexHardDatas: [],
       isShowIcon:false, //控制tab组件图标的显示
       CODE: "",
+      name:'',
       cscount: "",
       city: "",
       count: "",
@@ -388,9 +389,10 @@ export default {
         };
       })
       // 左侧列表-车辆监测 传过来的code 
-      blur.$on("getCity", data => {
+      blur.$on("getCity", (data,name) => {
         that.CODE = data;
         that.param.code=data;
+        that.name=name;
         that.clearMap();
         if(that.isShowdiv=='1'){
           that.getDomesticVehicleRankingDatas();

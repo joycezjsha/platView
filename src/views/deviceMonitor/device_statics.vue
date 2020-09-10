@@ -21,7 +21,7 @@
           <m-tab label='连通卡口设备' :value='allStatics.kkcount' icon='icon-kakou' icon_style='color:#FFFFFF' class='item'></m-tab>
           <m-tab label='连通视频设备' :value='allStatics.viocount' icon='icon-jiankong1' icon_style='color:#FFFFFF' class='item'></m-tab>
           <m-tab label='连通龙门架设备' :value='allStatics.lmjcount' icon='icon-liantonglongmenjia' icon_style='color:#FFFFFF' class='item'></m-tab>
-          <m-tab label='连通区间测速设备' :value='allStatics.qjcscount' icon='icon-cesu' icon_style='color:#FFFFFF' class='item'></m-tab>
+          <m-tab label='连通区间测速设备' value='2608' icon='icon-cesu' icon_style='color:#FFFFFF' class='item'></m-tab>
         </div>
         <div v-show='isShowMainDev' class='device-statics_chart boxstyle'>
           <m-title-com label='重点设备监测' style='width:8vw;height:4vh;line-height:4vh;'></m-title-com>

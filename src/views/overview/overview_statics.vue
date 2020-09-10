@@ -55,11 +55,11 @@
     <div class="overview-statics--split"></div>
     <div class="overview-statics--tab">
       <div class='content'>
-        <div class="overview-statics--tab_title">今日执法</div>
+        <div class="overview-statics--tab_title">今日拦截</div>
         <div  class="overview-statics--tab_radio">
           <div class='count'>{{datas.enforcement.count}}</div>
           <div class='inout'>
-            <span class="label">执法率:</span>
+            <span class="label">拦截率:</span>
             <span class="value">{{datas.enforcement.radio}}</span>
           </div>
         </div>

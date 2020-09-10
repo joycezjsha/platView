@@ -3,21 +3,21 @@
     <div class="overview-info_container">
       <div class="boxstyle top">
         <div>
-          <m-title label='省内超速情况' img_type=1 style='width:9vw;height:10%'></m-title>
+          <m-title label='省内超速违法情况' img_type=1 style='width:9vw;height:10%'></m-title>
         </div>
         <div class="top-main">
           <!-- 切换时间 -->
           <div style="display:flex;box-sizing:border-box;text-align:center;cursor:pointer;">
             <div @click='switchtime(1)' :class="isSelected==1? 'isSelected':''" style="flex:1;">
-              <div>今日
+              <div>今日：
                 <span>{{overSpeedData.today}}</span></div>
             </div>
             <div @click='switchtime(2)' :class="isSelected==2? 'isSelected':''" style="flex:1">
-              <div >本周
+              <div >本周：
                 <span>{{overSpeedData.lastWeek}}</span></div>
             </div>
             <div @click='switchtime(3)' :class="isSelected==3? 'isSelected':''" style="flex:1">
-              <div>本月
+              <div>本月：
                 <span>{{overSpeedData.lastMonth}}</span></div>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default {
       data1:null, 
       overSpeedData:{today:'',lastWeek:'',lastMonth:''},
       speedingprovince:[
-        {'name':'总检测次数:','value':''},
+        {'name':'总违法次数:','value':''},
         {'name':'超速比例:','value':''},
         {'name':'平均速度/限速:','value':''}
       ],

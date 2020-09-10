@@ -187,27 +187,21 @@ export default {
         };
         
         datas.features.forEach(e=>{
-            // q={
-            //     "type": "Feature",
-            //     "geometry": {
-            //         "type": "Point",
-            //         "coordinates": [
-            //         116.518189,
-            //         39.923959
-            //         ]
-            //     },
-            //     "properties": {
-            //         "mag": 1
-            //     }
-            // }
             jsonData.features.push({
                 "geometry": {
-                  "type": "Point",
-                  "coordinates": e.geometry.coordinates[0][0]
+                  "type": "MultiPolygon",
+                  "coordinates": [
+                      e.geometry.coordinates
+                    ]
                   },
                   "type": "Feature",
                   "properties": {
-                    "mag": e.properties.levels
+                    // "code": features[0].properties.code,
+                    // "title": features[0].properties.title,
+                    // "color":features[0].properties.color,
+                    "level": "province",
+                    "subFeatureIndex": 0,
+                    "levels": e.properties.levels
                   }
                 })
         })
@@ -218,41 +212,81 @@ export default {
                 'type': 'geojson',
                 'data': jsonData
             });
-            
+            let height= [
+                        [0, 0.0],
+                        [2000, 2000.0],
+                        [3000, 10000.0],
+                        [4000, 20000.0],
+                        [5000, 50000.0],
+                    ],
+                color=[
+                        [0, "green"],
+                        [500, "yellow"],
+                        [1000, "orange"],
+                        [3000, "#ff2b03"],
+                        [5000, "red"],
+                    ]
+            if(this.tableIndex==2){
+                height= [
+                        [0, 0.0],
+                        [200, 2000.0],
+                        [300, 10000.0],
+                        [500, 20000.0],
+                        [600, 50000.0],
+                    ]
+                color=[
+                        [0, "green"],
+                        [50, "yellow"],
+                        [100, "orange"],
+                        [300, "#ff2b03"],
+                        [500, "red"],
+                    ]
+            }
+            if(this.tableIndex==3){
+                height= [
+                        [0, 0.0],
+                        [200, 2000.0],
+                        [300, 10000.0],
+                        [500, 20000.0],
+                        [1000, 50000.0],
+                    ]
+                color=[
+                        [0, "green"],
+                        [50, "yellow"],
+                        [100, "orange"],
+                        [300, "#ff2b03"],
+                        [800, "red"],
+                    ]
+            }
         //面的显示
             this.map.addLayer({
-               "id": "illegal_Layer",
-                  "type": "heatmap",
-                  "source": "illegal_polygonSource",
-                  "layout": {
-                      "visibility": "visible"
-                  },
-                  "paint": {
-                      // 一个热力图数据点的模糊范围，单位是像素，默认值30；要求：值大于等于1，可根据zoom level进行插值设置
-                      "heatmap-radius": 15,
-                      //一个热力图单个数据点的热力程度，默认值为1；要求：值大于等于0，支持使用property中某个的热力值
-                      "heatmap-weight": {
-                          "property": "mag",
-                          "stops": [[0, 0], [10, 1]]
-                      },
-                      // 用于统一控制热力值的强度，默认值1；要求：值大于等于0，可根据zoom level进行插值设置
-                      "heatmap-intensity": 1,
-                      // 表示热力图颜色阶梯，阶梯的值域范围为0-1，默认值为["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"]
-                      "heatmap-color": [
-                          "interpolate",
-                          ["linear"],
-                          ["heatmap-density"],
-                          0, "rgba(0, 0, 255, 0)", 0.1, "royalblue", 0.3, "cyan", 0.5, "lime", 0.7, "yellow", 1, "red"
-                      ],
-                      // 表示热力图的不透明度，默认值1；值域范围0-1，可根据zoom level进行插值设置
-                      "heatmap-opacity": 1,
-                  }
+                "id": 'illegal_polygon',
+                "type": "extrusion",    // 建筑物图层
+                "source": 'illegal_polygonSource',
+                "layout": {
+                // "histogram-max-height-render": true  // 是否开启柱状图极大高度控制
+                },
+                "paint": {
+                'extrusion-color': {    // 建筑物的填充颜色，默认值为"#000000"
+                    "property": "levels",
+                    "stops":color
+                },
+                'extrusion-height': {   // 建筑物的高度
+                    'property': 'levels',
+                    "stops":height
+                },
+                'extrusion-base': 0,    // 建筑物的底部高度，必须小于或等于柱状图的高度
+                'extrusion-opacity': {  // 建筑物的透明度，值为数值，默认为1
+                    "base": 1,
+                    "stops": [[3, 0.8], [8, 0.8]]
+                 }
+                }
             });
             _this.map_cover.sourceList.push("illegal_polygonSource");
-            _this.map_cover.lineList.push("illegal_Layer");
+            _this.map_cover.lineList.push("illegal_polygon");
         };
         _this.map.setCenter(datas.features[0].geometry.coordinates[0][0]);
-        // _this.map.setPitch(60);
+        _this.map.setPitch(60);
        },
         /**
         * 违法热力图数据及展示 IllegalAnalysis/getIllegalHeatMap  GET_HEAT_MAP_API

@@ -155,7 +155,7 @@
             </div>
           </div>
           <div  class="hotroad borstyle" style="margin-top:2vh">
-            <m-title class="titletext"  label='热点卡口排名' ></m-title>
+            <m-title class="titletext"  :label='bayonetLabel' ></m-title>
             <div  class="padding"> 
               <div  class="table">
                 <el-table :data="tableDatas"
@@ -433,7 +433,8 @@ export default {
       },
       accurChart:null,
       statics:{count:'+2328',in:'+4546',out:'-2328'},
-      showIcon:false
+      showIcon:false,
+      bayonetLabel:'省际卡口排名'
     };
   },
   components:{mTitle,mLineChart,mTab,blur,mList:m_list,},
@@ -500,7 +501,8 @@ export default {
         that.getBelongData(that.stime);
       }
       if(num=='3'){
-        that.getHotCarDatas(that.stime)
+        that.getHotCarDatas(that.stime);
+        that.bayonetLabel='省际卡口排名';
       }
     },
     /**
@@ -587,6 +589,7 @@ export default {
          
       })  
       blur.$on("paramxzqh",(xzqh,city)=>{
+        that.bayonetLabel='市际卡口排名';
         that.xzqh=xzqh;
         that.city=city;
         that.showback=true; 
@@ -1090,7 +1093,7 @@ export default {
         el1.appendChild(dot); //将元素追加到el1元素上
         el1.appendChild(pause); //将元素追加到el1元素上
         el1.className='dot_marker dot_marker_'+type;
-        let marker = new minemap.Marker(el1, {offset: [-5,-5]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
+        let marker = new minemap.Marker(el1, {offset: [-15,-15]}).setLngLat(lnglat).setPopup(popup).addTo(this.map);
         this.map_cover.markers.push(marker);
       },
       /**

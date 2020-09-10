@@ -64,7 +64,7 @@
           </span>
           <span class="vehicle_warning-div-query--btn" @click='selectTime(4)'><el-button type="primary" v-loading='queryLoading'>确定</el-button></span>
       </div>
-      <div class='custom_tab' v-show='isCustom'><span>自定义</span><span>{{warningStatics.customCount}}</span></div>
+      <div class='custom_tab' v-show='isCustom'><span>所选时间段内预警量：</span><span>{{warningStatics.customCount}}</span></div>
     </div>
     
     <div class='vehicle_warning-div--bottom borstyle'>
@@ -676,7 +676,7 @@ export default {
     color: white;
     &>span:nth-child(1){
       display:inline-block;
-      width:90px;
+      width:200px;
       text-align: center;
     }
     &>span:nth-child(2){

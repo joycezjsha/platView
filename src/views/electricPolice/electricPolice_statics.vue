@@ -23,7 +23,7 @@
         <div class="table_right boxstyle">
            <div class="electricPolice-statics_title">
             <div>
-              <m-title style="width:12vw;margin-left:0.5vw" label='近30天违法抓拍量排名'></m-title>
+              <m-title style="width:12vw;margin-left:0.5vw" label='近7天违法抓拍量排名'></m-title>
               <!-- <i class="el-icon-collection-tag"></i> -->
             </div>
           </div>

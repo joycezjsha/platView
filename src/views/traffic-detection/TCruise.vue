@@ -3,7 +3,7 @@
     <div id="cruise_container">
       <div id="cruise_title">
         <div>
-           <m-title label='巡航地点' style='width:7vw;'></m-title>
+          <m-title label='巡航地点' style='width:7vw;'></m-title>
         </div>
         <div>
           <el-select v-model="value" placeholder="请选择" class="fangan">
@@ -43,13 +43,30 @@ export default {
       flyRoutes: [],
       i: 0,
       buildingmore: [],
+      url:'',
       playImgUrl: IMG.CRUISE_IMG_PLAY,
       isPlay: false,
       isShowContainer: true,
-      options: [{ value: 1, label: "方案1" }],
+      options: [
+        { value: 1, label: "西安" },
+        { value: 2, label: "咸阳" },
+        { value: 3, label: "延安" },
+        { value: 4, label: "铜川" },
+        { value: 5, label: "宝鸡" },
+        { value: 6, label: "榆林" },
+        { value: 7, label: "商洛" },
+        { value: 8, label: "渭南" },
+        { value: 9, label: "安康" },
+        { value: 10, label: "汉中" },
+      ],
       value:1,
       showDelIcon:true
     };
+  },
+  watch:{
+    value:function(newValue,oldValue){
+      this.getFlyData();
+    }
   },
   components:{mTitle},
   mounted() {
@@ -204,8 +221,36 @@ export default {
     //获取巡航数据
     getFlyData() {
       let that = this;
-      $.ajax({
-        url: "./static/json/cruise.json", //globals.CRUISE_ALL_INFO_URL,
+      console.log(that.value)
+      if(that.value==1){
+        that.url='./static/json/xian.json';
+      }else if(that.value==2){
+        that.url='./static/json/xianyang.json';
+        console.log(that.url)
+      }else if(that.value==3){
+        that.url='./static/json/yanan.json';
+      }else if(that.value==4){
+        that.url='./static/json/tongchuan.json';
+        console.log(that.url)
+      }else if(that.value==5){
+        that.url='./static/json/baoji.json';
+      }else if(that.value==6){
+        that.url='./static/json/yulin.json';
+      }else if(that.value==7){
+        that.url='./static/json/shangluo.json';
+        console.log(that.url)
+      }else if(that.value==8){
+        that.url='./static/json/weinan.json';
+      }else if(that.value==9){
+        that.url='./static/json/ankang.json';
+        console.log(that.url)
+      }else if(that.value==10){
+        that.url='./static/json/hanzhong.json';
+      }
+        $.ajax({
+        
+        url:that.url,
+        // url: "./static/json/xian.json", //globals.CRUISE_ALL_INFO_URL,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         },
@@ -219,9 +264,12 @@ export default {
           if (data.errcode == -2) {
             that.$router.push({ name: "/login" });
           }
-          if (data.errmsg == "success" && data.data.total > 0) {
+          // && data.data.total > 0
+          // errormsg
+          if (data.errmsg == "success" ||  data.errormsg=="success") {
             let features = [];
             for (let i = 0; i < data.data.rows.length; i++) {
+              console.log(data.data.rows)
               let zoom = 17;
               if (i % 2 == 0) zoom = 16;
               let name = data.data.rows[i].cruiseRoad;
@@ -241,12 +289,55 @@ export default {
             //that.fly();
           }
         },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-          console.log(XMLHttpRequest);
-          console.log(textStatus);
-          console.log(errorThrown);
-        }
-      });
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
+          }
+        });
+      // $.ajax({
+      //   url: "./static/json/xian.json", //globals.CRUISE_ALL_INFO_URL,
+      //   headers: {
+      //     "Content-Type": "application/x-www-form-urlencoded"
+      //   },
+      //   responseType: "json",
+      //   method: "get",
+      //   dataType: "json",
+      //   data: {
+      //     // token: window.localStorage.getItem("loginUserToken")
+      //   },
+      //   success: function(data) {
+      //     if (data.errcode == -2) {
+      //       that.$router.push({ name: "/login" });
+      //     }
+      //     if (data.errmsg == "success" && data.data.total > 0) {
+      //       let features = [];
+      //       for (let i = 0; i < data.data.rows.length; i++) {
+      //         let zoom = 17;
+      //         if (i % 2 == 0) zoom = 16;
+      //         let name = data.data.rows[i].cruiseRoad;
+      //         if (!name || name == "") name = data.data.rows[i].cruiseAddress;
+      //         features.push({
+      //           id: data.data.rows[i].id,
+      //           address: i + 1 ,
+      //           name: name,
+      //           geometry: data.data.rows[i].lnglat,
+      //           time: 10,
+      //           zoom: zoom,
+      //           pitch: 45,
+      //           bearing: 0
+      //         });
+      //       }
+      //       that.flyRoutes = features;
+      //       //that.fly();
+      //     }
+      //   },
+      //   error: function(XMLHttpRequest, textStatus, errorThrown) {
+      //     console.log(XMLHttpRequest);
+      //     console.log(textStatus);
+      //     console.log(errorThrown);
+      //   }
+      // });
     },
     //开始或停止
     playOrStop() {

@@ -57,7 +57,7 @@
             </span>
          </div>
          <div class='center_statics--radio'>进出比&nbsp;
-         <span class="">{{centerstatics.inoutProportion | number}}</span></div>
+         <span class="">{{centerstatics.inoutProportion}}</span></div>
        </div>
        <div class='center_table'>
          <!-- style="width: 100%"  max-height="250" -->
@@ -71,7 +71,7 @@
             <el-table-column prop="outNum" label="流出车辆"   sortable></el-table-column>
             <el-table-column prop="proportion" label="进出比" width="70">
              <template slot-scope="scope">
-              <span>{{scope.row.proportion | number}}</span>
+              <span>{{scope.row.proportion}}</span>
             </template>
             </el-table-column>
           </el-table>

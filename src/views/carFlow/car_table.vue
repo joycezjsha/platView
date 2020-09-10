@@ -20,7 +20,7 @@
         </div>
         <div style="color:#8d98b4;margin:0.4vh 2vw;" v-if="activeName==3">昨天：统计上昨天全天的流动情况
         </div> -->
-        <m-tiptxt class='tiptxt' v-if="activeName==1" :text="'实时：统计上一个小时('+realtimer1+':00-'+realtimer2+':00)'" :isShowIcon='isShowIcon'></m-tiptxt>
+        <m-tiptxt class='tiptxt' v-if="activeName==1" :text="'实时：统计上六个小时('+realtimer1+':00-'+realtimer2+':00)'" :isShowIcon='isShowIcon'></m-tiptxt>
         
         <m-tiptxt class='tiptxt' v-if="activeName==2" :text="'今天：统计今天(00:00-'+realtimer2+':00)的流动情况'" :isShowIcon='isShowIcon'></m-tiptxt>
         
@@ -48,7 +48,7 @@
           <div><span>陕西省</span><span>+{{allStatics.addIn}}</span></div>
           <div style="font-family:Source Han Sans CN;"><span>进入：+{{allStatics.incount}}</span>
           <span >流出：-{{allStatics.outcount}}</span></div>
-          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion.toFixed(2)}}</span></div>
+          <div style="font-family:Source Han Sans CN;"><span>进出比</span><span>{{allStatics.inoutProportion}}</span></div>
         </div>
         <div class="sort">
           <div class="text">排序方式 ：</div>
@@ -79,7 +79,7 @@
               <span  class="address-name">{{item.city}}</span>
               <span style="margin-left:1.8vw" >进：{{item.inNum}}</span>
               <span style="margin-left:0.5vw">出：{{item.outNum}}</span>
-              <span>进出比：{{item.proportion.toFixed(2)}}%</span>
+              <span>进出比：{{item.proportion}}%</span>
             </p>
             <p>
               <span></span>
@@ -210,12 +210,12 @@ export default {
     */
     getRealTimer(){
       let that = this;
-      that.realtimer1=new Date().getHours() - 1;
+      that.realtimer1=new Date(new Date().getTime()-6*60*60*1000).getHours();
       that.realtimer2=new Date().getHours();
       that.timer=setInterval(()=>{
-        that.realtimer1=new Date().getHours() - 1;
+        that.realtimer1=new Date(new Date().getTime()-6*60*60*1000).getHours();
         that.realtimer2=new Date().getHours();
-      },1000*60*60)
+      },1000*60*60*6)
       
     },
     /**
