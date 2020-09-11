@@ -65,6 +65,9 @@ export default {
   },
   watch:{
     value:function(newValue,oldValue){
+      this.isPlay = false;
+      this.i=0;
+      if(this.fly) clearInterval(this.fly);
       this.getFlyData();
     }
   },
@@ -111,18 +114,6 @@ export default {
     let that = this;
     clearInterval(that.fly);
     that.map.setPitch(0); //设置地图的俯仰角
-    /*for (let i = 0; i < that.buildingmore.length; i++) {
-        if(that.map.getLayer(that.buildingmore[i])) that.map.setLayoutProperty(that.buildingmore[i], 'visibility', 'none');
-      }*/
-    //显示地图右下角飞行图标
-    // eventBridge.$emit('map_hideFlyIcon');
-    // eventBridge.$emit('map_hideBuildingmore');
-    // eventBridge.$emit('hideLayerBtn');
-    // $("#traffiCtrlFly").css(
-    //   "background",
-    //   "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAWCAMAAADto6y6AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABC1BMVEWjtO////+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO+jtO////+KC4gAAAAAV3RSTlMAAJ8/nr07Xrk4H7U03/6yMKD7rS1g+Mn9qSohk6Un4WX8oSSikEr0nWM16fmZIzfblRzjGRbK8adNpMYGC5sHnASSjz4DJc7lx3UiAcBtCWKutB3uWVzSmX8cAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EKDAoBO7QtmC0AAADoSURBVCjPY2BiZkABjFDAwBLOyoZVgj08PJyDE4sEVzgIcPNgSDDwgmX4+AXQJQSBwkIgKWERVAlRoKCYOEiXhKQUsoQ0SIxXhg8sJSuHkGCQBwmxKgiB7VJUUoZLqIBFVNXUwXS4kIY0VEITIiCqpQ1hhOvocoEl9CBcMX1lg3CYlKERyIXGEJ6xiakZVMLcwhIkYQXlWtvYcgMpbTs1e7BRDAowExwYHJ2cXVxhrmJwg0m46yF7EAg8QCHi6eXN4IMmIavo62fE4B8QKIkmIWcKIn1Yw4PQJKAgOASHBEMoLgmGMIQEABPwPWhIBaSaAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEwLTEyVDEwOjAxOjU5KzA4OjAwEMBd+QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMC0xMlQxMDowMTo1OSswODowMGGd5UUAAAAASUVORK5CYII=') no-repeat 50% center"
-    // );
-    // commonVariable.CURRENT_MAP.repaint = false;
   },
   methods: {
     //显示飞行效果
@@ -192,46 +183,17 @@ export default {
       let tH = $("#cruise_title").outerHeight(true);
       $("#cruise_table").css("height", h - tH + "px");
     },
-    //显示楼的3D图层
-    /*getLayerData(){
-        let that = this;
-        $.ajax({
-          url: globals.MAP_TRAFFIC_URL + globals.MAP_SOLUTION +'?token=' + globals.MAP_ACCESS_TOKEN,
-          dataType: "json",
-          async: false,
-          success: function (data) {
-            if(data.data.rows[0].layers){
-              let arr = data.data.rows[0].layers
-              for (let i = 0; i < arr.length; i++) {
-                let content = JSON.parse(arr[i].content || '{}')
-                if ((content['source'] == 'Buildingmore' && content['source-layer'] == 'Buildingmore')) {
-                  that.buildingmore.push(arr[i].id);
-                  if(that.map.getLayer(arr[i].id)) that.map.setLayoutProperty(arr[i].id, 'visibility', 'visible');
-                }
-              }
-            }
-          },
-          error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log(XMLHttpRequest)
-            console.log(textStatus)
-            console.log(errorThrown)
-          }
-        });
-      },*/
     //获取巡航数据
     getFlyData() {
       let that = this;
-      console.log(that.value)
       if(that.value==1){
         that.url='./static/json/xian.json';
       }else if(that.value==2){
         that.url='./static/json/xianyang.json';
-        console.log(that.url)
       }else if(that.value==3){
         that.url='./static/json/yanan.json';
       }else if(that.value==4){
         that.url='./static/json/tongchuan.json';
-        console.log(that.url)
       }else if(that.value==5){
         that.url='./static/json/baoji.json';
       }else if(that.value==6){
@@ -243,112 +205,67 @@ export default {
         that.url='./static/json/weinan.json';
       }else if(that.value==9){
         that.url='./static/json/ankang.json';
-        console.log(that.url)
       }else if(that.value==10){
         that.url='./static/json/hanzhong.json';
       }
         $.ajax({
-        
-        url:that.url,
-        // url: "./static/json/xian.json", //globals.CRUISE_ALL_INFO_URL,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        responseType: "json",
-        method: "get",
-        dataType: "json",
-        data: {
-          // token: window.localStorage.getItem("loginUserToken")
-        },
-        success: function(data) {
-          if (data.errcode == -2) {
-            that.$router.push({ name: "/login" });
-          }
-          // && data.data.total > 0
-          // errormsg
-          if (data.errmsg == "success" ||  data.errormsg=="success") {
-            let features = [];
-            for (let i = 0; i < data.data.rows.length; i++) {
-              console.log(data.data.rows)
-              let zoom = 17;
-              if (i % 2 == 0) zoom = 16;
-              let name = data.data.rows[i].cruiseRoad;
-              if (!name || name == "") name = data.data.rows[i].cruiseAddress;
-              features.push({
-                id: data.data.rows[i].id,
-                address: i + 1 ,
-                name: name,
-                geometry: data.data.rows[i].lnglat,
-                time: 10,
-                zoom: zoom,
-                pitch: 45,
-                bearing: 0
-              });
+          url:that.url,
+          // url: "./static/json/xian.json", //globals.CRUISE_ALL_INFO_URL,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          responseType: "json",
+          method: "get",
+          dataType: "json",
+          data: {
+            // token: window.localStorage.getItem("loginUserToken")
+          },
+          success: function(data) {
+            if (data.errcode == -2) {
+              that.$router.push({ name: "/login" });
             }
-            that.flyRoutes = features;
-            //that.fly();
-          }
-        },
+            // && data.data.total > 0
+            // errormsg
+            if (data.errmsg == "success" ||  data.errormsg=="success") {
+              let features = [];
+              for (let i = 0; i < data.data.rows.length; i++) {
+                console.log(data.data.rows)
+                let zoom = 17;
+                if (i % 2 == 0) zoom = 16;
+                let name = data.data.rows[i].cruiseRoad;
+                if (!name || name == "") name = data.data.rows[i].cruiseAddress;
+                features.push({
+                  id: data.data.rows[i].id,
+                  address: i + 1 ,
+                  name: name,
+                  geometry: data.data.rows[i].lnglat,
+                  time: 10,
+                  zoom: zoom,
+                  pitch: 45,
+                  bearing: 0
+                });
+              }
+              that.flyRoutes = features;
+              //that.fly();
+            }
+          },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log(XMLHttpRequest);
             console.log(textStatus);
             console.log(errorThrown);
           }
-        });
-      // $.ajax({
-      //   url: "./static/json/xian.json", //globals.CRUISE_ALL_INFO_URL,
-      //   headers: {
-      //     "Content-Type": "application/x-www-form-urlencoded"
-      //   },
-      //   responseType: "json",
-      //   method: "get",
-      //   dataType: "json",
-      //   data: {
-      //     // token: window.localStorage.getItem("loginUserToken")
-      //   },
-      //   success: function(data) {
-      //     if (data.errcode == -2) {
-      //       that.$router.push({ name: "/login" });
-      //     }
-      //     if (data.errmsg == "success" && data.data.total > 0) {
-      //       let features = [];
-      //       for (let i = 0; i < data.data.rows.length; i++) {
-      //         let zoom = 17;
-      //         if (i % 2 == 0) zoom = 16;
-      //         let name = data.data.rows[i].cruiseRoad;
-      //         if (!name || name == "") name = data.data.rows[i].cruiseAddress;
-      //         features.push({
-      //           id: data.data.rows[i].id,
-      //           address: i + 1 ,
-      //           name: name,
-      //           geometry: data.data.rows[i].lnglat,
-      //           time: 10,
-      //           zoom: zoom,
-      //           pitch: 45,
-      //           bearing: 0
-      //         });
-      //       }
-      //       that.flyRoutes = features;
-      //       //that.fly();
-      //     }
-      //   },
-      //   error: function(XMLHttpRequest, textStatus, errorThrown) {
-      //     console.log(XMLHttpRequest);
-      //     console.log(textStatus);
-      //     console.log(errorThrown);
-      //   }
-      // });
+      });
+      
     },
     //开始或停止
     playOrStop() {
       let that = this;
       if (that.isPlay) {
         that.isPlay = false;
-        // that.playImgUrl = IMG.CRUISE_IMG_PLAY;
+        that.i=0;
         clearInterval(that.fly);
       } else {
         that.isPlay = true;
-        // that.playImgUrl = IMG.CRUISE_IMG_STOP;
         setInterval(that.fly, 1000 * 10);
         that.fly();
       }
