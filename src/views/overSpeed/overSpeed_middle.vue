@@ -4,7 +4,7 @@
       <m-title label="统计分析" :img_type="tableIndex==1?'1':'0'" class="car"></m-title>
     </div>
     <div @click="change(2)">
-      <m-title label="多发路段" :img_type="tableIndex==2?'1':'0'" class="car"></m-title>
+      <m-title label="多发点位" :img_type="tableIndex==2?'1':'0'" class="car"></m-title>
     </div>
     <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
   </div>
@@ -47,8 +47,9 @@ export default {
     this.getAreaData();
     blur.$on('changeParam',(data)=>{
       that.param=data;
+      ;
       switch(that.tableIndex){
-        case 1: that.addCityMarker(data.xzqh);break;
+        case 1: that.showArea = false;that.getAreaData(data.xzqh);break;
         case 2: that.clearMap();that.getBayonetActiveDatas();break;
         default:break;
       }

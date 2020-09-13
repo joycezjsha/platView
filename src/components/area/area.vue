@@ -62,6 +62,7 @@ export default {
           this.initArea();
           if(this.method) this.map.on('click',this.clickArea);
         }else{
+          ;
           this.hideArea();
         }
       }
@@ -144,6 +145,7 @@ export default {
      */
     addArea(data) { 
         let _this = this;
+        ;
         data.forEach((e, i) => {
           let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
           lonlats = lonlats.map(s => {
@@ -376,6 +378,13 @@ export default {
      * 计算颜色叠加值
      */
     multiply(max,min,value) {
+      if(max==min){
+        if(max=0){
+          return this.areaColors[0];
+        }else{
+          return this.areaColors[1];
+        }
+      }
       let result = [],position,item=(max-min)/2;
       if(min>0) item=min+item;
       if(item>value){

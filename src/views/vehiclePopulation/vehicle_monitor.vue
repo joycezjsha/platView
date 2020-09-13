@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class='vehicle_monitor-div--bottom borstyle'>
-      <m-title label='超速预警' style='width:8vw;'></m-title>
+      <m-title label='超速监测' style='width:8vw;'></m-title>
        <ul class="traffic-index_content_table">
          <!--    -->
           <li @click="showMapData(item)" 

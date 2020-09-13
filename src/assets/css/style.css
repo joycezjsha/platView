@@ -101,7 +101,7 @@
 }
 
 .el-table--enable-row-hover .el-table__body tr:hover>td, .el-table__body tr.hover-row>td,.el-table__body tr.hover-row>td,.el-table__body tr.current-row>td{
-background-color: #0367A6;
+background-color: #020916;
 color:white;
 }
 

@@ -220,7 +220,7 @@ export default {
         },
         series: [
           {
-            name: '限行日期分布',
+            name: '数量',
             barWidth : 8,//柱图宽度
             type: 'bar',
             data:[],
