@@ -86,7 +86,7 @@ export default {
     /*
      *  地图叠加统计分析
      */
-    getAreaData() {
+    getAreaData(xzqh) {
       let that = this;
       let param={stime:this.param.stime,c_flag:1};
       if(this.param.etime) param.etime=this.param.etime;
@@ -116,11 +116,14 @@ export default {
             else{
                that.showArea = true;
             };
-            if (data.data.length > 0) {
-              data.data.forEach(e => {
-                // that.addCityMarker(e);
-              });
+            if(xzqh && xzqh!=''){
+              that.addCityMarker(xzqh);
             }
+            // if (data.data.length > 0) {
+              // data.data.forEach(e => {
+                // that.addCityMarker(e);
+              // });
+            // }
           }
         }
       }) 

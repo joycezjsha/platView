@@ -217,8 +217,8 @@ export default {
                 let arr=[
                   {name:'10%',value:'0'},
                   {name:'20-50%',value:'0'},
-                  {name:'50%',value:'0'},
-                  {name:'其他',value:'0'}
+                  {name:'50%',value:'0'}//,
+                  // {name:'其他',value:'0'}
                 ];
                 for(var i=0;i<data.data.listmap.length;i++){
                   let item=data.data.listmap[i];
