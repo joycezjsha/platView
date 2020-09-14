@@ -27,7 +27,8 @@ export default {
         lineList: [],
         popups: []
       },
-      changeHightLayer:[]
+      changeHightLayer:[],
+      areaData:[]
     };
   },
   props:{
@@ -51,7 +52,11 @@ export default {
     },
     method:{
       type:Function
-    }
+    },
+    isRefreColor:{
+      type: Boolean,
+      default: false
+    },
 
   },
   watch:{
@@ -62,7 +67,6 @@ export default {
           this.initArea();
           if(this.method) this.map.on('click',this.clickArea);
         }else{
-          ;
           this.hideArea();
         }
       }
@@ -74,6 +78,17 @@ export default {
           this.resumeLayer();
         }
         
+      }
+    },
+    isRefreColor:{
+      immediate: false,
+      handler: function(cVAL, oVAL) {
+        ;
+        if(cVAL){
+          this.changeAreaColor();
+        }else{
+          
+        }
       }
     }
   },
@@ -100,6 +115,7 @@ export default {
      */
     initArea() {
       let that = this;
+
       if(this.mapAddItems.polygons && this.mapAddItems.polygons.length>0){
         this.mapAddItems.polygons.forEach(e => {
           if (this.map.getLayer(e) != undefined) {
@@ -129,6 +145,7 @@ export default {
                 color:e.color
               });
             });
+            that.areaData=datas;
             datas=that.sortArea(datas);
             that.clearMap();
             that.addArea(datas);
@@ -141,11 +158,20 @@ export default {
       }
     },
     /**
+     * 刷新区划面颜色
+     */
+    changeAreaColor(){
+      let datas=[];
+      datas=this.sortArea(this.areaData);
+      this.clearMap();
+      this.addArea(datas);
+    },
+    /**
      * 添加区域面
      */
     addArea(data) { 
+      ;
         let _this = this;
-        ;
         data.forEach((e, i) => {
           let lonlats = _this.getLonlats(e.areaGeometry)[0].split(",");
           lonlats = lonlats.map(s => {
@@ -378,49 +404,52 @@ export default {
      * 计算颜色叠加值
      */
     multiply(max,min,value) {
-      if(max==min){
-        if(max=0){
-          return this.areaColors[0];
-        }else{
-          return this.areaColors[1];
-        }
-      }
       let result = [],position,item=(max-min)/2;
-      if(min>0) item=min+item;
-      if(item>value){
-        position=0;
-      }else{
-        position=1;
-      };
-      switch(position){
-        case 0:{
-          if(value==min){
-            result=this.areaColors[0];
-          }else{
-             let f=(value-min)/item;
-             for( let i = 0; i < this.areaColors[0].length; i++ ) {
-              let b=Math.floor(this.areaColors[0][i]+f*(this.areaColors[1][i] - this.areaColors[0][i]));
-              result.push(b);
-            };
-          }
-          break;
+      if(max==min){
+        if(max==0){
+          result=this.areaColors[0];
+        }else{
+          result=this.areaColors[1];
         }
-        case 1:{
-          if(value==max){
-            result=this.areaColors[2];
-          }else if(value==item){
-            result=this.areaColors[1];
-          }else{
-            let f=(value-item)/item;
-            for( let i = 0; i < this.areaColors[1].length; i++ ) {
-              let b=Math.floor(this.areaColors[1][i]+f*(this.areaColors[2][i] -  this.areaColors[1][i]));
-              result.push(b);
-            };
-          }
-          break;
-        }
-        default:break;
       }
+      else{
+        if(min>0) item=min+item;
+        if(item>value){
+          position=0;
+        }else{
+          position=1;
+        };
+        switch(position){
+          case 0:{
+            if(value==min){
+              result=this.areaColors[0];
+            }else{
+              let f=(value-min)/item;
+              for( let i = 0; i < this.areaColors[0].length; i++ ) {
+                let b=Math.floor(this.areaColors[0][i]+f*(this.areaColors[1][i] - this.areaColors[0][i]));
+                result.push(b);
+              };
+            }
+            break;
+          }
+          case 1:{
+            if(value==max){
+              result=this.areaColors[2];
+            }else if(value==item){
+              result=this.areaColors[1];
+            }else{
+              let f=(value-item)/item;
+              for( let i = 0; i < this.areaColors[1].length; i++ ) {
+                let b=Math.floor(this.areaColors[1][i]+f*(this.areaColors[2][i] -  this.areaColors[1][i]));
+                result.push(b);
+              };
+            }
+            break;
+          }
+          default:break;
+        }
+      }
+
       return 'rgba('+result[0]+','+result[1]+','+result[2]+',0.82)';
       // return this.colorRGBtoHex('rgba('+result[0]+','+result[1]+','+result[2]+',0.82)');
     },

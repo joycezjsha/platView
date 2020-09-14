@@ -6,7 +6,7 @@
     <div @click="change(2)">
       <m-title label="多发点位" :img_type="tableIndex==2?'1':'0'" class="car"></m-title>
     </div>
-    <t-area :indexData='areaIndexs' :isShowArea='showArea'></t-area>
+    <t-area :indexData='areaIndexs' :isShowArea='showArea' :isRefreColor='isRefre'></t-area>
   </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
         popups: []
       },
       showArea: false,
+      isRefre:false,
       areaIndexs: [],
       param:{stime:1,etime:null,xzqh:null}
     };
@@ -47,9 +48,8 @@ export default {
     this.getAreaData();
     blur.$on('changeParam',(data)=>{
       that.param=data;
-      ;
       switch(that.tableIndex){
-        case 1: that.showArea = false;that.getAreaData(data.xzqh);break;
+        case 1: that.isRefre = false;that.getAreaData(data.xzqh);break;
         case 2: that.clearMap();that.getBayonetActiveDatas();break;
         default:break;
       }
@@ -109,11 +109,13 @@ export default {
               } else {
                 min = min > e.Num ? e.Num : min;
               }
-
               return e;
             });
             // that.areaList.push(max, (max - min) / 2 + min, min);
-            that.showArea = true;
+            if(that.showArea) that.isRefre = true;
+            else{
+               that.showArea = true;
+            };
             if (data.data.length > 0) {
               data.data.forEach(e => {
                 // that.addCityMarker(e);
