@@ -19,6 +19,7 @@ import bayonet from '@/views/bayonet/bayonetIndex.vue'
 import etc from '@/views/ETCquality/ETCqualityIndex.vue'
 import measurement from '@/views/speedMeasurement/speedMeasurementIndex.vue'
 import user from '@/views/userManager/userManage.vue'
+import userAdd from '@/views/userManager/userAdd.vue'
 import vehicleownership from '@/views/vehicleownership/vehicleownership.vue'
 import induction from '@/views/induction/induction'
 import Epidemic from '@/views/EpidemicConnect.vue'
@@ -174,7 +175,14 @@ const router = new Router({
           components: {
             default: overSpeed
           }
-        }
+        },
+        {
+          path: '/main/useradd',//用户账号新增
+          name: 'useradd',
+          components: {
+            default: userAdd
+          }
+        },
       ]
     },
     {

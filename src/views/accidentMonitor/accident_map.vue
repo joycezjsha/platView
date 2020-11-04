@@ -15,7 +15,7 @@
       </ul>
     </div>
     <t-area :indexData='areaIndexs' :isShowTxt='isShowTxt' :isShowArea='showArea' ref='areaModule'></t-area>
-    <!-- <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area> :method='clickAreaEvent'-->
+    <!-- <t-area v-if='showArea' :indexData='areaIndexs' :isShowArea='showArea' :isShowTxt='isShowTxt'></t-area> :method='clickAreaEvent' -->
   </div>
 </template>
 

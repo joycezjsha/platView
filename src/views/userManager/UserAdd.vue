@@ -2,41 +2,14 @@
   <div id="user-add">
     <div class="add-top">
       <div class="title user-add-title">
-        <span>权限管理</span>
-        <i class="el-breadcrumb__separator el-icon-arrow-right"></i>
         <span>用户管理</span>
         <i class="el-breadcrumb__separator el-icon-arrow-right"></i>
         <span v-text="$route.query.title"></span>
       </div>
-      <div class="data-save-btn">
-        <el-button type="primary" @click="saveUser" :loading="saving"></el-button>
-        <el-button type="primary" @click="returnManage"></el-button>
-      </div>
+      
     </div>
     <div class="add-item">
-      <div class="user-add-form-inner">
-        <el-form :label-position="labelPosition" label-width="10%" :model="userForm" ref="userForm" :rules="rules">
-          <el-form-item label="角色：" prop="role">
-            <el-select v-model="userForm.role" style="width:50%" placeholder="请选择角色" @change="selectRole">
-              <el-option v-for="(role,index) in roleList" multiple="1" :label="role.name" :key="role.id"
-                         :value="role.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="所属组织：" v-show="userForm.role!=''">
-            <!--<el-select v-model="userForm.orgnzation" style="width:50%" placeholder="请选择组织权限" @change="selectOrg">-->
-            <!--<el-option v-for="org in orgnzationList" multiple="1" :key="org.deptid" :label="org.name"-->
-            <!--:value="org.deptid"></el-option>-->
-            <!--</el-select>--><!--:default-expanded-keys="[orgnzationList[0].id]"-->                       <!--node-key="id"-->
-            <el-input v-model="userForm.deptname" style="width:50%" size="small" @focus="setOrgnzation" :disable="isDisable"></el-input>
-            <el-tree v-show="isShowOrgTree" ref="orgnzationTree" style="width: 50%"
-                     :data="orgnzationList"
-                     show-checkbox
-                     :check-strictly=true
-                    :default-expanded-keys="[orgnzationList[0].id]"
-                    @check-change="orgnzationChange"
-                     node-key="id">
-            </el-tree>
-          </el-form-item>
+      <el-form :label-position="labelPosition" label-width="10%" :model="userForm" ref="userForm" :rules="rules">
           <el-form-item label="用户名：" prop="username">
             <el-input v-model="userForm.username" style="width:50%" size="small" @change="checkUserDuplicate"></el-input>
           </el-form-item>
@@ -50,70 +23,11 @@
             <el-input v-model="userForm.phone" style="width:50%" size="small">></el-input>
           </el-form-item>
         </el-form>
-      </div>
-    </div>
-    <div class="user-add-footer">
-      <div class="right-title"><p>服务权限</p></div>
-    </div>
-    <div class="right">
-      <div class="right-item">
-        <div class="right-item-content">
-          <div class="right-item-title">功能操作权限</div>
-          <div class="right-item-tree">
-            <el-checkbox v-model="checkedRightsAll.operRights" @change="checkedAll('operRights')"
-                         class="right-item-all">全选
-            </el-checkbox>
-            <el-tree ref="operRights" :check-strictly="isStrictly"
-                     :data="rightsData.operRights"
-                     :default-expanded-keys="selectMenu"
-                     :default-checked-keys="selectMenu"
-                     show-checkbox
-                     @check-change="operRightsChange"
-                     node-key="id"
-                     default-expand-all>
-            </el-tree>
-          </div>
+        <div class="data-save-btn">
+          <el-button type="primary" @click="saveUser" :loading="saving">保存</el-button>
+          <el-button type="primary" @click="returnManage">返回</el-button>
         </div>
       </div>
-      <div class="right-item">
-        <div class="right-item-content">
-          <div class="right-item-title">服务权限</div>
-          <div class="right-item-tree">
-            <el-checkbox v-model="checkedRightsAll.serRights" @change="checkedAll('serRights')"
-                         class="right-item-all">全选
-            </el-checkbox>
-            <el-tree class="_inner_item" ref="serRights"
-                     :data="rightsData.serRights"
-                     :default-expanded-keys="selectService"
-                     :default-checked-keys="selectService"
-                     show-checkbox
-                     @check-change="serRightsChange"
-                     node-key="id"
-                     default-expand-all>
-            </el-tree>
-          </div>
-        </div>
-      </div>
-      <div class="right-item">
-        <div class="right-item-content">
-          <div class="right-item-title">图层数据权限</div>
-          <div class="right-item-tree">
-            <el-checkbox v-model="checkedRightsAll.layerRights" @change="checkedAll('layerRights')"
-                         class="right-item-all">全选
-            </el-checkbox>
-            <el-tree ref="layerRights"
-                     :data="rightsData.layerRights"
-                     :default-expanded-keys="selectLayer"
-                     :default-checked-keys="selectLayer"
-                     show-checkbox
-                     @check-change="layerRightsChange"
-                     node-key="id"
-                     default-expand-all>
-            </el-tree>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -124,6 +38,7 @@
   import utils from '../js/utils.js'
   import {mapGetters} from "vuex";
   import qs from 'qs';
+  import mTitle from "@/components/UI_el/title_com.vue";
 
   export default {
     name: "user-add",
@@ -350,36 +265,36 @@
 //          url: config.ROLE_LIST,
 //          params: {}
 //        }).then(response => {
-        config.ROLE_LIST({}).then((response) => {
-          if (response && response.status == 200) {
-            let datas= response.data.data.map(e=>{
-                e.id=parseInt(e.id);return e;
-            });
-            _this.roleList=datas;
-//            console.log(response.data.data);
-          }
-        })
+//         config.ROLE_LIST({}).then((response) => {
+//           if (response && response.status == 200) {
+//             let datas= response.data.data.map(e=>{
+//                 e.id=parseInt(e.id);return e;
+//             });
+//             _this.roleList=datas;
+// //            console.log(response.data.data);
+//           }
+//         })
       },
       initOrgList() {  //获取组织树结构
         let _this = this;
 //        _this.$axios.get( config.ORG_LIST,
 //          {params:{}}).then(response => {
-            config.ORG_LIST({}).then((response) => {
-          if(response.status == 200){
-            let data = response.data;
-            if(data.errcode == 0){
-                console.log(data);
-//              _this.orgnzationList = data.data;
-              data.data.map(function(e){
-                  e.label=e.name;
-                _this.initTreeData(e);
-                  return e;
-              });
-              _this.orgnzationList=data.data;
-//              console.log(_this.orgnzationList);
-            }
-          }
-        });
+//         config.ORG_LIST({}).then((response) => {
+//           if(response.status == 200){
+//             let data = response.data;
+//             if(data.errcode == 0){
+//                 console.log(data);
+// //              _this.orgnzationList = data.data;
+//               data.data.map(function(e){
+//                   e.label=e.name;
+//                 _this.initTreeData(e);
+//                   return e;
+//               });
+//               _this.orgnzationList=data.data;
+// //              console.log(_this.orgnzationList);
+//             }
+//           }
+//         });
       },
       initTreeData(data){
           let _this=this;
@@ -633,6 +548,7 @@
 
 <style lang="scss" scoped>
   #user-add {
+    position:absolute;
     height: 100%;
     width: 100%;
     padding:0 1.56vw;
@@ -650,22 +566,11 @@
     flex-direction: row;
     align-items: center;
     border-bottom: 1px solid #123a80;
+    color:white;
   }
-  .user-add-footer{
-    height: auto;
-    width: 96%;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    border-bottom: 1px solid #123a80;
-    margin: 0 auto;
-    border: 1px solid #0f3d8a;
+  .add-item{
+    text-align: center;
   }
-
   .user-add-form {
     height: auto;
     width: 100%;
@@ -681,6 +586,9 @@
     /*background: #0e2247;*/
     color: #ffffff;
   }
+  .data-save-btn{
+    text-align: center;
+  }
 </style>
 <style>
   #user-add  .el-input.is-disabled .el-input__inner{
@@ -688,5 +596,8 @@
   }
   #user-add .el-form-item__error {
     left:75px;
+  }
+  .el-form-item__label{
+    color:#ddd;
   }
 </style>

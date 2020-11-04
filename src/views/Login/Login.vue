@@ -31,7 +31,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                  <el-input v-model="formLogin.password" :type="[flag?'text':'password']" placeholder="密码">
+                  <el-input v-model="formLogin.password" :type="flag?'text':'password'" placeholder="密码">
                     <i slot="suffix" :class="[flag?'el-icon-minus':'el-icon-view']" style="margin-top:8px;font-size:18px;" autocomplete="auto" @click="flag=!flag" />
                     <i slot="prepend" class="el-icon-key"></i>
                   </el-input>
@@ -39,13 +39,13 @@
                     <i slot="prepend" class="el-icon-key"></i>
                   </el-input> -->
                 </el-form-item>
-                <!-- <el-form-item prop="code">
+                <el-form-item prop="code">
                   <el-input type="text" v-model="formLogin.code" placeholder="验证码">
                     <template slot="append">
                       <img class="login-code" :src="captchaPath"  @click="getCaptcha" />
                     </template>
                   </el-input>
-                </el-form-item>   -->
+                </el-form-item>  
                 <el-button size="default" :loading="loginLoading"  @click="submit" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
@@ -139,7 +139,7 @@ export default {
     // 验证码初始化
   },
   created(){
-    // this.getCaptcha();
+    this.getCaptcha();
   },
   methods: {
     // ...mapActions('d2admin/account', [
@@ -192,6 +192,8 @@ export default {
       let data={
           'username': _this.formLogin.username,
           'password': _this.formLogin.password,
+          'captcha':_this.formLogin.code,
+          'uuid':this.formLogin.uuid
       }
       axios.post(interf.LOGIN_URL,data).then(res => {
         let data=res.data;
@@ -226,12 +228,11 @@ export default {
     /**
      * @description 获取验证码图片
      */
-    // 获取验证码图片
-    // getCaptcha () {
-    //   let _this=this;
-    //     this.formLogin.uuid = getUUID();
-    //     this.captchaPath = config.interf.adornUrl(`/captcha.jpg?uuid=${this.formLogin.uuid}`);//this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
-    // },
+    getCaptcha () {
+      let _this=this;
+        this.formLogin.uuid = getUUID();
+        this.captchaPath = interf.adornUrl(`captcha.jpg?uuid=${this.formLogin.uuid}`);//this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
+    }
   }
 };
 </script>

@@ -36,7 +36,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <!-- <el-dropdown-item @click.native="goUser">账号管理</el-dropdown-item> -->
+            <el-dropdown-item @click.native="goUser">账号管理</el-dropdown-item>
             <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -229,7 +229,6 @@ export default {
         // let _layers=this.$store.state.map.__layersList;
         // let _markers=this.$store.state.map.__markerList;
         // let _sources=this.$store.state.map.__sourceList;
-        // debugger;
         // if(_sources.length>0){
         //   _sources.forEach(e=>{
         //     if(_this.$store.state.map.getSource(e)!=undefined){
@@ -374,7 +373,7 @@ export default {
     justify-content: left;
   }
   .topbar-time{
-    width: 7%;
+    width: 8%;
     margin-right:5px;
     // border-right: 1px solid #ccc;
     @include flex(row, end);
